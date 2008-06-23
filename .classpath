@@ -4,7 +4,7 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="C:/Documents and Settings/smoodie/epe2workspace/CompoundGraph/lib/apache-log4j-1.2.15/log4j-1.2.15.jar"/>
-	<classpathentry kind="lib" path="lib/junit4.4/junit-4.4.jar" sourcepath="lib/junit4.4/junit-4.4-src.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/smoodie/epe2workspace/CompoundGraph/lib/junit4.4/junit-4.4.jar" sourcepath="lib/junit4.4/junit-4.4-src.jar"/>
 	<classpathentry kind="lib" path="lib/jmock-2.4.0/jmock-2.4.0.jar"/>
 	<classpathentry kind="lib" path="lib/jmock-2.4.0/jmock-junit4-2.4.0.jar"/>
 	<classpathentry kind="lib" path="lib/jmock-2.4.0/cglib-2.1_3-src.jar"/>
