@@ -5,7 +5,7 @@ import java.util.Iterator;
 import uk.ed.inf.graph.directed.IDirectedSubgraph;
 
 public interface ISubCompoundGraph<
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, E>>,
+		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
 		E extends ICompoundEdge<N, E>
 > extends IDirectedSubgraph<N, E> {
 

@@ -1,7 +1,7 @@
 package uk.ed.inf.graph.basic;
 
 public interface IModifiableGraph<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, E>>,
+		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 		E extends IBasicEdge<N, E>
 > {
 
@@ -84,6 +84,14 @@ public interface IModifiableGraph<
 	 * @param subGraph the subgraph to copy
 	 */
 	void copyHere(IBasicSubgraph<N, E> subGraph);
+	
+	/**
+	 * Retrieves the nodes and edges created in this graph by the last copy operation. The subgraph
+	 * is <b>not</b> guaranteed to be a consistent snapshot of this graph.   If not copy operation has
+	 * been performed then an empty subset will be returned.
+	 * @return the subgraph of copied components, or an empty subset of not copy operation has been perfromed. 
+	 */
+	IBasicSubgraph<N, E> getCopiedComponents();
 	
 	/**
 	 * Creates a copy of this graph. Note that the graph's structure is copied, but the indexes of

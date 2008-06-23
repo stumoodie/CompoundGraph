@@ -3,7 +3,7 @@ package uk.ed.inf.graph.directed;
 import uk.ed.inf.graph.basic.IBasicPair;
 
 public interface IDirectedPair<
-		N extends IDirectedNode<N, ? extends IDirectedEdge<N, E>>,
+		N extends IDirectedNode<N, ? extends IDirectedEdge<N, ?>>,
 		E extends IDirectedEdge<N, E>
 > extends IBasicPair<N, E>{
 

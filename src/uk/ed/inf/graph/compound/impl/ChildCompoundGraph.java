@@ -192,4 +192,10 @@ public class ChildCompoundGraph implements IChildCompoundGraph<CompoundNode, Com
 		}
 		return retVal;
 	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
 }

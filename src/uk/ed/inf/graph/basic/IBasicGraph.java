@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 
 public interface IBasicGraph<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, E>>,
+		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 		E extends IBasicEdge<N, E>
 > {
 
@@ -93,4 +93,9 @@ public interface IBasicGraph<
 	 * @return The edge iterator, guaranteed to be non-null.
 	 */
 	Iterator<E> edgeIterator();
+	
+	/**
+	 * Removed all nodes and edges from the graph.
+	 */
+	void clear();
 }

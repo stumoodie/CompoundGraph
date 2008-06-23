@@ -18,7 +18,7 @@ import uk.ed.inf.graph.basic.IBasicNode;
  * @param <E> The edge class to be used. It must implement <code>IEdge</code>.
  */
 public interface IEdgeSet<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, E>>,
+		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 		E extends IBasicEdge<N, E>
 > extends Set<E> {
 

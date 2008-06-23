@@ -12,7 +12,7 @@ import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.util.IEdgeSet;
 
 public class EdgeSet <
-		N extends IBasicNode<N, ? extends IBasicEdge<N, E>>,
+		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 		E extends IBasicEdge<N, E>
 > implements IEdgeSet<N, E> {
 	

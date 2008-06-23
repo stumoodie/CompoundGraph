@@ -4,7 +4,7 @@ import uk.ed.inf.graph.directed.IDirectedGraph;
 
 
 public interface ICompoundGraph<
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, E>>,
+		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
 		E extends ICompoundEdge<N, E>
 > extends IDirectedGraph<N, E> {
 

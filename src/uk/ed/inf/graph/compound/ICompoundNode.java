@@ -5,7 +5,7 @@ import uk.ed.inf.tree.ITreeNode;
 
 
 public interface ICompoundNode<
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, E>> & ITreeNode<N>,
+		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>> & ITreeNode<N>,
 		E extends ICompoundEdge<N, E>
 > extends IDirectedNode<N, E>, ITreeNode<N> {
 	/**

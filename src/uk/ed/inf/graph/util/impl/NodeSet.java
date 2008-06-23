@@ -11,7 +11,7 @@ import uk.ed.inf.graph.basic.IBasicNode;
 import uk.ed.inf.graph.util.INodeSet;
 
 public final class NodeSet<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, E>>,
+		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 		E extends IBasicEdge<N, E>
 > implements INodeSet<N, E> {
 	

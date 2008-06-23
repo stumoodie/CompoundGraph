@@ -11,7 +11,7 @@ import uk.ed.inf.graph.basic.IBasicNode;
 import uk.ed.inf.graph.util.INodeEdgeFilterCriteria;
 
 public class EdgeFromNodeIterator <
-		N extends IBasicNode<N, ? extends IBasicEdge<N, E>>,
+		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 		E extends IBasicEdge<N, E>
 > implements Iterator<E> {
 	private final Iterator<N> nodeIter;
@@ -55,7 +55,7 @@ public class EdgeFromNodeIterator <
 		while(this.nodeIter.hasNext() && !nodesAdded){
 			final N nextNode = this.nodeIter.next();
 			if(criteria.matchedNode(nextNode)){
-				Iterator<? extends IBasicEdge<N, E>> edgeIter = nextNode.edgeIterator();
+				Iterator<? extends IBasicEdge<N, ?>> edgeIter = nextNode.edgeIterator();
 				while (edgeIter.hasNext()) {
 					E edge = (E) edgeIter.next();
 					if (criteria.matchedEdge(edge) && !isVisited(edge)) {

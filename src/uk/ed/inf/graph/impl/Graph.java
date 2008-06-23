@@ -288,4 +288,16 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 		retVal.copyHere(copySubgraph);
 		return retVal;
 	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IBasicSubgraph<Node, Edge> getCopiedComponents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

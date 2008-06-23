@@ -9,7 +9,7 @@ import uk.ed.inf.graph.basic.IBasicSubgraph;
 import uk.ed.inf.graph.basic.ISubgraphAlgorithms;
 
 public final class SubgraphAlgorithms<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, E>>,
+		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 		E extends IBasicEdge<N, E>
 > implements ISubgraphAlgorithms<N, E> {
 	

@@ -5,7 +5,7 @@ import uk.ed.inf.graph.basic.IBasicNodeFactory;
 import uk.ed.inf.graph.basic.IBasicSubgraph;
 
 public interface IModifiableChildCompoundGraph <
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, E>>,
+		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
 		E extends ICompoundEdge<N, E>
 > {
 

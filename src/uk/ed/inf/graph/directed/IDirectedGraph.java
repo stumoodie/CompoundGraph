@@ -4,7 +4,7 @@ import uk.ed.inf.graph.basic.IBasicGraph;
 
 
 public interface IDirectedGraph<
-		N extends IDirectedNode<N, ? extends IDirectedEdge<N, E>>,
+		N extends IDirectedNode<N, ? extends IDirectedEdge<N, ?>>,
 		E extends IDirectedEdge<N, E>
 > extends IBasicGraph<N, E> {
 

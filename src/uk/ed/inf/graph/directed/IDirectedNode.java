@@ -7,7 +7,7 @@ import uk.ed.inf.graph.basic.IBasicNode;
 
 
 public interface IDirectedNode<
-		N extends IDirectedNode<N, ? extends IDirectedEdge<N, E>>,
+		N extends IDirectedNode<N, ? extends IDirectedEdge<N, ?>>,
 		E extends IDirectedEdge<N, E>
 > extends IBasicNode<N, E> {
 	int getInDegree();

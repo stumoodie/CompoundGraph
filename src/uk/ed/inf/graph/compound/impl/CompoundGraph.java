@@ -23,7 +23,8 @@ public class CompoundGraph implements ICompoundGraph<CompoundNode, CompoundEdge>
 	private final IndexCounter nodeCounter;
 	private final IndexCounter edgeCounter;
 	private final GeneralTree<CompoundNode> nodeTree;
-	private final SubCompoundGraphFactory subgraphFactory; 
+	private final SubCompoundGraphFactory subgraphFactory;
+	private final CompoundEdgeFactory edgeFactory;
 	private final GraphStateHandler<CompoundNode, CompoundEdge> stateHandler; 
 	
 	public CompoundGraph(){
@@ -32,6 +33,7 @@ public class CompoundGraph implements ICompoundGraph<CompoundNode, CompoundEdge>
 		this.edgeCounter = new IndexCounter(INIT_EDGE_IDX);
 		this.nodeTree = new GeneralTree<CompoundNode>(rootNode);
 		this.subgraphFactory = new SubCompoundGraphFactory(this);
+		this.edgeFactory = new CompoundEdgeFactory(this);
 		this.stateHandler = new GraphStateHandler<CompoundNode, CompoundEdge>(this);
 	}
 	
@@ -116,7 +118,7 @@ public class CompoundGraph implements ICompoundGraph<CompoundNode, CompoundEdge>
 	}
 
 	public CompoundEdgeFactory edgeFactory() {
-		return new CompoundEdgeFactory(this);
+		return this.edgeFactory;
 	}
 
 	public CompoundNodeFactory nodeFactory() {
@@ -282,5 +284,17 @@ public class CompoundGraph implements ICompoundGraph<CompoundNode, CompoundEdge>
 		CompoundGraph retVal = new CompoundGraph();
 		retVal.copyHere(subgraph);
 		return retVal;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IBasicSubgraph<CompoundNode, CompoundEdge> getCopiedComponents() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

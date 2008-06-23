@@ -10,7 +10,7 @@ import uk.ed.inf.graph.basic.IBasicNode;
 import uk.ed.inf.graph.util.impl.EdgeFromNodeIterator;
 
 public class GraphStateHandler<
-		N extends IRestorableGraphElement & IBasicNode<N, ? extends IBasicEdge<N, E>> ,
+		N extends IRestorableGraphElement & IBasicNode<N, ? extends IBasicEdge<N, ?>> ,
 		E extends IRestorableGraphElement & IBasicEdge<N, E> 
 > implements IGraphStateHandler<N, E> {
 	

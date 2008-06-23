@@ -12,7 +12,7 @@ import java.util.SortedSet;
  * @param <E> The edge type that must implement the <code>IEdge</code> class. 
  */
 public interface IBasicNode<
-	N extends IBasicNode<N, ? extends IBasicEdge<N, E>>,
+	N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 	E extends IBasicEdge<N, E>
 > extends Comparable<N> {
 
