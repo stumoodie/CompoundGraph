@@ -3,6 +3,8 @@ package uk.ed.inf.graph.compound.impl;
 import java.util.Iterator;
 import java.util.SortedSet;
 
+import uk.ed.inf.graph.colour.IColouredNode;
+import uk.ed.inf.graph.colour.INodeColourHandler;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.state.IRestorableGraphElement;
 import uk.ed.inf.graph.util.IEdgeSet;
@@ -13,7 +15,8 @@ import uk.ed.inf.graph.util.impl.FilteredEdgeSet;
 import uk.ed.inf.tree.AncestorTreeIterator;
 import uk.ed.inf.tree.LevelOrderTreeIterator;
 
-public class CompoundNode implements ICompoundNode<CompoundNode, CompoundEdge>, IRestorableGraphElement {
+public class CompoundNode implements ICompoundNode<CompoundNode, CompoundEdge>,
+		IColouredNode<CompoundNode, CompoundEdge>, IRestorableGraphElement {
 	private final CompoundNode parent;
 	private final IEdgeSet<CompoundNode, CompoundEdge> edgeInList;
 	private final IEdgeSet<CompoundNode, CompoundEdge> edgeOutList;
@@ -21,18 +24,22 @@ public class CompoundNode implements ICompoundNode<CompoundNode, CompoundEdge>, 
 	private final CompoundGraph superGraph; 
 	private final int index;
 	private boolean removed;
+	private final INodeColourHandler<CompoundNode, CompoundEdge> colour;
 	
-	public CompoundNode(CompoundGraph superGraph, int index){
-		this(superGraph, null, index);
+	public CompoundNode(CompoundGraph superGraph, INodeColourHandler<CompoundNode, CompoundEdge> colour, int index){
+		this(superGraph, null, colour, index);
 	}
 	
-	public CompoundNode(CompoundNode parent, int index){
-		this(parent.getGraph(), parent, index);
+	public CompoundNode(CompoundNode parent, INodeColourHandler<CompoundNode, CompoundEdge> colour, int index){
+		this(parent.getGraph(), parent, colour, index);
 	}
 	
-	private CompoundNode(CompoundGraph superGraph, CompoundNode parent, int index){
+	private CompoundNode(CompoundGraph superGraph, CompoundNode parent,
+							INodeColourHandler<CompoundNode, CompoundEdge> colour, int index){
 		this.superGraph = superGraph;
 		this.index = index;
+		this.colour = colour;
+		this.colour.setNode(this);
 		if(parent == null){
 			this.parent = this;
 		}
@@ -164,22 +171,10 @@ public class CompoundNode implements ICompoundNode<CompoundNode, CompoundEdge>, 
 		this.edgeInList.add(edge);
 	}
 	
-//	void removeInEdge(CiEdge edge) {
-//		this.edgeInList.remove(edge);
-//	}
-
 	void addOutEdge(CompoundEdge edge){
 		this.edgeOutList.add(edge);
 	}
 	
-//	void removeOutEdge(CiEdge edge) {
-//		this.edgeOutList.remove(edge);
-//	}
-
-//	public void removeNode() {
-//		throw new UnsupportedOperationException("Implement this!");
-//	}
-
 	public int compareTo(CompoundNode o) {
 		return this.index < o.getIndex() ? -1 : (this.index == o.getIndex() ? 0 : 1);
 	}
@@ -227,6 +222,31 @@ public class CompoundNode implements ICompoundNode<CompoundNode, CompoundEdge>, 
 		
 	}
 
+	public boolean isParent(CompoundNode parentNode) {
+		boolean retVal = false;
+		if(parentNode != null){
+			retVal = this.parent.equals(parentNode);
+		}
+		return retVal;
+	}
+
+	public CompoundNode getRoot() {
+		return this.superGraph.getRoot();
+	}
+
+	public Iterator<CompoundNode> ancestorIterator() {
+		return new AncestorTreeIterator<CompoundNode>(this);
+	}
+
+	public Iterator<CompoundNode> levelOrderIterator() {
+		return new LevelOrderTreeIterator<CompoundNode>(this);
+	}
+
+	@Override
+	public INodeColourHandler<CompoundNode, CompoundEdge> getColourHandler() {
+		return this.colour;
+	}
+	
 	private class CombinedEdgeIterator implements Iterator<CompoundEdge> {
 		private final Iterator<CompoundEdge> inEdgeIterator;
 		private final Iterator<CompoundEdge> outEdgeIterator;
@@ -268,25 +288,5 @@ public class CompoundNode implements ICompoundNode<CompoundNode, CompoundEdge>, 
 			return !testObj.isRemoved();
 		}
 		
-	}
-
-	public boolean isParent(CompoundNode parentNode) {
-		boolean retVal = false;
-		if(parentNode != null){
-			retVal = this.parent.equals(parentNode);
-		}
-		return retVal;
-	}
-
-	public CompoundNode getRoot() {
-		return this.superGraph.getRoot();
-	}
-
-	public Iterator<CompoundNode> ancestorIterator() {
-		return new AncestorTreeIterator<CompoundNode>(this);
-	}
-
-	public Iterator<CompoundNode> levelOrderIterator() {
-		return new LevelOrderTreeIterator<CompoundNode>(this);
 	}
 }

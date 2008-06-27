@@ -5,6 +5,12 @@ public interface IBasicNodeFactory<
 		E extends IBasicEdge<N, E>
 > {
 
+	/**
+	 * Get the graph to which this factory acts upon.
+	 * @return The owning graph, cannot be null.
+	 */
+	IBasicGraph<N, E> getGraph();
+
 	N createNode();
 	
 }

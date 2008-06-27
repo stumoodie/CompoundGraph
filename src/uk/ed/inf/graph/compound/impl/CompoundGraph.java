@@ -6,6 +6,8 @@ import uk.ed.inf.graph.basic.IBasicGraph;
 import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.basic.IBasicSubgraph;
 import uk.ed.inf.graph.basic.IModifiableGraph;
+import uk.ed.inf.graph.colour.IColouredGraph;
+import uk.ed.inf.graph.colour.INodeColourHandler;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.directed.IDirectedPair;
@@ -17,7 +19,7 @@ import uk.ed.inf.graph.util.impl.EdgeFromNodeIterator;
 import uk.ed.inf.tree.GeneralTree;
 
 public class CompoundGraph implements ICompoundGraph<CompoundNode, CompoundEdge>, IRestorableGraph<CompoundNode, CompoundEdge>,
-		IModifiableGraph<CompoundNode, CompoundEdge> {
+		IModifiableGraph<CompoundNode, CompoundEdge>, IColouredGraph<CompoundNode, CompoundEdge> {
 	private final static int ROOT_NODE_IDX = 0;
 	private final static int INIT_EDGE_IDX = 0;
 	private final IndexCounter nodeCounter;
@@ -28,13 +30,25 @@ public class CompoundGraph implements ICompoundGraph<CompoundNode, CompoundEdge>
 	private final GraphStateHandler<CompoundNode, CompoundEdge> stateHandler; 
 	
 	public CompoundGraph(){
-		CompoundNode rootNode = new CompoundNode(this, ROOT_NODE_IDX);
+		CompoundNode rootNode = new CompoundNode(this, new RootNodeColourHandler(ROOT_NODE_IDX), ROOT_NODE_IDX);
 		this.nodeCounter = new IndexCounter(ROOT_NODE_IDX);
 		this.edgeCounter = new IndexCounter(INIT_EDGE_IDX);
 		this.nodeTree = new GeneralTree<CompoundNode>(rootNode);
 		this.subgraphFactory = new SubCompoundGraphFactory(this);
 		this.edgeFactory = new CompoundEdgeFactory(this);
 		this.stateHandler = new GraphStateHandler<CompoundNode, CompoundEdge>(this);
+	}
+
+	public CompoundGraph(CompoundGraph otherGraph){
+		this();
+		SubCompoundGraphFactory fact = otherGraph.subgraphFactory();
+		Iterator<CompoundNode> iter = otherGraph.nodeTree.getRootNode().getChildCigraph().nodeIterator();
+		while(iter.hasNext()){
+			CompoundNode level1Node = iter.next();
+			fact.addNode(level1Node);
+		}
+		SubCompoundGraph subgraph = fact.createInducedSubgraph();
+		this.copyHere(subgraph);
 	}
 	
 	public CompoundNode getRoot() {
@@ -274,16 +288,7 @@ public class CompoundGraph implements ICompoundGraph<CompoundNode, CompoundEdge>
 	}
 
 	public IBasicGraph<CompoundNode, CompoundEdge> createCopy() {
-		SubCompoundGraphFactory fact = this.subgraphFactory();
-		Iterator<CompoundNode> iter = this.nodeTree.getRootNode().getChildCigraph().nodeIterator();
-		while(iter.hasNext()){
-			CompoundNode level1Node = iter.next();
-			fact.addNode(level1Node);
-		}
-		SubCompoundGraph subgraph = fact.createInducedSubgraph();
-		CompoundGraph retVal = new CompoundGraph();
-		retVal.copyHere(subgraph);
-		return retVal;
+		return new CompoundGraph(this);
 	}
 
 	@Override
@@ -296,5 +301,52 @@ public class CompoundGraph implements ICompoundGraph<CompoundNode, CompoundEdge>
 	public IBasicSubgraph<CompoundNode, CompoundEdge> getCopiedComponents() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	private static class RootNodeColourHandler implements INodeColourHandler<CompoundNode, CompoundEdge> {
+		private Integer colour;
+		private CompoundNode node;
+		
+		public RootNodeColourHandler(Integer initialColour){
+			this.colour = initialColour;
+		}
+		
+		public RootNodeColourHandler(RootNodeColourHandler other){
+			this.colour = null;
+			this.node = null;
+		}
+		
+		
+		@Override
+		public Integer copyColour(CompoundNode newNode) {
+			return this.colour;
+		}
+
+		@Override
+		public INodeColourHandler<CompoundNode, CompoundEdge> createCopy() {
+			return new RootNodeColourHandler(this);
+		}
+
+		@Override
+		public Object getColour() {
+			return this.colour;
+		}
+
+		@Override
+		public CompoundNode getNode() {
+			return this.node;
+		}
+
+		@Override
+		public void setColour(Object colour) {
+			if(!(colour instanceof Integer)) new IllegalArgumentException("Expected a colour of class Integer");
+			
+			Integer intColour = (Integer)colour;
+			this.colour = intColour;
+		}
+		
+		public void setNode(CompoundNode node){
+			this.node = node;
+		}
 	}
 }

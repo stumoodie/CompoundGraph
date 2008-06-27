@@ -1,18 +1,23 @@
 package uk.ed.inf.graph.compound.impl;
 
 import uk.ed.inf.graph.basic.IBasicPair;
+import uk.ed.inf.graph.colour.IColouredEdge;
+import uk.ed.inf.graph.colour.IEdgeColourHandler;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.directed.IDirectedPair;
 import uk.ed.inf.graph.state.IRestorableGraphElement;
 
-public class CompoundEdge implements ICompoundEdge<CompoundNode, CompoundEdge>, IRestorableGraphElement {
+public class CompoundEdge implements ICompoundEdge<CompoundNode, CompoundEdge>, IColouredEdge<CompoundNode, CompoundEdge>,
+		IRestorableGraphElement {
 	private final int index;
 	private final CompoundNode inNode;
 	private final CompoundNode outNode;
 	private final ChildCompoundGraph owningSubgraph;
 	private boolean removed;
+	private final IEdgeColourHandler<CompoundNode, CompoundEdge> colour;
 	
-	public CompoundEdge(ChildCompoundGraph owningSubgraph, int index, CompoundNode outNode, CompoundNode inNode){
+	public CompoundEdge(ChildCompoundGraph owningSubgraph, int index, IEdgeColourHandler<CompoundNode, CompoundEdge> colour,
+						CompoundNode outNode, CompoundNode inNode){
 		this.index = index;
 		this.owningSubgraph = owningSubgraph;
 		this.inNode = inNode;
@@ -20,6 +25,8 @@ public class CompoundEdge implements ICompoundEdge<CompoundNode, CompoundEdge>, 
 		inNode.addInEdge(this);
 		outNode.addOutEdge(this);
 		this.removed = false;
+		this.colour = colour;
+		this.colour.setEdge(this);
 	}
 	
 	public IDirectedPair<CompoundNode, CompoundEdge> getConnectedNodes() {
@@ -105,5 +112,10 @@ public class CompoundEdge implements ICompoundEdge<CompoundNode, CompoundEdge>, 
 			return retVal;
 		}
 		
+	}
+
+	@Override
+	public IEdgeColourHandler<CompoundNode, CompoundEdge> getColourHandler() {
+		return this.colour;
 	}
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import uk.ed.inf.graph.colour.IEdgeColourHandler;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.directed.IDirectedPair;
 
@@ -28,7 +29,13 @@ public class ChildCompoundGraphBuilder {
 
 	private void copyNode(CompoundNode srcNode, CompoundNode destParentNode){
 		CompoundNodeFactory nodeFactory = destParentNode.getChildCigraph().nodeFactory();
+		// TODO: problem is I want to (1) create a copy of colour first
+		// then (2) I want to actually copy the value from the old one.
+		// to do 1 I can live without the node, but to do (2) I need the node 
+		nodeFactory.setColourHandler(srcNode.getColourHandler().createCopy());
 		CompoundNode newNode = nodeFactory.createNode();
+		Object newColour = srcNode.getColourHandler().copyColour(newNode);
+		newNode.getColourHandler().setColour(newColour);
 		this.oldNewEquivList.put(srcNode, newNode);
 		Iterator<CompoundNode> childIter = srcNode.childIterator();
 		while(childIter.hasNext()){
@@ -58,7 +65,8 @@ public class ChildCompoundGraphBuilder {
 				linkOwner = lca;
 			}
 			int edgeIdx =  this.destSubCigraph.getSuperGraph().getEdgeCounter().nextIndex();
-			CompoundEdge newEdge = new CompoundEdge(linkOwner.getChildCigraph(), edgeIdx, newInNode, newOutNode);
+			IEdgeColourHandler<CompoundNode, CompoundEdge> newColourHandler = srcEdge.getColourHandler().createCopy();
+			CompoundEdge newEdge = new CompoundEdge(linkOwner.getChildCigraph(), edgeIdx, newColourHandler, newInNode, newOutNode);
 			this.destSubCigraph.addNewEdge(newEdge);
 		}
 	}

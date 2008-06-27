@@ -1,9 +1,13 @@
 package uk.ed.inf.graph.colour;
 
-public interface IColouredEdge<D> {
+import uk.ed.inf.graph.basic.IBasicEdge;
+import uk.ed.inf.graph.basic.IBasicNode;
 
-	void setColour(D colour);
-	
-	D getColour();
-	
+public interface IColouredEdge<
+N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
+E extends IBasicEdge<N, E>
+> {
+
+	IEdgeColourHandler<N, E> getColourHandler();
+
 }

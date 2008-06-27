@@ -1,5 +1,6 @@
 package uk.ed.inf.graph.impl;
 
+import uk.ed.inf.graph.basic.IBasicGraph;
 import uk.ed.inf.graph.undirected.IUndirectedNodeFactory;
 
 public final class NodeFactory implements IUndirectedNodeFactory<Node, Edge> {
@@ -14,6 +15,11 @@ public final class NodeFactory implements IUndirectedNodeFactory<Node, Edge> {
 		Node retVal = new Node(this.graph, indexCntr++);
 		this.graph.addNewNode(retVal);
 		return retVal;
+	}
+
+	@Override
+	public IBasicGraph<Node, Edge> getGraph() {
+		return this.graph;
 	}
 
 }

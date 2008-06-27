@@ -38,22 +38,6 @@ public class SubCompoundGraph implements ISubCompoundGraph<CompoundNode, Compoun
 		return alg.isInducedSubgraph();
 	}
 
-//	public boolean canCreateEdges() {
-//		return false;
-//	}
-//
-//	public boolean canCreateNodes() {
-//		return false;
-//	}
-//
-//	public boolean canCreateSubgraphs() {
-//		return false;
-//	}
-//
-//	public boolean canRemoveSubgraphs() {
-//		return false;
-//	}
-
 	public boolean containsConnection(CompoundNode thisNode, CompoundNode thatNode) {
 		boolean retVal = false;
 		if(thisNode != null && thatNode != null){
@@ -113,10 +97,6 @@ public class SubCompoundGraph implements ISubCompoundGraph<CompoundNode, Compoun
 	public int getNumNodes() {
 		return this.nodeSet.size();
 	}
-
-//	public void removeSubgraph(IBasicSubgraph<CiNode, CiEdge> node) {
-//		throw new UnsupportedOperationException("Operation not supported by GeneralSubgraph");
-//	}
 
 	public void addNode(CompoundNode iNewNode){
 		CompoundNode newNode = (CompoundNode)iNewNode;

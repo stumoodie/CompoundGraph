@@ -332,7 +332,7 @@ public class SubCompoundGraphTest {
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
-		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
+//		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
 		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
@@ -442,7 +442,7 @@ public class SubCompoundGraphTest {
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
-		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
+//		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
 		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
@@ -768,12 +768,12 @@ public class SubCompoundGraphTest {
 		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
 		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
 		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
-		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
+//		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
-		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
+//		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
 		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
@@ -1023,12 +1023,12 @@ public class SubCompoundGraphTest {
 		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
 		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
 		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
-		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
+//		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
-		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
+//		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
 		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
@@ -1130,12 +1130,12 @@ public class SubCompoundGraphTest {
 		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
 		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
 		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
-		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
+//		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
-		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
+//		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
 		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
