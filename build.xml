@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- WARNING: Eclipse auto-generated file.
-              Any modifications will be overwritten.
-              To include a user specific buildfile here, simply create one in the same
-              directory with the processing instruction <?eclipse.ant.import?>
-              as the first entry and export the buildfile again. -->
+
 <project basedir="." default="all" name="CompoundGraph">
     <property environment="env"/>
-    <property name="ECLIPSE_HOME" value="../../My Documents/eclipseBuildLibs/eclipse"/>
     <property name="junit.output.dir" value="junit"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.5"/>
@@ -25,8 +20,10 @@
         <pathelement location="lib/jmock-2.4.0/jmock-legacy-2.4.0.jar"/>
         <pathelement location="lib/jmock-2.4.0/objenesis-1.0.jar"/>
     </path>
-	<target name="all" depends="cleanall,build-project"/>
-    <target name="init">
+
+	<target name="all" depends="cleanall,build-project,api-docs"/>
+
+	<target name="init">
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="src" excludes="**/*.launch, **/*.java"/>
@@ -35,29 +32,47 @@
             <fileset dir="test" excludes="**/*.launch, **/*.java"/>
         </copy>
     </target>
-    <target name="clean">
+
+	<target name="clean">
         <delete dir="bin"/>
     </target>
-    <target depends="clean" name="cleanall"/>
-    <target depends="build-subprojects,build-project" name="build"/>
-    <target name="build-subprojects"/>
-    <target depends="init" name="build-project">
+
+	<target depends="clean" name="cleanall"/>
+
+	<target depends="build-subprojects,build-project" name="build"/>
+
+	<target name="build-subprojects"/>
+	
+    <target depends="init,build-src,build-test" name="build-project"/>
+
+	<target depends="init" name="build-src">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}"
-        	target="${target}">
+        	nowarn="false" target="${target}">
             <src path="src"/>
             <exclude name="uk/ed/inf/graph/compound/impl/GeneralSubgraph.java"/>
             <exclude name="uk/ed/inf/graph/impl/GraphState.java"/>
             <classpath refid="CompoundGraph.classpath"/>
+        	<compilerarg value="-Xlint"/>
         </javac>
+    </target>
+
+    <target depends="init" name="build-test">
+        <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}"
+	        	nowarn="false"
         		target="${target}">
             <src path="test"/>
             <classpath refid="CompoundGraph.classpath"/>
+			<compilerarg value="-Xlint"/>
         </javac>
     </target>
+
+	
+	
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
-    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+
+	<target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
         <copy todir="${ant.library.dir}">
             <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
         </copy>
@@ -66,67 +81,21 @@
             <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
         </unzip>
     </target>
-    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+
+	<target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
     </target>
-    <target name="GeneralTreeTest">
-        <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <test name="uk.ed.inf.tree.GeneralTreeTest" todir="${junit.output.dir}"/>
+
+    <target name="jar" depends="build-src">
+        <jar destfile="compoundgraph.jar" basedir="bin">
+        </jar>
+    </target>
+	
+    <target name="api-docs">
+        <javadoc access="package" author="true" splitindex="true" use="true" version="true">
             <classpath refid="CompoundGraph.classpath"/>
-        </junit>
+        </javadoc>
     </target>
-    <target name="GraphTest">
-        <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <test name="uk.ed.inf.graph.impl.GraphTest" todir="${junit.output.dir}"/>
-            <classpath refid="CompoundGraph.classpath"/>
-        </junit>
-    </target>
-    <target name="test (2)">
-        <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <classpath refid="CompoundGraph.classpath"/>
-        </junit>
-    </target>
-    <target name="uk.ed.inf.graph.impl (1)">
-        <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <classpath refid="CompoundGraph.classpath"/>
-        </junit>
-    </target>
-    <target name="uk.ed.inf.graph.impl">
-        <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <classpath refid="CompoundGraph.classpath"/>
-        </junit>
-    </target>
-    <target name="uk.ed.inf.graph.util.impl">
-        <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <classpath refid="CompoundGraph.classpath"/>
-        </junit>
-    </target>
-    <target name="uk.ed.inf.tree">
-        <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <classpath refid="CompoundGraph.classpath"/>
-        </junit>
-    </target>
-    <target name="junitreport">
-        <junitreport todir="${junit.output.dir}">
-            <fileset dir="${junit.output.dir}">
-                <include name="TEST-*.xml"/>
-            </fileset>
-            <report format="frames" todir="${junit.output.dir}"/>
-        </junitreport>
-    </target>
+
 </project>
