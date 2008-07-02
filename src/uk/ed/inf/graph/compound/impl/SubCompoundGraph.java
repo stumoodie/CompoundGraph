@@ -177,7 +177,6 @@ public class SubCompoundGraph implements ISubCompoundGraph<CompoundNode, Compoun
 		return retVal;
 	}
 
-	@Override
 	public void clear() {
 		// TODO Auto-generated method stub
 		

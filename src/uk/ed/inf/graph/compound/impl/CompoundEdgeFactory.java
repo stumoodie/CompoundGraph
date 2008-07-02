@@ -37,7 +37,6 @@ public class CompoundEdgeFactory implements IDirectedEdgeFactory<CompoundNode, C
 	}
 
 
-	@Override
 	public void setColourHandler(IEdgeColourHandler<CompoundNode, CompoundEdge> colour) {
 		this.colourHandler = colour;
 	}

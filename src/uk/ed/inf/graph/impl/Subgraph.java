@@ -200,7 +200,6 @@ public final class Subgraph implements IUndirectedSubgraph<Node, Edge> {
 				undirectedEnds.getTwoNode().getIndex());
 	}
 
-	@Override
 	public void clear() {
 		// TODO Auto-generated method stub
 		

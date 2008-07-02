@@ -291,13 +291,11 @@ public class CompoundGraph implements ICompoundGraph<CompoundNode, CompoundEdge>
 		return new CompoundGraph(this);
 	}
 
-	@Override
 	public void clear() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public IBasicSubgraph<CompoundNode, CompoundEdge> getCopiedComponents() {
 		// TODO Auto-generated method stub
 		return null;
@@ -317,27 +315,22 @@ public class CompoundGraph implements ICompoundGraph<CompoundNode, CompoundEdge>
 		}
 		
 		
-		@Override
 		public Integer copyColour(CompoundNode newNode) {
 			return this.colour;
 		}
 
-		@Override
 		public INodeColourHandler<CompoundNode, CompoundEdge> createCopy() {
 			return new RootNodeColourHandler(this);
 		}
 
-		@Override
 		public Object getColour() {
 			return this.colour;
 		}
 
-		@Override
 		public CompoundNode getNode() {
 			return this.node;
 		}
 
-		@Override
 		public void setColour(Object colour) {
 			if(!(colour instanceof Integer)) new IllegalArgumentException("Expected a colour of class Integer");
 			

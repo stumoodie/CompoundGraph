@@ -242,7 +242,6 @@ public class CompoundNode implements ICompoundNode<CompoundNode, CompoundEdge>,
 		return new LevelOrderTreeIterator<CompoundNode>(this);
 	}
 
-	@Override
 	public INodeColourHandler<CompoundNode, CompoundEdge> getColourHandler() {
 		return this.colour;
 	}

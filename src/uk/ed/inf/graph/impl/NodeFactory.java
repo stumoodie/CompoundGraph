@@ -17,7 +17,6 @@ public final class NodeFactory implements IUndirectedNodeFactory<Node, Edge> {
 		return retVal;
 	}
 
-	@Override
 	public IBasicGraph<Node, Edge> getGraph() {
 		return this.graph;
 	}

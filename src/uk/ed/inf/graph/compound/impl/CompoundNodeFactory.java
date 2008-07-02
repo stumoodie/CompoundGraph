@@ -24,12 +24,10 @@ public class CompoundNodeFactory implements IBasicNodeFactory<CompoundNode, Comp
 		return retVal;
 	}
 
-	@Override
 	public CompoundGraph getGraph() {
 		return parent.getGraph();
 	}
 
-	@Override
 	public void setColourHandler(INodeColourHandler<CompoundNode, CompoundEdge> colour) {
 		this.colour = colour;
 	}
