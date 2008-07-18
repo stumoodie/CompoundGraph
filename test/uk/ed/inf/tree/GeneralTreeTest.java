@@ -487,6 +487,7 @@ public class GeneralTreeTest {
 			allowing(mockNode3).childIterator(); will(returnIterator());
 			allowing(mockNode3).getIndex(); will(returnValue(EXPECTED_NODE3_IDX));
 			allowing(mockNode3).getParent(); will(returnValue(mockNode1));
+			allowing(mockNode3).getRoot(); will(returnValue(mockRootNode));
 
 			allowing(mockNode4).childIterator(); will(returnIterator());
 			allowing(mockNode4).getIndex(); will(returnValue(EXPECTED_NODE4_IDX));

@@ -9,7 +9,6 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 	
 	public GeneralTree(final T rootNode){
 		if(rootNode == null) throw new NullPointerException("root node cannot be null");
-		if(rootNode.getRoot() != rootNode) throw new IllegalArgumentException("This is not the root node of the tree.");
 		
 		this.rootNode = rootNode;
 		this.lcaCalc = new LCACalculator<T>(rootNode);

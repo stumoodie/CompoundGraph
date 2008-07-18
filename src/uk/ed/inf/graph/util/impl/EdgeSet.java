@@ -101,7 +101,7 @@ public class EdgeSet <
 	}
 	
 	private SortedSet<E> findConnectingEdge(N otherNode){
-		SortedSet<E> retVal = null;
+		final SortedSet<E> retVal = new TreeSet<E>();
 		for(E edge : this.edgeSet){
 			IBasicPair<N, E> pair = edge.getConnectedNodes();
 			if(pair.containsNode(otherNode)){

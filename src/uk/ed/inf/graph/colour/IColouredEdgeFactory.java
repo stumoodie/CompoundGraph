@@ -16,7 +16,7 @@ public interface IColouredEdgeFactory<
 	 */
 	IColouredGraph<N, E> getGraph();
 	
-	void setColourHandler(IEdgeColourHandler<N, E> colour);
+	void setColourHandlerFactory(IEdgeColourHandlerFactory<N, E> handlerFactory);
 	
 	/**
 	 * Create a new edge and add it to the graph.

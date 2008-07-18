@@ -3,20 +3,64 @@ package uk.ed.inf.graph.colour;
 import uk.ed.inf.graph.basic.IBasicEdge;
 import uk.ed.inf.graph.basic.IBasicNode;
 
+/**
+ * Implementers of this interface will provide a handler class for an object that provides the colour
+ * to a node. The colour being one or more properties that are associated with the graph node. 
+ * The handler facilitates the storage of the colour and can be copied and perform the copying of the
+ * colour object itself. The handler is required because a colour can be of any type and each node in a graph
+ * can potentially have a different colour type.  Implementers of this interface provides a mechanism handle
+ * diverse colour object types. Another important issue handles here is the copy of a nodes colour when the node
+ * is copied. Depending of the usage of the graph or node, the colour value may or may not be copied. The decision
+ * to copy can be application dependent and so the supplier of the implementation of this interface can use the
+ * <code>copyObject(newNode)</code> method to control this behaviour. The <code>newNode</code> parameter provides
+ * the method with information about the node to be copied to and as a consequence the graph it belongs to and
+ * it;s topology. Any of these may be important in deciding if or how to copy the colour value.    
+ * @author smoodie
+ *
+ * @param <N> the graph node, which must implement the interface <code>IBasicNode</code>.
+ * @param <E> the graph edge, which must implement the interface <code>IBasicEdge</code>.
+ */
 public interface INodeColourHandler<
 	N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 	E extends IBasicEdge<N, E>
 > {
+	/**
+	 * Set the colour value.
+	 * @param colour The colour value to set.
+	 */
 	void setColour(Object colour);
 	
+	/**
+	 * Get the colour value.
+	 * @return the colour instance.
+	 */
 	Object getColour();
 	
+	/**
+	 * Create a copy of this colour handler. This should not copy the object value, which should be left as 
+	 * null or the default value.
+	 * @return a new instance of the copy handler.
+	 */
 	INodeColourHandler<N, E> createCopy();
 	
-	
+	/**
+	 * Copy the colour object. The new node to copied to is provided to enable the copy method
+	 * to decide how to copy the object based on the newNode. For example if the newNode belongs to
+	 * another Graph then the a deep copy of the object may be performed.
+	 * @param newNode The new node the colour will be copied to.
+	 * @return The copied object.
+	 */
 	Object copyColour(N newNode);
 	
+	/**
+	 * Sets the node that will own this handler and the associated colour value.
+	 * @param node The node that will own this instance. Can be null.
+	 */
 	void setNode(N node);
 	
+	/**
+	 * Gets the node that ones this colour handler.
+	 * @return the owning node. Can be null.
+	 */
 	N getNode();
 }

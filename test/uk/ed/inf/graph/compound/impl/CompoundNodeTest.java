@@ -1,9 +1,9 @@
 package uk.ed.inf.graph.compound.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.Iterator;
 
@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import uk.ed.inf.graph.colour.INodeColourHandler;
+import uk.ed.inf.graph.colour.INodeColourHandlerFactory;
 import uk.ed.inf.graph.directed.IDirectedPair;
 
 
@@ -50,12 +51,12 @@ public class CompoundNodeTest {
 	@Test
 	public final void testCiNodeCigraphInt() {
 		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockGraph");
-		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
+		final INodeColourHandler<CompoundNode, CompoundEdge> mockColourHandler = this.mockery.mock(INodeColourHandler.class, "mockColourHandler");
 		this.mockery.checking(new Expectations(){{
-			
+			atLeast(1).of(mockColourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockGraph, colourHandler, EXPECTED_NODE1_IDX);
+		this.testInstance = new CompoundNode(mockGraph, mockColourHandler, EXPECTED_NODE1_IDX);
 		assertEquals("expected index", EXPECTED_NODE1_IDX, this.testInstance.getIndex());
 		assertEquals("expected graph", mockGraph, this.testInstance.getGraph());
 		assertEquals("expected parent", this.testInstance, this.testInstance.getParent());
@@ -81,6 +82,8 @@ public class CompoundNodeTest {
 		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
 		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
@@ -114,9 +117,13 @@ public class CompoundNodeTest {
 			
 			allowing(mockChildNode1).compareTo(mockChildNode2); will(returnValue(-1));
 			allowing(mockChildNode1).compareTo(mockChildNode1); will(returnValue(0));
+			allowing(mockChildNode1).isRemoved(); will(returnValue(false));
 			
 			allowing(mockChildNode2).compareTo(mockChildNode1); will(returnValue(1));
 			allowing(mockChildNode2).compareTo(mockChildNode2); will(returnValue(0));
+			allowing(mockChildNode2).isRemoved(); will(returnValue(false));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		
 		}});
 
@@ -141,19 +148,34 @@ public class CompoundNodeTest {
 		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
 		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
 		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
+		final CompoundNode mockChildNode1 = this.mockery.mock(CompoundNode.class, "mockChildNode1");
+		final CompoundNode mockChildNode2 = this.mockery.mock(CompoundNode.class, "mockChildNode2");
 		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
 
 			allowing(mockInEdge1).compareTo(mockInEdge2); will(returnValue(-1));
 			allowing(mockInEdge1).compareTo(mockInEdge1); will(returnValue(0));
+			allowing(mockInEdge1).isRemoved(); will(returnValue(false));
+			allowing(mockInEdge1).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockInEdge2).compareTo(mockInEdge1); will(returnValue(1));
+			allowing(mockInEdge2).isRemoved(); will(returnValue(false));
+			allowing(mockInEdge2).isSelfEdge(); will(returnValue(false));
 
 			allowing(mockOutEdge1).compareTo(mockOutEdge2); will(returnValue(-1));
 			allowing(mockOutEdge1).compareTo(mockOutEdge1); will(returnValue(0));
 			
 			allowing(mockOutEdge2).compareTo(mockOutEdge1); will(returnValue(1));
+
+			allowing(mockChildNode1).compareTo(mockChildNode2); will(returnValue(-1));
+			allowing(mockChildNode1).compareTo(mockChildNode1); will(returnValue(0));
+			allowing(mockChildNode1).isRemoved(); will(returnValue(false));
+
+			allowing(mockChildNode2).compareTo(mockChildNode1); will(returnValue(1));
+			allowing(mockChildNode2).compareTo(mockChildNode2); will(returnValue(0));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
 		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
@@ -185,10 +207,13 @@ public class CompoundNodeTest {
 			
 			allowing(mockInEdge2).compareTo(mockInEdge1); will(returnValue(1));
 			allowing(mockInEdge2).getConnectedNodes(); will(returnValue(mockPair2));
+			allowing(mockInEdge2).isRemoved(); will(returnValue(false));
 			
 			allowing(mockPair1).containsNode(mockOutNode2); will(returnValue(false));
 
 			allowing(mockPair2).containsNode(mockOutNode2); will(returnValue(true));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
 		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
@@ -213,6 +238,18 @@ public class CompoundNodeTest {
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
 
+			allowing(mockInEdge1).compareTo(mockInEdge2); will(returnValue(-1));
+			allowing(mockInEdge1).compareTo(mockInEdge1); will(returnValue(0));
+			allowing(mockInEdge1).isRemoved(); will(returnValue(false));
+			
+			allowing(mockInEdge2).compareTo(mockInEdge1); will(returnValue(1));
+			allowing(mockInEdge2).compareTo(mockOutEdge1); will(returnValue(1));
+			allowing(mockInEdge2).isRemoved(); will(returnValue(false));
+
+			allowing(mockOutEdge2).compareTo(mockOutEdge2); will(returnValue(0));
+			allowing(mockOutEdge2).compareTo(mockOutEdge1); will(returnValue(1));
+			
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
 		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
@@ -231,36 +268,88 @@ public class CompoundNodeTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public final void testGetInNodeIterator() {
-		final CompoundGraph mockGraph = new CompoundGraph();
-		final CompoundNode mockParentNode = mockGraph.getRoot();
-		this.testInstance = mockParentNode.getChildCigraph().nodeFactory().createNode();
-		final CompoundNode mockInNode1 = mockParentNode.getChildCigraph().nodeFactory().createNode();
-		final CompoundNode mockInNode2 = mockParentNode.getChildCigraph().nodeFactory().createNode();
-		final CompoundNode mockOutNode1 = mockParentNode.getChildCigraph().nodeFactory().createNode();
-		final CompoundNode mockOutNode2 = mockParentNode.getChildCigraph().nodeFactory().createNode();
-		CompoundEdgeFactory edgeFact = mockGraph.edgeFactory();
-		edgeFact.setPair(mockOutNode1, this.testInstance);
-		edgeFact.createEdge();
-		edgeFact.setPair(mockOutNode2, this.testInstance);
-		edgeFact.createEdge();;
-		edgeFact.setPair(this.testInstance, mockInNode1);
-		edgeFact.createEdge();
-		edgeFact.setPair(this.testInstance, mockInNode2);
-		edgeFact.createEdge();
-		Iterator<CompoundNode> iter = this.testInstance.getInNodeIterator();
-		boolean actualNextNode1 = iter.hasNext();
-		CompoundNode actualNode1 =  iter.next();
-		boolean actualNextNode2 = iter.hasNext();
-		CompoundNode actualNode2 =  iter.next();
-		boolean actualNextNode3 = iter.hasNext();
+	public final void testGetInNodeIteratorWithMocks() {
+		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockGraph");
+		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
+		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
+		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
+		final IDirectedPair<CompoundNode, CompoundEdge> mockPair1 = this.mockery.mock(IDirectedPair.class, "mockPair1");
+		final IDirectedPair<CompoundNode, CompoundEdge> mockPair2 = this.mockery.mock(IDirectedPair.class, "mockPair2");
+		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
+		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
+		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
+		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
+		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
+		this.mockery.checking(new Expectations(){{
+			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
 
-		assertTrue("expected in node iter", actualNextNode1);
-		assertEquals("expected in node iter", mockOutNode1, actualNode1);
-		assertTrue("expected in node iter", actualNextNode2);
-		assertEquals("expected in node iter", mockOutNode2, actualNode2);
-		assertTrue("expected in node iter", actualNextNode3 == false);
+			allowing(mockInEdge1).compareTo(mockInEdge2); will(returnValue(-1));
+			allowing(mockInEdge1).compareTo(mockInEdge1); will(returnValue(0));
+			allowing(mockInEdge1).getConnectedNodes(); will(returnValue(mockPair1));
+			allowing(mockInEdge1).isRemoved(); will(returnValue(false));
+			
+			one(mockPair1).getOtherNode(with(any(CompoundNode.class))); will(returnValue(mockNode2));
+			
+			allowing(mockInEdge2).compareTo(mockInEdge1); will(returnValue(1));
+			allowing(mockInEdge2).compareTo(mockOutEdge1); will(returnValue(1));
+			allowing(mockInEdge2).getConnectedNodes(); will(returnValue(mockPair2));
+			allowing(mockInEdge2).isRemoved(); will(returnValue(false));
+
+			one(mockPair2).getOtherNode(with(any(CompoundNode.class))); will(returnValue(mockNode3));
+			
+			allowing(mockOutEdge2).compareTo(mockOutEdge2); will(returnValue(0));
+			allowing(mockOutEdge2).compareTo(mockOutEdge1); will(returnValue(1));
+			
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
+		}});
+
+		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
+		this.testInstance.addInEdge(mockInEdge1);
+		this.testInstance.addInEdge(mockInEdge2);
+		this.testInstance.addOutEdge(mockOutEdge1);
+		this.testInstance.addOutEdge(mockOutEdge2);
+		Iterator<CompoundNode> iter = this.testInstance.getInNodeIterator();
+		assertTrue("expected in node iter", iter.hasNext());
+		assertEquals("expected node 2", mockNode2, iter.next());
+		assertTrue("expected in node iter", iter.hasNext());
+		assertEquals("expected node 3", mockNode3, iter.next());
+		assertTrue("expected in node iter", iter.hasNext() == false);
+		this.mockery.assertIsSatisfied();
 	}
+	
+	
+//	@SuppressWarnings("unchecked")
+//	@Test
+//	public final void testGetInNodeIterator() {
+//		final CompoundGraph mockGraph = new CompoundGraph();
+//		final CompoundNode mockParentNode = mockGraph.getRoot();
+//		this.testInstance = mockParentNode.getChildCigraph().nodeFactory().createNode();
+//		final CompoundNode mockInNode1 = mockParentNode.getChildCigraph().nodeFactory().createNode();
+//		final CompoundNode mockInNode2 = mockParentNode.getChildCigraph().nodeFactory().createNode();
+//		final CompoundNode mockOutNode1 = mockParentNode.getChildCigraph().nodeFactory().createNode();
+//		final CompoundNode mockOutNode2 = mockParentNode.getChildCigraph().nodeFactory().createNode();
+//		CompoundEdgeFactory edgeFact = mockGraph.edgeFactory();
+//		edgeFact.setPair(mockOutNode1, this.testInstance);
+//		edgeFact.createEdge();
+//		edgeFact.setPair(mockOutNode2, this.testInstance);
+//		edgeFact.createEdge();;
+//		edgeFact.setPair(this.testInstance, mockInNode1);
+//		edgeFact.createEdge();
+//		edgeFact.setPair(this.testInstance, mockInNode2);
+//		edgeFact.createEdge();
+//		Iterator<CompoundNode> iter = this.testInstance.getInNodeIterator();
+//		boolean actualNextNode1 = iter.hasNext();
+//		CompoundNode actualNode1 =  iter.next();
+//		boolean actualNextNode2 = iter.hasNext();
+//		CompoundNode actualNode2 =  iter.next();
+//		boolean actualNextNode3 = iter.hasNext();
+//
+//		assertTrue("expected in node iter", actualNextNode1);
+//		assertEquals("expected in node iter", mockOutNode1, actualNode1);
+//		assertTrue("expected in node iter", actualNextNode2);
+//		assertEquals("expected in node iter", mockOutNode2, actualNode2);
+//		assertTrue("expected in node iter", actualNextNode3 == false);
+//	}
 
 	@SuppressWarnings("unchecked")
 	@Test
@@ -284,14 +373,22 @@ public class CompoundNodeTest {
 			allowing(mockOutEdge1).compareTo(mockOutEdge2); will(returnValue(-1));
 			allowing(mockOutEdge1).compareTo(mockOutEdge1); will(returnValue(0));
 			allowing(mockOutEdge1).compareTo(mockOutEdge3); will(returnValue(-1));
+			allowing(mockOutEdge1).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge1).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockOutEdge2).compareTo(mockOutEdge1); will(returnValue(1));
 			allowing(mockOutEdge2).compareTo(mockOutEdge2); will(returnValue(0));
 			allowing(mockOutEdge2).compareTo(mockOutEdge3); will(returnValue(-1));
+			allowing(mockOutEdge2).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge2).isSelfEdge(); will(returnValue(false));
 
 			allowing(mockOutEdge3).compareTo(mockOutEdge1); will(returnValue(1));
 			allowing(mockOutEdge3).compareTo(mockOutEdge3); will(returnValue(0));
 			allowing(mockOutEdge3).compareTo(mockOutEdge2); will(returnValue(1));
+			allowing(mockOutEdge3).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge3).isSelfEdge(); will(returnValue(false));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
 		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
@@ -324,8 +421,14 @@ public class CompoundNodeTest {
 
 			allowing(mockOutEdge1).compareTo(mockOutEdge2); will(returnValue(-1));
 			allowing(mockOutEdge1).compareTo(mockOutEdge1); will(returnValue(0));
+			allowing(mockOutEdge1).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge1).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockOutEdge2).compareTo(mockOutEdge1); will(returnValue(1));
+			allowing(mockOutEdge2).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge2).isSelfEdge(); will(returnValue(false));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
 		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
@@ -359,13 +462,19 @@ public class CompoundNodeTest {
 			allowing(mockOutEdge1).compareTo(mockOutEdge2); will(returnValue(-1));
 			allowing(mockOutEdge1).compareTo(mockOutEdge1); will(returnValue(0));
 			allowing(mockOutEdge1).getConnectedNodes(); will(returnValue(mockPair1));
+			allowing(mockOutEdge1).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge1).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockOutEdge2).compareTo(mockOutEdge1); will(returnValue(1));
 			allowing(mockOutEdge2).getConnectedNodes(); will(returnValue(mockPair2));
+			allowing(mockOutEdge2).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge2).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockPair1).containsNode(mockInNode2); will(returnValue(false));
 
 			allowing(mockPair2).containsNode(mockInNode2); will(returnValue(true));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
 		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
@@ -379,35 +488,93 @@ public class CompoundNodeTest {
 
 	@Test
 	public final void testGetOutNodeIterator() {
-		final CompoundGraph mockGraph = new CompoundGraph();
-		final CompoundNode mockParentNode = mockGraph.getRoot();
-		this.testInstance = mockParentNode.getChildCigraph().nodeFactory().createNode();
-		final CompoundNode mockInNode1 = mockParentNode.getChildCigraph().nodeFactory().createNode();
-		final CompoundNode mockInNode2 = mockParentNode.getChildCigraph().nodeFactory().createNode();
-		final CompoundNode mockOutNode1 = mockParentNode.getChildCigraph().nodeFactory().createNode();
-		final CompoundNode mockOutNode2 = mockParentNode.getChildCigraph().nodeFactory().createNode();
-		CompoundEdgeFactory edgeFact = mockGraph.edgeFactory();
-		edgeFact.setPair(mockOutNode1, this.testInstance);
-		edgeFact.createEdge();
-		edgeFact.setPair(mockOutNode2, this.testInstance);
-		edgeFact.createEdge();;
-		edgeFact.setPair(this.testInstance, mockInNode1);
-		edgeFact.createEdge();
-		edgeFact.setPair(this.testInstance, mockInNode2);
-		edgeFact.createEdge();
-		Iterator<CompoundNode> iter = this.testInstance.getOutNodeIterator();
-		boolean actualNextNode1 = iter.hasNext();
-		CompoundNode actualNode1 =  iter.next();
-		boolean actualNextNode2 = iter.hasNext();
-		CompoundNode actualNode2 =  iter.next();
-		boolean actualNextNode3 = iter.hasNext();
+		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockGraph");
+		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
+		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
+		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
+		final IDirectedPair<CompoundNode, CompoundEdge> mockPair1 = this.mockery.mock(IDirectedPair.class, "mockPair1");
+		final IDirectedPair<CompoundNode, CompoundEdge> mockPair2 = this.mockery.mock(IDirectedPair.class, "mockPair2");
+//		final IDirectedPair<CompoundNode, CompoundEdge> mockOutPair1 = this.mockery.mock(IDirectedPair.class, "mockOutPair1");
+//		final IDirectedPair<CompoundNode, CompoundEdge> mockOutPair2 = this.mockery.mock(IDirectedPair.class, "mockOutPair2");
+		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
+		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
+		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
+		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
+		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
+		this.mockery.checking(new Expectations(){{
+			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
 
-		assertTrue("expected out node iter", actualNextNode1);
-		assertEquals("expected out node iter", mockInNode1, actualNode1);
-		assertTrue("expected out node iter", actualNextNode2);
-		assertEquals("expected out node iter", mockInNode2, actualNode2);
-		assertTrue("expected out node iter", actualNextNode3 == false);
+			allowing(mockInEdge1).compareTo(mockInEdge2); will(returnValue(-1));
+			allowing(mockInEdge1).compareTo(mockInEdge1); will(returnValue(0));
+//			allowing(mockInEdge1).getConnectedNodes(); will(returnValue(mockPair1));
+			allowing(mockInEdge1).isRemoved(); will(returnValue(false));
+			
+			one(mockPair1).getOtherNode(with(any(CompoundNode.class))); will(returnValue(mockNode2));
+			
+			allowing(mockInEdge2).compareTo(mockInEdge1); will(returnValue(1));
+			allowing(mockInEdge2).compareTo(mockOutEdge1); will(returnValue(1));
+//			allowing(mockInEdge2).getConnectedNodes(); will(returnValue(mockPair2));
+			allowing(mockInEdge2).isRemoved(); will(returnValue(false));
+
+			one(mockPair2).getOtherNode(with(any(CompoundNode.class))); will(returnValue(mockNode3));
+			
+			allowing(mockOutEdge1).getConnectedNodes(); will(returnValue(mockPair1));
+			allowing(mockOutEdge1).isRemoved(); will(returnValue(false));
+
+			allowing(mockOutEdge2).getConnectedNodes(); will(returnValue(mockPair2));
+			allowing(mockOutEdge2).isRemoved(); will(returnValue(false));
+
+			allowing(mockOutEdge2).compareTo(mockOutEdge2); will(returnValue(0));
+			allowing(mockOutEdge2).compareTo(mockOutEdge1); will(returnValue(1));
+			
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
+		}});
+
+		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
+		this.testInstance.addInEdge(mockInEdge1);
+		this.testInstance.addInEdge(mockInEdge2);
+		this.testInstance.addOutEdge(mockOutEdge1);
+		this.testInstance.addOutEdge(mockOutEdge2);
+		Iterator<CompoundNode> iter = this.testInstance.getOutNodeIterator();
+		assertTrue("expected out node iter", iter.hasNext());
+		assertEquals("expected node 2", mockNode2, iter.next());
+		assertTrue("expected out node iter", iter.hasNext());
+		assertEquals("expected node 3", mockNode3, iter.next());
+		assertTrue("expected out node iter", iter.hasNext() == false);
+		this.mockery.assertIsSatisfied();
 	}
+	
+//	@Test
+//	public final void testGetOutNodeIteratorObsolete() {
+//		final CompoundGraph mockGraph = new CompoundGraph();
+//		final CompoundNode mockParentNode = mockGraph.getRoot();
+//		this.testInstance = mockParentNode.getChildCigraph().nodeFactory().createNode();
+//		final CompoundNode mockInNode1 = mockParentNode.getChildCigraph().nodeFactory().createNode();
+//		final CompoundNode mockInNode2 = mockParentNode.getChildCigraph().nodeFactory().createNode();
+//		final CompoundNode mockOutNode1 = mockParentNode.getChildCigraph().nodeFactory().createNode();
+//		final CompoundNode mockOutNode2 = mockParentNode.getChildCigraph().nodeFactory().createNode();
+//		CompoundEdgeFactory edgeFact = mockGraph.edgeFactory();
+//		edgeFact.setPair(mockOutNode1, this.testInstance);
+//		edgeFact.createEdge();
+//		edgeFact.setPair(mockOutNode2, this.testInstance);
+//		edgeFact.createEdge();;
+//		edgeFact.setPair(this.testInstance, mockInNode1);
+//		edgeFact.createEdge();
+//		edgeFact.setPair(this.testInstance, mockInNode2);
+//		edgeFact.createEdge();
+//		Iterator<CompoundNode> iter = this.testInstance.getOutNodeIterator();
+//		boolean actualNextNode1 = iter.hasNext();
+//		CompoundNode actualNode1 =  iter.next();
+//		boolean actualNextNode2 = iter.hasNext();
+//		CompoundNode actualNode2 =  iter.next();
+//		boolean actualNextNode3 = iter.hasNext();
+//
+//		assertTrue("expected out node iter", actualNextNode1);
+//		assertEquals("expected out node iter", mockInNode1, actualNode1);
+//		assertTrue("expected out node iter", actualNextNode2);
+//		assertEquals("expected out node iter", mockInNode2, actualNode2);
+//		assertTrue("expected out node iter", actualNextNode3 == false);
+//	}
 
 	@SuppressWarnings("unchecked")
 	@Test
@@ -426,13 +593,19 @@ public class CompoundNodeTest {
 			allowing(mockInEdge1).compareTo(mockInEdge2); will(returnValue(-1));
 			allowing(mockInEdge1).compareTo(mockInEdge1); will(returnValue(0));
 			allowing(mockInEdge1).getConnectedNodes(); will(returnValue(mockPair1));
+			allowing(mockInEdge1).isRemoved(); will(returnValue(false));
+			allowing(mockInEdge1).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockInEdge2).compareTo(mockInEdge1); will(returnValue(1));
 			allowing(mockInEdge2).getConnectedNodes(); will(returnValue(mockPair2));
+			allowing(mockInEdge2).isRemoved(); will(returnValue(false));
+			allowing(mockInEdge2).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockPair1).containsNode(mockOutNode2); will(returnValue(false));
 
 			allowing(mockPair2).containsNode(mockOutNode2); will(returnValue(true));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
 		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
@@ -459,13 +632,19 @@ public class CompoundNodeTest {
 			allowing(mockOutEdge1).compareTo(mockOutEdge2); will(returnValue(-1));
 			allowing(mockOutEdge1).compareTo(mockOutEdge1); will(returnValue(0));
 			allowing(mockOutEdge1).getConnectedNodes(); will(returnValue(mockPair1));
+			allowing(mockOutEdge1).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge1).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockOutEdge2).compareTo(mockOutEdge1); will(returnValue(1));
 			allowing(mockOutEdge2).getConnectedNodes(); will(returnValue(mockPair2));
+			allowing(mockOutEdge2).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge2).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockPair1).containsNode(mockInNode2); will(returnValue(false));
 
 			allowing(mockPair2).containsNode(mockInNode2); will(returnValue(true));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
 		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
@@ -475,11 +654,102 @@ public class CompoundNodeTest {
 		this.mockery.assertIsSatisfied();
 	}
 
+//	@Test
+//	public final void testGetConnectedNodeIteratorWithMocks() {
+//		final CompoundGraph mockGraph = this.mockery.mock(ICompoundGraph.class,
+//				"mockGraph");
+//		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
+//		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
+//		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
+//		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
+//		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
+//		final CompoundNode mockOutNode1 = this.mockery.mock(CompoundNode.class,	"mockInNode1");
+//		final CompoundNode mockOutNode2 = this.mockery.mock(CompoundNode.class, "mockInNode2");
+//		final CompoundNode mockInNode1 = this.mockery.mock(CompoundNode.class, "mockOutNode2");
+//		final CompoundNode mockInNode2 = this.mockery.mock(CompoundNode.class, "mockOutNode3");
+//		final IDirectedPair<CompoundNode, CompoundEdge> mockInPair1 = this.mockery.mock(IDirectedPair.class, "mockInPair1");
+//		final IDirectedPair<CompoundNode, CompoundEdge> mockInPair2 = this.mockery.mock(IDirectedPair.class, "mockInPair2");
+//		final IDirectedPair<CompoundNode, CompoundEdge> mockOutPair1 = this.mockery.mock(IDirectedPair.class, "mockOutPair1");
+//		final IDirectedPair<CompoundNode, CompoundEdge> mockOutPair2 = this.mockery.mock(IDirectedPair.class, "mockOutPair2");
+//		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
+//		this.mockery.checking(new Expectations() {{
+//				atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
+//
+//				allowing(mockInEdge1).compareTo(mockInEdge2); will(returnValue(-1));
+//				allowing(mockInEdge1).compareTo(mockInEdge1); will(returnValue(0));
+//				allowing(mockInEdge1).getConnectedNodes(); will(returnValue(mockInPair1));
+//				allowing(mockInEdge1).isRemoved(); will(returnValue(false));
+//
+////				one(mockInPair1).getOtherNode(with(any(CompoundNode.class))); will(returnValue(mockInNode1));
+//
+//				allowing(mockInEdge2).compareTo(mockInEdge1); will(returnValue(1));
+//				allowing(mockInEdge2).compareTo(mockOutEdge1); will(returnValue(1));
+//				allowing(mockInEdge2).getConnectedNodes(); will(returnValue(mockInPair1));
+//				allowing(mockInEdge2).isRemoved(); will(returnValue(false));
+//
+//				one(mockInPair2).getOtherNode(with(any(CompoundNode.class))); will(returnValue(mockInNode2));
+//
+//				allowing(mockOutEdge1).getConnectedNodes();	will(returnValue(mockOutPair1));
+//				allowing(mockOutEdge1).isRemoved();	will(returnValue(false));
+//
+//				allowing(mockOutEdge2).getConnectedNodes(); will(returnValue(mockOutPair2));
+//				allowing(mockOutEdge2).isRemoved();	will(returnValue(false));
+//
+//				allowing(mockOutEdge2).compareTo(mockOutEdge2);	will(returnValue(0));
+//				allowing(mockOutEdge2).compareTo(mockOutEdge1); will(returnValue(1));
+//
+//				one(mockOutPair2).getOtherNode(with(any(CompoundNode.class))); will(returnValue(mockOutNode2));
+//
+//				one(mockOutPair2).getOtherNode(with(any(CompoundNode.class))); will(returnValue(mockOutNode2));
+//
+//				atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
+//			}
+//		});
+//
+//		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
+//		this.testInstance.addInEdge(mockInEdge1);
+//		this.testInstance.addInEdge(mockInEdge2);
+//		this.testInstance.addOutEdge(mockOutEdge1);
+//		this.testInstance.addOutEdge(mockOutEdge2);
+//		Iterator<CompoundNode> iter = this.testInstance.connectedNodeIterator();
+//		boolean actualNextNode1 = iter.hasNext();
+//		CompoundNode actualNode1 =  iter.next();
+//		boolean actualNextNode2 = iter.hasNext();
+//		CompoundNode actualNode2 =  iter.next();
+//		boolean actualNextNode3 = iter.hasNext();
+//		CompoundNode actualNode3 =  iter.next();
+//		boolean actualNextNode4 = iter.hasNext();
+//		CompoundNode actualNode4 =  iter.next();
+//		boolean actualNextNode5 = iter.hasNext();
+//
+//		assertTrue("expected node iter", actualNextNode1);
+//		assertEquals("expected node iter", mockOutNode1, actualNode1);
+//		assertTrue("expected node iter", actualNextNode2);
+//		assertEquals("expected node iter", mockOutNode2, actualNode2);
+//		assertTrue("expected node iter", actualNextNode3);
+//		assertEquals("expected node iter", mockInNode1, actualNode3);
+//		assertTrue("expected node iter", actualNextNode4);
+//		assertEquals("expected node iter", mockInNode2, actualNode4);
+//		assertTrue("expected node iter", actualNextNode5 == false);
+//		this.mockery.assertIsSatisfied();
+//	}
+	
+	// seems like there is a JMock bug here so have been fored to use concrete classes.
+	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetConnectedNodeIterator() {
+		final INodeColourHandlerFactory<CompoundNode, CompoundEdge> colourHandlerFact = this.mockery.mock(INodeColourHandlerFactory.class, "colourHandlerFact");
+		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
+		mockery.checking(new Expectations(){{
+			atLeast(1).of(colourHandlerFact).createColourHandler(); will(returnValue(colourHandler));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
+		}});
 		final CompoundGraph mockGraph = new CompoundGraph();
 		final CompoundNode mockParentNode = mockGraph.getRoot();
-		this.testInstance = mockParentNode.getChildCigraph().nodeFactory().createNode();
+		CompoundNodeFactory nodeFact = mockParentNode.getChildCigraph().nodeFactory();
+		nodeFact.setColourHandlerFactory(colourHandlerFact);
+		this.testInstance = nodeFact.createNode();
 		final CompoundNode mockInNode1 = mockParentNode.getChildCigraph().nodeFactory().createNode();
 		final CompoundNode mockInNode2 = mockParentNode.getChildCigraph().nodeFactory().createNode();
 		final CompoundNode mockOutNode1 = mockParentNode.getChildCigraph().nodeFactory().createNode();
@@ -513,6 +783,7 @@ public class CompoundNodeTest {
 		assertTrue("expected node iter", actualNextNode4);
 		assertEquals("expected node iter", mockInNode2, actualNode4);
 		assertTrue("expected node iter", actualNextNode5 == false);
+		this.mockery.assertIsSatisfied();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -531,20 +802,32 @@ public class CompoundNodeTest {
 
 			allowing(mockInEdge1).compareTo(mockInEdge2); will(returnValue(-1));
 			allowing(mockInEdge1).compareTo(mockInEdge1); will(returnValue(0));
+			allowing(mockInEdge1).isRemoved(); will(returnValue(false));
+			allowing(mockInEdge1).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockInEdge2).compareTo(mockInEdge1); will(returnValue(1));
+			allowing(mockInEdge2).isRemoved(); will(returnValue(false));
+			allowing(mockInEdge2).isSelfEdge(); will(returnValue(false));
 
 			allowing(mockOutEdge1).compareTo(mockOutEdge2); will(returnValue(-1));
 			allowing(mockOutEdge1).compareTo(mockOutEdge1); will(returnValue(0));
 			allowing(mockOutEdge1).compareTo(mockOutEdge3); will(returnValue(-1));
+			allowing(mockOutEdge1).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge1).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockOutEdge2).compareTo(mockOutEdge1); will(returnValue(1));
 			allowing(mockOutEdge2).compareTo(mockOutEdge2); will(returnValue(0));
 			allowing(mockOutEdge2).compareTo(mockOutEdge3); will(returnValue(-1));
+			allowing(mockOutEdge2).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge2).isSelfEdge(); will(returnValue(false));
 
 			allowing(mockOutEdge3).compareTo(mockOutEdge1); will(returnValue(1));
 			allowing(mockOutEdge3).compareTo(mockOutEdge3); will(returnValue(0));
 			allowing(mockOutEdge3).compareTo(mockOutEdge2); will(returnValue(1));
+			allowing(mockOutEdge3).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge3).isSelfEdge(); will(returnValue(false));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
 		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
@@ -573,21 +856,33 @@ public class CompoundNodeTest {
 
 			allowing(mockInEdge1).compareTo(mockInEdge2); will(returnValue(-1));
 			allowing(mockInEdge1).compareTo(mockInEdge1); will(returnValue(0));
+			allowing(mockInEdge1).isRemoved(); will(returnValue(false));
+			allowing(mockInEdge1).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockInEdge2).compareTo(mockInEdge1); will(returnValue(1));
 			allowing(mockInEdge2).compareTo(mockInEdge2); will(returnValue(0));
+			allowing(mockInEdge2).isRemoved(); will(returnValue(false));
+			allowing(mockInEdge2).isSelfEdge(); will(returnValue(false));
 
 			allowing(mockOutEdge1).compareTo(mockOutEdge2); will(returnValue(-1));
 			allowing(mockOutEdge1).compareTo(mockOutEdge1); will(returnValue(0));
 			allowing(mockOutEdge1).compareTo(mockOutEdge3); will(returnValue(-1));
+			allowing(mockOutEdge1).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge1).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockOutEdge2).compareTo(mockOutEdge1); will(returnValue(1));
 			allowing(mockOutEdge2).compareTo(mockOutEdge2); will(returnValue(0));
 			allowing(mockOutEdge2).compareTo(mockOutEdge3); will(returnValue(-1));
+			allowing(mockOutEdge2).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge2).isSelfEdge(); will(returnValue(false));
 
 			allowing(mockOutEdge3).compareTo(mockOutEdge1); will(returnValue(1));
 			allowing(mockOutEdge3).compareTo(mockOutEdge3); will(returnValue(0));
 			allowing(mockOutEdge3).compareTo(mockOutEdge2); will(returnValue(1));
+			allowing(mockOutEdge3).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge3).isSelfEdge(); will(returnValue(false));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
 		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
@@ -635,16 +930,22 @@ public class CompoundNodeTest {
 			allowing(mockOutEdge1).compareTo(mockOutEdge1); will(returnValue(0));
 			allowing(mockOutEdge1).compareTo(mockOutEdge3); will(returnValue(-1));
 			allowing(mockOutEdge1).getConnectedNodes(); will(returnValue(mockOutPair1));
+			allowing(mockOutEdge1).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge1).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockOutEdge2).compareTo(mockOutEdge1); will(returnValue(1));
 			allowing(mockOutEdge2).compareTo(mockOutEdge2); will(returnValue(0));
 			allowing(mockOutEdge2).compareTo(mockOutEdge3); will(returnValue(-1));
 			allowing(mockOutEdge2).getConnectedNodes(); will(returnValue(mockOutPair2));
+			allowing(mockOutEdge2).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge2).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockOutEdge3).compareTo(mockOutEdge1); will(returnValue(1));
 			allowing(mockOutEdge3).compareTo(mockOutEdge3); will(returnValue(0));
 			allowing(mockOutEdge3).compareTo(mockOutEdge2); will(returnValue(1));
 			allowing(mockOutEdge3).getConnectedNodes(); will(returnValue(mockOutPair3));
+			allowing(mockOutEdge3).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge3).isSelfEdge(); will(returnValue(false));
 
 			allowing(mockInEdge1).compareTo(mockInEdge2); will(returnValue(-1));
 			allowing(mockInEdge1).compareTo(mockInEdge1); will(returnValue(0));
@@ -663,6 +964,8 @@ public class CompoundNodeTest {
 			allowing(mockInPair1).containsNode(mockInNode2); will(returnValue(false));
 
 			allowing(mockInPair2).containsNode(mockInNode2); will(returnValue(false));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
 		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
@@ -701,24 +1004,34 @@ public class CompoundNodeTest {
 			allowing(mockOutEdge1).compareTo(mockOutEdge1); will(returnValue(0));
 			allowing(mockOutEdge1).compareTo(mockOutEdge3); will(returnValue(-1));
 			allowing(mockOutEdge1).getConnectedNodes(); will(returnValue(mockOutPair1));
+			allowing(mockOutEdge1).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge1).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockOutEdge2).compareTo(mockOutEdge1); will(returnValue(1));
 			allowing(mockOutEdge2).compareTo(mockOutEdge2); will(returnValue(0));
 			allowing(mockOutEdge2).compareTo(mockOutEdge3); will(returnValue(-1));
 			allowing(mockOutEdge2).getConnectedNodes(); will(returnValue(mockOutPair2));
+			allowing(mockOutEdge2).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge2).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockOutEdge3).compareTo(mockOutEdge1); will(returnValue(1));
 			allowing(mockOutEdge3).compareTo(mockOutEdge3); will(returnValue(0));
 			allowing(mockOutEdge3).compareTo(mockOutEdge2); will(returnValue(1));
 			allowing(mockOutEdge3).getConnectedNodes(); will(returnValue(mockOutPair3));
+			allowing(mockOutEdge3).isRemoved(); will(returnValue(false));
+			allowing(mockOutEdge3).isSelfEdge(); will(returnValue(false));
 
 			allowing(mockInEdge1).compareTo(mockInEdge2); will(returnValue(-1));
 			allowing(mockInEdge1).compareTo(mockInEdge1); will(returnValue(0));
 			allowing(mockInEdge1).getConnectedNodes(); will(returnValue(mockInPair1));
+			allowing(mockInEdge1).isRemoved(); will(returnValue(false));
+			allowing(mockInEdge1).isSelfEdge(); will(returnValue(false));
 			
 			allowing(mockInEdge2).compareTo(mockInEdge1); will(returnValue(1));
 			allowing(mockInEdge2).compareTo(mockInEdge2); will(returnValue(0));
 			allowing(mockInEdge2).getConnectedNodes(); will(returnValue(mockInPair2));
+			allowing(mockInEdge2).isRemoved(); will(returnValue(false));
+			allowing(mockInEdge2).isSelfEdge(); will(returnValue(false));
 
 			allowing(mockOutPair1).containsNode(mockInNode2); will(returnValue(false));
 
@@ -729,6 +1042,8 @@ public class CompoundNodeTest {
 			allowing(mockInPair1).containsNode(mockInNode2); will(returnValue(false));
 
 			allowing(mockInPair2).containsNode(mockInNode2); will(returnValue(false));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
 		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
@@ -742,18 +1057,38 @@ public class CompoundNodeTest {
 	}
 
 	@Test
-	public final void testRemoveInEdge() {
-		fail("Not yet implemented"); // TODO
-	}
+	public final void testMarkRemoved() {
+		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
+		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
+		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
+		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
+		final CompoundNode mockOutNode2 = this.mockery.mock(CompoundNode.class, "mockOutNode2");
+		final IDirectedPair<CompoundNode, CompoundEdge> mockPair1 = this.mockery.mock(IDirectedPair.class, "mockPair1");
+		final IDirectedPair<CompoundNode, CompoundEdge> mockPair2 = this.mockery.mock(IDirectedPair.class, "mockPair2");
+		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
+		this.mockery.checking(new Expectations(){{
+			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
 
-	@Test
-	public final void testRemoveOutEdge() {
-		fail("Not yet implemented"); // TODO
-	}
+			allowing(mockInEdge1).compareTo(mockInEdge2); will(returnValue(-1));
+			allowing(mockInEdge1).compareTo(mockInEdge1); will(returnValue(0));
+			allowing(mockInEdge1).getConnectedNodes(); will(returnValue(mockPair1));
+			
+			allowing(mockInEdge2).compareTo(mockInEdge1); will(returnValue(1));
+			allowing(mockInEdge2).getConnectedNodes(); will(returnValue(mockPair2));
+			
+			allowing(mockPair1).containsNode(mockOutNode2); will(returnValue(false));
 
-	@Test
-	public final void testRemoveNode() {
-		fail("Not yet implemented"); // TODO
+			allowing(mockPair2).containsNode(mockOutNode2); will(returnValue(true));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
+		}});
+
+		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
+		this.testInstance.markRemoved(true);
+		assertTrue("expected removed", this.testInstance.isRemoved());
+		this.testInstance.markRemoved(false);
+		assertFalse("expected removed", this.testInstance.isRemoved());
+		this.mockery.assertIsSatisfied();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -770,6 +1105,8 @@ public class CompoundNodeTest {
 			allowing(mockInNode1).getIndex(); will(returnValue(EXPECTED_CHILD_NODE1_IDX));
 
 			allowing(mockInNode2).getIndex(); will(returnValue(EXPECTED_CHILD_NODE2_IDX));
+
+			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
 		this.testInstance = new CompoundNode(mockParentNode, colourHandler, EXPECTED_NODE1_IDX);
