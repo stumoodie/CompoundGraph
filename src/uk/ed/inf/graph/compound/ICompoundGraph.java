@@ -8,14 +8,10 @@ public interface ICompoundGraph<
 		E extends ICompoundEdge<N, E>
 > extends IDirectedGraph<N, E> {
 
-//	/**
-//	 * Gets the least common ancestor node. This is where links that span sub-graphs
-//	 * should go. 
-//	 * @param inNode
-//	 * @param outNode
-//	 * @return the lca node, which is guaranteed to be non-null
-//	 */
-//	ICiNode<N, E> getLcaNode(N inNode, N outNode);
-	
+	/**
+	 * Get the root node of this graph.
+	 * @return The root node, which cannot be null.
+	 */
 	N getRoot();
+
 }

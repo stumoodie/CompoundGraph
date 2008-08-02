@@ -111,12 +111,12 @@ public class FilteredEdgeSet <
 		int count = 0;
 		for(E edge : this.edgeSet){
 			if(this.criteria.matched(edge)){
-				if(edge.isSelfEdge()){
-					count += 2;
-				}
-				else{
+//				if(edge.isSelfEdge()){
+//					count += 2;
+//				}
+//				else{
 					count++;
-				}
+//				}
 			}
 		}
 		return count;
@@ -217,7 +217,7 @@ public class FilteredEdgeSet <
 		boolean retVal = this.edgeSet.contains(edgeIdx);
 		if(retVal){
 			E edge = this.edgeSet.get(edgeIdx);
-			retVal = !this.criteria.matched(edge);
+			retVal = this.criteria.matched(edge);
 		}
 		return retVal;
 	}

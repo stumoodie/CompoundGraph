@@ -1,34 +1,27 @@
 package uk.ed.inf.graph.compound.impl;
 
-import uk.ed.inf.graph.colour.IColouredEdgeFactory;
-import uk.ed.inf.graph.colour.IEdgeColourHandler;
-import uk.ed.inf.graph.colour.IEdgeColourHandlerFactory;
 import uk.ed.inf.graph.directed.IDirectedEdgeFactory;
 
-public class CompoundEdgeFactory implements IDirectedEdgeFactory<CompoundNode, CompoundEdge>,
-	IColouredEdgeFactory<CompoundNode, CompoundEdge> {
+public class CompoundEdgeFactory implements IDirectedEdgeFactory<ArchetypalCompoundNode, ArchetypalCompoundEdge> {
 	private final CompoundGraph graph;
-	private ChildCompoundGraph childCompoundGraph;
 	private CompoundNode inNode;
 	private CompoundNode outNode;
-	private IEdgeColourHandlerFactory<CompoundNode, CompoundEdge> colourHandlerFactory;
 	
 	public CompoundEdgeFactory(CompoundGraph graph){
 		this.graph = graph;
 	}
 	
 	
-	public void setPair(CompoundNode inNode, CompoundNode outNode){
+	public void setPair(ArchetypalCompoundNode outNode, ArchetypalCompoundNode inNode){
 		this.inNode = (CompoundNode)inNode;
 		this.outNode = (CompoundNode)outNode;
 	}
 	
 	public CompoundEdge createEdge() {
-		if(colourHandlerFactory == null) throw new IllegalStateException("Colour handler factor must be set");
-		CompoundNode lcmNode = this.graph.getLcaNode(this.inNode, this.outNode);
+		if(inNode == null || outNode == null) throw new IllegalStateException("One or more nodes not set");
+		ArchetypalCompoundNode lcmNode = this.graph.getLcaNode(this.inNode, this.outNode);
 		int cntr = this.graph.getEdgeCounter().nextIndex();
-		IEdgeColourHandler<CompoundNode, CompoundEdge> edgeColourHandler = colourHandlerFactory.createColourHandler();
-		CompoundEdge newEdge = new CompoundEdge(this.childCompoundGraph, cntr, edgeColourHandler, inNode, outNode); 
+		CompoundEdge newEdge = new CompoundEdge((ChildCompoundGraph)lcmNode.getChildCigraph(), cntr, outNode, inNode); 
 		lcmNode.getChildCigraph().addNewEdge(newEdge);
 		return newEdge;
 	}
@@ -36,10 +29,5 @@ public class CompoundEdgeFactory implements IDirectedEdgeFactory<CompoundNode, C
 
 	public CompoundGraph getGraph() {
 		return this.graph;
-	}
-
-
-	public void setColourHandlerFactory(IEdgeColourHandlerFactory<CompoundNode, CompoundEdge> colourHandlerFactory) {
-		this.colourHandlerFactory = colourHandlerFactory;
 	}
 }

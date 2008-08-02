@@ -1,6 +1,5 @@
 package uk.ed.inf.graph.compound;
 
-import uk.ed.inf.graph.basic.IBasicEdgeFactory;
 import uk.ed.inf.graph.basic.IBasicNodeFactory;
 import uk.ed.inf.graph.basic.IBasicSubgraph;
 
@@ -11,36 +10,20 @@ public interface IModifiableChildCompoundGraph <
 
 
 	/**
-	 * Test whether the implementation of this graph can create new nodes that are added to the graph.
-	 * @return true if it can, false otherwise.
-	 */
-	boolean canCreateNodes();
-	
-	/**
 	 * Gets the nodeFactory for this class. This factory is a singleton so this method must always
 	 *  return the same instance of the factory. The factory is the only way that new nodes can be added to
 	 *  this graph.
 	 * @return The node factory.
-	 * @throws UnsupportedOperationException if this graph implementation does support new node creation and so a factory
-	 *  is not provided, i.e. <code>canCreateNodes() == false</code>.
 	 */
 	IBasicNodeFactory<N, E> nodeFactory();
-	
-	/**
-	 * Test whether the implementation of this graph can create new edges that are added to the graph.
-	 * @return true if it can, false otherwise.
-	 */
-	boolean canCreateEdges();
 	
 	/**
 	 * Gets the edgeFactory for this class. This factory is a singleton so this method must always
 	 *  return the same instance of the factory. The factory is the only way that new edges can be added to
 	 *  this graph.
 	 * @return The edge factory.
-	 * @throws UnsupportedOperationException if this graph implementation does support new edge creation and so a factory
-	 *  is not provided, i.e. <code>canCreateEdges() == false</code>.
 	 */
-	IBasicEdgeFactory<N, E> edgeFactory();
+	ICompoundEdgeFactory<N, E> edgeFactory();
 	
 	/**
 	 * Tests whether the subGraph can be copied to this graph. To be true the subgraph must be an induced subgraph

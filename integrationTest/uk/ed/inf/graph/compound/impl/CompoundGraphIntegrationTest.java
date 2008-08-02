@@ -34,6 +34,13 @@ public class CompoundGraphIntegrationTest {
 	private static final int NUM_NODE6_EDGES = 2;
 	private static final int NUM_NODE7_EDGES = 0;
 	private static final int NUM_NODE8_EDGES = 0;
+	private static final int EXPECTED_NODES_AFTER_NODE2_DELETED = 4;
+	private static final int EXPECTED_EDGES_AFTER_NODE2_DELETED = 2;
+	private static final int EXPECTED_EDGES_AFTER_EDGE2_DELETED = 8;
+	private static final int EXPECTED_NODES_AFTER_NODE5_DELETED = 8;
+	private static final int EXPECTED_EDGES_AFTER_EDGE2_NODE5_DELETED = 8;
+	private static final int EXPECTED_NODES_AFTER_NODES_1_AND_2_DELETED = 1;
+	private static final int EXPECTED_EDGES_AFTER_NODES_1_AND_2_DELETED = 0;
 
 	
 	private CompoundGraph testInstance;
@@ -131,14 +138,8 @@ public class CompoundGraphIntegrationTest {
 		assertTrue("expected empty edge iterator", testEmptyInstance.edgeIterator().hasNext() == false);
 		assertTrue("obtain edge factory", testEmptyInstance.edgeFactory() != null);
 		assertTrue("obtain subgraph factory", testEmptyInstance.subgraphFactory() != null);
-		try{
-			testEmptyInstance.nodeFactory();
-			fail("expected UnsupportedOperationException to be thrown");
-		}
-		catch(UnsupportedOperationException e){
-			// success! exception thrown as expected.
-		}
-		Iterator<CompoundNode> iter = testEmptyInstance.nodeIterator();
+		assertTrue("obtain node factory", testEmptyInstance.nodeFactory() != null);
+		Iterator<ArchetypalCompoundNode> iter = testEmptyInstance.nodeIterator();
 		assertTrue("expected root node iterator", iter.hasNext());
 		iter.next();
 		assertTrue("expected root node iterator", iter.hasNext() == false);
@@ -260,12 +261,12 @@ public class CompoundGraphIntegrationTest {
 
 	@Test
 	public final void testGetEdgeIterator() {
-		Iterator<CompoundEdge> iter = this.testInstance.edgeIterator();
-		CompoundEdge expectedIterationOrder[] = { edge1, edge8, edge9, edge2, edge3, edge4, edge7, edge6, edge5 };
+		Iterator<ArchetypalCompoundEdge> iter = this.testInstance.edgeIterator();
+		CompoundEdge expectedIterationOrder[] = { edge2, edge8, edge9, edge1, edge3, edge4, edge7, edge5, edge6 };
 		List<CompoundEdge> expectedEdgeList = Arrays.asList(expectedIterationOrder);
 		for(CompoundEdge expectedEdge : expectedEdgeList){
 			assertTrue("edge available", iter.hasNext());
-			CompoundEdge actualEdge = iter.next();
+			ArchetypalCompoundEdge actualEdge = iter.next();
 			assertEquals("next edge idx", expectedEdge.getIndex(), actualEdge.getIndex());
 			assertEquals("next edge", expectedEdge, actualEdge);
 //			System.out.print("Edge ID = "); System.out.println(actualEdge.getIndex());
@@ -309,7 +310,7 @@ public class CompoundGraphIntegrationTest {
 	
 	@Test
 	public final void testGetNodeIterator() {
-		Iterator<CompoundNode> iter = this.testInstance.nodeIterator();
+		Iterator<ArchetypalCompoundNode> iter = this.testInstance.nodeIterator();
 		CompoundNode expectedIterationOrder[] = { rootNode, node1, node2, node3,
 				node4, node5, node6, node7, node8 };
 		List<CompoundNode> expectedNodeList = Arrays.asList(expectedIterationOrder);
@@ -351,7 +352,18 @@ public class CompoundGraphIntegrationTest {
 		subgraphFact.addNode(this.node2);
 		SubCompoundGraph subGraph = subgraphFact.createInducedSubgraph();
 		this.testInstance.removeSubgraph(subGraph);
-		fail("Complete assertions");
+		assertEquals("Expected num nodes", EXPECTED_NODES_AFTER_NODE2_DELETED, this.testInstance.getNumNodes());
+		assertEquals("Expected num edges", EXPECTED_EDGES_AFTER_NODE2_DELETED, this.testInstance.getNumEdges());
+		assertTrue("node 2 removed", this.testInstance.containsNode(this.node2)== false);
+		assertTrue("edge 2 removed", this.testInstance.containsEdge(this.edge2)== false);
+		assertTrue("edge 1 removed", this.testInstance.containsEdge(this.edge1)== false);
+		assertTrue("edge 3 removed", this.testInstance.containsEdge(this.edge2)== false);
+		assertTrue("edge 4 removed", this.testInstance.containsEdge(this.edge4)== false);
+		assertTrue("node 2 marked removed", this.node2.isRemoved());
+		assertTrue("edge 2 marked removed", this.edge2.isRemoved());
+		assertTrue("edge 1 marked removed", this.edge1.isRemoved());
+		assertTrue("edge 3 marked removed", this.edge2.isRemoved());
+		assertTrue("edge 4 marked removed", this.edge4.isRemoved());
 	}
 
 	@Test
@@ -360,7 +372,11 @@ public class CompoundGraphIntegrationTest {
 		subgraphFact.addEdge(this.edge2);
 		SubCompoundGraph subGraph = subgraphFact.createInducedSubgraph();
 		this.testInstance.removeSubgraph(subGraph);
-		fail("Complete assertions");
+		assertEquals("Expected num nodes", EXPECTED_NUM_NODES, this.testInstance.getNumNodes());
+		assertEquals("Expected num edges", EXPECTED_EDGES_AFTER_EDGE2_DELETED, this.testInstance.getNumEdges());
+		assertTrue("edge 2 removed", this.testInstance.containsDirectedEdge(this.edge2.getConnectedNodes())== false);
+		assertTrue("edge 2 removed", this.testInstance.containsEdge(this.edge2)== false);
+		assertTrue("edge 2 marked removed", this.edge2.isRemoved());
 	}
 
 	@Test
@@ -370,7 +386,14 @@ public class CompoundGraphIntegrationTest {
 		subgraphFact.addEdge(this.edge2);
 		SubCompoundGraph subGraph = subgraphFact.createInducedSubgraph();
 		this.testInstance.removeSubgraph(subGraph);
-		fail("Complete assertions");
+		assertEquals("Expected num nodes", EXPECTED_NODES_AFTER_NODE5_DELETED, this.testInstance.getNumNodes());
+		assertEquals("Expected num edges", EXPECTED_EDGES_AFTER_EDGE2_NODE5_DELETED, this.testInstance.getNumEdges());
+		assertTrue("node 5 removed", this.testInstance.containsNode(this.node5)== false);
+		assertTrue("edge 2 removed", this.testInstance.containsEdge(this.edge2)== false);
+		assertTrue("edge 2 removed", this.testInstance.containsDirectedEdge(this.edge2.getConnectedNodes())== false);
+		assertTrue("edge 1 present", this.testInstance.containsEdge(this.edge1));
+		assertTrue("node 5 marked removed", this.node5.isRemoved());
+		assertTrue("edge 2 marked removed", this.edge2.isRemoved());
 	}
 
 	@Test
@@ -380,29 +403,33 @@ public class CompoundGraphIntegrationTest {
 		subgraphFact.addNode(this.node2);
 		SubCompoundGraph subGraph = subgraphFact.createInducedSubgraph();
 		this.testInstance.removeSubgraph(subGraph);
-		fail("Complete assertions");
+		assertEquals("Expected num nodes", EXPECTED_NODES_AFTER_NODES_1_AND_2_DELETED, this.testInstance.getNumNodes());
+		assertEquals("Expected num edges", EXPECTED_EDGES_AFTER_NODES_1_AND_2_DELETED, this.testInstance.getNumEdges());
+		assertTrue("node 1 removed", this.testInstance.containsNode(this.node1)== false);
+		assertTrue("node 2 removed", this.testInstance.containsNode(this.node2)== false);
+		assertTrue("edge 2 removed", this.testInstance.containsEdge(this.edge2)== false);
+		assertTrue("edge 2 removed", this.testInstance.containsDirectedEdge(this.edge2.getConnectedNodes())== false);
+		assertTrue("edge 1 removed", this.testInstance.containsEdge(this.edge1) == false);
+		assertTrue("node 1 marked removed", this.node1.isRemoved());
+		assertTrue("node 2 marked removed", this.node2.isRemoved());
 	}
 
 	@Test
 	public final void testRemoveSubgraphRemoveNonInducedGraph() {
 		SubCompoundGraphFactory subgraphFact = this.testInstance.subgraphFactory();
-		subgraphFact.addNode(this.rootNode);
 		subgraphFact.addNode(this.node1);
 		subgraphFact.addNode(this.node2);
 		SubCompoundGraph subGraph = subgraphFact.createSubgraph();
 		this.testInstance.removeSubgraph(subGraph);
-		fail("Complete assertions");
-	}
-
-	@Test
-	public final void testRemoveSubgraphRemoveEmptySubGraph() {
-		SubCompoundGraphFactory subgraphFact = this.testInstance.subgraphFactory();
-		subgraphFact.addNode(this.rootNode);
-		subgraphFact.addNode(this.node1);
-		subgraphFact.addNode(this.node2);
-		SubCompoundGraph subGraph = subgraphFact.createSubgraph();
-		this.testInstance.removeSubgraph(subGraph);
-		fail("Complete assertions");
+		assertEquals("Expected num nodes", EXPECTED_NODES_AFTER_NODES_1_AND_2_DELETED, this.testInstance.getNumNodes());
+		assertEquals("Expected num edges", EXPECTED_EDGES_AFTER_NODES_1_AND_2_DELETED, this.testInstance.getNumEdges());
+		assertTrue("node 1 removed", this.testInstance.containsNode(this.node1)== false);
+		assertTrue("node 2 removed", this.testInstance.containsNode(this.node2)== false);
+		assertTrue("edge 2 removed", this.testInstance.containsEdge(this.edge2)== false);
+		assertTrue("edge 2 removed", this.testInstance.containsDirectedEdge(this.edge2.getConnectedNodes())== false);
+		assertTrue("edge 1 removed", this.testInstance.containsEdge(this.edge1) == false);
+		assertTrue("node 1 marked removed", this.node1.isRemoved());
+		assertTrue("node 2 marked removed", this.node2.isRemoved());
 	}
 
 	@Test

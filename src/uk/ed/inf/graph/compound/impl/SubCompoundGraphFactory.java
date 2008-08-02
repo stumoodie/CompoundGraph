@@ -6,7 +6,7 @@ import java.util.Set;
 
 import uk.ed.inf.graph.basic.IBasicSubgraphFactory;
 
-public class SubCompoundGraphFactory implements IBasicSubgraphFactory<CompoundNode, CompoundEdge> {
+public class SubCompoundGraphFactory implements IBasicSubgraphFactory<ArchetypalCompoundNode, ArchetypalCompoundEdge> {
 	private final CompoundGraph graph;
 	private final Set<CompoundNode> nodeList = new HashSet<CompoundNode>();
 	private final Set<CompoundEdge> edgeList = new HashSet<CompoundEdge>();
@@ -15,12 +15,12 @@ public class SubCompoundGraphFactory implements IBasicSubgraphFactory<CompoundNo
 		this.graph = graph;
 	}
 	
-	public void addNode(CompoundNode iNode){
+	public void addNode(ArchetypalCompoundNode iNode){
 		CompoundNode node = (CompoundNode)iNode;
 		this.nodeList.add(node);
 	}
 	
-	public void addEdge(CompoundEdge iEdge){
+	public void addEdge(ArchetypalCompoundEdge iEdge){
 		CompoundEdge edge = (CompoundEdge)iEdge;
 		this.edgeList.add(edge);
 	}

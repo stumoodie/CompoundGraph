@@ -10,15 +10,15 @@ import uk.ed.inf.graph.util.SubgraphAlgorithms;
 import uk.ed.inf.graph.util.impl.EdgeSet;
 import uk.ed.inf.graph.util.impl.NodeSet;
 
-public class SubCompoundGraph implements ISubCompoundGraph<CompoundNode, CompoundEdge> {
-	private final CompoundGraph superGraph;
-	private final NodeSet<CompoundNode, CompoundEdge> nodeSet;
-	private final EdgeSet<CompoundNode, CompoundEdge> edgeSet;
+public class SubCompoundGraph implements ISubCompoundGraph<ArchetypalCompoundNode, ArchetypalCompoundEdge> {
+	private final ArchetypalCompoundGraph superGraph;
+	private final NodeSet<ArchetypalCompoundNode, ArchetypalCompoundEdge> nodeSet;
+	private final EdgeSet<ArchetypalCompoundNode, ArchetypalCompoundEdge> edgeSet;
 	
-	public SubCompoundGraph(CompoundGraph superGraph){
+	public SubCompoundGraph(ArchetypalCompoundGraph superGraph){
 		this.superGraph = superGraph;
-		this.nodeSet = new NodeSet<CompoundNode, CompoundEdge>();
-		this.edgeSet = new EdgeSet<CompoundNode, CompoundEdge>();
+		this.nodeSet = new NodeSet<ArchetypalCompoundNode, ArchetypalCompoundEdge>();
+		this.edgeSet = new EdgeSet<ArchetypalCompoundNode, ArchetypalCompoundEdge>();
 	}
 	
 //	public boolean canCopyHere(IBasicSubgraph<CiNode, CiEdge> subGraph) {
@@ -29,16 +29,16 @@ public class SubCompoundGraph implements ISubCompoundGraph<CompoundNode, Compoun
 //		throw new UnsupportedOperationException("Operation not supported by GeneralSubgraph");
 //	}
 
-	public CompoundGraph getSuperGraph() {
+	public ArchetypalCompoundGraph getSuperGraph() {
 		return this.superGraph;
 	}
 
 	public boolean isInducedSubgraph() {
-		ISubgraphAlgorithms<CompoundNode, CompoundEdge> alg = new SubgraphAlgorithms<CompoundNode, CompoundEdge>(this);
+		ISubgraphAlgorithms<ArchetypalCompoundNode, ArchetypalCompoundEdge> alg = new SubgraphAlgorithms<ArchetypalCompoundNode, ArchetypalCompoundEdge>(this);
 		return alg.isInducedSubgraph();
 	}
 
-	public boolean containsConnection(CompoundNode thisNode, CompoundNode thatNode) {
+	public boolean containsConnection(ArchetypalCompoundNode thisNode, ArchetypalCompoundNode thatNode) {
 		boolean retVal = false;
 		if(thisNode != null && thatNode != null){
 			retVal = thisNode.hasEdgeWith(thatNode);
@@ -46,7 +46,7 @@ public class SubCompoundGraph implements ISubCompoundGraph<CompoundNode, Compoun
 		return retVal;
 	}
 
-	public boolean containsEdge(CompoundEdge edge) {
+	public boolean containsEdge(ArchetypalCompoundEdge edge) {
 		return this.edgeSet.contains(edge);
 	}
 
@@ -58,7 +58,7 @@ public class SubCompoundGraph implements ISubCompoundGraph<CompoundNode, Compoun
 		return this.nodeSet.contains(nodeIdx);
 	}
 
-	public boolean containsNode(CompoundNode node) {
+	public boolean containsNode(ArchetypalCompoundNode node) {
 		return this.nodeSet.contains(node);
 	}
 
@@ -74,19 +74,19 @@ public class SubCompoundGraph implements ISubCompoundGraph<CompoundNode, Compoun
 //		throw new UnsupportedOperationException("Operation not supported by GeneralSubgraph");
 //	}
 
-	public CompoundEdge getEdge(int edgeIdx) {
+	public ArchetypalCompoundEdge getEdge(int edgeIdx) {
 		return this.edgeSet.get(edgeIdx);
 	}
 
-	public Iterator<CompoundEdge> edgeIterator() {
+	public Iterator<ArchetypalCompoundEdge> edgeIterator() {
 		return this.edgeSet.iterator();
 	}
 
-	public CompoundNode getNode(int nodeIdx) {
+	public ArchetypalCompoundNode getNode(int nodeIdx) {
 		return this.nodeSet.get(nodeIdx);
 	}
 
-	public Iterator<CompoundNode> nodeIterator() {
+	public Iterator<ArchetypalCompoundNode> nodeIterator() {
 		return this.nodeSet.iterator();
 	}
 
@@ -98,38 +98,33 @@ public class SubCompoundGraph implements ISubCompoundGraph<CompoundNode, Compoun
 		return this.nodeSet.size();
 	}
 
-	public void addNode(CompoundNode iNewNode){
-		CompoundNode newNode = (CompoundNode)iNewNode;
-		
+	void addNode(ArchetypalCompoundNode newNode){
 		this.nodeSet.add(newNode);
 	}
 	
-	public void addEdge(CompoundEdge iNewEdge){
-		CompoundEdge newEdge = (CompoundEdge)iNewEdge;
+	void addEdge(ArchetypalCompoundEdge newEdge){
 		
 		this.edgeSet.add(newEdge);
 	}
 
-	public boolean containsDirectedEdge(CompoundNode iInNode, CompoundNode iOutNode) {
+	public boolean containsDirectedEdge(ArchetypalCompoundNode outNode, ArchetypalCompoundNode inNode) {
 		boolean retVal = false;
-		if(iInNode != null && iOutNode != null){
-			CompoundNode inNode = (CompoundNode)iInNode;
-			CompoundNode outNode = (CompoundNode)iOutNode;
-			retVal = this.edgeSet.contains(inNode, outNode);
+		if(outNode != null && inNode != null){
+			retVal = this.edgeSet.contains(outNode, inNode);
 		}
 		return retVal;
 	}
 
 	public boolean isConsistentSnapShot() {
 		boolean retVal = true;
-		for(CompoundNode compoundNode : this.nodeSet){
+		for(ArchetypalCompoundNode compoundNode : this.nodeSet){
 			if(compoundNode.isRemoved()){
 				retVal = false;
 				break;
 			}
 		}
 		if(retVal){
-			for(CompoundEdge compoundEdge : this.edgeSet){
+			for(ArchetypalCompoundEdge compoundEdge : this.edgeSet){
 				if(compoundEdge.isRemoved()){
 					retVal = false;
 					break;
@@ -142,11 +137,11 @@ public class SubCompoundGraph implements ISubCompoundGraph<CompoundNode, Compoun
 	/**
 	 * Tests if the ends define one or more directed edges.
 	 */
-	public boolean containsDirectedEdge(IDirectedPair<CompoundNode, CompoundEdge> ends) {
+	public boolean containsDirectedEdge(IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> ends) {
 		boolean retVal = false;
 		if(ends != null){
-			CompoundNode outNode = ends.getOutNode();
-			CompoundNode inNode = ends.getInNode();
+			ArchetypalCompoundNode outNode = ends.getOutNode();
+			ArchetypalCompoundNode inNode = ends.getInNode();
 			// check that both nodes exist in this subgraph
 			if(this.nodeSet.contains(outNode) && this.nodeSet.contains(inNode)){
 				retVal = outNode.hasOutEdgeTo(inNode);
@@ -162,13 +157,13 @@ public class SubCompoundGraph implements ISubCompoundGraph<CompoundNode, Compoun
 	 * @param ends the pair of nodes that may define the edges of an edge.
 	 * @return true if it does, false otherwise.  
 	 */
-	public boolean containsConnection(IBasicPair<CompoundNode, CompoundEdge> ends) {
+	public boolean containsConnection(IBasicPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> ends) {
 		boolean retVal = false;
 		if(ends != null && ends instanceof IDirectedPair){
 			// since this is a directed graph a valid edge pair must be an IDirectedPair
-			IDirectedPair<CompoundNode, CompoundEdge> ciEnds = (IDirectedPair<CompoundNode, CompoundEdge>)ends;
-			CompoundNode oneNode = ciEnds.getOutNode();
-			CompoundNode twoNode = ciEnds.getInNode();
+			IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> ciEnds = (IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge>)ends;
+			ArchetypalCompoundNode oneNode = ciEnds.getOutNode();
+			ArchetypalCompoundNode twoNode = ciEnds.getInNode();
 			// check that the nodes belong to this subgraph.
 			if(this.nodeSet.contains(oneNode) && this.nodeSet.contains(twoNode)){
 				retVal = this.containsConnection(oneNode, twoNode);

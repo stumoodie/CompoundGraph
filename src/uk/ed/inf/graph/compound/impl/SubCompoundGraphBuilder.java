@@ -7,9 +7,9 @@ import java.util.Set;
 import uk.ed.inf.graph.directed.IDirectedPair;
 
 public class SubCompoundGraphBuilder {
-	private final CompoundGraph graph;
-	private final Set<CompoundNode> nodeList;
-	private final Set<CompoundEdge> edgeList;
+	private final ArchetypalCompoundGraph graph;
+	private final Set<ArchetypalCompoundNode> nodeList;
+	private final Set<ArchetypalCompoundEdge> edgeList;
 	private SubCompoundGraph subGraph;
 
 	/**
@@ -20,10 +20,11 @@ public class SubCompoundGraphBuilder {
 	 * @param edgeList the list of edges to be added to the subgraph, cannot be null.
 	 * @throws NullPointerException if any of the the parameters are null. 
 	 */
-	public SubCompoundGraphBuilder(CompoundGraph graph, Set<CompoundNode> nodeList, Set<CompoundEdge> edgeList){
+	public SubCompoundGraphBuilder(ArchetypalCompoundGraph graph, Set<? extends ArchetypalCompoundNode> nodeList,
+			Set<? extends ArchetypalCompoundEdge> edgeList){
 		this.graph = graph;
-		this.nodeList = new HashSet<CompoundNode>(nodeList);
-		this.edgeList = new HashSet<CompoundEdge>(edgeList);
+		this.nodeList = new HashSet<ArchetypalCompoundNode>(nodeList);
+		this.edgeList = new HashSet<ArchetypalCompoundEdge>(edgeList);
 	}
 	
 	/**
@@ -32,10 +33,10 @@ public class SubCompoundGraphBuilder {
 	 * @param nodeList the list of nodes to be added to the subgraph, cannot be null.
 	 * @throws NullPointerException if any of the the parameters are null. 
 	 */
-	public SubCompoundGraphBuilder(CompoundGraph graph, Set<CompoundNode> nodeList){
+	public SubCompoundGraphBuilder(ArchetypalCompoundGraph graph, Set<? extends ArchetypalCompoundNode> nodeList){
 		this.graph = graph;
-		this.nodeList = new HashSet<CompoundNode>(nodeList);
-		this.edgeList = new HashSet<CompoundEdge>();
+		this.nodeList = new HashSet<ArchetypalCompoundNode>(nodeList);
+		this.edgeList = new HashSet<ArchetypalCompoundEdge>();
 	}
 	
 	
@@ -46,17 +47,17 @@ public class SubCompoundGraphBuilder {
 	 * respective branches.
 	 */
 	public void expandChildCigraphs(){
-		Set<CompoundNode> initialNodes = new HashSet<CompoundNode>(this.nodeList); 
-		for(CompoundNode compoundNode : initialNodes){
-			Iterator<CompoundNode> iter = compoundNode.levelOrderIterator();
+		Set<ArchetypalCompoundNode> initialNodes = new HashSet<ArchetypalCompoundNode>(this.nodeList); 
+		for(ArchetypalCompoundNode compoundNode : initialNodes){
+			Iterator<? extends ArchetypalCompoundNode> iter = compoundNode.levelOrderIterator();
 			iter.next(); // skip the current node
 			while(iter.hasNext()){
-				CompoundNode childNode = iter.next();
+				ArchetypalCompoundNode childNode = iter.next();
 				this.nodeList.add(childNode);
 				// now add edges in this node's compound graph.
-				Iterator<CompoundEdge> edgeIter = childNode.getChildCigraph().edgeIterator();
+				Iterator<? extends ArchetypalCompoundEdge> edgeIter = childNode.getChildCigraph().edgeIterator();
 				while(edgeIter.hasNext()){
-					CompoundEdge childEdge = edgeIter.next();
+					ArchetypalCompoundEdge childEdge = edgeIter.next();
 					this.edgeList.add(childEdge);
 				}
 			}
@@ -68,17 +69,17 @@ public class SubCompoundGraphBuilder {
 	 * produce an induced subgraph. 
 	 */
 	public void addIncidentEdges(){
-		for(CompoundNode node : this.nodeList){
+		for(ArchetypalCompoundNode node : this.nodeList){
 			// we only consider out edges as this will reduce the number edges we have
 			// to consider twice. If an edge is directed and incident to the nodes in the
 			// subgraph then we are guaranteed to traverse it once.
 			// 
-			Iterator<CompoundEdge> edgeIter = node.getOutEdgeIterator();
+			Iterator<ArchetypalCompoundEdge> edgeIter = node.getOutEdgeIterator();
 			while(edgeIter.hasNext()){
-				CompoundEdge edge = edgeIter.next();
+				ArchetypalCompoundEdge edge = edgeIter.next();
 				if(!this.edgeList.contains(edge)){
 					// only do this if the edge is not already in the set of edges
-					IDirectedPair<CompoundNode, CompoundEdge> ends = edge.getConnectedNodes();
+					IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> ends = edge.getConnectedNodes();
 					if(nodeList.contains(ends.getInNode())){
 						// the edge links two nodes that will be in the subgraph so it is
 						// incident and so we add it.
@@ -95,10 +96,10 @@ public class SubCompoundGraphBuilder {
 	public void buildSubgraph() {
 		this.subGraph = new SubCompoundGraph(this.graph);
 		
-		for(CompoundNode node : this.nodeList){
+		for(ArchetypalCompoundNode node : this.nodeList){
 			subGraph.addNode(node);
 		}
-		for(CompoundEdge edge : this.edgeList){
+		for(ArchetypalCompoundEdge edge : this.edgeList){
 			subGraph.addEdge(edge);
 		}
 	}

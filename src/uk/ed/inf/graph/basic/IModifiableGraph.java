@@ -6,12 +6,6 @@ public interface IModifiableGraph<
 > {
 
 	/**
-	 * Test whether the implementation of this graph can create new nodes that are added to the graph.
-	 * @return true if it can, false otherwise.
-	 */
-	boolean canCreateNodes();
-	
-	/**
 	 * Gets the nodeFactory for this class. This factory is a singleton so this method must always
 	 *  return the same instance of the factory. The factory is the only way that new nodes can be added to
 	 *  this graph.
@@ -20,12 +14,6 @@ public interface IModifiableGraph<
 	 *  is not provided, i.e. <code>canCreateNodes() == false</code>.
 	 */
 	IBasicNodeFactory<N, E> nodeFactory();
-	
-	/**
-	 * Test whether the implementation of this graph can create new edges that are added to the graph.
-	 * @return true if it can, false otherwise.
-	 */
-	boolean canCreateEdges();
 	
 	/**
 	 * Gets the edgeFactory for this class. This factory is a singleton so this method must always
@@ -38,12 +26,6 @@ public interface IModifiableGraph<
 	IBasicEdgeFactory<N, E> edgeFactory();
 	
 	/**
-	 * Test whether the implementation of this graph can create new edges that are added to the graph.
-	 * @return true if it can, false otherwise.
-	 */
-	boolean canCreateSubgraphs();
-	
-	/**
 	 * Gets the subgraphFactory for this class. This factory is a singleton so this method must always
 	 *  return the same instance of the factory.
 	 * @return The subgraph factory.
@@ -51,12 +33,6 @@ public interface IModifiableGraph<
 	 *  is not provided, i.e. <code>canCreateSubgraphs() == false</code>.
 	 */
 	IBasicSubgraphFactory<N, E> subgraphFactory();
-	
-	/**
-	 * Can this implementation remove subgraphs (and therefore nodes and edges) from the graph.
-	 * @return true is it can, false otherwise.
-	 */
-	boolean canRemoveSubgraphs();
 	
 	/**
 	 * Removes the nodes and edges defined in the subgraph from this graph. The subgraph must be consistent with

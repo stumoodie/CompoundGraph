@@ -52,19 +52,19 @@ public interface ITreeNode<T extends ITreeNode<T>> {
 	 * Iterator over the immediate children of this node.
 	 * @return An iterator to this nodes children.
 	 */
-	Iterator<T> childIterator();
+	Iterator<? extends T> childIterator();
 	
 	/**
 	 * Iterator that traverses directly from this node up to the root node.
 	 * @return a new iterator instance, which cannot be null.
 	 */
-	Iterator<T> ancestorIterator();
+	Iterator<? extends T> ancestorIterator();
 	
 	/**
 	 * Iterator that traverses down the tree in level-order, starting at this node.
 	 * @return a new instance of the iterator, which cannot be null.
 	 */
-	Iterator<T> levelOrderIterator();
+	Iterator<? extends T> levelOrderIterator();
 	
 //	/**
 //	 * Get a visitor that will traverse the tree in level-order. This will start at this node

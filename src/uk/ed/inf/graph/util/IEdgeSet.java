@@ -26,24 +26,23 @@ public interface IEdgeSet<
 	 * Does the edge set contain at least one edge with these nodes.
 	 * This assumes a direction to the nodes so if the edges are undirected
 	 * the method must be called for both orientations of the edge.
-	 * @param outNode The node from which the edge is leading out from.
-	 * @param inNode The node from which the edge is leading into.
+	 * @param thisNode a node the edge may be connected to.
+	 * @param thatNode another node the edge may be connected to.
 	 * @return True if one or more edges has this connectivity, false otherwise. 
 	 */
-	boolean contains(N outNode, N inNode);
+	boolean contains(N thisNode, N thatNode);
 	
 	/**
 	 * Get the edges that match the given node connectivity.
-	 * The connectivity is directed so to find an undirected edge the reciprocal
-	 * node connectivity may need to be used. 
-	 * @param outNode The node that the edge is leading out from. Cannot be null.
-	 * @param inNode The node that the edge is leading into. Cannot be null.
+	 * The connectivity is undirected. 
+	 * @param thisNode a node the edge may be connected to. Cannot be null.
+	 * @param thatNode another node the edge may be connected to. Cannot be null.
 	 * @return The set of edges containing this connectivity. Note that the set is guaranteed to
 	 *  contain at least one edge.
 	 *  @throws NullPointerException if the parameters are null.
-	 *  @throws IllegalArgumentException if <code>contains(N outNode, N inNode) == false</code>
+	 *  @throws IllegalArgumentException if <code>contains(N thisNode, N thatNode) == false</code>
 	 */
-	SortedSet<E> get(N inNode, N outNode);
+	SortedSet<E> get(N thisNode, N thatNode);
 
 	/**
 	 * Does this edge set contain one or more edges associated with this
