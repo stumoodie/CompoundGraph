@@ -1,4 +1,4 @@
-package uk.ed.inf.graph.compound.impl;
+package uk.ed.inf.graph.compound.archetypal;
 
 import java.util.Iterator;
 import java.util.SortedSet;
@@ -42,6 +42,7 @@ public abstract class ArchetypalCompoundNode implements ICompoundNode<Archetypal
 				new CiEdgeExistanceCriteria());
 		this.edgeOutList = new FilteredEdgeSet<ArchetypalCompoundNode, ArchetypalCompoundEdge>(new EdgeSet<ArchetypalCompoundNode, ArchetypalCompoundEdge>(),
 				new CiEdgeExistanceCriteria());
+		createChildCompoundGraph(this);
 	}
 	
 	public Iterator<ArchetypalCompoundNode> childIterator() {
@@ -51,6 +52,8 @@ public abstract class ArchetypalCompoundNode implements ICompoundNode<Archetypal
 	public ArchetypalCompoundNode getParent() {
 		return this.parent;
 	}
+
+	protected abstract void createChildCompoundGraph(ArchetypalCompoundNode rootNode);
 
 	public abstract ArchetypalChildCompoundGraph getChildCigraph();
 
@@ -220,7 +223,7 @@ public abstract class ArchetypalCompoundNode implements ICompoundNode<Archetypal
 	}
 
 	public ArchetypalCompoundNode getRoot() {
-		return this.superGraph.getRoot();
+		return this.superGraph.getRootNode();
 	}
 
 	public Iterator<ArchetypalCompoundNode> ancestorIterator() {

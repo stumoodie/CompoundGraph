@@ -1,4 +1,4 @@
-package uk.ed.inf.graph.compound.impl;
+package uk.ed.inf.graph.compound.archetypal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -17,7 +17,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import uk.ed.inf.graph.basic.IBasicSubgraphFactory;
 import uk.ed.inf.graph.colour.INodeColourHandler;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundEdge;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
 import uk.ed.inf.graph.directed.IDirectedPair;
 
 
@@ -26,7 +29,7 @@ public class CompoundNodeTest {
 	private Mockery mockery = new JUnit4Mockery() {{
 		setImposteriser(ClassImposteriser.INSTANCE);
 	}};
-	private CompoundNode testInstance;
+	private ArchetypalCompoundNode testInstance;
 
 	private static final int EXPECTED_NODE1_IDX = 2;
 	private static final int EXPECTED_INITIAL_DEGREE = 0;
@@ -49,18 +52,18 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testCiNodeCigraphInt() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockGraph");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockGraph");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> mockColourHandler = this.mockery.mock(INodeColourHandler.class, "mockColourHandler");
 		this.mockery.checking(new Expectations(){{
 //			atLeast(1).of(mockColourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockGraph, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockGraph, EXPECTED_NODE1_IDX);
 		assertEquals("expected index", EXPECTED_NODE1_IDX, this.testInstance.getIndex());
 		assertEquals("expected graph", mockGraph, this.testInstance.getGraph());
 		assertEquals("expected parent", this.testInstance, this.testInstance.getParent());
 		assertNotNull("expected subgraph exists", this.testInstance.getChildCigraph());
-		assertEquals("expected subgraph root", this.testInstance, this.testInstance.getChildCigraph().getRoot());
+		assertEquals("expected subgraph root", this.testInstance, this.testInstance.getChildCigraph().getRootNode());
 		assertEquals("expected initial degree", EXPECTED_INITIAL_DEGREE, this.testInstance.getDegree());
 		assertEquals("expected initial degree", EXPECTED_INITIAL_DEGREE, this.testInstance.getInDegree());
 		assertEquals("expected initial degree", EXPECTED_INITIAL_DEGREE, this.testInstance.getOutDegree());
@@ -76,8 +79,8 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testCiNodeCiNodeInt() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
@@ -85,12 +88,12 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		assertEquals("expected index", EXPECTED_NODE1_IDX, this.testInstance.getIndex());
 		assertEquals("expected graph", mockGraph, this.testInstance.getGraph());
 		assertEquals("expected parent", mockParentNode, this.testInstance.getParent());
 		assertNotNull("expected subgraph exists", this.testInstance.getChildCigraph());
-		assertEquals("expected subgraph root", this.testInstance, this.testInstance.getChildCigraph().getRoot());
+		assertEquals("expected subgraph root", this.testInstance, this.testInstance.getChildCigraph().getRootNode());
 		assertEquals("expected initial degree", EXPECTED_INITIAL_DEGREE, this.testInstance.getDegree());
 		assertEquals("expected initial degree", EXPECTED_INITIAL_DEGREE, this.testInstance.getInDegree());
 		assertEquals("expected initial degree", EXPECTED_INITIAL_DEGREE, this.testInstance.getOutDegree());
@@ -106,10 +109,10 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testChildIterator() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundNode mockChildNode1 = this.mockery.mock(CompoundNode.class, "mockChildNode1");
-		final CompoundNode mockChildNode2 = this.mockery.mock(CompoundNode.class, "mockChildNode2");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundNode mockChildNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockChildNode1");
+		final ArchetypalCompoundNode mockChildNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockChildNode2");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
@@ -126,7 +129,7 @@ public class CompoundNodeTest {
 		
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.getChildCigraph().addNewNode(mockChildNode1);
 		this.testInstance.getChildCigraph().addNewNode(mockChildNode2);
 		Iterator<ArchetypalCompoundNode> iter = this.testInstance.childIterator();
@@ -141,14 +144,14 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetInDegree() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
-		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
-		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
-		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
-		final CompoundNode mockChildNode1 = this.mockery.mock(CompoundNode.class, "mockChildNode1");
-		final CompoundNode mockChildNode2 = this.mockery.mock(CompoundNode.class, "mockChildNode2");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundEdge mockInEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge1");
+		final ArchetypalCompoundEdge mockInEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge2");
+		final ArchetypalCompoundEdge mockOutEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge1");
+		final ArchetypalCompoundEdge mockOutEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge2");
+		final ArchetypalCompoundNode mockChildNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockChildNode1");
+		final ArchetypalCompoundNode mockChildNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockChildNode2");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
@@ -177,7 +180,7 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.addInEdge(mockInEdge1);
 		this.testInstance.addInEdge(mockInEdge2);
 		this.testInstance.addOutEdge(mockOutEdge1);
@@ -189,11 +192,11 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetInEdgeFrom() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
-		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
-		final CompoundNode mockOutNode2 = this.mockery.mock(CompoundNode.class, "mockOutNode2");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundEdge mockInEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge1");
+		final ArchetypalCompoundEdge mockInEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge2");
+		final ArchetypalCompoundNode mockOutNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockOutNode2");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockPair1 = this.mockery.mock(IDirectedPair.class, "mockPair1");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockPair2 = this.mockery.mock(IDirectedPair.class, "mockPair2");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
@@ -215,10 +218,10 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.addInEdge(mockInEdge1);
 		this.testInstance.addInEdge(mockInEdge2);
-		CompoundEdge expectedEdge = mockInEdge2;
+		ArchetypalCompoundEdge expectedEdge = mockInEdge2;
 		ArchetypalCompoundEdge actualEdge = this.testInstance.getInEdgesFrom(mockOutNode2).first();
 		assertEquals("expected edge", expectedEdge, actualEdge);
 		this.mockery.assertIsSatisfied();
@@ -227,12 +230,12 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetInEdgeIterator() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
-		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
-		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
-		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundEdge mockInEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge1");
+		final ArchetypalCompoundEdge mockInEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge2");
+		final ArchetypalCompoundEdge mockOutEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge1");
+		final ArchetypalCompoundEdge mockOutEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge2");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
@@ -251,7 +254,7 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.addInEdge(mockInEdge1);
 		this.testInstance.addInEdge(mockInEdge2);
 		this.testInstance.addOutEdge(mockOutEdge1);
@@ -268,16 +271,16 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetInNodeIteratorWithMocks() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockGraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockGraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockPair1 = this.mockery.mock(IDirectedPair.class, "mockPair1");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockPair2 = this.mockery.mock(IDirectedPair.class, "mockPair2");
-		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
-		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
-		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
-		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
+		final ArchetypalCompoundEdge mockInEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge1");
+		final ArchetypalCompoundEdge mockInEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge2");
+		final ArchetypalCompoundEdge mockOutEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge1");
+		final ArchetypalCompoundEdge mockOutEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge2");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
@@ -287,14 +290,14 @@ public class CompoundNodeTest {
 			allowing(mockInEdge1).getConnectedNodes(); will(returnValue(mockPair1));
 			allowing(mockInEdge1).isRemoved(); will(returnValue(false));
 			
-			one(mockPair1).getOtherNode(with(any(CompoundNode.class))); will(returnValue(mockNode2));
+			one(mockPair1).getOtherNode(with(any(ArchetypalCompoundNode.class))); will(returnValue(mockNode2));
 			
 			allowing(mockInEdge2).compareTo(mockInEdge1); will(returnValue(1));
 			allowing(mockInEdge2).compareTo(mockOutEdge1); will(returnValue(1));
 			allowing(mockInEdge2).getConnectedNodes(); will(returnValue(mockPair2));
 			allowing(mockInEdge2).isRemoved(); will(returnValue(false));
 
-			one(mockPair2).getOtherNode(with(any(CompoundNode.class))); will(returnValue(mockNode3));
+			one(mockPair2).getOtherNode(with(any(ArchetypalCompoundNode.class))); will(returnValue(mockNode3));
 			
 			allowing(mockOutEdge2).compareTo(mockOutEdge2); will(returnValue(0));
 			allowing(mockOutEdge2).compareTo(mockOutEdge1); will(returnValue(1));
@@ -302,7 +305,7 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.addInEdge(mockInEdge1);
 		this.testInstance.addInEdge(mockInEdge2);
 		this.testInstance.addOutEdge(mockOutEdge1);
@@ -353,13 +356,13 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetOutDegree() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
-		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
-		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
-		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
-		final CompoundEdge mockOutEdge3 = this.mockery.mock(CompoundEdge.class, "mockOutEdge3");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundEdge mockInEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge1");
+		final ArchetypalCompoundEdge mockInEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge2");
+		final ArchetypalCompoundEdge mockOutEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge1");
+		final ArchetypalCompoundEdge mockOutEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge2");
+		final ArchetypalCompoundEdge mockOutEdge3 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge3");
 		final INodeColourHandler<ArchetypalCompoundNode, ArchetypalCompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
@@ -387,10 +390,10 @@ public class CompoundNodeTest {
 			allowing(mockOutEdge3).isRemoved(); will(returnValue(false));
 			allowing(mockOutEdge3).isSelfEdge(); will(returnValue(false));
 
-			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
+			atLeast(1).of(colourHandler).setNode(with(any(ArchetypalCompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.addInEdge(mockInEdge1);
 		this.testInstance.addInEdge(mockInEdge2);
 		this.testInstance.addOutEdge(mockOutEdge1);
@@ -403,12 +406,12 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetOutEdgeIterator() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
-		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
-		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
-		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundEdge mockInEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge1");
+		final ArchetypalCompoundEdge mockInEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge2");
+		final ArchetypalCompoundEdge mockOutEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge1");
+		final ArchetypalCompoundEdge mockOutEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge2");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
@@ -430,7 +433,7 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.addInEdge(mockInEdge1);
 		this.testInstance.addInEdge(mockInEdge2);
 		this.testInstance.addOutEdge(mockOutEdge1);
@@ -447,11 +450,11 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetOutEdgeTo() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
-		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
-		final CompoundNode mockInNode2 = this.mockery.mock(CompoundNode.class, "mockInNode2");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundEdge mockOutEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge1");
+		final ArchetypalCompoundEdge mockOutEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge2");
+		final ArchetypalCompoundNode mockInNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockInNode2");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockPair1 = this.mockery.mock(IDirectedPair.class, "mockPair1");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockPair2 = this.mockery.mock(IDirectedPair.class, "mockPair2");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
@@ -476,10 +479,10 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.addInEdge(mockOutEdge1);
 		this.testInstance.addInEdge(mockOutEdge2);
-		CompoundEdge expectedEdge = mockOutEdge2;
+		ArchetypalCompoundEdge expectedEdge = mockOutEdge2;
 		ArchetypalCompoundEdge actualEdge = this.testInstance.getInEdgesFrom(mockInNode2).first();
 		assertEquals("expected edge", expectedEdge, actualEdge);
 		this.mockery.assertIsSatisfied();
@@ -488,18 +491,18 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetOutNodeIterator() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockGraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockGraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockPair1 = this.mockery.mock(IDirectedPair.class, "mockPair1");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockPair2 = this.mockery.mock(IDirectedPair.class, "mockPair2");
 //		final IDirectedPair<CompoundNode, CompoundEdge> mockOutPair1 = this.mockery.mock(IDirectedPair.class, "mockOutPair1");
 //		final IDirectedPair<CompoundNode, CompoundEdge> mockOutPair2 = this.mockery.mock(IDirectedPair.class, "mockOutPair2");
-		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
-		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
-		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
-		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
+		final ArchetypalCompoundEdge mockInEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge1");
+		final ArchetypalCompoundEdge mockInEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge2");
+		final ArchetypalCompoundEdge mockOutEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge1");
+		final ArchetypalCompoundEdge mockOutEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge2");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
@@ -509,14 +512,14 @@ public class CompoundNodeTest {
 //			allowing(mockInEdge1).getConnectedNodes(); will(returnValue(mockPair1));
 			allowing(mockInEdge1).isRemoved(); will(returnValue(false));
 			
-			one(mockPair1).getOtherNode(with(any(CompoundNode.class))); will(returnValue(mockNode2));
+			one(mockPair1).getOtherNode(with(any(ArchetypalCompoundNode.class))); will(returnValue(mockNode2));
 			
 			allowing(mockInEdge2).compareTo(mockInEdge1); will(returnValue(1));
 			allowing(mockInEdge2).compareTo(mockOutEdge1); will(returnValue(1));
 //			allowing(mockInEdge2).getConnectedNodes(); will(returnValue(mockPair2));
 			allowing(mockInEdge2).isRemoved(); will(returnValue(false));
 
-			one(mockPair2).getOtherNode(with(any(CompoundNode.class))); will(returnValue(mockNode3));
+			one(mockPair2).getOtherNode(with(any(ArchetypalCompoundNode.class))); will(returnValue(mockNode3));
 			
 			allowing(mockOutEdge1).getConnectedNodes(); will(returnValue(mockPair1));
 			allowing(mockOutEdge1).isRemoved(); will(returnValue(false));
@@ -530,7 +533,7 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.addInEdge(mockInEdge1);
 		this.testInstance.addInEdge(mockInEdge2);
 		this.testInstance.addOutEdge(mockOutEdge1);
@@ -579,11 +582,11 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testHasInEdgeFrom() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
-		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
-		final CompoundNode mockOutNode2 = this.mockery.mock(CompoundNode.class, "mockOutNode2");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundEdge mockInEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge1");
+		final ArchetypalCompoundEdge mockInEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge2");
+		final ArchetypalCompoundNode mockOutNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockOutNode2");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockPair1 = this.mockery.mock(IDirectedPair.class, "mockPair1");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockPair2 = this.mockery.mock(IDirectedPair.class, "mockPair2");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
@@ -608,7 +611,7 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.addInEdge(mockInEdge1);
 		this.testInstance.addInEdge(mockInEdge2);
 		assertTrue("expected edge", this.testInstance.hasInEdgeFrom(mockOutNode2));
@@ -618,11 +621,11 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testHasOutEdgeTo() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
-		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
-		final CompoundNode mockInNode2 = this.mockery.mock(CompoundNode.class, "mockInNode2");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundEdge mockOutEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge1");
+		final ArchetypalCompoundEdge mockOutEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge2");
+		final ArchetypalCompoundNode mockInNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockInNode2");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockPair1 = this.mockery.mock(IDirectedPair.class, "mockPair1");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockPair2 = this.mockery.mock(IDirectedPair.class, "mockPair2");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
@@ -647,7 +650,7 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.addInEdge(mockOutEdge1);
 		this.testInstance.addInEdge(mockOutEdge2);
 		assertTrue("expected edge", this.testInstance.hasOutEdgeTo(mockInNode2));
@@ -745,16 +748,16 @@ public class CompoundNodeTest {
 
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
-		final CompoundGraph mockGraph = new CompoundGraph();
-		final CompoundNode mockParentNode = mockGraph.getRoot();
-		CompoundNodeFactory nodeFact = mockParentNode.getChildCigraph().nodeFactory();
+		final ArchetypalCompoundGraph mockGraph = new TestCompoundGraph();
+		final ArchetypalCompoundNode mockParentNode = mockGraph.getRootNode();
+		ArchetypalCompoundNodeFactory nodeFact = mockParentNode.getChildCigraph().nodeFactory();
 //		nodeFact.setColourHandlerFactory(colourHandlerFact);
 		this.testInstance = nodeFact.createNode();
-		final CompoundNode mockInNode1 = mockParentNode.getChildCigraph().nodeFactory().createNode();
-		final CompoundNode mockInNode2 = mockParentNode.getChildCigraph().nodeFactory().createNode();
-		final CompoundNode mockOutNode1 = mockParentNode.getChildCigraph().nodeFactory().createNode();
-		final CompoundNode mockOutNode2 = mockParentNode.getChildCigraph().nodeFactory().createNode();
-		CompoundEdgeFactory edgeFact = mockGraph.edgeFactory();
+		final ArchetypalCompoundNode mockInNode1 = mockParentNode.getChildCigraph().nodeFactory().createNode();
+		final ArchetypalCompoundNode mockInNode2 = mockParentNode.getChildCigraph().nodeFactory().createNode();
+		final ArchetypalCompoundNode mockOutNode1 = mockParentNode.getChildCigraph().nodeFactory().createNode();
+		final ArchetypalCompoundNode mockOutNode2 = mockParentNode.getChildCigraph().nodeFactory().createNode();
+		ArchetypalCompoundEdgeFactory edgeFact = mockGraph.edgeFactory();
 		edgeFact.setPair(mockOutNode1, this.testInstance);
 		edgeFact.createEdge();
 		edgeFact.setPair(mockOutNode2, this.testInstance);
@@ -789,13 +792,13 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetDegree() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
-		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
-		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
-		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
-		final CompoundEdge mockOutEdge3 = this.mockery.mock(CompoundEdge.class, "mockOutEdge3");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundEdge mockInEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge1");
+		final ArchetypalCompoundEdge mockInEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge2");
+		final ArchetypalCompoundEdge mockOutEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge1");
+		final ArchetypalCompoundEdge mockOutEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge2");
+		final ArchetypalCompoundEdge mockOutEdge3 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge3");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
@@ -830,7 +833,7 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.addInEdge(mockInEdge1);
 		this.testInstance.addInEdge(mockInEdge2);
 		this.testInstance.addOutEdge(mockOutEdge1);
@@ -843,13 +846,13 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetEdgeIterator() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
-		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
-		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
-		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
-		final CompoundEdge mockOutEdge3 = this.mockery.mock(CompoundEdge.class, "mockOutEdge3");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundEdge mockInEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge1");
+		final ArchetypalCompoundEdge mockInEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge2");
+		final ArchetypalCompoundEdge mockOutEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge1");
+		final ArchetypalCompoundEdge mockOutEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge2");
+		final ArchetypalCompoundEdge mockOutEdge3 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge3");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
@@ -885,7 +888,7 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.addInEdge(mockInEdge1);
 		this.testInstance.addInEdge(mockInEdge2);
 		this.testInstance.addOutEdge(mockOutEdge1);
@@ -909,14 +912,14 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetEdgeWith() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
-		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
-		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
-		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
-		final CompoundEdge mockOutEdge3 = this.mockery.mock(CompoundEdge.class, "mockOutEdge3");
-		final CompoundNode mockInNode2 = this.mockery.mock(CompoundNode.class, "mockInNode2");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundEdge mockInEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge1");
+		final ArchetypalCompoundEdge mockInEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge2");
+		final ArchetypalCompoundEdge mockOutEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge1");
+		final ArchetypalCompoundEdge mockOutEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge2");
+		final ArchetypalCompoundEdge mockOutEdge3 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge3");
+		final ArchetypalCompoundNode mockInNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockInNode2");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockOutPair1 = this.mockery.mock(IDirectedPair.class, "mockOutPair1");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockOutPair2 = this.mockery.mock(IDirectedPair.class, "mockOutPair2");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockOutPair3 = this.mockery.mock(IDirectedPair.class, "mockOutPair3");
@@ -968,13 +971,13 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.addInEdge(mockInEdge1);
 		this.testInstance.addInEdge(mockInEdge2);
 		this.testInstance.addOutEdge(mockOutEdge1);
 		this.testInstance.addOutEdge(mockOutEdge2);
 		this.testInstance.addOutEdge(mockOutEdge3);
-		CompoundEdge expectedEdge = mockOutEdge2;
+		ArchetypalCompoundEdge expectedEdge = mockOutEdge2;
 		ArchetypalCompoundEdge actualEdge = this.testInstance.getEdgesWith(mockInNode2).first();
 		assertEquals("expected edge", expectedEdge, actualEdge);
 		this.mockery.assertIsSatisfied();
@@ -983,14 +986,14 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testHasEdgeWith() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
-		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
-		final CompoundEdge mockOutEdge1 = this.mockery.mock(CompoundEdge.class, "mockOutEdge1");
-		final CompoundEdge mockOutEdge2 = this.mockery.mock(CompoundEdge.class, "mockOutEdge2");
-		final CompoundEdge mockOutEdge3 = this.mockery.mock(CompoundEdge.class, "mockOutEdge3");
-		final CompoundNode mockInNode2 = this.mockery.mock(CompoundNode.class, "mockInNode2");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundEdge mockInEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge1");
+		final ArchetypalCompoundEdge mockInEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge2");
+		final ArchetypalCompoundEdge mockOutEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge1");
+		final ArchetypalCompoundEdge mockOutEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge2");
+		final ArchetypalCompoundEdge mockOutEdge3 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockOutEdge3");
+		final ArchetypalCompoundNode mockInNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockInNode2");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockOutPair1 = this.mockery.mock(IDirectedPair.class, "mockOutPair1");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockOutPair2 = this.mockery.mock(IDirectedPair.class, "mockOutPair2");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockOutPair3 = this.mockery.mock(IDirectedPair.class, "mockOutPair3");
@@ -1046,7 +1049,7 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.addInEdge(mockInEdge1);
 		this.testInstance.addInEdge(mockInEdge2);
 		this.testInstance.addOutEdge(mockOutEdge1);
@@ -1059,11 +1062,11 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testMarkRemoved() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundEdge mockInEdge1 = this.mockery.mock(CompoundEdge.class, "mockInEdge1");
-		final CompoundEdge mockInEdge2 = this.mockery.mock(CompoundEdge.class, "mockInEdge2");
-		final CompoundNode mockOutNode2 = this.mockery.mock(CompoundNode.class, "mockOutNode2");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundEdge mockInEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge1");
+		final ArchetypalCompoundEdge mockInEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockInEdge2");
+		final ArchetypalCompoundNode mockOutNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockOutNode2");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockPair1 = this.mockery.mock(IDirectedPair.class, "mockPair1");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockPair2 = this.mockery.mock(IDirectedPair.class, "mockPair2");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
@@ -1084,7 +1087,7 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		this.testInstance.markRemoved(true);
 		assertTrue("expected removed", this.testInstance.isRemoved());
 		this.testInstance.markRemoved(false);
@@ -1095,10 +1098,10 @@ public class CompoundNodeTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testCompareTo() {
-		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockSubgraph");
-		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
-		final CompoundNode mockInNode1 = this.mockery.mock(CompoundNode.class, "mockInNode1");
-		final CompoundNode mockInNode2 = this.mockery.mock(CompoundNode.class, "mockInNode2");
+		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
+		final ArchetypalCompoundNode mockParentNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockParentNode");
+		final ArchetypalCompoundNode mockInNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockInNode1");
+		final ArchetypalCompoundNode mockInNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockInNode2");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockParentNode).getGraph(); will(returnValue(mockGraph));
@@ -1110,11 +1113,89 @@ public class CompoundNodeTest {
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		}});
 
-		this.testInstance = new CompoundNode(mockParentNode, EXPECTED_NODE1_IDX);
+		this.testInstance = new TestNode(mockParentNode, EXPECTED_NODE1_IDX);
 		assertTrue("compare correct", this.testInstance.compareTo(mockInNode1) > 0);
 		assertTrue("compare correct", this.testInstance.compareTo(mockInNode2) < 0);
 		assertTrue("compare correct", this.testInstance.compareTo(this.testInstance) == 0);
 		this.mockery.assertIsSatisfied();
 	}
 
+	private static class TestNode extends ArchetypalCompoundNode {
+		private TestChildGraph childGraph;
+		
+		protected TestNode(ArchetypalCompoundGraph superGraph, int index) {
+			super(superGraph, index);
+		}
+
+		protected TestNode(ArchetypalCompoundNode parent, int index) {
+			super(parent, index);
+		}
+
+		@Override
+		protected void createChildCompoundGraph(ArchetypalCompoundNode rootNode) {
+			this.childGraph = new TestChildGraph(this);
+		}
+
+		@Override
+		public ArchetypalChildCompoundGraph getChildCigraph() {
+			return this.childGraph;
+		}
+		
+	}
+	
+	private static class TestChildGraph extends ArchetypalChildCompoundGraph {
+
+		protected TestChildGraph(ArchetypalCompoundNode root) {
+			super(root, null);
+		}
+
+		@Override
+		public ArchetypalChildCompoundEdgeFactory edgeFactory() {
+			throw new UnsupportedOperationException("Not used");
+		}
+
+		@Override
+		public ArchetypalCompoundNodeFactory nodeFactory() {
+			throw new UnsupportedOperationException("Not used");
+		}
+		
+	}
+	
+	private static class TestCompoundGraph extends ArchetypalCompoundGraph {
+
+		protected TestCompoundGraph() {
+			super(null);
+		}
+
+		@Override
+		protected void createCopyOfRootNode(int newIndexValue,
+				ArchetypalCompoundNode otherRootNode) {
+			throw new UnsupportedOperationException("not implemented"); 
+		}
+
+		@Override
+		protected void createNewRootNode(int indexValue) {
+			throw new UnsupportedOperationException("not implemented"); 
+		}
+
+		@Override
+		public ArchetypalCompoundEdgeFactory edgeFactory() {
+			throw new UnsupportedOperationException("not implemented"); 
+		}
+
+		@Override
+		public ArchetypalCompoundNode getRootNode() {
+			throw new UnsupportedOperationException("not implemented"); 
+		}
+
+		@Override
+		public ArchetypalCompoundNodeFactory nodeFactory() {
+			throw new UnsupportedOperationException("not implemented"); 
+		}
+
+		public IBasicSubgraphFactory<ArchetypalCompoundNode, ArchetypalCompoundEdge> subgraphFactory() {
+			throw new UnsupportedOperationException("not implemented"); 
+		}
+		
+	}
 }

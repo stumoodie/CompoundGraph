@@ -1,5 +1,7 @@
 package uk.ed.inf.graph.compound.impl;
 
+import uk.ed.inf.graph.compound.archetypal.ArchetypalChildCompoundGraph;
+
 
 public class ChildCompoundGraph extends ArchetypalChildCompoundGraph {
 //	private final CompoundNode root;
@@ -9,7 +11,7 @@ public class ChildCompoundGraph extends ArchetypalChildCompoundGraph {
 	private final ChildCompoundEdgeFactory edgeFactory;
 	
 	public ChildCompoundGraph(CompoundNode root){
-		super(root);
+		super(root, new CompoundGraphCopyBuilder());
 //		if(root == null) throw new IllegalArgumentException("root cannot be null");
 //		
 //		this.root = root;
@@ -29,13 +31,13 @@ public class ChildCompoundGraph extends ArchetypalChildCompoundGraph {
 //			}
 //	
 //		});
-		this.nodeFactory = new CompoundNodeFactory(this.getRoot());
-		this.edgeFactory = new ChildCompoundEdgeFactory(this.getRoot());
+		this.nodeFactory = new CompoundNodeFactory(this.getRootNode());
+		this.edgeFactory = new ChildCompoundEdgeFactory(this.getRootNode());
 	}
 	
 	@Override
-	public CompoundNode getRoot() {
-		return (CompoundNode)super.getRoot();
+	public CompoundNode getRootNode() {
+		return (CompoundNode)super.getRootNode();
 	}
 //
 //	public boolean containsDirectedEdge(CompoundNode iInNode, CompoundNode iOutNode) {

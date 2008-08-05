@@ -142,7 +142,7 @@ public class FilteredEdgeSet <
 
 	public E get(int edgeIdx) {
 		E retVal = this.edgeSet.get(edgeIdx);
-		if(!this.criteria.matched(retVal)){
+		if(retVal == null || !this.criteria.matched(retVal)){
 			throw new IllegalArgumentException("edgeIdx must point to an edge contained in this set that matches the filter criteria");
 		}
 		return retVal;

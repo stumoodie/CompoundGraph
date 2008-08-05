@@ -1,4 +1,4 @@
-package uk.ed.inf.graph.compound.impl;
+package uk.ed.inf.graph.compound.archetypal;
 
 import java.util.Iterator;
 
@@ -14,31 +14,43 @@ import uk.ed.inf.graph.state.IGraphState;
 import uk.ed.inf.graph.state.IRestorableGraph;
 import uk.ed.inf.graph.util.IndexCounter;
 import uk.ed.inf.graph.util.impl.EdgeFromNodeIterator;
+import uk.ed.inf.tree.GeneralTree;
 import uk.ed.inf.tree.ITree;
 
-public abstract class ArchetypalCompoundGraph implements ICompoundGraph<ArchetypalCompoundNode, ArchetypalCompoundEdge>, IRestorableGraph<ArchetypalCompoundNode, ArchetypalCompoundEdge>,
+public abstract class ArchetypalCompoundGraph implements ICompoundGraph<ArchetypalCompoundNode, ArchetypalCompoundEdge>,
+		IRestorableGraph<ArchetypalCompoundNode, ArchetypalCompoundEdge>,
 		IModifiableCompoundGraph<ArchetypalCompoundNode, ArchetypalCompoundEdge> {
 	private final static int ROOT_NODE_IDX = 0;
 	private final static int INIT_EDGE_IDX = 0;
 	private final IndexCounter nodeCounter;
 	private final IndexCounter edgeCounter;
-//	private final GeneralTree<ArchetypalCompoundNode> nodeTree;
+	private final GeneralTree<ArchetypalCompoundNode> nodeTree;
 	private final GraphStateHandler<ArchetypalCompoundNode, ArchetypalCompoundEdge> stateHandler;
+	private ArchetypalGraphCopyBuilder copyBuilder;
 	
-	protected ArchetypalCompoundGraph(){
-//		ArchetypalCompoundNode rootNode = nodeFactory.createNode();
+	protected ArchetypalCompoundGraph(ArchetypalGraphCopyBuilder copyBuilder){
 		this.nodeCounter = new IndexCounter(ROOT_NODE_IDX);
 		this.edgeCounter = new IndexCounter(INIT_EDGE_IDX);
-//		this.nodeTree = new GeneralTree<ArchetypalCompoundNode>(rootNode);
+		createNewRootNode(nodeCounter.getLastIndex());
+		this.nodeTree = new GeneralTree<ArchetypalCompoundNode>(getRootNode());
 		this.stateHandler = new GraphStateHandler<ArchetypalCompoundNode, ArchetypalCompoundEdge>(this);
+		this.copyBuilder = copyBuilder;
 	}
 
-//	protected abstract ArchetypalCompoundNode getRootNode();
+	protected abstract void createNewRootNode(int indexValue);
 	
-	protected abstract ITree<ArchetypalCompoundNode> getNodeTree();
+	protected abstract void createCopyOfRootNode(int newIndexValue, ArchetypalCompoundNode otherRootNode);
+
+	private ITree<ArchetypalCompoundNode> getNodeTree(){
+		return this.nodeTree;
+	}
 	
-	protected ArchetypalCompoundGraph(ArchetypalCompoundGraph otherGraph){
-		this();
+	protected ArchetypalCompoundGraph(ArchetypalGraphCopyBuilder copyBuilder, ArchetypalCompoundGraph otherGraph){
+		this.nodeCounter = new IndexCounter(ROOT_NODE_IDX);
+		this.edgeCounter = new IndexCounter(INIT_EDGE_IDX);
+		createCopyOfRootNode(nodeCounter.getLastIndex(), otherGraph.getRootNode());
+		this.nodeTree = new GeneralTree<ArchetypalCompoundNode>(getRootNode());
+		this.stateHandler = new GraphStateHandler<ArchetypalCompoundNode, ArchetypalCompoundEdge>(this);
 		IBasicSubgraphFactory<ArchetypalCompoundNode, ArchetypalCompoundEdge> fact = otherGraph.subgraphFactory();
 		Iterator<ArchetypalCompoundNode> iter = otherGraph.getNodeTree().getRootNode().getChildCigraph().nodeIterator();
 		while(iter.hasNext()){
@@ -47,11 +59,10 @@ public abstract class ArchetypalCompoundGraph implements ICompoundGraph<Archetyp
 		}
 		IBasicSubgraph<ArchetypalCompoundNode, ArchetypalCompoundEdge> subgraph = fact.createInducedSubgraph();
 		this.copyHere(subgraph);
+		this.copyBuilder = copyBuilder;
 	}
 	
-	public ArchetypalCompoundNode getRoot() {
-		return this.getNodeTree().getRootNode();
-	}
+	public abstract ArchetypalCompoundNode getRootNode();
 
 	public boolean containsDirectedEdge(ArchetypalCompoundNode outNode, ArchetypalCompoundNode inNode) {
 		boolean retVal = false;
@@ -184,7 +195,7 @@ public abstract class ArchetypalCompoundGraph implements ICompoundGraph<Archetyp
 	private void removeNodes(Iterator<ArchetypalCompoundNode> nodeIterator){
 		while(nodeIterator.hasNext()){
 			ArchetypalCompoundNode node = (ArchetypalCompoundNode)nodeIterator.next();
-			if(node.equals(this.getRoot())){
+			if(node.equals(this.getRootNode())){
 				throw new IllegalStateException("Cannot remove the root node from a compound graph");
 			}
 			node.markRemoved(true);
@@ -272,7 +283,9 @@ public abstract class ArchetypalCompoundGraph implements ICompoundGraph<Archetyp
 		ISubCompoundGraph<ArchetypalCompoundNode, ArchetypalCompoundEdge> subGraph = (ISubCompoundGraph<ArchetypalCompoundNode, ArchetypalCompoundEdge>)iSubGraph;
 		
 		ArchetypalChildCompoundGraph rootCiGraph = this.getNodeTree().getRootNode().getChildCigraph();
-		ChildCompoundGraphBuilder copyBuilder = new ChildCompoundGraphBuilder(rootCiGraph, subGraph);
+//		ChildCompoundGraphBuilder copyBuilder = new ChildCompoundGraphBuilder(rootCiGraph, subGraph);
+		copyBuilder.setDestinatChildCompoundGraph(rootCiGraph);
+		copyBuilder.setSourceSubgraph(subGraph);
 		copyBuilder.copyNodes();
 		copyBuilder.copyEquivalentEdges();
 	}
@@ -283,12 +296,12 @@ public abstract class ArchetypalCompoundGraph implements ICompoundGraph<Archetyp
 	}
 
 
-	IndexCounter getNodeCounter(){
+	protected final IndexCounter getNodeCounter(){
 		return this.nodeCounter;
 	}
 	
 	
-	IndexCounter getEdgeCounter(){
+	protected final IndexCounter getEdgeCounter(){
 		return this.edgeCounter;
 	}
 
@@ -296,4 +309,8 @@ public abstract class ArchetypalCompoundGraph implements ICompoundGraph<Archetyp
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Implement this method!");
 	}
+	
+	public abstract ArchetypalCompoundNodeFactory nodeFactory();
+
+	public abstract ArchetypalCompoundEdgeFactory edgeFactory();
 }

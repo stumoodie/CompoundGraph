@@ -1,45 +1,27 @@
 package uk.ed.inf.graph.compound.impl;
 
-import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalChildCompoundEdgeFactory;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalChildCompoundGraph;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundEdge;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
 
-public class ChildCompoundEdgeFactory implements ICompoundEdgeFactory<ArchetypalCompoundNode, ArchetypalCompoundEdge> {
-	private final CompoundNode parentNode;
-	private CompoundNode inNode;
-	private CompoundNode outNode;
+
+public class ChildCompoundEdgeFactory extends ArchetypalChildCompoundEdgeFactory {
 	
-	public ChildCompoundEdgeFactory(CompoundNode parentNode){
-		this.parentNode = parentNode;
+	public ChildCompoundEdgeFactory(ArchetypalCompoundNode parentNode){
+		super(parentNode);
+	}
+
+	@Override
+	protected ArchetypalCompoundEdge newEdge(
+			ArchetypalChildCompoundGraph owningChildGraph, int edgeIndex,
+			ArchetypalCompoundNode outNode, ArchetypalCompoundNode inNode) {
+		return new CompoundEdge((ChildCompoundGraph)owningChildGraph, edgeIndex,
+				(CompoundNode)outNode, (CompoundNode)inNode);
 	}
 	
-	public CompoundEdge createEdge(ArchetypalCompoundNode outNode, ArchetypalCompoundNode inNode) {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public CompoundEdge createEdge(){
+		return (CompoundEdge)super.createEdge();
 	}
-
-	public ChildCompoundGraph getOwningChildGraph() {
-		return (ChildCompoundGraph)this.parentNode.getChildCigraph();
-	}
-
-	public boolean isValidNodePair(ArchetypalCompoundNode outNode, ArchetypalCompoundNode inNode) {
-		boolean retVal = false;
-		if(outNode != null && outNode instanceof CompoundNode && inNode != null && outNode instanceof CompoundNode){
-			retVal = parentNode.getGraph().getLcaNode(outNode, inNode).equals(this.parentNode);
-		}
-		return retVal;
-	}
-
-	public void setPair(ArchetypalCompoundNode outNode, ArchetypalCompoundNode inNode) {
-		this.inNode = (CompoundNode)inNode;
-		this.outNode = (CompoundNode)outNode;
-	}
-
-	public CompoundEdge createEdge() {
-		int idx = this.getGraph().getEdgeCounter().nextIndex();
-		return new CompoundEdge(this.getOwningChildGraph(), idx, this.outNode, this.inNode);
-	}
-
-	public CompoundGraph getGraph() {
-		return (CompoundGraph)this.parentNode.getGraph();
-	}
-
 }

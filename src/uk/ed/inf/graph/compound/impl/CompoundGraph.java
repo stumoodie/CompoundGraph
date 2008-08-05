@@ -1,47 +1,58 @@
 package uk.ed.inf.graph.compound.impl;
 
-import java.util.Iterator;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundGraph;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
 
-import uk.ed.inf.tree.GeneralTree;
-import uk.ed.inf.tree.ITree;
 
 public class CompoundGraph extends ArchetypalCompoundGraph {
-	private final ITree<ArchetypalCompoundNode> nodeTree;
+	private CompoundNode rootNode;
 	private final SubCompoundGraphFactory subgraphFactory;
 	private final CompoundNodeFactory nodeFactory;
 	private final CompoundEdgeFactory edgeFactory;
 	
 	public CompoundGraph(){
-		super();
-		CompoundNode rootNode = new CompoundNode(this, this.getNodeCounter().getLastIndex());
-		this.nodeTree = new GeneralTree<ArchetypalCompoundNode>(rootNode);
+		super(new CompoundGraphCopyBuilder());
+//		CompoundNode rootNode = new CompoundNode(this, this.getNodeCounter().getLastIndex());
+//		this.nodeTree = new GeneralTree<ArchetypalCompoundNode>(rootNode);
 		this.subgraphFactory = new SubCompoundGraphFactory(this);
 		this.edgeFactory = new CompoundEdgeFactory(this);
 		this.nodeFactory = new CompoundNodeFactory(rootNode);
 	}
 
 	public CompoundGraph(CompoundGraph otherGraph){
-		this();
-		SubCompoundGraphFactory fact = otherGraph.subgraphFactory();
-		Iterator<ArchetypalCompoundNode> iter = otherGraph.nodeTree.getRootNode().getChildCigraph().nodeIterator();
-		while(iter.hasNext()){
-			ArchetypalCompoundNode level1Node = iter.next();
-			fact.addNode(level1Node);
-		}
-		SubCompoundGraph subgraph = fact.createInducedSubgraph();
-		this.copyHere(subgraph);
+		super(new CompoundGraphCopyBuilder(), otherGraph);
+		this.subgraphFactory = otherGraph.subgraphFactory();
+		this.nodeFactory = otherGraph.nodeFactory;
+		this.edgeFactory = otherGraph.edgeFactory;
+//		Iterator<ArchetypalCompoundNode> iter = otherGraph.nodeTree.getRootNode().getChildCigraph().nodeIterator();
+//		while(iter.hasNext()){
+//			ArchetypalCompoundNode level1Node = iter.next();
+//			fact.addNode(level1Node);
+//		}
+//		ArchetypalSubCompoundGraph subgraph = fact.createInducedSubgraph();
+//		this.copyHere(subgraph);
 	}
 	
 	@Override
-	protected final ITree<ArchetypalCompoundNode> getNodeTree(){
-		return this.nodeTree;
-	}
-	
-	@Override
-	public CompoundNode getRoot() {
-		return (CompoundNode)this.nodeTree.getRootNode();
+	protected void createNewRootNode(int newIndex){
+		this.rootNode = new CompoundNode(this, newIndex);
 	}
 
+	@Override
+	public CompoundNode getRootNode(){
+		return this.rootNode;
+	}
+	
+//	@Override
+//	protected final ITree<ArchetypalCompoundNode> getNodeTree(){
+//		return this.nodeTree;
+//	}
+//	
+//	@Override
+//	public CompoundNode getRoot() {
+//		return (CompoundNode)this.nodeTree.getRootNode();
+//	}
+//
 //	public boolean containsDirectedEdge(CompoundNode iInNode, CompoundNode iOutNode) {
 //		boolean retVal = false;
 //		if(iInNode != null && iOutNode != null){
@@ -274,8 +285,13 @@ public class CompoundGraph extends ArchetypalCompoundGraph {
 //		copyBuilder.copyEquivalentEdges();
 //	}
 
-	public CompoundGraph createCopy() {
-		return new CompoundGraph(this);
+//	public CompoundGraph createCopy() {
+//		return new CompoundGraph(this);
+//	}
+
+	@Override
+	protected void createCopyOfRootNode(int newIndexValue, ArchetypalCompoundNode otherRootNode) {
+		this.rootNode = new CompoundNode(this, newIndexValue);
 	}
 
 //	private static class RootNodeColourHandler implements INodeColourHandler<CompoundNode, CompoundEdge> {

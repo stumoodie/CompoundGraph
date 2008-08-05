@@ -41,6 +41,19 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 		this.stateHandler = new GraphStateHandler<Node, Edge>(this);
 	}
 	
+	public Graph(Graph other){
+		this();
+		
+		SubgraphFactory fact = other.subgraphFactory;
+		for(Node node : this.nodeList){
+			fact.addNode(node);
+		}
+		// since graph cannot contain dangling edges it is safe to only add the nodes
+		// and then add in the incident edges by creating an induced subgraph.
+		Subgraph copySubgraph = fact.createInducedSubgraph();
+		this.copyHere(copySubgraph);
+	}
+	
 	public Node getNode(int index){
 		if(this.containsNode(index) == false) throw new IllegalArgumentException("A node with this index must exist");
 		return this.nodeList.get(index); 
@@ -276,18 +289,18 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 		
 	}
 
-	public Graph createCopy() {
-		Graph retVal = new Graph();
-		SubgraphFactory fact = this.subgraphFactory;
-		for(Node node : this.nodeList){
-			fact.addNode(node);
-		}
-		// since graph cannot contain dangling edges it is safe to only add the nodes
-		// and then add in the incident edges by creating an induced subgraph.
-		Subgraph copySubgraph = fact.createInducedSubgraph();
-		retVal.copyHere(copySubgraph);
-		return retVal;
-	}
+//	public Graph createCopy() {
+//		Graph retVal = new Graph();
+//		SubgraphFactory fact = this.subgraphFactory;
+//		for(Node node : this.nodeList){
+//			fact.addNode(node);
+//		}
+//		// since graph cannot contain dangling edges it is safe to only add the nodes
+//		// and then add in the incident edges by creating an induced subgraph.
+//		Subgraph copySubgraph = fact.createInducedSubgraph();
+//		retVal.copyHere(copySubgraph);
+//		return retVal;
+//	}
 
 	public void clear() {
 		// TODO Auto-generated method stub

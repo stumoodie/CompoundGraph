@@ -1,4 +1,4 @@
-package uk.ed.inf.graph.compound.impl;
+package uk.ed.inf.graph.compound.archetypal;
 
 import java.util.Iterator;
 
@@ -19,12 +19,14 @@ import uk.ed.inf.graph.util.impl.NodeSet;
 public abstract class ArchetypalChildCompoundGraph implements IChildCompoundGraph<ArchetypalCompoundNode, ArchetypalCompoundEdge>,
 		IModifiableChildCompoundGraph<ArchetypalCompoundNode, ArchetypalCompoundEdge> {
 	private final ArchetypalCompoundNode root;
+	private final ArchetypalGraphCopyBuilder copyBuilder;
 	private final IEdgeSet<ArchetypalCompoundNode, ArchetypalCompoundEdge> edgeSet;
 	private final INodeSet<ArchetypalCompoundNode, ArchetypalCompoundEdge> nodeSet;
 	
-	protected ArchetypalChildCompoundGraph(ArchetypalCompoundNode root){
+	protected ArchetypalChildCompoundGraph(ArchetypalCompoundNode root, ArchetypalGraphCopyBuilder builder){
 		if(root == null) throw new IllegalArgumentException("root cannot be null");
 		
+		this.copyBuilder = builder;
 		this.root = root;
 		this.edgeSet = new FilteredEdgeSet<ArchetypalCompoundNode, ArchetypalCompoundEdge>(new DirectedEdgeSet<ArchetypalCompoundNode, ArchetypalCompoundEdge>(),
 				new IFilterCriteria<ArchetypalCompoundEdge>(){
@@ -44,7 +46,7 @@ public abstract class ArchetypalChildCompoundGraph implements IChildCompoundGrap
 		});
 	}
 	
-	public ArchetypalCompoundNode getRoot() {
+	public ArchetypalCompoundNode getRootNode() {
 		return this.root;
 	}
 
@@ -132,7 +134,9 @@ public abstract class ArchetypalChildCompoundGraph implements IChildCompoundGrap
 		if(!canCopyHere(iSubGraph)) throw new IllegalArgumentException("Cannot copy graph here");
 		ISubCompoundGraph<ArchetypalCompoundNode, ArchetypalCompoundEdge> subGraph = (ISubCompoundGraph<ArchetypalCompoundNode, ArchetypalCompoundEdge>)iSubGraph;
 		
-		ChildCompoundGraphBuilder copyBuilder = new ChildCompoundGraphBuilder(this, subGraph);
+//		ChildCompoundGraphBuilder copyBuilder = new ChildCompoundGraphBuilder(this, subGraph);
+		copyBuilder.setDestinatChildCompoundGraph(this);
+		copyBuilder.setSourceSubgraph(subGraph);
 		copyBuilder.copyNodes();
 		copyBuilder.copyEquivalentEdges();
 	}
@@ -183,4 +187,8 @@ public abstract class ArchetypalChildCompoundGraph implements IChildCompoundGrap
 		// TODO: implement this!
 		throw new UnsupportedOperationException("Implement this method!");
 	}
+	
+	public abstract ArchetypalCompoundNodeFactory nodeFactory();
+	
+	public abstract ArchetypalChildCompoundEdgeFactory edgeFactory();
 }

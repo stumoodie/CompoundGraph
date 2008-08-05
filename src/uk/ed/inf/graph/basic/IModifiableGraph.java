@@ -69,11 +69,11 @@ public interface IModifiableGraph<
 	 */
 	IBasicSubgraph<N, E> getCopiedComponents();
 	
-	/**
-	 * Creates a copy of this graph. Note that the graph's structure is copied, but the indexes of
-	 *  the copied graphs nodes and edges are not guaranteed to be the same.
-	 * @return An instance of the copied graph. Cannot be null.
-	 * @throws IllegalArgumentException if <code>canCopyHere()</code> cannot be null.
-	 */
-	IBasicGraph<N, E> createCopy();
+//	/**
+//	 * Creates a copy of this graph. Note that the graph's structure is copied, but the indexes of
+//	 *  the copied graphs nodes and edges are not guaranteed to be the same.
+//	 * @return An instance of the copied graph. Cannot be null.
+//	 * @throws IllegalArgumentException if <code>canCopyHere()</code> cannot be null.
+//	 */
+//	IBasicGraph<N, E> createCopy();
 }

@@ -1,4 +1,4 @@
-package uk.ed.inf.graph.compound.impl;
+package uk.ed.inf.graph.compound.archetypal;
 
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
@@ -23,6 +23,8 @@ import org.junit.runner.RunWith;
 
 import uk.ed.inf.graph.basic.IBasicEdge;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundEdge;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
 import uk.ed.inf.graph.directed.IDirectedPair;
 import uk.ed.inf.graph.util.IndexCounter;
 
@@ -57,7 +59,7 @@ public class SubCompoundGraphTest {
 		setImposteriser(ClassImposteriser.INSTANCE);
 	}};
 
-	private ChildCompoundGraph testInstance;
+	private ArchetypalChildCompoundGraph testInstance;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -70,19 +72,19 @@ public class SubCompoundGraphTest {
 
 	@Test(expected=IllegalArgumentException.class)
 	public final void testSubCigraphNull() {
-		new ChildCompoundGraph(null);
+		new TestChildCompoundGraph(null);
 	}
 
 	@Test
 	public final void testEmptySubCigraph() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
-		assertEquals("root node", mockRootNode, this.testInstance.getRoot());
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
+		assertEquals("root node", mockRootNode, this.testInstance.getRootNode());
 		assertEquals("empty nodes", EXPECTED_EMPTY_NODES, this.testInstance.getNumNodes());
 		assertEquals("empty edges", EXPECTED_EMPTY_EDGES, this.testInstance.getNumEdges());
 		assertFalse("cannot create edges", this.testInstance.canCreateEdges());
@@ -96,21 +98,21 @@ public class SubCompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testContainsDirectedEdge() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundEdge mockEdge1 = this.mockery.mock(CompoundEdge.class, "mockEdge1");
-		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
-		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
-		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundEdge mockEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge1");
+		final ArchetypalCompoundEdge mockEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge2");
+		final ArchetypalCompoundEdge mockEdge4 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge4");
+		final ArchetypalCompoundEdge mockEdge7 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge7");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
@@ -177,21 +179,21 @@ public class SubCompoundGraphTest {
 			allowing(mockEdge7).isRemoved(); will(returnValue(false));
 			allowing(mockEdge7).getIndex(); will(returnValue(EXPECTED_EDGE7_IDX));
 			
-			allowing(mockEdge1Pair).hasEnds(with(same(mockNode1)), with(same(mockNode2))); will(returnValue(true));
-			allowing(mockEdge1Pair).hasEnds(with(any(CompoundNode.class)), with(not(same(mockNode2)))); will(returnValue(false));
-			allowing(mockEdge1Pair).hasEnds(with(not(same(mockNode1))), with(any(CompoundNode.class))); will(returnValue(true));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(same(mockNode1)), with(same(mockNode2))); will(returnValue(true));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(any(ArchetypalCompoundNode.class)), with(not(same(mockNode2)))); will(returnValue(false));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(not(same(mockNode1))), with(any(ArchetypalCompoundNode.class))); will(returnValue(true));
 			
-			allowing(mockEdge2Pair).hasEnds(with(same(mockNode2)), with(same(mockNode1))); will(returnValue(true));
-			allowing(mockEdge2Pair).hasEnds(with(any(CompoundNode.class)), with(not(same(mockNode1)))); will(returnValue(false));
-			allowing(mockEdge2Pair).hasEnds(with(not(same(mockNode2))), with(any(CompoundNode.class))); will(returnValue(true));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(same(mockNode2)), with(same(mockNode1))); will(returnValue(true));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(any(ArchetypalCompoundNode.class)), with(not(same(mockNode1)))); will(returnValue(false));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(not(same(mockNode2))), with(any(ArchetypalCompoundNode.class))); will(returnValue(true));
 			
-			allowing(mockEdge4Pair).hasEnds(with(same(mockNode2)), with(same(mockNode4))); will(returnValue(true));
-			allowing(mockEdge4Pair).hasEnds(with(not(same(mockNode2))), with(not(same(mockNode4)))); will(returnValue(false));
+			allowing(mockEdge4Pair).hasDirectedEnds(with(same(mockNode2)), with(same(mockNode4))); will(returnValue(true));
+			allowing(mockEdge4Pair).hasDirectedEnds(with(not(same(mockNode2))), with(not(same(mockNode4)))); will(returnValue(false));
 			
-			allowing(mockEdge7Pair).hasEnds(with(same(mockNode7)), with(same(mockNode3))); will(returnValue(true));
-			allowing(mockEdge7Pair).hasEnds(with(not(same(mockNode7))), with(not(same(mockNode3)))); will(returnValue(false));
+			allowing(mockEdge7Pair).hasDirectedEnds(with(same(mockNode7)), with(same(mockNode3))); will(returnValue(true));
+			allowing(mockEdge7Pair).hasDirectedEnds(with(not(same(mockNode7))), with(not(same(mockNode3)))); will(returnValue(false));
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		this.testInstance.addNewEdge(mockEdge1);
@@ -207,21 +209,21 @@ public class SubCompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testContainsEdgeINodeINode() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundEdge mockEdge1 = this.mockery.mock(CompoundEdge.class, "mockEdge1");
-		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
-		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
-		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundEdge mockEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge1");
+		final ArchetypalCompoundEdge mockEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge2");
+		final ArchetypalCompoundEdge mockEdge4 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge4");
+		final ArchetypalCompoundEdge mockEdge7 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge7");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
@@ -284,21 +286,21 @@ public class SubCompoundGraphTest {
 			allowing(mockEdge7).compareTo(mockEdge7); will(returnValue(0));
 			allowing(mockEdge7).isRemoved(); will(returnValue(false));
 			
-			allowing(mockEdge1Pair).hasEnds(with(same(mockNode1)), with(same(mockNode2))); will(returnValue(true));
-			allowing(mockEdge1Pair).hasEnds(with(any(CompoundNode.class)), with(not(same(mockNode2)))); will(returnValue(false));
-			allowing(mockEdge1Pair).hasEnds(with(not(same(mockNode1))), with(any(CompoundNode.class))); will(returnValue(true));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(same(mockNode1)), with(same(mockNode2))); will(returnValue(true));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(any(ArchetypalCompoundNode.class)), with(not(same(mockNode2)))); will(returnValue(false));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(not(same(mockNode1))), with(any(ArchetypalCompoundNode.class))); will(returnValue(true));
 			
-			allowing(mockEdge2Pair).hasEnds(with(same(mockNode2)), with(same(mockNode1))); will(returnValue(true));
-			allowing(mockEdge2Pair).hasEnds(with(any(CompoundNode.class)), with(not(same(mockNode1)))); will(returnValue(false));
-			allowing(mockEdge2Pair).hasEnds(with(not(same(mockNode2))), with(any(CompoundNode.class))); will(returnValue(true));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(same(mockNode2)), with(same(mockNode1))); will(returnValue(true));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(any(ArchetypalCompoundNode.class)), with(not(same(mockNode1)))); will(returnValue(false));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(not(same(mockNode2))), with(any(ArchetypalCompoundNode.class))); will(returnValue(true));
 			
-			allowing(mockEdge4Pair).hasEnds(with(same(mockNode2)), with(same(mockNode4))); will(returnValue(true));
-			allowing(mockEdge4Pair).hasEnds(with(not(same(mockNode2))), with(not(same(mockNode4)))); will(returnValue(false));
+			allowing(mockEdge4Pair).hasDirectedEnds(with(same(mockNode2)), with(same(mockNode4))); will(returnValue(true));
+			allowing(mockEdge4Pair).hasDirectedEnds(with(not(same(mockNode2))), with(not(same(mockNode4)))); will(returnValue(false));
 			
-			allowing(mockEdge7Pair).hasEnds(with(same(mockNode7)), with(same(mockNode3))); will(returnValue(true));
-			allowing(mockEdge7Pair).hasEnds(with(not(same(mockNode7))), with(not(same(mockNode3)))); will(returnValue(false));
+			allowing(mockEdge7Pair).hasDirectedEnds(with(same(mockNode7)), with(same(mockNode3))); will(returnValue(true));
+			allowing(mockEdge7Pair).hasDirectedEnds(with(not(same(mockNode7))), with(not(same(mockNode3)))); will(returnValue(false));
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		this.testInstance.addNewEdge(mockEdge1);
@@ -317,23 +319,23 @@ public class SubCompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testContainsEdgeIEdge() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundEdge mockEdge1 = this.mockery.mock(CompoundEdge.class, "mockEdge1");
-		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
-		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
-		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
-		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundEdge mockEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge1");
+		final ArchetypalCompoundEdge mockEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge2");
+		final ArchetypalCompoundEdge mockEdge4 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge4");
+		final ArchetypalCompoundEdge mockEdge7 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge7");
+		final ArchetypalCompoundEdge mockEdge8 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge8");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
-//		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+//		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
@@ -369,6 +371,7 @@ public class SubCompoundGraphTest {
 			allowing(mockNode7).compareTo(mockNode7); will(returnValue(0));
 			
 			allowing(mockEdge1).getConnectedNodes(); will(returnValue(mockEdge1Pair));
+			allowing(mockEdge1).getIndex(); will(returnValue(EXPECTED_EDGE1_IDX));
 			allowing(mockEdge1).compareTo(mockEdge1); will(returnValue(0));
 			allowing(mockEdge1).compareTo(mockEdge2); will(returnValue(-1));
 			allowing(mockEdge1).compareTo(mockEdge4); will(returnValue(-1));
@@ -376,6 +379,7 @@ public class SubCompoundGraphTest {
 			allowing(mockEdge1).isRemoved(); will(returnValue(false));
 
 			allowing(mockEdge2).getConnectedNodes(); will(returnValue(mockEdge2Pair));
+			allowing(mockEdge2).getIndex(); will(returnValue(EXPECTED_EDGE2_IDX));
 			allowing(mockEdge2).compareTo(mockEdge1); will(returnValue(1));
 			allowing(mockEdge2).compareTo(mockEdge2); will(returnValue(0));
 			allowing(mockEdge2).compareTo(mockEdge4); will(returnValue(-1));
@@ -383,6 +387,7 @@ public class SubCompoundGraphTest {
 			allowing(mockEdge2).isRemoved(); will(returnValue(false));
 
 			allowing(mockEdge4).getConnectedNodes(); will(returnValue(mockEdge4Pair));
+			allowing(mockEdge4).getIndex(); will(returnValue(EXPECTED_EDGE4_IDX));
 			allowing(mockEdge4).compareTo(mockEdge1); will(returnValue(1));
 			allowing(mockEdge4).compareTo(mockEdge2); will(returnValue(1));
 			allowing(mockEdge4).compareTo(mockEdge4); will(returnValue(0));
@@ -390,27 +395,29 @@ public class SubCompoundGraphTest {
 			allowing(mockEdge4).isRemoved(); will(returnValue(false));
 
 			allowing(mockEdge7).getConnectedNodes(); will(returnValue(mockEdge7Pair));
-			allowing(mockEdge7).compareTo(mockEdge1); will(returnValue(1));
+			allowing(mockEdge7).getIndex(); will(returnValue(EXPECTED_EDGE7_IDX));
 			allowing(mockEdge7).compareTo(mockEdge2); will(returnValue(1));
 			allowing(mockEdge7).compareTo(mockEdge4); will(returnValue(1));
 			allowing(mockEdge7).compareTo(mockEdge7); will(returnValue(0));
 			allowing(mockEdge7).isRemoved(); will(returnValue(false));
 			
-			allowing(mockEdge1Pair).hasEnds(with(same(mockNode1)), with(same(mockNode2))); will(returnValue(true));
-			allowing(mockEdge1Pair).hasEnds(with(any(CompoundNode.class)), with(not(same(mockNode2)))); will(returnValue(false));
-			allowing(mockEdge1Pair).hasEnds(with(not(same(mockNode1))), with(any(CompoundNode.class))); will(returnValue(true));
+			allowing(mockEdge8).getIndex(); will(returnValue(EXPECTED_EDGE8_IDX));
+
+			allowing(mockEdge1Pair).hasDirectedEnds(with(same(mockNode1)), with(same(mockNode2))); will(returnValue(true));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(any(ArchetypalCompoundNode.class)), with(not(same(mockNode2)))); will(returnValue(false));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(not(same(mockNode1))), with(any(ArchetypalCompoundNode.class))); will(returnValue(true));
 			
-			allowing(mockEdge2Pair).hasEnds(with(same(mockNode2)), with(same(mockNode1))); will(returnValue(true));
-			allowing(mockEdge2Pair).hasEnds(with(any(CompoundNode.class)), with(not(same(mockNode1)))); will(returnValue(false));
-			allowing(mockEdge2Pair).hasEnds(with(not(same(mockNode2))), with(any(CompoundNode.class))); will(returnValue(true));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(same(mockNode2)), with(same(mockNode1))); will(returnValue(true));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(any(ArchetypalCompoundNode.class)), with(not(same(mockNode1)))); will(returnValue(false));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(not(same(mockNode2))), with(any(ArchetypalCompoundNode.class))); will(returnValue(true));
 			
-			allowing(mockEdge4Pair).hasEnds(with(same(mockNode2)), with(same(mockNode4))); will(returnValue(true));
-			allowing(mockEdge4Pair).hasEnds(with(not(same(mockNode2))), with(not(same(mockNode4)))); will(returnValue(false));
+			allowing(mockEdge4Pair).hasDirectedEnds(with(same(mockNode2)), with(same(mockNode4))); will(returnValue(true));
+			allowing(mockEdge4Pair).hasDirectedEnds(with(not(same(mockNode2))), with(not(same(mockNode4)))); will(returnValue(false));
 			
-			allowing(mockEdge7Pair).hasEnds(with(same(mockNode7)), with(same(mockNode3))); will(returnValue(true));
-			allowing(mockEdge7Pair).hasEnds(with(not(same(mockNode7))), with(not(same(mockNode3)))); will(returnValue(false));
+			allowing(mockEdge7Pair).hasDirectedEnds(with(same(mockNode7)), with(same(mockNode3))); will(returnValue(true));
+			allowing(mockEdge7Pair).hasDirectedEnds(with(not(same(mockNode7))), with(not(same(mockNode3)))); will(returnValue(false));
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		this.testInstance.addNewEdge(mockEdge1);
@@ -427,23 +434,23 @@ public class SubCompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testContainsEdgeInt() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundEdge mockEdge1 = this.mockery.mock(CompoundEdge.class, "mockEdge1");
-		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
-		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
-		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
-		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundEdge mockEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge1");
+		final ArchetypalCompoundEdge mockEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge2");
+		final ArchetypalCompoundEdge mockEdge4 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge4");
+		final ArchetypalCompoundEdge mockEdge7 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge7");
+		final ArchetypalCompoundEdge mockEdge8 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge8");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
-//		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+//		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
@@ -512,21 +519,21 @@ public class SubCompoundGraphTest {
 			
 			allowing(mockEdge8).getIndex(); will(returnValue(EXPECTED_EDGE8_IDX));
 
-			allowing(mockEdge1Pair).hasEnds(with(same(mockNode1)), with(same(mockNode2))); will(returnValue(true));
-			allowing(mockEdge1Pair).hasEnds(with(any(CompoundNode.class)), with(not(same(mockNode2)))); will(returnValue(false));
-			allowing(mockEdge1Pair).hasEnds(with(not(same(mockNode1))), with(any(CompoundNode.class))); will(returnValue(true));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(same(mockNode1)), with(same(mockNode2))); will(returnValue(true));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(any(ArchetypalCompoundNode.class)), with(not(same(mockNode2)))); will(returnValue(false));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(not(same(mockNode1))), with(any(ArchetypalCompoundNode.class))); will(returnValue(true));
 			
-			allowing(mockEdge2Pair).hasEnds(with(same(mockNode2)), with(same(mockNode1))); will(returnValue(true));
-			allowing(mockEdge2Pair).hasEnds(with(any(CompoundNode.class)), with(not(same(mockNode1)))); will(returnValue(false));
-			allowing(mockEdge2Pair).hasEnds(with(not(same(mockNode2))), with(any(CompoundNode.class))); will(returnValue(true));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(same(mockNode2)), with(same(mockNode1))); will(returnValue(true));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(any(ArchetypalCompoundNode.class)), with(not(same(mockNode1)))); will(returnValue(false));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(not(same(mockNode2))), with(any(ArchetypalCompoundNode.class))); will(returnValue(true));
 			
-			allowing(mockEdge4Pair).hasEnds(with(same(mockNode2)), with(same(mockNode4))); will(returnValue(true));
-			allowing(mockEdge4Pair).hasEnds(with(not(same(mockNode2))), with(not(same(mockNode4)))); will(returnValue(false));
+			allowing(mockEdge4Pair).hasDirectedEnds(with(same(mockNode2)), with(same(mockNode4))); will(returnValue(true));
+			allowing(mockEdge4Pair).hasDirectedEnds(with(not(same(mockNode2))), with(not(same(mockNode4)))); will(returnValue(false));
 			
-			allowing(mockEdge7Pair).hasEnds(with(same(mockNode7)), with(same(mockNode3))); will(returnValue(true));
-			allowing(mockEdge7Pair).hasEnds(with(not(same(mockNode7))), with(not(same(mockNode3)))); will(returnValue(false));
+			allowing(mockEdge7Pair).hasDirectedEnds(with(same(mockNode7)), with(same(mockNode3))); will(returnValue(true));
+			allowing(mockEdge7Pair).hasDirectedEnds(with(not(same(mockNode7))), with(not(same(mockNode3)))); will(returnValue(false));
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		this.testInstance.addNewEdge(mockEdge1);
@@ -541,71 +548,13 @@ public class SubCompoundGraphTest {
 
 	@Test
 	public final void testContainsNodeInt() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
-		this.mockery.checking(new Expectations(){{
-			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
-			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
-			
-			allowing(mockNode1).compareTo(mockNode1); will(returnValue(0));
-			allowing(mockNode1).compareTo(mockNode2); will(returnValue(-1));
-			allowing(mockNode1).compareTo(mockNode3); will(returnValue(-1));
-			allowing(mockNode1).compareTo(mockNode4); will(returnValue(-1));
-			allowing(mockNode1).compareTo(mockNode7); will(returnValue(-1));
-			allowing(mockNode1).getIndex(); will(returnValue(EXPECTED_NODE1_IDX));
-			
-			allowing(mockNode2).compareTo(mockNode1); will(returnValue(1));
-			allowing(mockNode2).compareTo(mockNode2); will(returnValue(0));
-			allowing(mockNode2).compareTo(mockNode3); will(returnValue(-1));
-			allowing(mockNode2).compareTo(mockNode4); will(returnValue(-1));
-			allowing(mockNode2).compareTo(mockNode7); will(returnValue(-1));
-			allowing(mockNode2).getIndex(); will(returnValue(EXPECTED_NODE2_IDX));
-			
-			allowing(mockNode3).compareTo(mockNode1); will(returnValue(1));
-			allowing(mockNode3).compareTo(mockNode2); will(returnValue(1));
-			allowing(mockNode3).compareTo(mockNode3); will(returnValue(0));
-			allowing(mockNode3).compareTo(mockNode4); will(returnValue(-1));
-			allowing(mockNode3).compareTo(mockNode7); will(returnValue(-1));
-			allowing(mockNode3).getIndex(); will(returnValue(EXPECTED_NODE3_IDX));
-			
-			allowing(mockNode4).compareTo(mockNode1); will(returnValue(1));
-			allowing(mockNode4).compareTo(mockNode2); will(returnValue(1));
-			allowing(mockNode4).compareTo(mockNode3); will(returnValue(1));
-			allowing(mockNode4).compareTo(mockNode4); will(returnValue(0));
-			allowing(mockNode4).compareTo(mockNode7); will(returnValue(-1));
-			allowing(mockNode4).getIndex(); will(returnValue(EXPECTED_NODE4_IDX));
-			
-			allowing(mockNode7).compareTo(mockNode1); will(returnValue(1));
-			allowing(mockNode7).compareTo(mockNode2); will(returnValue(1));
-			allowing(mockNode7).compareTo(mockNode3); will(returnValue(1));
-			allowing(mockNode7).compareTo(mockNode4); will(returnValue(1));
-			allowing(mockNode7).compareTo(mockNode7); will(returnValue(0));
-			allowing(mockNode7).getIndex(); will(returnValue(EXPECTED_NODE7_IDX));
-			
-		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
-		this.testInstance.addNewNode(mockNode1);
-		this.testInstance.addNewNode(mockNode2);
-		assertTrue("has node", this.testInstance.containsNode(mockNode1.getIndex()));
-		assertTrue("has node", this.testInstance.containsNode(mockNode2.getIndex()));
-		assertFalse("no node", this.testInstance.containsNode(EXPECTED_MISSING_IDX));
-		this.mockery.assertIsSatisfied();
-	}
-
-	@Test
-	public final void testContainsNodeINode() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
@@ -648,7 +597,67 @@ public class SubCompoundGraphTest {
 			allowing(mockNode7).getIndex(); will(returnValue(EXPECTED_NODE7_IDX));
 			
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
+		this.testInstance.addNewNode(mockNode1);
+		this.testInstance.addNewNode(mockNode2);
+		assertTrue("has node", this.testInstance.containsNode(mockNode1.getIndex()));
+		assertTrue("has node", this.testInstance.containsNode(mockNode2.getIndex()));
+		assertFalse("no node", this.testInstance.containsNode(EXPECTED_MISSING_IDX));
+		this.mockery.assertIsSatisfied();
+	}
+
+	@Test
+	public final void testContainsNodeINode() {
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
+		this.mockery.checking(new Expectations(){{
+			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
+			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
+			
+			allowing(mockNode1).compareTo(mockNode1); will(returnValue(0));
+			allowing(mockNode1).compareTo(mockNode2); will(returnValue(-1));
+			allowing(mockNode1).compareTo(mockNode3); will(returnValue(-1));
+			allowing(mockNode1).compareTo(mockNode4); will(returnValue(-1));
+			allowing(mockNode1).compareTo(mockNode7); will(returnValue(-1));
+			allowing(mockNode1).getIndex(); will(returnValue(EXPECTED_NODE1_IDX));
+			allowing(mockNode1).isRemoved(); will(returnValue(false));
+			
+			allowing(mockNode2).compareTo(mockNode1); will(returnValue(1));
+			allowing(mockNode2).compareTo(mockNode2); will(returnValue(0));
+			allowing(mockNode2).compareTo(mockNode3); will(returnValue(-1));
+			allowing(mockNode2).compareTo(mockNode4); will(returnValue(-1));
+			allowing(mockNode2).compareTo(mockNode7); will(returnValue(-1));
+			allowing(mockNode2).getIndex(); will(returnValue(EXPECTED_NODE2_IDX));
+			allowing(mockNode2).isRemoved(); will(returnValue(false));
+			
+			allowing(mockNode3).compareTo(mockNode1); will(returnValue(1));
+			allowing(mockNode3).compareTo(mockNode2); will(returnValue(1));
+			allowing(mockNode3).compareTo(mockNode3); will(returnValue(0));
+			allowing(mockNode3).compareTo(mockNode4); will(returnValue(-1));
+			allowing(mockNode3).compareTo(mockNode7); will(returnValue(-1));
+			allowing(mockNode3).getIndex(); will(returnValue(EXPECTED_NODE3_IDX));
+			
+			allowing(mockNode4).compareTo(mockNode1); will(returnValue(1));
+			allowing(mockNode4).compareTo(mockNode2); will(returnValue(1));
+			allowing(mockNode4).compareTo(mockNode3); will(returnValue(1));
+			allowing(mockNode4).compareTo(mockNode4); will(returnValue(0));
+			allowing(mockNode4).compareTo(mockNode7); will(returnValue(-1));
+			allowing(mockNode4).getIndex(); will(returnValue(EXPECTED_NODE4_IDX));
+			
+			allowing(mockNode7).compareTo(mockNode1); will(returnValue(1));
+			allowing(mockNode7).compareTo(mockNode2); will(returnValue(1));
+			allowing(mockNode7).compareTo(mockNode3); will(returnValue(1));
+			allowing(mockNode7).compareTo(mockNode4); will(returnValue(1));
+			allowing(mockNode7).compareTo(mockNode7); will(returnValue(0));
+			allowing(mockNode7).getIndex(); will(returnValue(EXPECTED_NODE7_IDX));
+			
+		}});
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		assertTrue("has node", this.testInstance.containsNode(mockNode1));
@@ -660,23 +669,23 @@ public class SubCompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetEdge() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundEdge mockEdge1 = this.mockery.mock(CompoundEdge.class, "mockEdge1");
-		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
-		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
-		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
-		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundEdge mockEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge1");
+		final ArchetypalCompoundEdge mockEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge2");
+		final ArchetypalCompoundEdge mockEdge4 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge4");
+		final ArchetypalCompoundEdge mockEdge7 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge7");
+		final ArchetypalCompoundEdge mockEdge8 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge8");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
@@ -713,15 +722,22 @@ public class SubCompoundGraphTest {
 			
 			allowing(mockEdge1).getConnectedNodes(); will(returnValue(mockEdge1Pair));
 			allowing(mockEdge1).getIndex(); will(returnValue(EXPECTED_EDGE1_IDX));
-
+			allowing(mockEdge1).isRemoved(); will(returnValue(false));
+			
 			allowing(mockEdge2).getConnectedNodes(); will(returnValue(mockEdge2Pair));
 			allowing(mockEdge2).getIndex(); will(returnValue(EXPECTED_EDGE2_IDX));
+			allowing(mockEdge2).compareTo(mockEdge1); will(returnValue(1));
+			allowing(mockEdge2).isRemoved(); will(returnValue(false));
 
 			allowing(mockEdge4).getConnectedNodes(); will(returnValue(mockEdge4Pair));
 			allowing(mockEdge4).getIndex(); will(returnValue(EXPECTED_EDGE4_IDX));
+			allowing(mockEdge4).compareTo(mockEdge1); will(returnValue(1));
+			allowing(mockEdge4).compareTo(mockEdge2); will(returnValue(1));
 
 			allowing(mockEdge7).getConnectedNodes(); will(returnValue(mockEdge7Pair));
 			allowing(mockEdge7).getIndex(); will(returnValue(EXPECTED_EDGE7_IDX));
+			allowing(mockEdge7).compareTo(mockEdge2); will(returnValue(1));
+			allowing(mockEdge7).compareTo(mockEdge4); will(returnValue(1));
 			
 			allowing(mockEdge8).getConnectedNodes(); will(returnValue(mockEdge8Pair));
 			allowing(mockEdge8).getIndex(); will(returnValue(EXPECTED_EDGE8_IDX));
@@ -742,7 +758,7 @@ public class SubCompoundGraphTest {
 //			allowing(mockEdge8Pair).getTwoNode(); will(returnValue(mockNode1));
 
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		this.testInstance.addNewEdge(mockEdge1);
@@ -758,23 +774,23 @@ public class SubCompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetEdgeIterator() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundEdge mockEdge1 = this.mockery.mock(CompoundEdge.class, "mockEdge1");
-		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
-		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
-		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
-//		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundEdge mockEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge1");
+		final ArchetypalCompoundEdge mockEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge2");
+		final ArchetypalCompoundEdge mockEdge4 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge4");
+		final ArchetypalCompoundEdge mockEdge7 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge7");
+//		final ArchetypalCompoundEdge mockEdge8 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge8");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
-//		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+//		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
@@ -837,21 +853,21 @@ public class SubCompoundGraphTest {
 			allowing(mockEdge7).compareTo(mockEdge7); will(returnValue(0));
 			allowing(mockEdge7).isRemoved(); will(returnValue(false));
 			
-			allowing(mockEdge1Pair).hasEnds(with(same(mockNode1)), with(same(mockNode2))); will(returnValue(true));
-			allowing(mockEdge1Pair).hasEnds(with(any(CompoundNode.class)), with(not(same(mockNode2)))); will(returnValue(false));
-			allowing(mockEdge1Pair).hasEnds(with(not(same(mockNode1))), with(any(CompoundNode.class))); will(returnValue(true));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(same(mockNode1)), with(same(mockNode2))); will(returnValue(true));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(any(ArchetypalCompoundNode.class)), with(not(same(mockNode2)))); will(returnValue(false));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(not(same(mockNode1))), with(any(ArchetypalCompoundNode.class))); will(returnValue(true));
 			
-			allowing(mockEdge2Pair).hasEnds(with(same(mockNode2)), with(same(mockNode1))); will(returnValue(true));
-			allowing(mockEdge2Pair).hasEnds(with(any(CompoundNode.class)), with(not(same(mockNode1)))); will(returnValue(false));
-			allowing(mockEdge2Pair).hasEnds(with(not(same(mockNode2))), with(any(CompoundNode.class))); will(returnValue(true));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(same(mockNode2)), with(same(mockNode1))); will(returnValue(true));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(any(ArchetypalCompoundNode.class)), with(not(same(mockNode1)))); will(returnValue(false));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(not(same(mockNode2))), with(any(ArchetypalCompoundNode.class))); will(returnValue(true));
 			
-			allowing(mockEdge4Pair).hasEnds(with(same(mockNode2)), with(same(mockNode4))); will(returnValue(true));
-			allowing(mockEdge4Pair).hasEnds(with(not(same(mockNode2))), with(not(same(mockNode4)))); will(returnValue(false));
+			allowing(mockEdge4Pair).hasDirectedEnds(with(same(mockNode2)), with(same(mockNode4))); will(returnValue(true));
+			allowing(mockEdge4Pair).hasDirectedEnds(with(not(same(mockNode2))), with(not(same(mockNode4)))); will(returnValue(false));
 			
-			allowing(mockEdge7Pair).hasEnds(with(same(mockNode7)), with(same(mockNode3))); will(returnValue(true));
-			allowing(mockEdge7Pair).hasEnds(with(not(same(mockNode7))), with(not(same(mockNode3)))); will(returnValue(false));
+			allowing(mockEdge7Pair).hasDirectedEnds(with(same(mockNode7)), with(same(mockNode3))); will(returnValue(true));
+			allowing(mockEdge7Pair).hasDirectedEnds(with(not(same(mockNode7))), with(not(same(mockNode3)))); will(returnValue(false));
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		this.testInstance.addNewEdge(mockEdge1);
@@ -878,13 +894,13 @@ public class SubCompoundGraphTest {
 
 	@Test
 	public final void testGetNode() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
@@ -925,7 +941,7 @@ public class SubCompoundGraphTest {
 			allowing(mockNode7).getIndex(); will(returnValue(EXPECTED_NODE7_IDX));
 			
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		assertEquals("has node", mockNode1, this.testInstance.getNode(mockNode1.getIndex()));
@@ -942,13 +958,13 @@ public class SubCompoundGraphTest {
 
 	@Test
 	public final void testGetNodeIterator() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
@@ -989,13 +1005,13 @@ public class SubCompoundGraphTest {
 			allowing(mockNode7).getIndex(); will(returnValue(EXPECTED_NODE7_IDX));
 			
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		Iterator<ArchetypalCompoundNode> iter = this.testInstance.nodeIterator();
-		CompoundNode expectedIterationOrder[] = { mockNode1, mockNode2 };
-		List<CompoundNode> expectedNodeList = Arrays.asList(expectedIterationOrder);
-		for(CompoundNode expectedNode : expectedNodeList){
+		ArchetypalCompoundNode expectedIterationOrder[] = { mockNode1, mockNode2 };
+		List<ArchetypalCompoundNode> expectedNodeList = Arrays.asList(expectedIterationOrder);
+		for(ArchetypalCompoundNode expectedNode : expectedNodeList){
 			assertTrue("node available", iter.hasNext());
 			assertEquals("expected next node", expectedNode, iter.next());
 		}
@@ -1013,23 +1029,23 @@ public class SubCompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetNumEdges() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundEdge mockEdge1 = this.mockery.mock(CompoundEdge.class, "mockEdge1");
-		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
-		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
-		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
-//		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundEdge mockEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge1");
+		final ArchetypalCompoundEdge mockEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge2");
+		final ArchetypalCompoundEdge mockEdge4 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge4");
+		final ArchetypalCompoundEdge mockEdge7 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge7");
+//		final ArchetypalCompoundEdge mockEdge8 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge8");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
-//		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+//		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
@@ -1092,21 +1108,21 @@ public class SubCompoundGraphTest {
 			allowing(mockEdge7).compareTo(mockEdge7); will(returnValue(0));
 			allowing(mockEdge7).isRemoved(); will(returnValue(false));
 			
-			allowing(mockEdge1Pair).hasEnds(with(same(mockNode1)), with(same(mockNode2))); will(returnValue(true));
-			allowing(mockEdge1Pair).hasEnds(with(any(CompoundNode.class)), with(not(same(mockNode2)))); will(returnValue(false));
-			allowing(mockEdge1Pair).hasEnds(with(not(same(mockNode1))), with(any(CompoundNode.class))); will(returnValue(true));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(same(mockNode1)), with(same(mockNode2))); will(returnValue(true));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(any(ArchetypalCompoundNode.class)), with(not(same(mockNode2)))); will(returnValue(false));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(not(same(mockNode1))), with(any(ArchetypalCompoundNode.class))); will(returnValue(true));
 			
-			allowing(mockEdge2Pair).hasEnds(with(same(mockNode2)), with(same(mockNode1))); will(returnValue(true));
-			allowing(mockEdge2Pair).hasEnds(with(any(CompoundNode.class)), with(not(same(mockNode1)))); will(returnValue(false));
-			allowing(mockEdge2Pair).hasEnds(with(not(same(mockNode2))), with(any(CompoundNode.class))); will(returnValue(true));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(same(mockNode2)), with(same(mockNode1))); will(returnValue(true));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(any(ArchetypalCompoundNode.class)), with(not(same(mockNode1)))); will(returnValue(false));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(not(same(mockNode2))), with(any(ArchetypalCompoundNode.class))); will(returnValue(true));
 			
-			allowing(mockEdge4Pair).hasEnds(with(same(mockNode2)), with(same(mockNode4))); will(returnValue(true));
-			allowing(mockEdge4Pair).hasEnds(with(not(same(mockNode2))), with(not(same(mockNode4)))); will(returnValue(false));
+			allowing(mockEdge4Pair).hasDirectedEnds(with(same(mockNode2)), with(same(mockNode4))); will(returnValue(true));
+			allowing(mockEdge4Pair).hasDirectedEnds(with(not(same(mockNode2))), with(not(same(mockNode4)))); will(returnValue(false));
 			
-			allowing(mockEdge7Pair).hasEnds(with(same(mockNode7)), with(same(mockNode3))); will(returnValue(true));
-			allowing(mockEdge7Pair).hasEnds(with(not(same(mockNode7))), with(not(same(mockNode3)))); will(returnValue(false));
+			allowing(mockEdge7Pair).hasDirectedEnds(with(same(mockNode7)), with(same(mockNode3))); will(returnValue(true));
+			allowing(mockEdge7Pair).hasDirectedEnds(with(not(same(mockNode7))), with(not(same(mockNode3)))); will(returnValue(false));
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		this.testInstance.addNewEdge(mockEdge1);
@@ -1120,23 +1136,23 @@ public class SubCompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testGetNumNodes() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundEdge mockEdge1 = this.mockery.mock(CompoundEdge.class, "mockEdge1");
-		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
-		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
-		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
-//		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundEdge mockEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge1");
+		final ArchetypalCompoundEdge mockEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge2");
+		final ArchetypalCompoundEdge mockEdge4 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge4");
+		final ArchetypalCompoundEdge mockEdge7 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge7");
+//		final ArchetypalCompoundEdge mockEdge8 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge8");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
-//		final IDirectedPair<CompoundNode, CompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+//		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
@@ -1199,21 +1215,21 @@ public class SubCompoundGraphTest {
 			allowing(mockEdge7).compareTo(mockEdge7); will(returnValue(0));
 			allowing(mockEdge7).isRemoved(); will(returnValue(false));
 			
-			allowing(mockEdge1Pair).hasEnds(with(same(mockNode1)), with(same(mockNode2))); will(returnValue(true));
-			allowing(mockEdge1Pair).hasEnds(with(any(CompoundNode.class)), with(not(same(mockNode2)))); will(returnValue(false));
-			allowing(mockEdge1Pair).hasEnds(with(not(same(mockNode1))), with(any(CompoundNode.class))); will(returnValue(true));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(same(mockNode1)), with(same(mockNode2))); will(returnValue(true));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(any(ArchetypalCompoundNode.class)), with(not(same(mockNode2)))); will(returnValue(false));
+			allowing(mockEdge1Pair).hasDirectedEnds(with(not(same(mockNode1))), with(any(ArchetypalCompoundNode.class))); will(returnValue(true));
 			
-			allowing(mockEdge2Pair).hasEnds(with(same(mockNode2)), with(same(mockNode1))); will(returnValue(true));
-			allowing(mockEdge2Pair).hasEnds(with(any(CompoundNode.class)), with(not(same(mockNode1)))); will(returnValue(false));
-			allowing(mockEdge2Pair).hasEnds(with(not(same(mockNode2))), with(any(CompoundNode.class))); will(returnValue(true));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(same(mockNode2)), with(same(mockNode1))); will(returnValue(true));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(any(ArchetypalCompoundNode.class)), with(not(same(mockNode1)))); will(returnValue(false));
+			allowing(mockEdge2Pair).hasDirectedEnds(with(not(same(mockNode2))), with(any(ArchetypalCompoundNode.class))); will(returnValue(true));
 			
-			allowing(mockEdge4Pair).hasEnds(with(same(mockNode2)), with(same(mockNode4))); will(returnValue(true));
-			allowing(mockEdge4Pair).hasEnds(with(not(same(mockNode2))), with(not(same(mockNode4)))); will(returnValue(false));
+			allowing(mockEdge4Pair).hasDirectedEnds(with(same(mockNode2)), with(same(mockNode4))); will(returnValue(true));
+			allowing(mockEdge4Pair).hasDirectedEnds(with(not(same(mockNode2))), with(not(same(mockNode4)))); will(returnValue(false));
 			
-			allowing(mockEdge7Pair).hasEnds(with(same(mockNode7)), with(same(mockNode3))); will(returnValue(true));
-			allowing(mockEdge7Pair).hasEnds(with(not(same(mockNode7))), with(not(same(mockNode3)))); will(returnValue(false));
+			allowing(mockEdge7Pair).hasDirectedEnds(with(same(mockNode7)), with(same(mockNode3))); will(returnValue(true));
+			allowing(mockEdge7Pair).hasDirectedEnds(with(not(same(mockNode7))), with(not(same(mockNode3)))); will(returnValue(false));
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		this.testInstance.addNewEdge(mockEdge1);
@@ -1227,23 +1243,23 @@ public class SubCompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testCanCopyHere() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundEdge mockEdge1 = this.mockery.mock(CompoundEdge.class, "mockEdge1");
-		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
-		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
-		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
-		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundEdge mockEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge1");
+		final ArchetypalCompoundEdge mockEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge2");
+		final ArchetypalCompoundEdge mockEdge4 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge4");
+		final ArchetypalCompoundEdge mockEdge7 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge7");
+		final ArchetypalCompoundEdge mockEdge8 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge8");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		final ISubCompoundGraph<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSubgraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
@@ -1312,7 +1328,7 @@ public class SubCompoundGraphTest {
 			atLeast(1).of(mockSubgraph).isInducedSubgraph(); will(returnValue(true));
 			
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		this.testInstance.addNewEdge(mockEdge1);
@@ -1327,23 +1343,23 @@ public class SubCompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testCanCopyHereNotInducedSubGraph() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundEdge mockEdge1 = this.mockery.mock(CompoundEdge.class, "mockEdge1");
-		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
-		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
-		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
-		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundEdge mockEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge1");
+		final ArchetypalCompoundEdge mockEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge2");
+		final ArchetypalCompoundEdge mockEdge4 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge4");
+		final ArchetypalCompoundEdge mockEdge7 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge7");
+		final ArchetypalCompoundEdge mockEdge8 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge8");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		final ISubCompoundGraph<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSubgraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
@@ -1412,7 +1428,7 @@ public class SubCompoundGraphTest {
 			atLeast(1).of(mockSubgraph).isInducedSubgraph(); will(returnValue(false));
 			
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		this.testInstance.addNewEdge(mockEdge1);
@@ -1427,23 +1443,23 @@ public class SubCompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testCopyHere() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundEdge mockEdge1 = this.mockery.mock(CompoundEdge.class, "mockEdge1");
-		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
-		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
-		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
-		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundEdge mockEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge1");
+		final ArchetypalCompoundEdge mockEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge2");
+		final ArchetypalCompoundEdge mockEdge4 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge4");
+		final ArchetypalCompoundEdge mockEdge7 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge7");
+		final ArchetypalCompoundEdge mockEdge8 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge8");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
@@ -1510,7 +1526,7 @@ public class SubCompoundGraphTest {
 
 			
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		this.testInstance.addNewEdge(mockEdge1);
@@ -1519,19 +1535,19 @@ public class SubCompoundGraphTest {
 		this.testInstance.addNewEdge(mockEdge7);
 		this.mockery.assertIsSatisfied();
 		final ISubCompoundGraph mockSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSubgraph");
-		final ChildCompoundGraph mockChildgraph0 = this.mockery.mock(ChildCompoundGraph.class, "mockChildgraph0");
-		final ChildCompoundGraph mockChildgraph2 = this.mockery.mock(ChildCompoundGraph.class, "mockChildgraph2");
-		final ChildCompoundGraph mockChildgraph3 = this.mockery.mock(ChildCompoundGraph.class, "mockChildgraph3");
-		final CompoundNode mockSubRootNode = this.mockery.mock(CompoundNode.class, "mockSubRootNode");
-		final CompoundNode mockSubNode0 = this.mockery.mock(CompoundNode.class, "mockSubNode0");
-		final CompoundNode mockSubNode1 = this.mockery.mock(CompoundNode.class, "mockSubNode1");
-		final CompoundNode mockSubNode2 = this.mockery.mock(CompoundNode.class, "mockSubNode2");
-		final CompoundNode mockSubNode3 = this.mockery.mock(CompoundNode.class, "mockSubNode3");
-		final CompoundNode mockSubNode4 = this.mockery.mock(CompoundNode.class, "mockSubNode4");
-		final CompoundEdge mockSubEdge1 = this.mockery.mock(CompoundEdge.class, "mockSubEdge1");
-		final CompoundEdge mockSubEdge2 = this.mockery.mock(CompoundEdge.class, "mockSubEdge2");
-		final CompoundEdge mockSubEdge3 = this.mockery.mock(CompoundEdge.class, "mockSubEdge3");
-		final CompoundEdge mockSubEdge4 = this.mockery.mock(CompoundEdge.class, "mockSubEdge4");
+		final ArchetypalChildCompoundGraph mockChildgraph0 = this.mockery.mock(ArchetypalChildCompoundGraph.class, "mockChildgraph0");
+		final ArchetypalChildCompoundGraph mockChildgraph2 = this.mockery.mock(ArchetypalChildCompoundGraph.class, "mockChildgraph2");
+		final ArchetypalChildCompoundGraph mockChildgraph3 = this.mockery.mock(ArchetypalChildCompoundGraph.class, "mockChildgraph3");
+		final ArchetypalCompoundNode mockSubRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockSubRootNode");
+		final ArchetypalCompoundNode mockSubNode0 = this.mockery.mock(ArchetypalCompoundNode.class, "mockSubNode0");
+		final ArchetypalCompoundNode mockSubNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockSubNode1");
+		final ArchetypalCompoundNode mockSubNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockSubNode2");
+		final ArchetypalCompoundNode mockSubNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockSubNode3");
+		final ArchetypalCompoundNode mockSubNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockSubNode4");
+		final ArchetypalCompoundEdge mockSubEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockSubEdge1");
+		final ArchetypalCompoundEdge mockSubEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockSubEdge2");
+		final ArchetypalCompoundEdge mockSubEdge3 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockSubEdge3");
+		final ArchetypalCompoundEdge mockSubEdge4 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockSubEdge4");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockSubEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockSubEdge1Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockSubEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockSubEdge2Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockSubEdge3Pair = this.mockery.mock(IDirectedPair.class, "mockSubEdge3Pair");
@@ -1545,7 +1561,7 @@ public class SubCompoundGraphTest {
 			
 			atLeast(1).of(mockCigraph).getNodeCounter(); will(returnValue(nodeCounter));
 			atLeast(1).of(mockCigraph).getEdgeCounter(); will(returnValue(edgeCounter));
-			one(mockCigraph).getLcaNode(with(aNonNull(CompoundNode.class)), with(aNonNull(CompoundNode.class)));
+			one(mockCigraph).getLcaNode(with(aNonNull(ArchetypalCompoundNode.class)), with(aNonNull(ArchetypalCompoundNode.class)));
 			
 			atLeast(1).of(mockRootNode).getChildCigraph(); will(returnValue(testInstance));
 			
@@ -1602,11 +1618,11 @@ public class SubCompoundGraphTest {
 			allowing(mockSubNode4).childIterator(); will(returnIterator());
 			allowing(mockSubNode4).getParent(); will(returnValue(mockSubRootNode));
 			
-			allowing(mockChildgraph0).getRoot(); will(returnValue(mockSubRootNode));
+			allowing(mockChildgraph0).getRootNode(); will(returnValue(mockSubRootNode));
 			
-			allowing(mockChildgraph2).getRoot(); will(returnValue(mockSubNode2));
+			allowing(mockChildgraph2).getRootNode(); will(returnValue(mockSubNode2));
 			
-			allowing(mockChildgraph3).getRoot(); will(returnValue(mockSubNode3));
+			allowing(mockChildgraph3).getRootNode(); will(returnValue(mockSubNode3));
 		}});
 		this.testInstance.copyHere(mockSubgraph);
 		assertEquals("num nodes", EXPECTED_POST_COPY_NUM_NODES, this.testInstance.getNumNodes());
@@ -1617,23 +1633,23 @@ public class SubCompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testIsInducedSubgraph() {
-		final CompoundNode mockRootNode = this.mockery.mock(CompoundNode.class, "mockRootNode");
-		final CompoundNode mockNode1 = this.mockery.mock(CompoundNode.class, "mockNode1");
-		final CompoundNode mockNode2 = this.mockery.mock(CompoundNode.class, "mockNode2");
-		final CompoundNode mockNode3 = this.mockery.mock(CompoundNode.class, "mockNode3");
-		final CompoundNode mockNode4 = this.mockery.mock(CompoundNode.class, "mockNode4");
-		final CompoundNode mockNode7 = this.mockery.mock(CompoundNode.class, "mockNode7");
-		final CompoundEdge mockEdge1 = this.mockery.mock(CompoundEdge.class, "mockEdge1");
-		final CompoundEdge mockEdge2 = this.mockery.mock(CompoundEdge.class, "mockEdge2");
-		final CompoundEdge mockEdge4 = this.mockery.mock(CompoundEdge.class, "mockEdge4");
-		final CompoundEdge mockEdge7 = this.mockery.mock(CompoundEdge.class, "mockEdge7");
-		final CompoundEdge mockEdge8 = this.mockery.mock(CompoundEdge.class, "mockEdge8");
+		final ArchetypalCompoundNode mockRootNode = this.mockery.mock(ArchetypalCompoundNode.class, "mockRootNode");
+		final ArchetypalCompoundNode mockNode1 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode1");
+		final ArchetypalCompoundNode mockNode2 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode2");
+		final ArchetypalCompoundNode mockNode3 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode3");
+		final ArchetypalCompoundNode mockNode4 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode4");
+		final ArchetypalCompoundNode mockNode7 = this.mockery.mock(ArchetypalCompoundNode.class, "mockNode7");
+		final ArchetypalCompoundEdge mockEdge1 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge1");
+		final ArchetypalCompoundEdge mockEdge2 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge2");
+		final ArchetypalCompoundEdge mockEdge4 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge4");
+		final ArchetypalCompoundEdge mockEdge7 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge7");
+		final ArchetypalCompoundEdge mockEdge8 = this.mockery.mock(ArchetypalCompoundEdge.class, "mockEdge8");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge1Pair = this.mockery.mock(IDirectedPair.class, "mockEdge1Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge2Pair = this.mockery.mock(IDirectedPair.class, "mockEdge2Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge4Pair = this.mockery.mock(IDirectedPair.class, "mockEdge4Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge7Pair = this.mockery.mock(IDirectedPair.class, "mockEdge7Pair");
 		final IDirectedPair<ArchetypalCompoundNode, ArchetypalCompoundEdge> mockEdge8Pair = this.mockery.mock(IDirectedPair.class, "mockEdge8Pair");
-		final CompoundGraph mockCigraph = this.mockery.mock(CompoundGraph.class, "mockCigraph");
+		final ArchetypalCompoundGraph mockCigraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockCigraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
@@ -1699,7 +1715,7 @@ public class SubCompoundGraphTest {
 //			allowing(mockEdge8Pair).getTwoNode(); will(returnValue(mockNode1));
 
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode);
+		this.testInstance = new TestChildCompoundGraph(mockRootNode);
 		this.testInstance.addNewNode(mockNode1);
 		this.testInstance.addNewNode(mockNode2);
 		this.testInstance.addNewEdge(mockEdge1);
@@ -1815,4 +1831,22 @@ public class SubCompoundGraphTest {
 //		assertEquals("expected lca", mockRootNode, this.testInstance.getLcaNode(mockNode7, mockNode3));
 //		this.mockery.assertIsSatisfied();
 //	}
+	
+	private static class TestChildCompoundGraph extends ArchetypalChildCompoundGraph {
+
+		protected TestChildCompoundGraph(ArchetypalCompoundNode root) {
+			super(root, null);
+		}
+
+		@Override
+		public ArchetypalChildCompoundEdgeFactory edgeFactory() {
+			throw new UnsupportedOperationException("not implemented"); 
+		}
+
+		@Override
+		public ArchetypalCompoundNodeFactory nodeFactory() {
+			throw new UnsupportedOperationException("not implemented"); 
+		}
+
+	}
 }

@@ -1,24 +1,22 @@
 package uk.ed.inf.graph.compound.impl;
 
-import uk.ed.inf.graph.basic.IBasicNodeFactory;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNodeFactory;
 
-public class CompoundNodeFactory implements IBasicNodeFactory<ArchetypalCompoundNode, ArchetypalCompoundEdge> {
-	private final CompoundNode parent;
+
+public class CompoundNodeFactory extends ArchetypalCompoundNodeFactory {
 	
 	public CompoundNodeFactory(CompoundNode parent){
-		if(parent == null) throw new IllegalArgumentException("parent cannot be null");
-		
-		this.parent = parent;
+		super(parent);
 	}
 	
-	public CompoundNode createNode() {
-		int cntr = this.parent.getGraph().getNodeCounter().nextIndex();
-		CompoundNode retVal = new CompoundNode(this.parent, cntr);
-		this.parent.getChildCigraph().addNewNode(retVal);
-		return retVal;
+	@Override
+	public CompoundNode newNode(ArchetypalCompoundNode parent, int nodeIndex) {
+		return new CompoundNode((CompoundNode)parent, nodeIndex);
 	}
-
-	public ArchetypalCompoundGraph getGraph() {
-		return parent.getGraph();
+	
+	@Override
+	public CompoundNode createNode(){
+		return (CompoundNode)super.createNode();
 	}
 }

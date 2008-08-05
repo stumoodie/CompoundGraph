@@ -1,4 +1,4 @@
-package uk.ed.inf.graph.compound.impl;
+package uk.ed.inf.graph.compound.archetypal;
 
 import static org.junit.Assert.*;
 
@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CompoundNodeFactoryTest {
+public class ChildCompoundGraphBuilderTest {
 
 	@Before
 	public void setUp() throws Exception {
@@ -17,12 +17,17 @@ public class CompoundNodeFactoryTest {
 	}
 
 	@Test
-	public final void testCiNodeFactory() {
+	public final void testChildCigraphBuilder() {
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public final void testCreateNode() {
+	public final void testCopyNodes() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	@Test
+	public final void testCopyEquivalentEdges() {
 		fail("Not yet implemented"); // TODO
 	}
 

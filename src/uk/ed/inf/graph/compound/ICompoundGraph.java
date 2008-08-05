@@ -12,6 +12,6 @@ public interface ICompoundGraph<
 	 * Get the root node of this graph.
 	 * @return The root node, which cannot be null.
 	 */
-	N getRoot();
+	N getRootNode();
 
 }
