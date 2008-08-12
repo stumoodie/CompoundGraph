@@ -49,7 +49,7 @@ public abstract class BaseSubCompoundGraphBuilder {
 				BaseCompoundNode childNode = iter.next();
 				this.nodeList.add(childNode);
 				// now add edges in this node's compound graph.
-				Iterator<? extends BaseCompoundEdge> edgeIter = childNode.getChildCigraph().edgeIterator();
+				Iterator<? extends BaseCompoundEdge> edgeIter = childNode.getChildCompoundGraph().edgeIterator();
 				while(edgeIter.hasNext()){
 					BaseCompoundEdge childEdge = edgeIter.next();
 					this.edgeList.add(childEdge);

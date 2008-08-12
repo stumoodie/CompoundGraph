@@ -101,7 +101,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		return retVal;
 	}
 
-	public final BaseCompoundEdge getEdge(int edgeIdx) {
+	public BaseCompoundEdge getEdge(int edgeIdx) {
 		return this.edgeSet.get(edgeIdx);
 	}
 
@@ -109,7 +109,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		return this.edgeSet.iterator();
 	}
 
-	public final BaseCompoundNode getNode(int nodeIdx) {
+	public BaseCompoundNode getNode(int nodeIdx) {
 		return this.nodeSet.get(nodeIdx);
 	}
 
@@ -142,7 +142,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		copyBuilder.copyEquivalentEdges();
 	}
 
-	public final BaseCompoundGraph getSuperGraph() {
+	public BaseCompoundGraph getSuperGraph() {
 		return this.getRootNode().getGraph();
 	}
 

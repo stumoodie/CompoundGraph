@@ -13,5 +13,5 @@ public interface ICompoundNode<
 	 * sub-Cigraph.
 	 * @return
 	 */
-	IChildCompoundGraph<N, E> getChildCigraph();
+	IChildCompoundGraph<N, E> getChildCompoundGraph();
 }

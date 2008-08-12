@@ -21,8 +21,8 @@ public abstract class BaseCompoundEdgeFactory implements IDirectedEdgeFactory<Ba
 		if(inNode == null || outNode == null) throw new IllegalStateException("One or more nodes not set");
 		BaseCompoundNode lcmNode = this.graph.getLcaNode(this.inNode, this.outNode);
 		int cntr = this.graph.getEdgeCounter().nextIndex();
-		BaseCompoundEdge newEdge = newEdge(lcmNode.getChildCigraph(), cntr, outNode, inNode); 
-		lcmNode.getChildCigraph().addNewEdge(newEdge);
+		BaseCompoundEdge newEdge = newEdge(lcmNode.getChildCompoundGraph(), cntr, outNode, inNode); 
+		lcmNode.getChildCompoundGraph().addNewEdge(newEdge);
 		return newEdge;
 	}
 

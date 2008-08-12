@@ -93,7 +93,7 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder 
 //			ICompoundEdgeFactory<BaseCompoundNode, BaseCompoundEdge> edgeFact = this.destSubCigraph.edgeFactory();
 //			edgeFact.setPair(newOutNode, newInNode);
 //			BaseCompoundEdge newEdge = edgeFact.createEdge();
-			BaseCompoundEdge newEdge = createCopyOfEdge(srcEdge, linkOwner.getChildCigraph(), linkOwner.getGraph().getEdgeCounter().nextIndex(),
+			BaseCompoundEdge newEdge = createCopyOfEdge(srcEdge, linkOwner.getChildCompoundGraph(), linkOwner.getGraph().getEdgeCounter().nextIndex(),
 																newOutNode, newInNode);
 			this.destSubCigraph.addNewEdge(newEdge);
 		}

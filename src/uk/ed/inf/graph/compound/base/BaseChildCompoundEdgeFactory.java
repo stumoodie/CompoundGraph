@@ -12,7 +12,7 @@ public abstract class BaseChildCompoundEdgeFactory implements ICompoundEdgeFacto
 	}
 	
 	public BaseChildCompoundGraph getOwningChildGraph() {
-		return this.parentNode.getChildCigraph();
+		return this.parentNode.getChildCompoundGraph();
 	}
 
 	public boolean isValidNodePair(BaseCompoundNode outNode, BaseCompoundNode inNode) {

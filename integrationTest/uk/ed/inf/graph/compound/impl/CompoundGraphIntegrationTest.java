@@ -70,18 +70,18 @@ public class CompoundGraphIntegrationTest {
 	public void setUp() throws Exception {
 		this.testInstance = new CompoundGraph();
 		this.rootNode = this.testInstance.getRootNode();
-		CompoundNodeFactory rootNodeFact = this.testInstance.getRootNode().getChildCigraph().nodeFactory();
+		CompoundNodeFactory rootNodeFact = this.testInstance.getRootNode().getChildCompoundGraph().nodeFactory();
 		node1 = rootNodeFact.createNode();
 		node2 = rootNodeFact.createNode();
-		CompoundNodeFactory node1Fact = node1.getChildCigraph().nodeFactory();
+		CompoundNodeFactory node1Fact = node1.getChildCompoundGraph().nodeFactory();
 		node3 = node1Fact.createNode();
 		node4 = node1Fact.createNode();
-		CompoundNodeFactory node2Fact = node2.getChildCigraph().nodeFactory();
+		CompoundNodeFactory node2Fact = node2.getChildCompoundGraph().nodeFactory();
 		node5 = node2Fact.createNode();
 		node6 = node2Fact.createNode();
-		CompoundNodeFactory node6Fact = node6.getChildCigraph().nodeFactory();
+		CompoundNodeFactory node6Fact = node6.getChildCompoundGraph().nodeFactory();
 		node7 = node6Fact.createNode();
-		CompoundNodeFactory node7Fact = node7.getChildCigraph().nodeFactory();
+		CompoundNodeFactory node7Fact = node7.getChildCompoundGraph().nodeFactory();
 		node8 = node7Fact.createNode();
 		
 		CompoundEdgeFactory edgeFact = this.testInstance.edgeFactory();
@@ -295,15 +295,15 @@ public class CompoundGraphIntegrationTest {
 
 	@Test
 	public final void testGraphStructure(){
-		assertEquals("root subgraph edges", NUM_ROOT_NODE_EDGES, rootNode.getChildCigraph().getNumEdges());
-		assertEquals("node1 subgraph edges", NUM_NODE1_EDGES, node1.getChildCigraph().getNumEdges());
-		assertEquals("node2 subgraph edges", NUM_NODE2_EDGES, node2.getChildCigraph().getNumEdges());
-		assertEquals("node3 subgraph edges", NUM_NODE3_EDGES, node3.getChildCigraph().getNumEdges());
-		assertEquals("node4 subgraph edges", NUM_NODE4_EDGES, node4.getChildCigraph().getNumEdges());
-		assertEquals("node5 subgraph edges", NUM_NODE5_EDGES, node5.getChildCigraph().getNumEdges());
-		assertEquals("node6 subgraph edges", NUM_NODE6_EDGES, node6.getChildCigraph().getNumEdges());
-		assertEquals("node7 subgraph edges", NUM_NODE7_EDGES, node7.getChildCigraph().getNumEdges());
-		assertEquals("node8 subgraph edges", NUM_NODE8_EDGES, node8.getChildCigraph().getNumEdges());
+		assertEquals("root subgraph edges", NUM_ROOT_NODE_EDGES, rootNode.getChildCompoundGraph().getNumEdges());
+		assertEquals("node1 subgraph edges", NUM_NODE1_EDGES, node1.getChildCompoundGraph().getNumEdges());
+		assertEquals("node2 subgraph edges", NUM_NODE2_EDGES, node2.getChildCompoundGraph().getNumEdges());
+		assertEquals("node3 subgraph edges", NUM_NODE3_EDGES, node3.getChildCompoundGraph().getNumEdges());
+		assertEquals("node4 subgraph edges", NUM_NODE4_EDGES, node4.getChildCompoundGraph().getNumEdges());
+		assertEquals("node5 subgraph edges", NUM_NODE5_EDGES, node5.getChildCompoundGraph().getNumEdges());
+		assertEquals("node6 subgraph edges", NUM_NODE6_EDGES, node6.getChildCompoundGraph().getNumEdges());
+		assertEquals("node7 subgraph edges", NUM_NODE7_EDGES, node7.getChildCompoundGraph().getNumEdges());
+		assertEquals("node8 subgraph edges", NUM_NODE8_EDGES, node8.getChildCompoundGraph().getNumEdges());
 	}
 	
 	@Test

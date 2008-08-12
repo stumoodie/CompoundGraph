@@ -1564,7 +1564,7 @@ public class SubCompoundGraphTest {
 //			atLeast(1).of(mockCigraph).getEdgeCounter(); will(returnValue(edgeCounter));
 //			one(mockCigraph).getLcaNode(with(aNonNull(ArchetypalCompoundNode.class)), with(aNonNull(ArchetypalCompoundNode.class)));
 			
-			atLeast(1).of(mockRootNode).getChildCigraph(); will(returnValue(testInstance));
+			atLeast(1).of(mockRootNode).getChildCompoundGraph(); will(returnValue(testInstance));
 			
 			allowing(mockNode1).getIndex(); will(returnValue(EXPECTED_NODE1_IDX));
 			

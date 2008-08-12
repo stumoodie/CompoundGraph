@@ -27,7 +27,7 @@ public class CompoundNode extends ArchetypalCompoundNode {
 	}
 	
 	@Override
-	public ChildCompoundGraph getChildCigraph() {
+	public ChildCompoundGraph getChildCompoundGraph() {
 		return this.childCompoundGraph;
 	}
 	

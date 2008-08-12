@@ -38,7 +38,7 @@ public abstract class ArchetypalCompoundNode extends BaseCompoundNode {
 
 	protected abstract void createChildCompoundGraph(ArchetypalCompoundNode rootNode);
 
-	public abstract ArchetypalChildCompoundGraph getChildCigraph();
+	public abstract ArchetypalChildCompoundGraph getChildCompoundGraph();
 
 	public ArchetypalCompoundGraph getGraph() {
 		return this.superGraph;

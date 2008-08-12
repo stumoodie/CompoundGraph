@@ -27,30 +27,9 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		this.removed = false;
 	}
 	
-//	protected BaseCompoundNode(BaseCompoundGraph superGraph, int index){
-//		this(superGraph, null, index);
-//	}
-//	
-//	protected BaseCompoundNode(BaseCompoundNode parent, int index){
-//		this(parent.getGraph(), parent, index);
-//	}
-	
-//	private BaseCompoundNode(BaseCompoundGraph superGraph, BaseCompoundNode parent, int index){
-//		this.superGraph = superGraph;
-//		this.index = index;
-//		if(parent == null){
-//			this.parent = this;
-//		}
-//		else{
-//			this.parent = parent;
-//		}
-//		this.edgeInList = new FilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge>(newDirectedEdgeSet(), new CiEdgeExistanceCriteria());
-//		this.edgeOutList = new FilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge>(newDirectedEdgeSet(), new CiEdgeExistanceCriteria());
-//		createChildCompoundGraph(this);
-//	}
 	
 	public final Iterator<BaseCompoundNode> childIterator() {
-		return this.getChildCigraph().nodeIterator();
+		return this.getChildCompoundGraph().nodeIterator();
 	}
 
 	public abstract BaseCompoundNode getParent();
@@ -72,9 +51,7 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 	}
 
 	
-//	protected abstract void createChildCompoundGraph(BaseCompoundNode rootNode);
-
-	public abstract BaseChildCompoundGraph getChildCigraph();
+	public abstract BaseChildCompoundGraph getChildCompoundGraph();
 
 	public final int getInDegree() {
 		return this.getEdgeInList().size();
@@ -237,7 +214,7 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		return retVal;
 	}
 
-	public final BaseCompoundNode getRoot() {
+	public BaseCompoundNode getRoot() {
 		return this.getGraph().getRootNode();
 	}
 
