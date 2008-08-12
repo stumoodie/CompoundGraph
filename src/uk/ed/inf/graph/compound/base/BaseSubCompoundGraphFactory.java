@@ -1,29 +1,25 @@
-package uk.ed.inf.graph.compound.archetypal;
+package uk.ed.inf.graph.compound.base;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import uk.ed.inf.graph.basic.IBasicSubgraphFactory;
-import uk.ed.inf.graph.compound.impl.CompoundEdge;
-import uk.ed.inf.graph.compound.impl.CompoundNode;
 
-public abstract class ArchetypalSubCompoundGraphFactory implements IBasicSubgraphFactory<ArchetypalCompoundNode, ArchetypalCompoundEdge> {
-	private final ArchetypalSubCompoundGraphBuilder builder;
-	private final Set<ArchetypalCompoundNode> nodeList = new HashSet<ArchetypalCompoundNode>();
-	private final Set<ArchetypalCompoundEdge> edgeList = new HashSet<ArchetypalCompoundEdge>();
+public abstract class BaseSubCompoundGraphFactory implements IBasicSubgraphFactory<BaseCompoundNode, BaseCompoundEdge> {
+	private final BaseSubCompoundGraphBuilder builder;
+	private final Set<BaseCompoundNode> nodeList = new HashSet<BaseCompoundNode>();
+	private final Set<BaseCompoundEdge> edgeList = new HashSet<BaseCompoundEdge>();
 
-	public ArchetypalSubCompoundGraphFactory(ArchetypalSubCompoundGraphBuilder builder){
+	public BaseSubCompoundGraphFactory(BaseSubCompoundGraphBuilder builder){
 		this.builder = builder;
 	}
 	
-	public void addNode(ArchetypalCompoundNode iNode){
-		CompoundNode node = (CompoundNode)iNode;
+	public void addNode(BaseCompoundNode node){
 		this.nodeList.add(node);
 	}
 	
-	public void addEdge(ArchetypalCompoundEdge iEdge){
-		CompoundEdge edge = (CompoundEdge)iEdge;
+	public void addEdge(BaseCompoundEdge edge){
 		this.edgeList.add(edge);
 	}
 
@@ -33,7 +29,7 @@ public abstract class ArchetypalSubCompoundGraphFactory implements IBasicSubgrap
 	 * subgraph to get this.
 	 * @return iterator of <code>CiNode</code>s.
 	 */
-	public Iterator<ArchetypalCompoundNode> nodeIterator(){
+	public Iterator<BaseCompoundNode> nodeIterator(){
 		return this.nodeList.iterator();
 	}
 	
@@ -42,7 +38,7 @@ public abstract class ArchetypalSubCompoundGraphFactory implements IBasicSubgrap
 	 * edges derived from the nodes selected here or between nodes in any child compound graphs of
 	 * the selected nodes. You should create the subgraph to get this. 
 	 */
-	public Iterator<ArchetypalCompoundEdge> edgeIterator(){
+	public Iterator<BaseCompoundEdge> edgeIterator(){
 		return this.edgeList.iterator();
 	}
 	
@@ -51,7 +47,7 @@ public abstract class ArchetypalSubCompoundGraphFactory implements IBasicSubgrap
 	 *  of each subgraph.
 	 *  @return the newly created subgraph, cannot be null. 
 	 */
-	public ArchetypalSubCompoundGraph createSubgraph() {
+	public BaseSubCompoundGraph createSubgraph() {
 		builder.setNodeList(this.nodeList);
 		builder.setEdgeList(this.edgeList);
 		builder.expandChildCigraphs();
@@ -69,7 +65,7 @@ public abstract class ArchetypalSubCompoundGraphFactory implements IBasicSubgrap
 	 * <code>retVal.isInducedSubgraph() == true</code>
 	 * @return the newly created induced subgraph.    
 	 */
-	public ArchetypalSubCompoundGraph createInducedSubgraph(){
+	public BaseSubCompoundGraph createInducedSubgraph(){
 		builder.setNodeList(this.nodeList);
 		builder.setEdgeList(this.edgeList);
 		builder.expandChildCigraphs();

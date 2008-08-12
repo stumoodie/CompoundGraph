@@ -1,12 +1,12 @@
 package uk.ed.inf.graph.compound.impl;
 
-import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundGraph;
-import uk.ed.inf.graph.compound.archetypal.ArchetypalSubCompoundGraph;
+import uk.ed.inf.graph.compound.base.BaseCompoundGraph;
+import uk.ed.inf.graph.compound.base.BaseSubCompoundGraph;
 
 
-public class SubCompoundGraph extends ArchetypalSubCompoundGraph {
+public class SubCompoundGraph extends BaseSubCompoundGraph {
 	
-	public SubCompoundGraph(ArchetypalCompoundGraph superGraph){
+	public SubCompoundGraph(BaseCompoundGraph superGraph){
 		super(superGraph);
 	}
 	

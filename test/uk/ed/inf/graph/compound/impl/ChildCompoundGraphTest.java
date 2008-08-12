@@ -1,4 +1,4 @@
-package uk.ed.inf.graph.compound.archetypal;
+package uk.ed.inf.graph.compound.impl;
 
 import static org.junit.Assert.*;
 

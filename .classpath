@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="uk/ed/inf/graph/compound/archetypal/ArchetypalChildCompoundEdgeFactory.java|uk/ed/inf/graph/compound/archetypal/ArchetypalCompoundEdgeFactory.java|uk/ed/inf/graph/compound/archetypal/ArchetypalCompoundNodeFactory.java|uk/ed/inf/graph/compound/archetypal/ArchetypalGraphCopyBuilder.java|uk/ed/inf/graph/compound/archetypal/ArchetypalSubCompoundGraph.java|uk/ed/inf/graph/compound/archetypal/ArchetypalSubCompoundGraphBuilder.java|uk/ed/inf/graph/compound/archetypal/ArchetypalSubCompoundGraphFactory.java" kind="src" path="src"/>
 	<classpathentry kind="src" path="integrationTest"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="lib" path="lib/jmock-2.4.0/jmock-2.4.0.jar"/>

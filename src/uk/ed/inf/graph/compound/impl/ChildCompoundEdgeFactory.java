@@ -1,12 +1,13 @@
 package uk.ed.inf.graph.compound.impl;
 
-import uk.ed.inf.graph.compound.archetypal.ArchetypalChildCompoundEdgeFactory;
-import uk.ed.inf.graph.compound.archetypal.ArchetypalChildCompoundGraph;
 import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundEdge;
 import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
+import uk.ed.inf.graph.compound.base.BaseChildCompoundEdgeFactory;
+import uk.ed.inf.graph.compound.base.BaseChildCompoundGraph;
+import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 
 
-public class ChildCompoundEdgeFactory extends ArchetypalChildCompoundEdgeFactory {
+public class ChildCompoundEdgeFactory extends BaseChildCompoundEdgeFactory {
 	
 	public ChildCompoundEdgeFactory(ArchetypalCompoundNode parentNode){
 		super(parentNode);
@@ -14,8 +15,8 @@ public class ChildCompoundEdgeFactory extends ArchetypalChildCompoundEdgeFactory
 
 	@Override
 	protected ArchetypalCompoundEdge newEdge(
-			ArchetypalChildCompoundGraph owningChildGraph, int edgeIndex,
-			ArchetypalCompoundNode outNode, ArchetypalCompoundNode inNode) {
+			BaseChildCompoundGraph owningChildGraph, int edgeIndex,
+			BaseCompoundNode outNode, BaseCompoundNode inNode) {
 		return new CompoundEdge((ChildCompoundGraph)owningChildGraph, edgeIndex,
 				(CompoundNode)outNode, (CompoundNode)inNode);
 	}

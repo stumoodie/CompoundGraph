@@ -14,8 +14,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundEdge;
-import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
+import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
+import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 
 public class CompoundGraphIntegrationTest {
 	private static final int EXPECTED_INITIAL_EDGES = 0;
@@ -130,10 +130,6 @@ public class CompoundGraphIntegrationTest {
 	@Test
 	public final void testCompoundGraph() {
 		CompoundGraph testEmptyInstance = new CompoundGraph();
-		assertTrue("expected edge creation", testEmptyInstance.canCreateEdges());
-		assertFalse("expected node creation", testEmptyInstance.canCreateNodes());
-		assertTrue("expected edge creation", testEmptyInstance.canCreateSubgraphs());
-		assertTrue("expected edge removal", testEmptyInstance.canRemoveSubgraphs());
 		assertEquals("empty edges", EXPECTED_INITIAL_EDGES, testEmptyInstance.getNumEdges());
 		assertEquals("empty nodes", EXPECTED_INITIAL_NODES, testEmptyInstance.getNumNodes());
 		assertEquals("root node is as expected", EXPECTED_ROOT_NODE_IDX, testEmptyInstance.getRootNode().getIndex());
@@ -141,7 +137,7 @@ public class CompoundGraphIntegrationTest {
 		assertTrue("obtain edge factory", testEmptyInstance.edgeFactory() != null);
 		assertTrue("obtain subgraph factory", testEmptyInstance.subgraphFactory() != null);
 		assertTrue("obtain node factory", testEmptyInstance.nodeFactory() != null);
-		Iterator<ArchetypalCompoundNode> iter = testEmptyInstance.nodeIterator();
+		Iterator<BaseCompoundNode> iter = testEmptyInstance.nodeIterator();
 		assertTrue("expected root node iterator", iter.hasNext());
 		iter.next();
 		assertTrue("expected root node iterator", iter.hasNext() == false);
@@ -263,12 +259,12 @@ public class CompoundGraphIntegrationTest {
 
 	@Test
 	public final void testGetEdgeIterator() {
-		Iterator<ArchetypalCompoundEdge> iter = this.testInstance.edgeIterator();
+		Iterator<BaseCompoundEdge> iter = this.testInstance.edgeIterator();
 		CompoundEdge expectedIterationOrder[] = { edge2, edge8, edge9, edge1, edge3, edge4, edge7, edge5, edge6 };
 		List<CompoundEdge> expectedEdgeList = Arrays.asList(expectedIterationOrder);
 		for(CompoundEdge expectedEdge : expectedEdgeList){
 			assertTrue("edge available", iter.hasNext());
-			ArchetypalCompoundEdge actualEdge = iter.next();
+			BaseCompoundEdge actualEdge = iter.next();
 			assertEquals("next edge idx", expectedEdge.getIndex(), actualEdge.getIndex());
 			assertEquals("next edge", expectedEdge, actualEdge);
 //			System.out.print("Edge ID = "); System.out.println(actualEdge.getIndex());
@@ -312,7 +308,7 @@ public class CompoundGraphIntegrationTest {
 	
 	@Test
 	public final void testGetNodeIterator() {
-		Iterator<ArchetypalCompoundNode> iter = this.testInstance.nodeIterator();
+		Iterator<BaseCompoundNode> iter = this.testInstance.nodeIterator();
 		CompoundNode expectedIterationOrder[] = { rootNode, node1, node2, node3,
 				node4, node5, node6, node7, node8 };
 		List<CompoundNode> expectedNodeList = Arrays.asList(expectedIterationOrder);

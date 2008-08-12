@@ -1,17 +1,17 @@
 package uk.ed.inf.graph.compound.impl;
 
-import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
-import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNodeFactory;
+import uk.ed.inf.graph.compound.base.BaseCompoundNode;
+import uk.ed.inf.graph.compound.base.BaseCompoundNodeFactory;
 
 
-public class CompoundNodeFactory extends ArchetypalCompoundNodeFactory {
+public class CompoundNodeFactory extends BaseCompoundNodeFactory {
 	
 	public CompoundNodeFactory(CompoundNode parent){
 		super(parent);
 	}
 	
 	@Override
-	public CompoundNode newNode(ArchetypalCompoundNode parent, int nodeIndex) {
+	public CompoundNode newNode(BaseCompoundNode parent, int nodeIndex) {
 		return new CompoundNode((CompoundNode)parent, nodeIndex);
 	}
 	

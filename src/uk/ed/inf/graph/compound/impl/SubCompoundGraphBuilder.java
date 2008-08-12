@@ -1,10 +1,10 @@
 package uk.ed.inf.graph.compound.impl;
 
-import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundGraph;
-import uk.ed.inf.graph.compound.archetypal.ArchetypalSubCompoundGraphBuilder;
+import uk.ed.inf.graph.compound.base.BaseCompoundGraph;
+import uk.ed.inf.graph.compound.base.BaseSubCompoundGraphBuilder;
 
 
-public class SubCompoundGraphBuilder extends ArchetypalSubCompoundGraphBuilder {
+public class SubCompoundGraphBuilder extends BaseSubCompoundGraphBuilder {
 	private SubCompoundGraph subgraph;
 	
 	/**
@@ -20,7 +20,7 @@ public class SubCompoundGraphBuilder extends ArchetypalSubCompoundGraphBuilder {
 	}
 	
 	@Override
-	protected void newSubgraph(ArchetypalCompoundGraph compoundGraph) {
+	protected void newSubgraph(BaseCompoundGraph compoundGraph) {
 		this.subgraph = new SubCompoundGraph(compoundGraph);
 	}
 

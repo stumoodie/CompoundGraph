@@ -1,19 +1,20 @@
 package uk.ed.inf.graph.compound.impl;
 
-import uk.ed.inf.graph.compound.archetypal.ArchetypalChildCompoundGraph;
-import uk.ed.inf.graph.compound.archetypal.ArchetypalGraphCopyBuilder;
 import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundEdge;
-import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
+import uk.ed.inf.graph.compound.base.BaseChildCompoundGraph;
+import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
+import uk.ed.inf.graph.compound.base.BaseCompoundNode;
+import uk.ed.inf.graph.compound.base.BaseGraphCopyBuilder;
 
 
-public class CompoundGraphCopyBuilder extends ArchetypalGraphCopyBuilder {
+public class CompoundGraphCopyBuilder extends BaseGraphCopyBuilder {
 	
 	public CompoundGraphCopyBuilder(){
 		super();
 	}
 
 	@Override
-	protected CompoundNode createCopyOfNode(ArchetypalCompoundNode srcNode, ArchetypalCompoundNode destParentNode, int newIndex) {
+	protected CompoundNode createCopyOfNode(BaseCompoundNode srcNode, BaseCompoundNode destParentNode, int newIndex) {
 		CompoundNode retVal = new CompoundNode((CompoundNode)destParentNode, newIndex);
 //		ChildCompoundGraph destParentCompoundNode = (ChildCompoundGraph)destParentNode.getChildCigraph(); 
 //		CompoundNodeFactory fact = destParentCompoundNode.nodeFactory();
@@ -22,8 +23,8 @@ public class CompoundGraphCopyBuilder extends ArchetypalGraphCopyBuilder {
 	}
 
 	@Override
-	protected ArchetypalCompoundEdge createCopyOfEdge(ArchetypalCompoundEdge srcEdge, ArchetypalChildCompoundGraph edgeOwner,
-			int newEdgeIndex, ArchetypalCompoundNode outNode, ArchetypalCompoundNode inNode) {
+	protected ArchetypalCompoundEdge createCopyOfEdge(BaseCompoundEdge srcEdge, BaseChildCompoundGraph edgeOwner,
+			int newEdgeIndex, BaseCompoundNode outNode, BaseCompoundNode inNode) {
 		return new CompoundEdge((ChildCompoundGraph)edgeOwner, newEdgeIndex, (CompoundNode)outNode, (CompoundNode)inNode);
 	}
 
