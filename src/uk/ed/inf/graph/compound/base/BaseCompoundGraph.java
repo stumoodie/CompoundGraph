@@ -234,7 +234,7 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 		return retVal;
 	}
 
-	public final IGraphState<BaseCompoundNode, BaseCompoundEdge> getCurrentState() {
+	public IGraphState<BaseCompoundNode, BaseCompoundEdge> getCurrentState() {
 		return stateHandler.createGraphState();
 	}
 
