@@ -2,14 +2,26 @@ package uk.ed.inf.graph.impl;
 
 import static org.junit.Assert.*;
 
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class NodeFactoryTest {
+	
+	private static final int INDEX_ZERO = 0 ;
+	
+	private NodeFactory testNodeFactory ;
+	private Graph mockGraph ;
 
 	@Before
 	public void setUp() throws Exception {
+		
+		mockGraph = new Graph () ;
+		
+		testNodeFactory = new NodeFactory (mockGraph) ;
 	}
 
 	@After
@@ -17,13 +29,10 @@ public class NodeFactoryTest {
 	}
 
 	@Test
-	public final void testNodeFactory() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
 	public final void testCreateNode() {
-		fail("Not yet implemented"); // TODO
+		Node createdNode = testNodeFactory.createNode() ;
+		assertEquals ( "get graph" , mockGraph , createdNode.getGraph() ) ;
+		assertEquals ( "get index" , INDEX_ZERO , createdNode.getIndex()) ;
 	}
 
 }
