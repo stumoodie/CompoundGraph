@@ -43,10 +43,12 @@ public class BitStringBuffer {
 		bitVector.clear(bitIndex);
 	}
 
-	public boolean equals(Object obj) {
-		return bitVector.equals(obj);
-	}
+//	public boolean equals(Object obj) {
+//		return bitVector.equals(obj);
+//	}
 
+	
+	
 	public void flip(int fromIndex, int toIndex) {
 		bitVector.flip(fromIndex, toIndex);
 	}
@@ -61,10 +63,6 @@ public class BitStringBuffer {
 
 	public boolean get(int bitIndex) {
 		return bitVector.get(bitIndex);
-	}
-
-	public int hashCode() {
-		return bitVector.hashCode();
 	}
 
 	public boolean intersects(BitStringBuffer set) {
@@ -121,5 +119,22 @@ public class BitStringBuffer {
 
 	public void xor(BitStringBuffer set) {
 		bitVector.xor(set.bitVector);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final BitStringBuffer other = (BitStringBuffer) obj;
+		if (bitVector == null) {
+			if (other.bitVector != null)
+				return false;
+		} else if (!bitVector.equals(other.bitVector))
+			return false;
+		return true;
 	}
 }

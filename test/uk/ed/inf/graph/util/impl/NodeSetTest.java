@@ -2,14 +2,45 @@ package uk.ed.inf.graph.util.impl;
 
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.lang.reflect.Array;
+
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JMock;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import uk.ed.inf.graph.basic.IBasicEdge;
+import uk.ed.inf.graph.basic.IBasicNode;
+import uk.ed.inf.graph.impl.Edge;
+import uk.ed.inf.graph.impl.Node;
+
+@RunWith(JMock.class)
 public class NodeSetTest {
+	
+	private Mockery mockery = new JUnit4Mockery() {{
+		setImposteriser(ClassImposteriser.INSTANCE);
+	}};
+	
+	private NodeSet<TestNode, TestEdge> testNodeSet ;
+	
+	private TestNode mockBasicNode2 ;
+	
+	private Set<TestNode> nodeCollection = new HashSet<TestNode> () ;
+	
+	private static final int[] NUMERIC = {0,1,2,3,4,5} ;
 
 	@Before
 	public void setUp() throws Exception {
+		
+		testNodeSet = new NodeSet<TestNode, TestEdge>() ;
 	}
 
 	@After
@@ -23,17 +54,37 @@ public class NodeSetTest {
 
 	@Test
 	public final void testAdd() {
-		fail("Not yet implemented"); // TODO
+		final TestNode mockBasicNode ;
+		mockBasicNode = mockery.mock(TestNode.class ,"mockBasicNode") ;
+		testNodeSet.add(mockBasicNode) ;
+		assertEquals ( "added node" , NUMERIC[1] , testNodeSet.size() ) ;
 	}
 
 	@Test
 	public final void testAddAll() {
-		fail("Not yet implemented"); // TODO
+		final TestNode mockBasicNode ;
+		mockBasicNode = mockery.mock(TestNode.class ,"mockBasicNode") ;
+		mockBasicNode2 = mockery.mock(TestNode.class ,"mockBasicNode2") ;
+		
+		this.mockery.checking(new Expectations(){{
+			atLeast(1).of(mockBasicNode).compareTo(mockBasicNode2) ; returnValue(-1) ;
+			atLeast(1).of(mockBasicNode2).compareTo(mockBasicNode) ; returnValue(1) ;
+		}});
+		
+		nodeCollection.add(mockBasicNode) ;
+		nodeCollection.add(mockBasicNode2) ;
+		
+		testNodeSet.addAll(nodeCollection) ;
+		assertEquals ( "added node" , NUMERIC[2] , testNodeSet.size() ) ;
 	}
 
 	@Test
 	public final void testClear() {
-		fail("Not yet implemented"); // TODO
+		final TestNode mockBasicNode ;
+		mockBasicNode = mockery.mock(TestNode.class ,"mockBasicNode") ;
+		testNodeSet.add(mockBasicNode) ;
+		testNodeSet.clear() ;
+		assertEquals ( "cleared" , NUMERIC[0] , testNodeSet.size() ) ;
 	}
 
 	@Test
@@ -43,17 +94,41 @@ public class NodeSetTest {
 
 	@Test
 	public final void testContainsInt() {
-		fail("Not yet implemented"); // TODO
+		final TestNode mockBasicNode ;
+		mockBasicNode = mockery.mock(TestNode.class ,"mockBasicNode") ;
+		testNodeSet.add(mockBasicNode) ;
+		
+		this.mockery.checking(new Expectations(){{
+			atLeast(1).of(mockBasicNode).getIndex() ; returnValue(0) ;
+		}});
+		
+		assertTrue ( "contains at 0" , testNodeSet.contains(0) ) ;
 	}
 
 	@Test
 	public final void testContainsObject() {
-		fail("Not yet implemented"); // TODO
+		final TestNode mockBasicNode ;
+		mockBasicNode = mockery.mock(TestNode.class ,"mockBasicNode") ;
+		testNodeSet.add(mockBasicNode) ;
+		
+		this.mockery.checking(new Expectations(){{
+			atLeast(1).of(mockBasicNode).compareTo(mockBasicNode) ; returnValue(0) ;
+		}});
+		
+		assertTrue ( "contains object" , testNodeSet.contains(mockBasicNode)) ;
 	}
 
 	@Test
 	public final void testGet() {
-		fail("Not yet implemented"); // TODO
+		final TestNode mockBasicNode ;
+		mockBasicNode = mockery.mock(TestNode.class ,"mockBasicNode") ;
+		testNodeSet.add(mockBasicNode) ;
+		
+		this.mockery.checking(new Expectations(){{
+			atLeast(1).of(mockBasicNode).getIndex() ; returnValue(0) ;
+		}});
+		
+		assertEquals ( "same with modkBasicNode" , mockBasicNode , testNodeSet.get(0) ) ;
 	}
 
 	@Test
@@ -63,17 +138,47 @@ public class NodeSetTest {
 
 	@Test
 	public final void testIsEmpty() {
-		fail("Not yet implemented"); // TODO
+		assertTrue ( "is Empty" , testNodeSet.isEmpty()) ;
 	}
 
 	@Test
 	public final void testIterator() {
-		fail("Not yet implemented"); // TODO
+		final TestNode mockBasicNode ;
+		
+		mockBasicNode = mockery.mock(TestNode.class ,"mockBasicNode") ;
+		testNodeSet.add(mockBasicNode) ;
+		
+		TestNode [] nodeArray = { mockBasicNode } ;
+		
+		Iterator nodeIterator = testNodeSet.iterator() ;
+		
+		int counter = 0 ;
+		
+		while(nodeIterator.hasNext())
+		{
+			assertEquals("sameNode" , nodeArray[counter], nodeIterator.next()) ;
+			counter++ ;
+		}
+		
+		assertEquals( "same number" , NUMERIC[1] , counter) ;
+		
 	}
 
 	@Test
 	public final void testRemove() {
-		fail("Not yet implemented"); // TODO
+		final TestNode mockBasicNode ;
+		mockBasicNode = mockery.mock(TestNode.class ,"mockBasicNode") ;
+		this.mockery.checking(new Expectations(){{
+			atLeast(1).of(mockBasicNode).compareTo(mockBasicNode) ; returnValue(0) ;
+		}});
+		
+		testNodeSet.add(mockBasicNode) ;
+		
+		assertFalse ( "not empty" , testNodeSet.isEmpty()) ;
+		
+		testNodeSet.remove(mockBasicNode) ;
+		
+		assertTrue ( "empty" , testNodeSet.isEmpty()) ;
 	}
 
 	@Test
@@ -88,17 +193,48 @@ public class NodeSetTest {
 
 	@Test
 	public final void testSize() {
-		fail("Not yet implemented"); // TODO
+		final TestNode mockBasicNode ;
+		mockBasicNode = mockery.mock(TestNode.class ,"mockBasicNode") ;
+		testNodeSet.add(mockBasicNode) ;
+		
+		assertEquals ( "size is 1 " , NUMERIC[1] , testNodeSet.size() );
 	}
 
 	@Test
 	public final void testToArray() {
-		fail("Not yet implemented"); // TODO
+		final TestNode mockBasicNode ;
+		mockBasicNode = mockery.mock(TestNode.class ,"mockBasicNode") ;
+		
+		testNodeSet.add(mockBasicNode) ;
+		
+		Object[] nodeArray = testNodeSet.toArray() ;
+		
+		assertEquals ( "length" , NUMERIC[1] , Array.getLength(nodeArray) ) ;
+		assertTrue ( "is TestNode" , nodeArray[0] instanceof TestNode) ;
+		assertEquals ( "mockNode" , mockBasicNode , nodeArray[0]) ;
 	}
 
 	@Test
 	public final void testToArrayTArray() {
-		fail("Not yet implemented"); // TODO
+		final TestNode mockBasicNode ;
+		mockBasicNode = mockery.mock(TestNode.class ,"mockBasicNode") ;
+		
+		testNodeSet.add(mockBasicNode) ;
+		
+		TestNode nodeArray [] = new TestNode [0] ;
+		
+		assertEquals ( "array empty" , NUMERIC[0] , Array.getLength(nodeArray)) ;
+		
+		nodeArray = testNodeSet.toArray(nodeArray ) ;
+		
+		assertEquals ( "length" , NUMERIC[1] , Array.getLength(nodeArray) ) ;
+		assertTrue ( "is TestNode" , nodeArray[0] instanceof TestNode) ;
+		assertEquals ( "mockNode" , mockBasicNode , nodeArray[0]) ;
+		
 	}
+	
+	private static abstract class TestNode implements IBasicNode<TestNode, TestEdge> { }
+	
+	private static abstract class TestEdge implements IBasicEdge<TestNode, TestEdge> {}
 
 }

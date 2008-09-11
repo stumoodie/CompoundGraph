@@ -48,14 +48,8 @@ public class BitString implements IBitString {
 	public int cardinality() {
 		return bitVector.cardinality();
 	}
-
-	/* (non-Javadoc)
-	 * @see uk.ed.inf.graph.impl.IBitString#equals(java.lang.Object)
-	 */
-	public boolean equals(Object obj) {
-		return bitVector.equals(obj);
-	}
-
+	
+	
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.IBitString#get(int, int)
 	 */
@@ -70,11 +64,13 @@ public class BitString implements IBitString {
 		return bitVector.get(bitIndex);
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ed.inf.graph.impl.IBitString#hashCode()
-	 */
+	@Override
 	public int hashCode() {
-		return bitVector.hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((bitVector == null) ? 0 : bitVector.hashCode());
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -162,6 +158,23 @@ public class BitString implements IBitString {
 			retVal[i] = this.get(i);
 		}
 		return retVal;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final BitString other = (BitString) obj;
+		if (bitVector == null) {
+			if (other.bitVector != null)
+				return false;
+		} else if (!bitVector.equals(other.bitVector))
+			return false;
+		return true;
 	}
 
 }

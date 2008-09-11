@@ -126,7 +126,8 @@ public class CompoundNodeTest {
 			allowing(mockChildNode2).compareTo(mockChildNode1); will(returnValue(1));
 			allowing(mockChildNode2).compareTo(mockChildNode2); will(returnValue(0));
 			allowing(mockChildNode2).isRemoved(); will(returnValue(false));
-
+			atLeast(1).of(mockChildNode2).getIndex(); will(returnValue(1)) ;
+			
 //			atLeast(1).of(colourHandler).setNode(with(any(CompoundNode.class)));
 		
 		}});

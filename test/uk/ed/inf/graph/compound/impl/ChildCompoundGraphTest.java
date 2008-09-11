@@ -2,14 +2,57 @@ package uk.ed.inf.graph.compound.impl;
 
 import static org.junit.Assert.*;
 
+import java.util.Iterator;
+
+import javax.swing.border.EtchedBorder;
+
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.api.Expectation;
+import org.jmock.integration.junit4.JMock;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import uk.ed.inf.graph.basic.IBasicSubgraph;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
+import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
+import uk.ed.inf.graph.compound.base.BaseCompoundNode;
+import uk.ed.inf.graph.directed.IDirectedPair;
+import uk.ed.inf.graph.impl.Graph;
+
+@RunWith(JMock.class)
 public class ChildCompoundGraphTest {
+	private static final int NUMERIC [] = {0,1,2,3,4,5} ;
+
+	private Mockery mockery = new JUnit4Mockery() {{
+		setImposteriser(ClassImposteriser.INSTANCE);
+	}};
+	
+	private ChildCompoundGraph testChildCompoundGraph ;
+	private CompoundNode mockRootNode ;
+	private CompoundGraph mockGraph ;
+	
+	private CompoundNode inNode ;
+	private CompoundNode outNode ;
+	
+	private CompoundEdge anEdge ;
 
 	@Before
 	public void setUp() throws Exception {
+		mockGraph = new CompoundGraph () ;
+		mockRootNode = mockGraph.getRootNode() ;
+		
+		testChildCompoundGraph = mockGraph.getRootNode().getChildCompoundGraph() ;
+		
+		inNode = testChildCompoundGraph.nodeFactory().createNode() ;
+		outNode = testChildCompoundGraph.nodeFactory().createNode() ;
+		
+		testChildCompoundGraph.edgeFactory().setPair(outNode, inNode) ;
+		anEdge = testChildCompoundGraph.edgeFactory().createEdge() ;
 	}
 
 	@After
@@ -17,28 +60,35 @@ public class ChildCompoundGraphTest {
 	}
 
 	@Test
-	public final void testChildCigraph() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
 	public final void testGetRoot() {
-		fail("Not yet implemented"); // TODO
+		assertEquals ( "root" , mockRootNode , testChildCompoundGraph.getRootNode()) ;
 	}
 
 	@Test
 	public final void testContainsDirectedEdgeCiNodeCiNode() {
-		fail("Not yet implemented"); // TODO
+		IDirectedPair<BaseCompoundNode, BaseCompoundEdge> mockDirectedPair = mockery.mock(IDirectedPair.class , "mockDirectedPair") ;
+		
+		mockery.checking( new Expectations () {{
+			
+		}} );
+		
+		assertTrue ( "contains directed edge" , testChildCompoundGraph.containsDirectedEdge(mockDirectedPair)) ;
 	}
 
 	@Test
 	public final void testCanCreateEdges() {
-		fail("Not yet implemented"); // TODO
+		assertTrue ( "hasFactory" , testChildCompoundGraph.edgeFactory() != null ) ;
+		assertTrue ( "singleton factory" , testChildCompoundGraph.edgeFactory() == testChildCompoundGraph.edgeFactory() ) ;
+		testChildCompoundGraph.edgeFactory().createEdge() ;
+		assertEquals ( "two edges" , NUMERIC[2] , testChildCompoundGraph.getNumEdges() ) ;
 	}
 
 	@Test
 	public final void testCanCreateNodes() {
-		fail("Not yet implemented"); // TODO
+		assertTrue ( "hasFactory" , testChildCompoundGraph.nodeFactory() != null ) ;
+		assertTrue ( "singleton factory" , testChildCompoundGraph.nodeFactory() == testChildCompoundGraph.nodeFactory() ) ;
+		testChildCompoundGraph.nodeFactory().createNode() ;
+		assertEquals ( "one node" , NUMERIC[3] , testChildCompoundGraph.getNumNodes()) ;
 	}
 
 	@Test
@@ -53,27 +103,27 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testContainsConnectionCiNodeCiNode() {
-		fail("Not yet implemented"); // TODO
+		assertTrue ( "connection" , testChildCompoundGraph.containsConnection(inNode, outNode)) ;
 	}
 
 	@Test
 	public final void testContainsEdgeCiEdge() {
-		fail("Not yet implemented"); // TODO
+		assertTrue ( "contains this edge" , testChildCompoundGraph.containsEdge(anEdge)) ;
 	}
 
 	@Test
 	public final void testContainsEdgeInt() {
-		fail("Not yet implemented"); // TODO
+		assertTrue ( "contains edge" , testChildCompoundGraph.containsEdge(1)) ;
 	}
 
 	@Test
 	public final void testContainsNodeInt() {
-		fail("Not yet implemented"); // TODO
+		assertTrue ( "contains node" , testChildCompoundGraph.containsNode(1)) ;
 	}
 
 	@Test
 	public final void testContainsNodeCiNode() {
-		fail("Not yet implemented"); // TODO
+		assertTrue ( "contains inNode" , testChildCompoundGraph.containsNode(inNode)) ;
 	}
 
 	@Test
@@ -93,32 +143,57 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testGetEdge() {
-		fail("Not yet implemented"); // TODO
+		assertEquals ( "get edge" , anEdge , testChildCompoundGraph.getEdge(1)) ;
 	}
 
 	@Test
 	public final void testEdgeIterator() {
-		fail("Not yet implemented"); // TODO
+		CompoundEdge [] edgeArray = { anEdge } ;
+		
+		Iterator<BaseCompoundEdge> edgeIterator = testChildCompoundGraph.edgeIterator() ;
+		
+		int counter = 0; 
+		
+		while ( edgeIterator.hasNext())
+		{
+			assertEquals ( "same edge" , edgeArray[counter] , edgeIterator.next()) ;
+			counter++ ;
+		}
+		
+		assertEquals ( "one element" , NUMERIC[1] , counter) ;
+		
 	}
 
 	@Test
 	public final void testGetNode() {
-		fail("Not yet implemented"); // TODO
+		assertEquals ( "get inNode" , inNode , testChildCompoundGraph.getNode(1) ) ;
 	}
 
 	@Test
 	public final void testNodeIterator() {
-		fail("Not yet implemented"); // TODO
+		CompoundNode [] nodeArray = { inNode , outNode } ;
+		
+		Iterator<BaseCompoundNode> nodeIterator = testChildCompoundGraph.nodeIterator() ;
+		
+		int counter = 0; 
+		
+		while ( nodeIterator.hasNext())
+		{
+			assertEquals ( "same edge" , nodeArray[counter] , nodeIterator.next()) ;
+			counter++ ;
+		}
+		
+		assertEquals ( "two elements" , NUMERIC[2] , counter) ;
 	}
 
 	@Test
 	public final void testGetNumEdges() {
-		fail("Not yet implemented"); // TODO
+		assertEquals( "one edge" , NUMERIC[1] , testChildCompoundGraph.getNumEdges() ) ;
 	}
 
 	@Test
 	public final void testGetNumNodes() {
-		fail("Not yet implemented"); // TODO
+		assertEquals ( "no nodes" , NUMERIC[2] , testChildCompoundGraph.getNumNodes()) ;
 	}
 
 	@Test
@@ -128,22 +203,29 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testCanCopyHere() {
-		fail("Not yet implemented"); // TODO
+		IBasicSubgraph<BaseCompoundNode, BaseCompoundEdge> aBasicSubgraph =  mockGraph.subgraphFactory().createSubgraph() ;
+		
+		assertTrue ( "canCopy" , testChildCompoundGraph.canCopyHere(aBasicSubgraph) );
 	}
 
 	@Test
 	public final void testCopyHere() {
-		fail("Not yet implemented"); // TODO
+		IBasicSubgraph<BaseCompoundNode, BaseCompoundEdge> aBasicSubgraph = mockGraph.subgraphFactory().createSubgraph() ;
+		
+		testChildCompoundGraph.copyHere(aBasicSubgraph) ;
+		assertEquals ( "same BaseGraph" , testChildCompoundGraph.getSuperGraph() , aBasicSubgraph.getSuperGraph()) ;
+		assertEquals ( "same no of Nodes" , testChildCompoundGraph.getNumNodes() , aBasicSubgraph.getNumNodes()) ;
+		assertEquals ( "same no of Edges" , testChildCompoundGraph.getNumEdges() , aBasicSubgraph.getNumEdges()) ;
 	}
 
 	@Test
 	public final void testGetSuperGraph() {
-		fail("Not yet implemented"); // TODO
+		assertEquals ( "graph" , mockGraph , testChildCompoundGraph.getSuperGraph()) ;
 	}
 
 	@Test
 	public final void testIsInducedSubgraph() {
-		fail("Not yet implemented"); // TODO
+		assertFalse ( "not Indused" , testChildCompoundGraph.isInducedSubgraph() );
 	}
 
 	@Test
@@ -153,17 +235,23 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testAddNewNode() {
-		fail("Not yet implemented"); // TODO
+		CompoundNode newNode = testChildCompoundGraph.nodeFactory().createNode() ;
+		assertEquals ( "one more node" , NUMERIC[3] , testChildCompoundGraph.getNumNodes()) ;
+		assertTrue ( "contains new Node" , testChildCompoundGraph.containsNode(newNode)) ;
 	}
 
 	@Test
 	public final void testAddNewEdge() {
-		fail("Not yet implemented"); // TODO
+		CompoundEdge newEdge = testChildCompoundGraph.edgeFactory().createEdge() ;
+		assertEquals ( "one more edge" , NUMERIC[2] , testChildCompoundGraph.getNumEdges()) ;
+		assertTrue ( "contains new Node" , testChildCompoundGraph.containsEdge(newEdge)) ;
 	}
 
 	@Test
 	public final void testContainsDirectedEdgeIDirectedPairOfCiNodeCiEdge() {
-		fail("Not yet implemented"); // TODO
+		final IDirectedPair<BaseCompoundNode, BaseCompoundEdge> aDirectedPair = mockery.mock(IDirectedPair.class , "aDirectedPair") ;
+			
+		assertTrue ( "contains directed pair" , testChildCompoundGraph.containsDirectedEdge(aDirectedPair) );
 	}
 
 	@Test

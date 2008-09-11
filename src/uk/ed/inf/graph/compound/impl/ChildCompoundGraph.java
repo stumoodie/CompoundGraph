@@ -10,7 +10,7 @@ public class ChildCompoundGraph extends ArchetypalChildCompoundGraph {
 	private final CompoundNodeFactory nodeFactory;
 	private final ChildCompoundEdgeFactory edgeFactory;
 	
-	public ChildCompoundGraph(CompoundNode root){
+	ChildCompoundGraph(CompoundNode root){
 		super(root, new CompoundGraphCopyBuilder());
 //		if(root == null) throw new IllegalArgumentException("root cannot be null");
 //		

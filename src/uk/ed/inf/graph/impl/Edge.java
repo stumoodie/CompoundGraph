@@ -83,7 +83,7 @@ public final class Edge implements IUndirectedEdge<Node, Edge>, IRestorableGraph
 	}
 
 	public boolean hasEnds(IBasicPair<Node, Edge> ends) {
-		return ends.equals(ends);
+		return connectedNodes.equals(ends);
 	}
 
 	public String toString(){

@@ -1,6 +1,8 @@
 package uk.ed.inf.graph.compound.base;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.basic.IBasicSubgraph;
@@ -9,6 +11,8 @@ import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
 import uk.ed.inf.graph.compound.IModifiableCompoundGraph;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
+import uk.ed.inf.graph.compound.impl.CompoundEdge;
+import uk.ed.inf.graph.compound.impl.CompoundNode;
 import uk.ed.inf.graph.directed.IDirectedPair;
 import uk.ed.inf.graph.state.GraphStateHandler;
 import uk.ed.inf.graph.state.IGraphState;
@@ -267,8 +271,22 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 
 
 	public final void clear() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Implement this method!");
+
+		this.removeEdges(this.edgeIterator()) ;
+		Iterator<BaseCompoundNode> nodeIterator = this.nodeIterator() ;
+		
+		List<BaseCompoundNode> allNodesButRootNode = new ArrayList<BaseCompoundNode> () ;
+		
+		while ( nodeIterator.hasNext())
+		{
+			BaseCompoundNode aNode = nodeIterator.next() ;
+			if ( aNode != this.getRootNode())
+			{
+				allNodesButRootNode.add(aNode) ;
+			}
+		}
+		
+		this.removeNodes(allNodesButRootNode.iterator()) ;
 	}
 	
 	public abstract BaseCompoundNodeFactory nodeFactory();
