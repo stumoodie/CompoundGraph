@@ -2,14 +2,60 @@ package uk.ed.inf.graph.impl;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.SortedSet;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class NodeTest {
+import uk.ed.inf.graph.util.impl.ConnectedNodeIterator;
 
+public class NodeTest {
+	
+	private Node testNode ;
+	private Node otherNode ;
+	
+	private static Graph mockGraph ;
+	private static Edge mockEdge ;
+	private static Edge mockEdgeTwo ;
+	private static Node mockOneNode ;
+	private static Node mockTwoNode ;
+	
+	private static final int NODE_INDEX_ONE = 1 ;
+	private static final int NODE_INDEX_TWO = 2 ;
+	private static final int NODE_INDEX_THREE = 3 ;
+	private static final int EDGE_INDEX_ONE = 1 ;
+	private static final int EDGE_INDEX_TWO = 2 ;
+	
+	private static final int COMPARE_GREATER_INDEX = 1 ;
+	private static final int COMPARE_LESSER_INDEX = -1 ;
+	private static final int COMPARE_SAME_INDEX = 0 ;
+	
+	private static final int NUMERIC_VALUE_ONE = 1 ;
+	
 	@Before
 	public void setUp() throws Exception {
+		
+		mockGraph = new Graph () ;
+		
+		mockOneNode = mockGraph.nodeFactory().createNode() ;
+		mockTwoNode = mockGraph.nodeFactory().createNode() ;
+		
+
+		
+		mockGraph.edgeFactory().setPair(mockOneNode, mockTwoNode ) ;
+		mockEdge = mockGraph.edgeFactory().createEdge() ;
+		mockEdgeTwo = mockGraph.edgeFactory().createEdge() ;
+		
+		testNode = mockGraph.nodeFactory().createNode() ;
+		otherNode = mockGraph.nodeFactory().createNode() ;
+		
+		mockOneNode.addEdge(mockEdge) ;
+		testNode.addEdge(mockEdge) ;
+		
 	}
 
 	@After
@@ -18,77 +64,110 @@ public class NodeTest {
 
 	@Test
 	public final void testHashCode() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testNode() {
-		fail("Not yet implemented"); // TODO
+		assertEquals ("same hash code" , testNode , testNode ) ;
 	}
 
 	@Test
 	public final void testConnectedNodeIterator() {
-		fail("Not yet implemented"); // TODO
+		ConnectedNodeIterator<Node, Edge> validation = new ConnectedNodeIterator<Node, Edge> ( mockOneNode , mockOneNode.edgeIterator()) ;
+		
+		Iterator<Node> toCheck = mockOneNode.connectedNodeIterator() ;
+		
+		while ( validation.hasNext())
+		{
+			assertEquals ( "same object" , validation.next() , toCheck.next()) ;
+		}
+		
+		assertFalse ( "no more" , toCheck.hasNext()) ;
+		
 	}
 
 	@Test
 	public final void testGetDegree() {
-		fail("Not yet implemented"); // TODO
+		assertEquals ( "degree" ,NUMERIC_VALUE_ONE , testNode.getDegree() );
 	}
 
 	@Test
 	public final void testEdgeIterator() {
-		fail("Not yet implemented"); // TODO
+		Edge edgeArray [] = {mockEdge} ;
+		
+		Iterator<Edge> edgeIterator = testNode.edgeIterator() ;
+		
+		int counter = 0 ;
+		
+		while ( edgeIterator.hasNext() )
+		{
+			assertEquals ( "egde iterator item" , edgeArray[counter] , edgeIterator.next() ) ;
+			counter ++ ;
+		}
 	}
 
 	@Test
 	public final void testGetEdgesWith() {
-		fail("Not yet implemented"); // TODO
+		assertEquals ( "get Edges" , NUMERIC_VALUE_ONE , testNode.getEdgesWith(mockOneNode ).size() );
+		assertTrue ( "contains edge" , testNode.getEdgesWith(mockOneNode).contains(mockEdge) );
 	}
 
 	@Test
 	public final void testGetGraph() {
-		fail("Not yet implemented"); // TODO
+		assertEquals ( "graph" , mockGraph , testNode.getGraph()) ;
 	}
 
 	@Test
 	public final void testGetIndex() {
-		fail("Not yet implemented"); // TODO
+		assertEquals ( "index" , NODE_INDEX_TWO , testNode.getIndex()) ;
 	}
 
 	@Test
 	public final void testHasEdgeWith() {
-		fail("Not yet implemented"); // TODO
+		assertTrue ( mockOneNode.hasEdgeWith(mockTwoNode) );
 	}
 
 	@Test
-	public final void testAddEdge() {
-		fail("Not yet implemented"); // TODO
+	public final void testAddEdge() {  
+		testNode.addEdge(mockEdgeTwo) ;
+		
+		Edge edgeArray [] = {mockEdge , mockEdgeTwo} ;
+		
+		Iterator<Edge> edgeIterator = testNode.edgeIterator() ;
+		
+		int counter = 0 ;
+		
+		while ( edgeIterator.hasNext() )
+		{
+			assertEquals ( "egde iterator item" , edgeArray[counter] , edgeIterator.next() ) ;
+			counter ++ ;
+		}
 	}
 
 	@Test
 	public final void testCompareTo() {
-		fail("Not yet implemented"); // TODO
+		assertEquals ( "same Node" , COMPARE_SAME_INDEX , testNode.compareTo(testNode) ) ;
+		assertEquals ( "greater index" , COMPARE_GREATER_INDEX , otherNode.compareTo(testNode) ) ;
+		assertEquals ( "lesser index" , COMPARE_LESSER_INDEX , testNode.compareTo(otherNode) ) ;
 	}
 
 	@Test
 	public final void testEqualsObject() {
-		fail("Not yet implemented"); // TODO
+		assertTrue ( "same" , testNode.equals(testNode)) ;
+		assertFalse ( "not same" , testNode.equals(otherNode)) ;
 	}
 
 	@Test
 	public final void testIsRemoved() {
-		fail("Not yet implemented"); // TODO
+		assertFalse ( "not removed" , testNode.isRemoved() ) ;
 	}
 
 	@Test
 	public final void testMarkRemoved() {
-		fail("Not yet implemented"); // TODO
+		testNode.markRemoved(true) ;
+		assertTrue ( "removed" , testNode.isRemoved()) ;
 	}
 
 	@Test
 	public final void testToString() {
-		fail("Not yet implemented"); // TODO
+		assertEquals ( "test node" , "[uk.ed.inf.graph.impl.Node: index=2, removed=false]",  testNode.toString()) ;
+		assertNotSame ( "other node" , "[uk.ed.inf.graph.impl.Node: index=3, removed=false]",  testNode.toString()) ;
 	}
 
 }
