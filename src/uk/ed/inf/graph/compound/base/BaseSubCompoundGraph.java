@@ -151,10 +151,4 @@ public class BaseSubCompoundGraph implements ISubCompoundGraph<BaseCompoundNode,
 		}
 		return retVal;
 	}
-
-	// TODO: what should we do here?
-	public void clear() {
-		// TODO Auto-generated method stub
-		
-	}
 }
