@@ -32,10 +32,12 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 //	private final SubgraphFactory subgraphFactory;
 	private final ArrayList<Node> nodeList;
 	private final GraphStateHandler<Node, Edge> stateHandler;
+	private SubgraphFactory copiedComponentsFact;
 	
 	public Graph(){
 		this.nodeList = new ArrayList<Node>();
 		this.stateHandler = new GraphStateHandler<Node, Edge>(this);
+		this.copiedComponentsFact = this.subgraphFactory();
 	}
 	
 	public Graph(Graph other){
@@ -255,6 +257,7 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 			Node newNode = nodeFactory.createNode();
 			this.nodeList.add(newNode);
 			nodeEquivalence.put(oldNode, newNode);
+			this.copiedComponentsFact.addNode(newNode);
 		}
 		EdgeFactory edgeFactory = this.edgeFactory();
 		Iterator<? extends Edge> edgeIter = subGraph.edgeIterator();
@@ -263,7 +266,8 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 			Node newNodeOne = nodeEquivalence.get(oldEdge.getConnectedNodes().getOneNode());
 			Node newNodeTwo = nodeEquivalence.get(oldEdge.getConnectedNodes().getTwoNode());
 			edgeFactory.setPair(newNodeOne, newNodeTwo);
-			edgeFactory.createEdge();
+			Edge newEdge = edgeFactory.createEdge();
+			this.copiedComponentsFact.addEdge(newEdge);
 		}
 	}
 
@@ -286,26 +290,7 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 		
 	}
 
-//	public Graph createCopy() {
-//		Graph retVal = new Graph();
-//		SubgraphFactory fact = this.subgraphFactory;
-//		for(Node node : this.nodeList){
-//			fact.addNode(node);
-//		}
-//		// since graph cannot contain dangling edges it is safe to only add the nodes
-//		// and then add in the incident edges by creating an induced subgraph.
-//		Subgraph copySubgraph = fact.createInducedSubgraph();
-//		retVal.copyHere(copySubgraph);
-//		return retVal;
-//	}
-
-	public void clear() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public IBasicSubgraph<Node, Edge> getCopiedComponents() {
-		// TODO Auto-generated method stub
-		return null;
+	public Subgraph getCopiedComponents() {
+		return this.copiedComponentsFact.createSubgraph();
 	}
 }
