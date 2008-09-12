@@ -258,7 +258,7 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 		copyBuilder.makeCopy();
 	}
 	
-	public final IBasicSubgraph<BaseCompoundNode, BaseCompoundEdge> getCopiedComponents() {
+	public final ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> getCopiedComponents() {
 		return copyBuilder.getCopiedComponents();
 	}
 
