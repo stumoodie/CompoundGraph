@@ -1,8 +1,8 @@
 package uk.ed.inf.graph.compound.base;
 
-import uk.ed.inf.graph.directed.IDirectedEdgeFactory;
+import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 
-public abstract class BaseCompoundEdgeFactory implements IDirectedEdgeFactory<BaseCompoundNode, BaseCompoundEdge> {
+public abstract class BaseCompoundEdgeFactory implements ICompoundEdgeFactory<BaseCompoundNode, BaseCompoundEdge> {
 	private final BaseCompoundGraph graph;
 	private BaseCompoundNode inNode;
 	private BaseCompoundNode outNode;

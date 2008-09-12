@@ -1,8 +1,8 @@
 package uk.ed.inf.graph.compound.base;
 
-import uk.ed.inf.graph.basic.IBasicNodeFactory;
+import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 
-public abstract class BaseCompoundNodeFactory implements IBasicNodeFactory<BaseCompoundNode, BaseCompoundEdge> {
+public abstract class BaseCompoundNodeFactory implements ICompoundNodeFactory<BaseCompoundNode, BaseCompoundEdge> {
 	private final BaseCompoundNode parent;
 	
 	public BaseCompoundNodeFactory(BaseCompoundNode parent){
@@ -13,7 +13,6 @@ public abstract class BaseCompoundNodeFactory implements IBasicNodeFactory<BaseC
 	
 	public BaseCompoundNode createNode() {
 		int cntr = this.parent.getGraph().getNodeCounter().nextIndex();
-//		CompoundNode retVal = new CompoundNode(this.parent, cntr);
 		BaseCompoundNode retVal = newNode(this.parent, cntr);
 		this.parent.getChildCompoundGraph().addNewNode(retVal);
 		return retVal;
@@ -23,5 +22,9 @@ public abstract class BaseCompoundNodeFactory implements IBasicNodeFactory<BaseC
 
 	public BaseCompoundGraph getGraph() {
 		return parent.getGraph();
+	}
+	
+	public BaseChildCompoundGraph getOwningChildGraph() {
+		return this.parent.getChildCompoundGraph();
 	}
 }
