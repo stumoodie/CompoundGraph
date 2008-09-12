@@ -63,7 +63,7 @@ public interface IBasicGraph<
 	 * @param ends the ends of the edge to test.
 	 * @return true if the edge exists in the graph, false otherwise.
 	 */
-	boolean containsConnection(IBasicPair<N, E> ends);
+	boolean containsConnection(IBasicPair<? extends N, ? extends E> ends);
 
 	/**
 	 * Tests if the graph contains the edge of the given index. 

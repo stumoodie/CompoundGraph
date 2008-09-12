@@ -21,14 +21,6 @@ public class BaseSubCompoundGraph implements ISubCompoundGraph<BaseCompoundNode,
 		this.edgeSet = new EdgeSet<BaseCompoundNode, BaseCompoundEdge>();
 	}
 	
-//	public boolean canCopyHere(IBasicSubgraph<CiNode, CiEdge> subGraph) {
-//		return false;
-//	}
-//
-//	public void copyHere(IBasicSubgraph<CiNode, CiEdge> subGraph) {
-//		throw new UnsupportedOperationException("Operation not supported by GeneralSubgraph");
-//	}
-
 	public BaseCompoundGraph getSuperGraph() {
 		return this.superGraph;
 	}
@@ -61,18 +53,6 @@ public class BaseSubCompoundGraph implements ISubCompoundGraph<BaseCompoundNode,
 	public boolean containsNode(BaseCompoundNode node) {
 		return this.nodeSet.contains(node);
 	}
-
-//	public IBasicEdgeFactory<CiNode, CiEdge> basicEdgeFactory() {
-//		throw new UnsupportedOperationException("Operation not supported by GeneralSubgraph");
-//	}
-//
-//	public IBasicNodeFactory<CiNode, CiEdge> basicNodeFactory() {
-//		throw new UnsupportedOperationException("Operation not supported by GeneralSubgraph");
-//	}
-//
-//	public IBasicSubgraphFactory<CiNode, CiEdge> basicSubgraphFactory() {
-//		throw new UnsupportedOperationException("Operation not supported by GeneralSubgraph");
-//	}
 
 	public BaseCompoundEdge getEdge(int edgeIdx) {
 		return this.edgeSet.get(edgeIdx);
@@ -137,11 +117,11 @@ public class BaseSubCompoundGraph implements ISubCompoundGraph<BaseCompoundNode,
 	/**
 	 * Tests if the ends define one or more directed edges.
 	 */
-	public boolean containsDirectedEdge(IDirectedPair<BaseCompoundNode, BaseCompoundEdge> ends) {
+	public boolean containsDirectedEdge(IDirectedPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ends) {
 		boolean retVal = false;
 		if(ends != null){
-			BaseCompoundNode outNode = ends.getOutNode();
-			BaseCompoundNode inNode = ends.getInNode();
+			BaseCompoundNode outNode = (BaseCompoundNode)ends.getOutNode();
+			BaseCompoundNode inNode = (BaseCompoundNode)ends.getInNode();
 			// check that both nodes exist in this subgraph
 			if(this.nodeSet.contains(outNode) && this.nodeSet.contains(inNode)){
 				retVal = outNode.hasOutEdgeTo(inNode);
@@ -157,13 +137,13 @@ public class BaseSubCompoundGraph implements ISubCompoundGraph<BaseCompoundNode,
 	 * @param ends the pair of nodes that may define the edges of an edge.
 	 * @return true if it does, false otherwise.  
 	 */
-	public boolean containsConnection(IBasicPair<BaseCompoundNode, BaseCompoundEdge> ends) {
+	public boolean containsConnection(IBasicPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ends) {
 		boolean retVal = false;
 		if(ends != null && ends instanceof IDirectedPair){
 			// since this is a directed graph a valid edge pair must be an IDirectedPair
-			IDirectedPair<BaseCompoundNode, BaseCompoundEdge> ciEnds = (IDirectedPair<BaseCompoundNode, BaseCompoundEdge>)ends;
-			BaseCompoundNode oneNode = ciEnds.getOutNode();
-			BaseCompoundNode twoNode = ciEnds.getInNode();
+			IDirectedPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ciEnds = (IDirectedPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge>)ends;
+			BaseCompoundNode oneNode = (BaseCompoundNode)ciEnds.getOutNode();
+			BaseCompoundNode twoNode = (BaseCompoundNode)ciEnds.getInNode();
 			// check that the nodes belong to this subgraph.
 			if(this.nodeSet.contains(oneNode) && this.nodeSet.contains(twoNode)){
 				retVal = this.containsConnection(oneNode, twoNode);
@@ -172,6 +152,7 @@ public class BaseSubCompoundGraph implements ISubCompoundGraph<BaseCompoundNode,
 		return retVal;
 	}
 
+	// TODO: what should we do here?
 	public void clear() {
 		// TODO Auto-generated method stub
 		

@@ -42,7 +42,7 @@ public interface IBasicEdge<
 	 * @param ends The ends to be tested.
 	 * @return true if the edge contains the ends, false otherwise. 
 	 */
-	boolean hasEnds(IBasicPair<N, E> ends);
+	boolean hasEnds(IBasicPair<? super N, ? super E> ends);
 	
 	/**
 	 * Test if the edge has been removed from the graph.

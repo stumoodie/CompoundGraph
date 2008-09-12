@@ -27,24 +27,21 @@ import uk.ed.inf.graph.util.impl.FilteredIterator;
 public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGraph<Node, Edge>,
 			IModifiableGraph<Node, Edge> {
 	private final Logger logger = Logger.getLogger(this.getClass()); 
-	private final EdgeFactory edgeFactory;
-	private final NodeFactory nodeFactory;
-	private final SubgraphFactory subgraphFactory;
+//	private final EdgeFactory edgeFactory;
+//	private final NodeFactory nodeFactory;
+//	private final SubgraphFactory subgraphFactory;
 	private final ArrayList<Node> nodeList;
 	private final GraphStateHandler<Node, Edge> stateHandler;
 	
 	public Graph(){
 		this.nodeList = new ArrayList<Node>();
-		this.edgeFactory = new EdgeFactory(this);
-		this.nodeFactory = new NodeFactory(this);
-		this.subgraphFactory = new SubgraphFactory(this);
 		this.stateHandler = new GraphStateHandler<Node, Edge>(this);
 	}
 	
 	public Graph(Graph other){
 		this();
 		
-		SubgraphFactory fact = other.subgraphFactory;
+		SubgraphFactory fact = other.subgraphFactory();
 		for(Node node : this.nodeList){
 			fact.addNode(node);
 		}
@@ -93,15 +90,15 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 	}
 
 	public EdgeFactory edgeFactory() {
-		return this.edgeFactory;
+		return new EdgeFactory(this);
 	}
 
 	public NodeFactory nodeFactory() {
-		return this.nodeFactory;
+		return new NodeFactory(this);
 	}
 
 	public SubgraphFactory subgraphFactory() {
-		return this.subgraphFactory;
+		return new SubgraphFactory(this);
 	}
 
 	public Iterator<Edge> edgeIterator() {
@@ -133,7 +130,7 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 		return count;
 	}
 
-	public void removeSubgraph(IBasicSubgraph<Node, Edge> subgraph) {
+	public void removeSubgraph(IBasicSubgraph<? extends Node, ? extends Edge> subgraph) {
 		this.logger.debug("entering method removeSubgraph");
 		if(subgraph == null) throw new IllegalArgumentException("subgraph cannot be null");
 		if(subgraph.getSuperGraph() != this) throw new IllegalArgumentException("The subgraph must belong to this graph");
@@ -142,7 +139,7 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 		this.logger.debug("exiting method removeSubgraph");
 	}
 
-	private void removeEdges(Iterator<Edge> edgeIterator){
+	private void removeEdges(Iterator<? extends Edge> edgeIterator){
 		this.logger.debug("entering method removeEdges");
 		while(edgeIterator.hasNext()){
 			Edge edge = (Edge)edgeIterator.next();
@@ -152,7 +149,7 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 		this.logger.debug("exiting method removeEdges");
 	}
 	
-	private void removeNodes(Iterator<Node> nodeIterator){
+	private void removeNodes(Iterator<? extends Node> nodeIterator){
 		this.logger.debug("entering method removeNodes");
 		while(nodeIterator.hasNext()){
 			Node node = (Node)nodeIterator.next();
@@ -221,12 +218,12 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 		this.nodeList.add(newNode);
 	}
 
-	public boolean containsConnection(IBasicPair<Node, Edge> ends) {
+	public boolean containsConnection(IBasicPair<? extends Node, ? extends Edge> ends) {
 		boolean retVal = false;
 		if(ends != null && ends instanceof IUndirectedPair){
-			IUndirectedPair<Node, Edge> undirectedEnds = (IUndirectedPair<Node, Edge>)ends;
-			Node thisNode = undirectedEnds.getOneNode();
-			Node thatNode = undirectedEnds.getTwoNode();
+			IUndirectedPair<? extends Node, ? extends Edge> undirectedEnds = (IUndirectedPair<? extends Node, ? extends Edge>)ends;
+			Node thisNode = (Node)undirectedEnds.getOneNode();
+			Node thatNode = (Node)undirectedEnds.getTwoNode();
 			if(!thisNode.isRemoved() && !thatNode.isRemoved()){
 				retVal = thisNode.hasEdgeWith(thatNode);
 			}
@@ -242,17 +239,17 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 		this.stateHandler.restoreState(previousState);
 	}
 
-	public boolean canCopyHere(IBasicSubgraph<Node, Edge> subGraph) {
+	public boolean canCopyHere(IBasicSubgraph<? extends Node, ? extends Edge> subGraph) {
 		return subGraph != null && subGraph.isInducedSubgraph();
 	}
 
 	
-	public void copyHere(IBasicSubgraph<Node, Edge> subGraph) {
+	public void copyHere(IBasicSubgraph<? extends Node, ? extends Edge> subGraph) {
 		if(canCopyHere(subGraph)) throw new IllegalArgumentException("Cannot copy graph here");
 		
 		Map<Node, Node> nodeEquivalence = new HashMap<Node, Node>();
 		NodeFactory nodeFactory = this.nodeFactory();
-		Iterator<Node> nodeIter = subGraph.nodeIterator();
+		Iterator<? extends Node> nodeIter = subGraph.nodeIterator();
 		while(nodeIter.hasNext()){
 			Node oldNode = nodeIter.next();
 			Node newNode = nodeFactory.createNode();
@@ -260,7 +257,7 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 			nodeEquivalence.put(oldNode, newNode);
 		}
 		EdgeFactory edgeFactory = this.edgeFactory();
-		Iterator<Edge> edgeIter = subGraph.edgeIterator();
+		Iterator<? extends Edge> edgeIter = subGraph.edgeIterator();
 		while(edgeIter.hasNext()){
 			Edge oldEdge = edgeIter.next();
 			Node newNodeOne = nodeEquivalence.get(oldEdge.getConnectedNodes().getOneNode());

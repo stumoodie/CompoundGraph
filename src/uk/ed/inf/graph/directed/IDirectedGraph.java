@@ -21,6 +21,6 @@ public interface IDirectedGraph<
 	 * @param ends the pair of nodes to be tested, can be null.
 	 * @return true if there is at least one edge between then, false otherwise.
 	 */
-	boolean containsDirectedEdge(IDirectedPair<N, E> ends);
+	boolean containsDirectedEdge(IDirectedPair<? extends N, ? extends E> ends);
 	
 }

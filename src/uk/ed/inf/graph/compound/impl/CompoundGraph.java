@@ -6,22 +6,13 @@ import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
 
 public class CompoundGraph extends ArchetypalCompoundGraph {
 	private CompoundNode rootNode;
-	private final SubCompoundGraphFactory subgraphFactory;
-	private final CompoundNodeFactory nodeFactory;
-	private final CompoundEdgeFactory edgeFactory;
 	
 	public CompoundGraph(){
 		super(new CompoundGraphCopyBuilder());
-		this.subgraphFactory = new SubCompoundGraphFactory(this);
-		this.edgeFactory = new CompoundEdgeFactory(this);
-		this.nodeFactory = new CompoundNodeFactory(rootNode);
 	}
 
 	public CompoundGraph(CompoundGraph otherGraph){
 		super(new CompoundGraphCopyBuilder(), otherGraph);
-		this.subgraphFactory = otherGraph.subgraphFactory();
-		this.nodeFactory = otherGraph.nodeFactory;
-		this.edgeFactory = otherGraph.edgeFactory;
 	}
 	
 	@Override
@@ -34,19 +25,20 @@ public class CompoundGraph extends ArchetypalCompoundGraph {
 		return this.rootNode;
 	}
 	
-
+	@Override
 	public CompoundEdgeFactory edgeFactory() {
-		return this.edgeFactory;
+		return new CompoundEdgeFactory(this);
 	}
 
+	@Override
 	public CompoundNodeFactory nodeFactory() {
-		return this.nodeFactory;
+		return new CompoundNodeFactory(rootNode);
 	}
 
+	@Override
 	public SubCompoundGraphFactory subgraphFactory() {
-		return this.subgraphFactory;
+		return new SubCompoundGraphFactory(this);
 	}
-
 
 	@Override
 	protected void createCopyOfRootNode(int newIndexValue, ArchetypalCompoundNode otherRootNode) {

@@ -10,7 +10,6 @@ public abstract class BaseSubCompoundGraphBuilder {
 	private final BaseCompoundGraph graph;
 	private final Set<BaseCompoundNode> nodeList;
 	private final Set<BaseCompoundEdge> edgeList;
-//	private ArchetypalSubCompoundGraph subGraph;
 
 	/**
 	 * Construct the builder, providing it with a list of nodes and edges with which to populate
@@ -20,7 +19,8 @@ public abstract class BaseSubCompoundGraphBuilder {
 	 * @param edgeList the list of edges to be added to the subgraph, cannot be null.
 	 * @throws NullPointerException if any of the the parameters are null. 
 	 */
-	public BaseSubCompoundGraphBuilder(BaseCompoundGraph graph){
+	protected BaseSubCompoundGraphBuilder(BaseCompoundGraph graph){
+		if(graph == null) throw new IllegalArgumentException("graph cannot be null");
 		this.graph = graph;
 		this.nodeList = new HashSet<BaseCompoundNode>();
 		this.edgeList = new HashSet<BaseCompoundEdge>();
@@ -40,7 +40,7 @@ public abstract class BaseSubCompoundGraphBuilder {
 	 * the original nodes are fully expanded. Nodes that are already children are merged into their
 	 * respective branches.
 	 */
-	public void expandChildCigraphs(){
+	public void expandChildNodes(){
 		Set<BaseCompoundNode> initialNodes = new HashSet<BaseCompoundNode>(this.nodeList); 
 		for(BaseCompoundNode compoundNode : initialNodes){
 			Iterator<? extends BaseCompoundNode> iter = compoundNode.levelOrderIterator();

@@ -42,7 +42,7 @@ public interface IBasicNode<
 	 * @return A set of edges sorted by edge index, which 
 	 * 
 	 */
-	SortedSet<? extends E> getEdgesWith(N other);
+	SortedSet<E> getEdgesWith(N other);
 	
 	/**
 	 * Get the degree of the this node. That is the number of edges associated with it. Note that in graph theory
@@ -56,7 +56,7 @@ public interface IBasicNode<
 	 * this iterator ignores the direction of the edge.
 	 * @return the edge iterator.
 	 */
-	Iterator<? extends E> edgeIterator();
+	Iterator<E> edgeIterator();
 
 	/**
 	 * Provides an iterator that lists all nodes connected to this node via another edge. When self-edges
@@ -64,7 +64,7 @@ public interface IBasicNode<
 	 * if this node has multiple edges to it.
 	 * @return the node iterator.
 	 */
-	Iterator<? extends N> connectedNodeIterator();
+	Iterator<N> connectedNodeIterator();
 	
 	/**
 	 * Has the node been removed from the graph? Nodes are not removed from the graph's data structures,

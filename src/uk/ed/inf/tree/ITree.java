@@ -25,8 +25,6 @@ public interface ITree<T extends ITreeNode<T>> {
 
 	T getLowestCommonAncestor(T thisNode, T thatNode);
 	
-//	boolean hasLowestCommonAncestor(T thisNode, T thatNode);
-
 	/**
 	 * Tests if <code>testNode</code> is a descendent of <code>startNode</code>. This means traversing
 	 * from the <code>startNode</code> until it finds the <code>testNode</code>.

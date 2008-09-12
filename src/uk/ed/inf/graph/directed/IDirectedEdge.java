@@ -10,4 +10,11 @@ public interface IDirectedEdge<
 	
 	IDirectedPair<N, E> getConnectedNodes();
 
+	/**
+	 * Tests if this directed edge has these ends. Ignores the directions of the ends.
+	 * @param ends The ends to be tested.
+	 * @return true if the edge contains the ends, false otherwise. 
+	 */
+	boolean hasDirectedEnds(IDirectedPair<? super N, ? super E> ends);
+	
 }

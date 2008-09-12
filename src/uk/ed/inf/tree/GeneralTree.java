@@ -7,7 +7,7 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 	private final T rootNode;
 	private final LCACalculator<T> lcaCalc;
 	
-	public GeneralTree(final T rootNode){
+	public GeneralTree(T rootNode){
 		if(rootNode == null) throw new NullPointerException("root node cannot be null");
 		
 		this.rootNode = rootNode;
@@ -66,23 +66,9 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 		return this.lcaCalc.getLCANode();
 	}
 	
-//	public boolean hasLowestCommonAncestor(final T thisNode, final T thatNode){
-//		boolean retVal = false;
-//		if(thisNode != null && thatNode != null){
-//			this.lcaCalc.findLowestCommonAncestor(thisNode, thatNode);
-//			retVal = this.lcaCalc.wasLCAFound();
-//		}
-//		return retVal;
-//	}
-	
 	public Iterator<T> levelOrderIterator(){
 		return new LevelOrderTreeIterator<T>(this.rootNode);
 	}
-	
-//	public ITreeWalker<T> levelOrderTreeWalker(ITreeNodeAction<T> visitor){
-//		ITreeWalker<T> treeVisitor = new LevelOrderTreeWalker<T>(this.rootNode, visitor);
-//		return treeVisitor;
-//	}
 	
 	/**
 	 * Tests if <code>testNode</code> is a descendant of <code>startNode</code>. This means traversing
@@ -125,5 +111,4 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 		}
 		return retVal;
 	}
-
 }

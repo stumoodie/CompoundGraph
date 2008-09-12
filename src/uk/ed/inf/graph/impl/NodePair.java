@@ -7,7 +7,7 @@ public final class NodePair implements IUndirectedPair<Node, Edge> {
 	private final Node oneNode;
 	private final Node twoNode;
 	
-	public NodePair(Node oneNode, Node twoNode){
+	NodePair(Node oneNode, Node twoNode){
 		this.oneNode = oneNode;
 		this.twoNode = twoNode;
 	}

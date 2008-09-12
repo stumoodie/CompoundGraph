@@ -32,7 +32,7 @@ public interface IModifiableGraph<
 	 * @throws UnsupportedOperationException if this graph implementation does support new subgraph creation and so a factory
 	 *  is not provided, i.e. <code>canCreateSubgraphs() == false</code>.
 	 */
-	IBasicSubgraphFactory<N, E> subgraphFactory();
+	IBasicSubgraphFactory<N,E> subgraphFactory();
 	
 	/**
 	 * Removes the nodes and edges defined in the subgraph from this graph. The subgraph must be consistent with
@@ -43,7 +43,7 @@ public interface IModifiableGraph<
 	 * @throws IllegalArgumentException if the subgraph does not belong to this graph: <code>subgraph.getOwningGraph() != this</code>.
 	 * @throws IllegalArgumentException if the subgraph is not consistent with this graph: <code>subgraph.isConsistentSnapshot() == false</code>. 
 	 */
-	void removeSubgraph(IBasicSubgraph<N, E> subgraph);
+	void removeSubgraph(IBasicSubgraph<? extends N, ? extends E> subgraph);
 
 	/**
 	 * Tests whether the subGraph can be copied to this graph. To be true the subgraph must be an induced subgraph
@@ -51,7 +51,7 @@ public interface IModifiableGraph<
 	 * @param subGraph the subgraph to test, can be null. 
 	 * @return true if the subgraph is valid to copy from, false otherwise.
 	 */
-	boolean canCopyHere(IBasicSubgraph<N, E> subGraph);
+	boolean canCopyHere(IBasicSubgraph<? extends N, ? extends E> subGraph);
 
 	/**
 	 * Copies a subgraph into this graph. Note that the subgraph can be from a different graph or subgraph
@@ -59,7 +59,7 @@ public interface IModifiableGraph<
 	 * themselves. Note that the subgraph must be valid to be copied.
 	 * @param subGraph the subgraph to copy
 	 */
-	void copyHere(IBasicSubgraph<N, E> subGraph);
+	void copyHere(IBasicSubgraph<? extends N, ? extends E> subGraph);
 	
 	/**
 	 * Retrieves the nodes and edges created in this graph by the last copy operation. The subgraph
@@ -69,11 +69,4 @@ public interface IModifiableGraph<
 	 */
 	IBasicSubgraph<N, E> getCopiedComponents();
 	
-//	/**
-//	 * Creates a copy of this graph. Note that the graph's structure is copied, but the indexes of
-//	 *  the copied graphs nodes and edges are not guaranteed to be the same.
-//	 * @return An instance of the copied graph. Cannot be null.
-//	 * @throws IllegalArgumentException if <code>canCopyHere()</code> cannot be null.
-//	 */
-//	IBasicGraph<N, E> createCopy();
 }

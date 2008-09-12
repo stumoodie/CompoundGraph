@@ -11,10 +11,10 @@ public class ConnectedNodeIterator<
 		E extends IBasicEdge<N, E>
 	> implements Iterator<N> {
 	
-	private final Iterator<E> edgeIterator;
+	private final Iterator<? extends E> edgeIterator;
 	private final N currNode;
 
-	public ConnectedNodeIterator(N currNode, Iterator<E> edgeIterator) {
+	public ConnectedNodeIterator(N currNode, Iterator<? extends E> edgeIterator) {
 		this.edgeIterator = edgeIterator;
 		this.currNode = currNode;
 	}

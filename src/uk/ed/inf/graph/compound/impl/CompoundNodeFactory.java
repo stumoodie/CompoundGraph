@@ -6,7 +6,7 @@ import uk.ed.inf.graph.compound.base.BaseCompoundNodeFactory;
 
 public class CompoundNodeFactory extends BaseCompoundNodeFactory {
 	
-	public CompoundNodeFactory(CompoundNode parent){
+	CompoundNodeFactory(CompoundNode parent){
 		super(parent);
 	}
 	

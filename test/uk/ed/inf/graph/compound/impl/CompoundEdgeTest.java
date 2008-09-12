@@ -35,7 +35,6 @@ public class CompoundEdgeTest {
 	public void tearDown() throws Exception {
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public final void testCiEdge() {
 		final ChildCompoundGraph mockSubgraph = this.mockery.mock(ChildCompoundGraph.class, "mockSubgraph");
@@ -61,7 +60,6 @@ public class CompoundEdgeTest {
 		this.mockery.assertIsSatisfied();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public final void testCompareTo() {
 		final ChildCompoundGraph mockSubgraph = this.mockery.mock(ChildCompoundGraph.class, "mockSubgraph");

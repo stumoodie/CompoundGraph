@@ -55,16 +55,15 @@ class LCACalculator<T extends ITreeNode<T>> {
 	}
 
 	// now see where thatNode shares a common node
-	@SuppressWarnings("unchecked")
 	private void findCommonNode(final T thatNode) {
-		ITreeNode previousNode = null;
-		ITreeNode currNode = thatNode;
+		T previousNode = null;
+		T currNode = thatNode;
 		this.lcaNode = null;
 		// iterate down to known root for this tree or stop
 		// if a root node is detected (i.e. parent matches itself)
 		do {
 			if (visitedThisNodes.contains(currNode)) {
-				this.lcaNode = (T) currNode;
+				this.lcaNode = currNode;
 			} else {
 				previousNode = currNode;
 				currNode = previousNode.getParent();

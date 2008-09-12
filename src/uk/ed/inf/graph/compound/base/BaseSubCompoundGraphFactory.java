@@ -11,15 +11,15 @@ public abstract class BaseSubCompoundGraphFactory implements IBasicSubgraphFacto
 	private final Set<BaseCompoundNode> nodeList = new HashSet<BaseCompoundNode>();
 	private final Set<BaseCompoundEdge> edgeList = new HashSet<BaseCompoundEdge>();
 
-	public BaseSubCompoundGraphFactory(BaseSubCompoundGraphBuilder builder){
+	protected BaseSubCompoundGraphFactory(BaseSubCompoundGraphBuilder builder){
 		this.builder = builder;
 	}
 	
-	public void addNode(BaseCompoundNode node){
+	public final void addNode(BaseCompoundNode node){
 		this.nodeList.add(node);
 	}
 	
-	public void addEdge(BaseCompoundEdge edge){
+	public final void addEdge(BaseCompoundEdge edge){
 		this.edgeList.add(edge);
 	}
 
@@ -50,7 +50,7 @@ public abstract class BaseSubCompoundGraphFactory implements IBasicSubgraphFacto
 	public BaseSubCompoundGraph createSubgraph() {
 		builder.setNodeList(this.nodeList);
 		builder.setEdgeList(this.edgeList);
-		builder.expandChildCigraphs();
+		builder.expandChildNodes();
 		builder.buildSubgraph();
 		return builder.getSubgraph();
 	}
@@ -68,7 +68,7 @@ public abstract class BaseSubCompoundGraphFactory implements IBasicSubgraphFacto
 	public BaseSubCompoundGraph createInducedSubgraph(){
 		builder.setNodeList(this.nodeList);
 		builder.setEdgeList(this.edgeList);
-		builder.expandChildCigraphs();
+		builder.expandChildNodes();
 		builder.addIncidentEdges();
 		builder.buildSubgraph();
 		return builder.getSubgraph();

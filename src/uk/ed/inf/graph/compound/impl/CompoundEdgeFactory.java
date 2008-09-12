@@ -7,11 +7,11 @@ import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 
 
 public class CompoundEdgeFactory extends BaseCompoundEdgeFactory {
-	public CompoundEdgeFactory(CompoundGraph graph){
+	CompoundEdgeFactory(CompoundGraph graph){
 		super(graph);
 	}
 	
-	
+	@Override
 	protected ArchetypalCompoundEdge newEdge(BaseChildCompoundGraph owningGraph, int nodeIndex,
 			BaseCompoundNode outNode,	BaseCompoundNode inNode) {
 		return new CompoundEdge((ChildCompoundGraph)owningGraph, nodeIndex, (CompoundNode)outNode, (CompoundNode)inNode);

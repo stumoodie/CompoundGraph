@@ -14,12 +14,12 @@ public class EdgeFromNodeIterator <
 		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 		E extends IBasicEdge<N, E>
 > implements Iterator<E> {
-	private final Iterator<N> nodeIter;
+	private final Iterator<? extends N> nodeIter;
 	private final Set<Integer> visited;
 	private final Queue<E> lookAhead;
-	private final INodeEdgeFilterCriteria<N, E> criteria;
+	private final INodeEdgeFilterCriteria<? super N, ? super E> criteria;
 
-	public EdgeFromNodeIterator(Iterator<N> nodeListIterator){
+	public EdgeFromNodeIterator(Iterator<? extends N> nodeListIterator){
 		if(nodeListIterator == null) throw new IllegalArgumentException("collection must exist");
 		this.nodeIter = nodeListIterator;
 		this.lookAhead = new LinkedList<E>();
@@ -28,7 +28,7 @@ public class EdgeFromNodeIterator <
 		readUntilNewEdgeFound();
 	}
 	
-	public EdgeFromNodeIterator(Iterator<N> nodeListIterator, INodeEdgeFilterCriteria<N, E> criteria){
+	public EdgeFromNodeIterator(Iterator<? extends N> nodeListIterator, INodeEdgeFilterCriteria<? super N, ? super E> criteria){
 		if(nodeListIterator == null) throw new IllegalArgumentException("collection must exist");
 		this.nodeIter = nodeListIterator;
 		this.lookAhead = new LinkedList<E>();
@@ -72,11 +72,11 @@ public class EdgeFromNodeIterator <
 		throw new UnsupportedOperationException("This Iterator does not support removal");
 	}
 
-	private void markEdgeVisited(IBasicEdge<N, E> edge){
+	private void markEdgeVisited(IBasicEdge<? extends N, ? extends E> edge){
 		this.visited.add(edge.getIndex());
 	}
 	
-	private boolean isVisited(IBasicEdge<N, E> edge){
+	private boolean isVisited(IBasicEdge<? extends N, ? extends E> edge){
 		return this.visited.contains(edge.getIndex());
 	}
 	

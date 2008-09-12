@@ -6,7 +6,7 @@ import uk.ed.inf.graph.compound.base.BaseSubCompoundGraph;
 
 public class SubCompoundGraph extends BaseSubCompoundGraph {
 	
-	public SubCompoundGraph(BaseCompoundGraph superGraph){
+	SubCompoundGraph(BaseCompoundGraph superGraph){
 		super(superGraph);
 	}
 	

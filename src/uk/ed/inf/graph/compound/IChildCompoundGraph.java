@@ -1,6 +1,5 @@
 package uk.ed.inf.graph.compound;
 
-import uk.ed.inf.graph.basic.IBasicGraph;
 
 
 public interface IChildCompoundGraph<
@@ -8,5 +7,5 @@ public interface IChildCompoundGraph<
 		E extends ICompoundEdge<N, E>
 > extends ICompoundGraph<N, E> {
 	
-	IBasicGraph<N, E> getSuperGraph();
+	ICompoundGraph<N, E> getSuperGraph();
 }

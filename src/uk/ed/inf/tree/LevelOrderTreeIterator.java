@@ -25,9 +25,8 @@ public class LevelOrderTreeIterator <T extends ITreeNode<T>> implements Iterator
 		return retVal;
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void readChildren(T parent){
-		Iterator<? extends ITreeNode> iter = parent.childIterator();
+		Iterator<T> iter = parent.childIterator();
 		while(iter.hasNext()){
 			this.queue.offer((T)iter.next());
 		}

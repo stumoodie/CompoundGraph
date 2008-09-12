@@ -4,37 +4,57 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.directed.IDirectedPair;
 
-public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder {
-	private ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> sourceSubCigraph;
+public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder<BaseCompoundNode, BaseCompoundEdge> {
+	private BaseSubCompoundGraph sourceSubCigraph;
 	private BaseChildCompoundGraph destSubCigraph;
+	private BaseSubCompoundGraphFactory subGraphFactory;
 	private final Map<BaseCompoundNode, BaseCompoundNode> oldNewEquivList;
 	
 	public BaseGraphCopyBuilder(){
 		this.oldNewEquivList = new HashMap<BaseCompoundNode, BaseCompoundNode>();
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see uk.ed.inf.graph.compound.base.ICompoundGraphCopyBuilder#setSourceSubgraph(uk.ed.inf.graph.compound.ISubCompoundGraph)
+	 * 
+	 * @param sourceSubCompoundGraph source subgraph to be copied
+	 * @throws IllegalArgumentException if <code>sourceSubCompoundGraph</code> is not of type <code>BaseSubCompoundGraph</code>. 
 	 */
-	public void setSourceSubgraph(ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> sourceSubCompoundGraph){
-		this.sourceSubCigraph = sourceSubCompoundGraph;
+	public void setSourceSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> sourceSubCompoundGraph){
+		if(!(sourceSubCompoundGraph instanceof BaseSubCompoundGraph)){
+			throw new IllegalArgumentException("sourceSubCompoundGraph must be of type BaseSubCompondGraph");
+		}
+		this.sourceSubCigraph = (BaseSubCompoundGraph)sourceSubCompoundGraph;
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see uk.ed.inf.graph.compound.base.ICompoundGraphCopyBuilder#setDestinatChildCompoundGraph(uk.ed.inf.graph.compound.base.BaseChildCompoundGraph)
+	 * @param sourceSubCompoundGraph target child graph to be copied to
+	 * @throws IllegalArgumentException if <code>childCompoundGraph</code> is not of type <code>BaseChildCompoundGraph</code>. 
 	 */
-	public void setDestinatChildCompoundGraph(BaseChildCompoundGraph childCompoundGraph){
-		this.destSubCigraph = childCompoundGraph;
+	public void setDestinatChildCompoundGraph(IChildCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> childCompoundGraph){
+		if(!(childCompoundGraph instanceof BaseChildCompoundGraph)){
+			throw new IllegalArgumentException("childCompoundGraph must be of type BaseChildCompondGraph");
+		}
+		this.destSubCigraph = (BaseChildCompoundGraph)childCompoundGraph;
+	}
+	
+	public void makeCopy(){
+		this.oldNewEquivList.clear();
+		this.subGraphFactory = this.destSubCigraph.getSuperGraph().subgraphFactory();
+		copyNodes();
+		copyEquivalentEdges();
 	}
 	
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.compound.base.ICompoundGraphCopyBuilder#copyNodes()
 	 */
-	public void copyNodes(){
+	private void copyNodes(){
 		Iterator<BaseCompoundNode> sourceNodeIter = this.sourceSubCigraph.nodeIterator();
 		while(sourceNodeIter.hasNext()){
 			BaseCompoundNode srcNode = (BaseCompoundNode)sourceNodeIter.next(); 
@@ -43,10 +63,9 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder 
 	}
 
 	private void copyNode(BaseCompoundNode srcNode, BaseCompoundNode destParentNode){
-//		IBasicNodeFactory<BaseCompoundNode, BaseCompoundEdge> nodeFactory = this.destSubCigraph.nodeFactory();
-//		BaseCompoundNode newNode = nodeFactory.createNode();
-		BaseCompoundNode newNode = createCopyOfNode(srcNode, destParentNode, destParentNode.getGraph().getNodeCounter().nextIndex());
+		BaseCompoundNode newNode = createCopyOfNode(srcNode, destParentNode);
 		this.oldNewEquivList.put(srcNode, newNode);
+		this.subGraphFactory.addNode(newNode);
 		Iterator<? extends BaseCompoundNode> childIter = srcNode.childIterator();
 		while(childIter.hasNext()){
 			BaseCompoundNode childNode = childIter.next();
@@ -54,20 +73,27 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder 
 		}
 	}
 	
+	public final BaseSubCompoundGraph getSourceSubgraph(){
+		return this.sourceSubCigraph;
+	}
+	
+	public final BaseChildCompoundGraph getDestinationChildGraph(){
+		return this.destSubCigraph;
+	}
+	
 	/**
-	 * Create a compound node
+	 * Create a compound node.  This node MUST be added to the child graph of the <code>destParentNode</code>. 
 	 * @param srcNode
 	 * @param destParentNode
 	 * @param newNodeIndex
 	 * @return
 	 */
-	protected abstract BaseCompoundNode createCopyOfNode(BaseCompoundNode srcNode,
-																BaseCompoundNode destParentNode, int newNodeIndex);
+	protected abstract BaseCompoundNode createCopyOfNode(BaseCompoundNode srcNode, BaseCompoundNode destParentNode);
 	
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.compound.base.ICompoundGraphCopyBuilder#copyEquivalentEdges()
 	 */
-	public void copyEquivalentEdges(){
+	private void copyEquivalentEdges(){
 		Iterator<BaseCompoundEdge> edgeIter = this.sourceSubCigraph.edgeIterator();
 		while(edgeIter.hasNext()){
 			BaseCompoundEdge srcEdge = (BaseCompoundEdge)edgeIter.next();
@@ -87,25 +113,24 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder 
 				}
 				linkOwner = lca;
 			}
-//			int edgeIdx =  this.destSubCigraph.getSuperGraph().getEdgeCounter().nextIndex();
-//			IEdgeColourHandler<BaseCompoundNode, BaseCompoundEdge> newColourHandler = srcEdge.getColourHandler().createCopy();
-//			BaseCompoundEdge newEdge = new BaseCompoundEdge(linkOwner.getChildCigraph(), edgeIdx, newColourHandler, newInNode, newOutNode);
-//			ICompoundEdgeFactory<BaseCompoundNode, BaseCompoundEdge> edgeFact = this.destSubCigraph.edgeFactory();
-//			edgeFact.setPair(newOutNode, newInNode);
-//			BaseCompoundEdge newEdge = edgeFact.createEdge();
-			BaseCompoundEdge newEdge = createCopyOfEdge(srcEdge, linkOwner.getChildCompoundGraph(), linkOwner.getGraph().getEdgeCounter().nextIndex(),
-																newOutNode, newInNode);
-			this.destSubCigraph.addNewEdge(newEdge);
+			BaseCompoundEdge newEdge = createCopyOfEdge(srcEdge, linkOwner.getChildCompoundGraph(),	newOutNode, newInNode);
+			this.subGraphFactory.addEdge(newEdge);
 		}
 	}
 	
 	/**
-	 * Create a new edge that us a copy of another, which may be in a different graph this this one. 
+	 * Create a new edge that us a copy of another, which may be in a different graph this this one. This edge MUST be added to
+	 * the destination child graph. 
 	 * @param srcEdge The edge to copy.
 	 * @param edgeOwner The compound node that will "own" this edge. 
 	 * @param newEdgeIndex The index to use for the newly created edge.
 	 * @return The newly created edge.
 	 */
 	protected abstract BaseCompoundEdge createCopyOfEdge(BaseCompoundEdge srcEdge, BaseChildCompoundGraph edgeOwner,
-												int newEdgeIndex, BaseCompoundNode outNode, BaseCompoundNode inNode);	
+												BaseCompoundNode outNode, BaseCompoundNode inNode);	
+
+
+	public ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> getCopiedComponents() {
+		return this.subGraphFactory.createSubgraph();
+	}
 }

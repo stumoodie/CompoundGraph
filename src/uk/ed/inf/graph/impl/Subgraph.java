@@ -20,7 +20,7 @@ public final class Subgraph implements IUndirectedSubgraph<Node, Edge> {
 	private final EdgeSet<Node, Edge> edgeSet;
 	private final AdjList adjList;
 	
-	public Subgraph(Graph superGraph){
+	Subgraph(Graph superGraph){
 		this.superGraph = superGraph;
 		this.nodeList = new TreeSet<Node>(new Comparator<Node>(){
 			public int compare(Node o1, Node o2) {
@@ -194,14 +194,14 @@ public final class Subgraph implements IUndirectedSubgraph<Node, Edge> {
 		return retVal;
 	}
 
-	public boolean containsConnection(IBasicPair<Node, Edge> ends) {
-		IUndirectedPair<Node, Edge> undirectedEnds = (IUndirectedPair<Node, Edge>)ends;
+	public boolean containsConnection(IBasicPair<? extends Node, ? extends Edge> ends) {
+		IUndirectedPair<? extends Node, ? extends Edge> undirectedEnds = (IUndirectedPair<? extends Node, ? extends Edge>)ends;
 		return this.adjList.isConnected(undirectedEnds.getOneNode().getIndex(),
 				undirectedEnds.getTwoNode().getIndex());
 	}
 
 	public void clear() {
-		// TODO Auto-generated method stub
-		
+		this.nodeList.clear();
+		this.edgeSet.clear();
 	}
 }

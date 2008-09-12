@@ -31,7 +31,7 @@ public interface IModifiableChildCompoundGraph <
 	 * @param subGraph the subgraph to test, can be null. 
 	 * @return true if the subgraph is valid to copy from, false otherwise.
 	 */
-	boolean canCopyHere(IBasicSubgraph<N, E> subGraph);
+	boolean canCopyHere(IBasicSubgraph<? extends N, ? extends E> subGraph);
 
 	/**
 	 * Copies a subgraph into this graph. Note that the subgraph can be from a different graph or subgraph
@@ -39,5 +39,5 @@ public interface IModifiableChildCompoundGraph <
 	 * themselves. Note that the subgraph must be valid to be copied.
 	 * @param subGraph the subgraph to copy
 	 */
-	void copyHere(IBasicSubgraph<N, E> subGraph);
+	void copyHere(IBasicSubgraph<? extends N, ? extends E> subGraph);
 }

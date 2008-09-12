@@ -41,7 +41,7 @@ public class GraphStateHandler<
 	
 	private void recordNodes(){
 		BitStringBuffer nodeStatus = new BitStringBuffer();
-		Iterator<N> iter = this.graph.nodeIterator();
+		Iterator<? extends N> iter = this.graph.nodeIterator();
 		while(iter.hasNext()){
 			N node = iter.next();
 			if(!node.isRemoved()){
@@ -56,7 +56,7 @@ public class GraphStateHandler<
 
 	private void recordEdges(){
 		BitStringBuffer edgeStatus = new BitStringBuffer();
-		Iterator<E> edgeIter = this.graph.edgeIterator();
+		Iterator<? extends E> edgeIter = this.graph.edgeIterator();
 		while(edgeIter.hasNext()){
 			E edge = edgeIter.next();
 			if(edge.isRemoved()){
@@ -83,7 +83,7 @@ public class GraphStateHandler<
 	
 	
 	private void restoreNodes(){
-		Iterator<N> iter = this.graph.nodeIterator();
+		Iterator<? extends N> iter = this.graph.nodeIterator();
 		while(iter.hasNext()){
 			N node = iter.next();
 			int nodeIdx = node.getIndex();
@@ -98,7 +98,7 @@ public class GraphStateHandler<
 	}
 	
 	private void restoreEdges(){
-		Iterator<E> edgeIter = new EdgeFromNodeIterator<N, E>(this.graph.nodeIterator());
+		Iterator<? extends E> edgeIter = new EdgeFromNodeIterator<N, E>(this.graph.nodeIterator());
 		while(edgeIter.hasNext()){
 			E edge = edgeIter.next();
 			int edgeIdx = edge.getIndex();

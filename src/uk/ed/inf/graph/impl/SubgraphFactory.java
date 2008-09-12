@@ -12,7 +12,7 @@ public final class SubgraphFactory implements IUndirectedSubgraphFactory<Node, E
 	private final Set<Node> nodeList = new HashSet<Node>();
 	private final Set<Edge>	edgeList = new HashSet<Edge>(); 
 	
-	public SubgraphFactory(Graph graph){
+	SubgraphFactory(Graph graph){
 		this.graph = graph;	
 	}
 	

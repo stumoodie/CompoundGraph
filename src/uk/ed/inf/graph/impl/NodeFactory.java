@@ -7,7 +7,7 @@ public final class NodeFactory implements IUndirectedNodeFactory<Node, Edge> {
 	private final Graph graph;
 	private int indexCntr = 0;
 	
-	public NodeFactory(Graph graph){
+	NodeFactory(Graph graph){
 		this.graph = graph;
 	}
 	

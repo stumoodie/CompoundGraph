@@ -36,15 +36,15 @@ public interface IDirectedNode<
 	 * Gets all edges connecting this node
 	 * @return
 	 */
-	Iterator<? extends E> getInEdgeIterator();
+	Iterator<E> getInEdgeIterator();
 	
 	/**
 	 * Gets all edges going out from this node. 
 	 * @return
 	 */
-	Iterator<? extends E> getOutEdgeIterator();
+	Iterator<E> getOutEdgeIterator();
 
-	Iterator<? extends N> getInNodeIterator();
+	Iterator<N> getInNodeIterator();
 	
-	Iterator<? extends N> getOutNodeIterator();
+	Iterator<N> getOutNodeIterator();
 }

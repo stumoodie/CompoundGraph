@@ -17,13 +17,12 @@ import uk.ed.inf.graph.util.impl.FilteredEdgeSet;
 import uk.ed.inf.graph.util.impl.FilteredNodeSet;
 
 public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<BaseCompoundNode, BaseCompoundEdge>,	IModifiableChildCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
-//	private final BaseCompoundNode root;
-	private final ICompoundGraphCopyBuilder copyBuilder;
+	private final ICompoundGraphCopyBuilder<BaseCompoundNode, BaseCompoundEdge> copyBuilder;
 	private IEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet;
 	private INodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet;
 	
-	protected BaseChildCompoundGraph(ICompoundGraphCopyBuilder builder){
-//		if(root == null) throw new IllegalArgumentException("root cannot be null");
+	protected BaseChildCompoundGraph(ICompoundGraphCopyBuilder<BaseCompoundNode, BaseCompoundEdge> builder){
+		if(builder == null) throw new IllegalArgumentException("builder cannot be null");
 		
 		this.copyBuilder = builder;
 	}
@@ -125,21 +124,19 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		return this.nodeSet.size();
 	}
 
-	public final boolean canCopyHere(IBasicSubgraph<BaseCompoundNode, BaseCompoundEdge> subGraph) {
+	public final boolean canCopyHere(IBasicSubgraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph) {
 		return subGraph != null && subGraph instanceof ISubCompoundGraph && subGraph.isInducedSubgraph()
 			&& subGraph.isConsistentSnapShot();
 	}
 
 	
-	public final void copyHere(IBasicSubgraph<BaseCompoundNode, BaseCompoundEdge> iSubGraph) {
+	public final void copyHere(IBasicSubgraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> iSubGraph) {
 		if(!canCopyHere(iSubGraph)) throw new IllegalArgumentException("Cannot copy graph here");
-		ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> subGraph = (ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge>)iSubGraph;
+		ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph = (ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge>)iSubGraph;
 		
-//		ChildCompoundGraphBuilder copyBuilder = new ChildCompoundGraphBuilder(this, subGraph);
 		copyBuilder.setDestinatChildCompoundGraph(this);
 		copyBuilder.setSourceSubgraph(subGraph);
-		copyBuilder.copyNodes();
-		copyBuilder.copyEquivalentEdges();
+		copyBuilder.makeCopy();
 	}
 
 	public BaseCompoundGraph getSuperGraph() {
@@ -150,10 +147,6 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		return false;
 	}
 
-//	public CiNode getLcaNode(CiNode inNode, CiNode outNode) {
-//		return this.root.getLowestCommonAncestor(inNode, outNode);
-//	}
-
 	final void addNewNode(BaseCompoundNode newNode){
 		this.nodeSet.add(newNode);
 	}
@@ -162,7 +155,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		this.edgeSet.add(newEdge);
 	}
 
-	public final boolean containsDirectedEdge(IDirectedPair<BaseCompoundNode, BaseCompoundEdge> ends) {
+	public final boolean containsDirectedEdge(IDirectedPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ends) {
 		boolean retVal = false;
 		if(ends != null){
 			for(BaseCompoundEdge edge : this.edgeSet){
@@ -175,18 +168,18 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		return retVal;
 	}
 
-	public final boolean containsConnection(IBasicPair<BaseCompoundNode, BaseCompoundEdge> ends) {
+	public final boolean containsConnection(IBasicPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ends) {
 		boolean retVal = false;
 		if(ends != null && ends instanceof IDirectedPair){
-			IDirectedPair<BaseCompoundNode, BaseCompoundEdge> ciEnds = (IDirectedPair<BaseCompoundNode, BaseCompoundEdge>)ends;
+			IDirectedPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ciEnds = (IDirectedPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge>)ends;
 			retVal = containsDirectedEdge(ciEnds);
 		}
 		return retVal;
 	}
 
 	public final void clear() {
-		// TODO: implement this!
-		throw new UnsupportedOperationException("Implement this method!");
+		this.nodeSet.clear();
+		this.edgeSet.clear();
 	}
 	
 	public abstract BaseCompoundNodeFactory nodeFactory();

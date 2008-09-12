@@ -13,7 +13,7 @@ public final class Edge implements IUndirectedEdge<Node, Edge>, IRestorableGraph
 	private final Graph graph;
 	private boolean removed;
 	
-	public Edge(Graph graph, int index, Node oneNode, Node twoNode){
+	Edge(Graph graph, int index, Node oneNode, Node twoNode){
 		this.index = index;
 		this.graph = graph;
 		this.connectedNodes = new NodePair(oneNode, twoNode);
@@ -82,8 +82,8 @@ public final class Edge implements IUndirectedEdge<Node, Edge>, IRestorableGraph
 		this.removed = markRemoved;
 	}
 
-	public boolean hasEnds(IBasicPair<Node, Edge> ends) {
-		return connectedNodes.equals(ends);
+	public boolean hasEnds(IBasicPair<? super Node, ? super Edge> ends) {
+		return this.connectedNodes.equals(ends);
 	}
 
 	public String toString(){

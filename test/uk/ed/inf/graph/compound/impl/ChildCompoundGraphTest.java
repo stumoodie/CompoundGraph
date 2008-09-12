@@ -1,14 +1,14 @@
 package uk.ed.inf.graph.compound.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Iterator;
 
-import javax.swing.border.EtchedBorder;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.jmock.api.Expectation;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
@@ -18,11 +18,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import uk.ed.inf.graph.basic.IBasicSubgraph;
-import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
 import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
 import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 import uk.ed.inf.graph.directed.IDirectedPair;
-import uk.ed.inf.graph.impl.Graph;
 
 @RunWith(JMock.class)
 public class ChildCompoundGraphTest {

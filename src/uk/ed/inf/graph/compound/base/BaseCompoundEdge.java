@@ -62,7 +62,12 @@ public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode
 		this.removed = removed;
 	}
 
-	public final boolean hasEnds(IBasicPair<BaseCompoundNode, BaseCompoundEdge> ends) {
+	public final boolean hasEnds(IBasicPair<? super BaseCompoundNode, ? super BaseCompoundEdge> ends) {
+		return ends.hasEnds(getInNode(), getOutNode());
+	}
+
+
+	public final boolean hasDirectedEnds(IDirectedPair<? super BaseCompoundNode, ? super BaseCompoundEdge> ends) {
 		return ends.hasEnds(getInNode(), getOutNode());
 	}
 

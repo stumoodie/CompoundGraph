@@ -12,7 +12,7 @@ public class EdgeFactory implements IUndirectedEdgeFactory<Node, Edge> {
 	private Node oneNode;
 	private Node twoNode;
 	
-	public EdgeFactory(Graph graph){
+	EdgeFactory(Graph graph){
 		this.graph = graph;
 	}
 	

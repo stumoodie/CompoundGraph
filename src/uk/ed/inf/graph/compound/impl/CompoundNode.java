@@ -13,11 +13,11 @@ public class CompoundNode extends ArchetypalCompoundNode {
 //	private boolean removed;
 //	private final INodeColourHandler<CompoundNode, CompoundEdge> colour;
 	
-	public CompoundNode(CompoundGraph superGraph, int index){
+	CompoundNode(CompoundGraph superGraph, int index){
 		super(superGraph, index);
 	}
 	
-	public CompoundNode(CompoundNode parent, int index){
+	CompoundNode(CompoundNode parent, int index){
 		super(parent, index);
 	}
 

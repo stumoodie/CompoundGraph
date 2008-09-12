@@ -11,13 +11,11 @@ public interface IBasicSubgraphFactory<
 	
 	void addEdge(E edge);
 	
-	Iterator<? extends N> nodeIterator();
+	Iterator<N> nodeIterator();
 	
-	Iterator<? extends E> edgeIterator();
+	Iterator<E> edgeIterator();
 	
 	IBasicSubgraph<N, E> createSubgraph();
-	
-//	IBasicSubgraph<N, E> createEmptySubgraph();
 	
 	IBasicSubgraph<N, E> createInducedSubgraph();
 }

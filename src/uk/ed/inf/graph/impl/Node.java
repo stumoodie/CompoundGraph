@@ -29,7 +29,7 @@ public final class Node implements IUndirectedNode<Node, Edge>, IRestorableGraph
 	 *  @throws IllegalArgumentException if owningGraph is null.
 	 *  @throws IllegalArgumentException if index is negative.
 	 */
-	public Node(Graph owningGraph, int index){
+	Node(Graph owningGraph, int index){
 		if(owningGraph == null) throw new IllegalArgumentException("owning graph cannot be null");
 		if(index < 0) throw new IllegalArgumentException("index must be a positive integer");
 		

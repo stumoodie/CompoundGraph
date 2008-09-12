@@ -14,7 +14,7 @@ public interface IColouredNodeFactory<
 	 */
 	IColouredGraph<N, E> getGraph();
 
-	void setColourHandlerFactory(INodeColourHandlerFactory<N, E> handlerFactory);
+	void setColourHandlerFactory(INodeColourHandlerFactory<? extends N, ? extends E> handlerFactory);
 	
 	N createNode();
 	
