@@ -199,9 +199,4 @@ public final class Subgraph implements IUndirectedSubgraph<Node, Edge> {
 		return this.adjList.isConnected(undirectedEnds.getOneNode().getIndex(),
 				undirectedEnds.getTwoNode().getIndex());
 	}
-
-	public void clear() {
-		this.nodeList.clear();
-		this.edgeSet.clear();
-	}
 }
