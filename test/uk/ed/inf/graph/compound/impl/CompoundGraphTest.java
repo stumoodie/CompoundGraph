@@ -20,6 +20,7 @@ import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
 import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 import uk.ed.inf.graph.directed.IDirectedPair;
 import uk.ed.inf.graph.impl.Edge;
+import uk.ed.inf.graph.impl.Graph;
 import uk.ed.inf.graph.impl.Node;
 import uk.ed.inf.graph.state.IGraphState;
 
@@ -30,6 +31,7 @@ public class CompoundGraphTest {
 	}};
 	
 	private CompoundGraph testCompoundGraph ;
+	private CompoundGraph anotherCompoundGraph ;
 	
 	private CompoundNode aNode ;
 	private CompoundNode anotherNode ;
@@ -40,24 +42,47 @@ public class CompoundGraphTest {
 	
 	private CompoundEdge anEdge ;
 	
+	private CompoundEdge subEdge ;
+	private CompoundNode subNode ;
+	
+	private CompoundEdgeFactory edgeFactory ;
+	private CompoundNodeFactory nodeFactory ;
+	private SubCompoundGraphFactory subGraphFactory ;
+	
+	private CompoundEdgeFactory anotherEdgeFactory ;
+	private CompoundNodeFactory anotherNodeFactory ;
+	private SubCompoundGraphFactory anotherSubGraphFactory ;
+	
 	private static final int [] NUMERIC = {0,1,2,3,4,5} ;
 	
 	
 	@Before
 	public void setUp() throws Exception {
 		testCompoundGraph = new CompoundGraph () ;
+		anotherCompoundGraph = new CompoundGraph () ;
+		
+		edgeFactory = testCompoundGraph.edgeFactory() ;
+		nodeFactory = testCompoundGraph.nodeFactory() ;
+		subGraphFactory = testCompoundGraph.subgraphFactory() ;
+		
+		anotherEdgeFactory = anotherCompoundGraph.edgeFactory() ;
+		anotherNodeFactory = anotherCompoundGraph.nodeFactory() ;
+		anotherSubGraphFactory = anotherCompoundGraph.subgraphFactory() ;
 		
 		originalState = testCompoundGraph.getCurrentState() ;
 		
-		aNode = testCompoundGraph.nodeFactory().createNode() ;
-		anotherNode = testCompoundGraph.nodeFactory().createNode() ;
+		aNode = nodeFactory.createNode() ;
+		anotherNode = nodeFactory.createNode() ;
 		rootNode = testCompoundGraph.getRootNode() ;
 		
-		testCompoundGraph.edgeFactory().setPair(aNode,anotherNode) ;
-		anEdge = testCompoundGraph.edgeFactory().createEdge() ;
+		edgeFactory.setPair(aNode,anotherNode) ;
+		anEdge = edgeFactory.createEdge() ;
 		
 		currentState = testCompoundGraph.getCurrentState() ;
 		
+		subNode = anotherNodeFactory.createNode() ;
+		anotherEdgeFactory.setPair(subNode, subNode) ;
+		subEdge = anotherEdgeFactory.createEdge() ;
 	}
 
 	@After
@@ -111,28 +136,28 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testEdgeFactory() {
-		assertTrue ( "has edge factory" , testCompoundGraph.edgeFactory() != null ) ;
-		assertTrue ( "same instance" , testCompoundGraph.edgeFactory() == testCompoundGraph.edgeFactory() ) ;
+		assertTrue ( "has edge factory" , edgeFactory != null ) ;
+		assertTrue ( "not same instance" , testCompoundGraph.edgeFactory() != edgeFactory ) ;
 		
-		testCompoundGraph.edgeFactory().createEdge() ;
+		edgeFactory.createEdge() ;
 		
 		assertEquals ( "two nodes" , NUMERIC[2] , testCompoundGraph.getNumEdges()) ;
 	}
 
 	@Test
 	public final void testNodeFactory() {
-		assertTrue ( "has node factory" , testCompoundGraph.nodeFactory() != null ) ;
-		assertTrue ( "same instance" , testCompoundGraph.nodeFactory() == testCompoundGraph.nodeFactory() ) ;
+		assertTrue ( "has node factory" , nodeFactory != null ) ;
+		assertTrue ( "not same instance" , testCompoundGraph.nodeFactory() != nodeFactory ) ;
 		
-		testCompoundGraph.nodeFactory().createNode() ;
+		nodeFactory.createNode() ;
 		
 		assertEquals ( "one more node" , NUMERIC[4] , testCompoundGraph.getNumNodes()) ;
 	}
 
 	@Test
 	public final void testSubgraphFactory() {
-		assertTrue ( "has Subgraph factory" , testCompoundGraph.subgraphFactory() != null ) ;
-		assertTrue ( "same instance" , testCompoundGraph.subgraphFactory() == testCompoundGraph.subgraphFactory() ) ;
+		assertTrue ( "has Subgraph factory" , subGraphFactory != null ) ;
+		assertTrue ( "not same instance" , testCompoundGraph.subgraphFactory() != subGraphFactory ) ;
 	}
 
 	@Test
@@ -199,11 +224,6 @@ public class CompoundGraphTest {
 	}
 
 	@Test
-	public final void testGetLcaNode() {
-		fail("Not yet implemented"); // TODO ?? 
-	}
-
-	@Test
 	public final void testGetNodeCounter() {
 		assertEquals ( "3 nodes" , NUMERIC[3] , testCompoundGraph.getNumNodes()) ;
 	}
@@ -257,12 +277,19 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testCopyHere() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testCreateCopy() {
-		fail("Not yet implemented"); // TODO
+		
+		anotherSubGraphFactory.addEdge(subEdge) ;
+		anotherSubGraphFactory.addNode(subNode) ;
+		
+		IBasicSubgraph<BaseCompoundNode, BaseCompoundEdge> subGraph = anotherSubGraphFactory.createSubgraph();
+	
+		assertEquals ( "3 Nodes " , NUMERIC[3] , testCompoundGraph.getNumNodes()) ;
+		assertEquals ( "1 Edges " , NUMERIC[1] , testCompoundGraph.getNumEdges()) ;
+		
+		testCompoundGraph.copyHere( subGraph)  ;
+		
+		assertEquals ( "4 Nodes " , NUMERIC[4] , testCompoundGraph.getNumNodes()) ;
+		assertEquals ( "2 Edges " , NUMERIC[2] , testCompoundGraph.getNumEdges()) ;
 	}
 
 	@Test
@@ -275,9 +302,20 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testGetCopiedComponents() {
+		anotherSubGraphFactory.addEdge(subEdge) ;
+		anotherSubGraphFactory.addNode(subNode) ;
+		
+		IBasicSubgraph<BaseCompoundNode, BaseCompoundEdge> subGraph = anotherSubGraphFactory.createSubgraph();
+	
+		assertEquals ( "3 Nodes " , NUMERIC[3] , testCompoundGraph.getNumNodes()) ;
+		assertEquals ( "1 Edges " , NUMERIC[1] , testCompoundGraph.getNumEdges()) ;
+		
+		testCompoundGraph.copyHere( subGraph)  ;
+		
 		IBasicSubgraph<BaseCompoundNode, BaseCompoundEdge> copyOfGraph = testCompoundGraph.getCopiedComponents() ;
 		
-		assertEquals ( "same edges" , testCompoundGraph.edgeIterator() , copyOfGraph.edgeIterator() );
+		assertEquals ( "one edge" , NUMERIC[1] , copyOfGraph.getNumEdges() );
+		assertEquals ( "one node" , NUMERIC[1] , copyOfGraph.getNumNodes() );
 	}
 
 }

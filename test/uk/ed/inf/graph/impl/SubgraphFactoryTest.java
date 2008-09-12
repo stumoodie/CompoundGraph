@@ -16,8 +16,10 @@ public class SubgraphFactoryTest {
 	
 	private SubgraphFactory testSubGraphFactory;
 	
-	private Node aNode ;
+	private NodeFactory nodeFactory ;
+	private EdgeFactory edgeFactory ;
 	
+	private Node aNode ;
 	private Edge anEdge ;
 	
 	private static final int NUMMERIC [] = {0,1,2,3,4,5} ;
@@ -26,11 +28,13 @@ public class SubgraphFactoryTest {
 	public void setUp() throws Exception {
 		graph = new Graph () ;
 		testSubGraphFactory = graph.subgraphFactory() ;
+		nodeFactory = graph.nodeFactory() ;
+		edgeFactory = graph.edgeFactory() ;
 		
-		aNode = graph.nodeFactory().createNode() ;
+		aNode = nodeFactory.createNode() ;
 		
-		graph.edgeFactory().setPair(aNode, aNode) ;
-		anEdge = graph.edgeFactory().createEdge() ;
+		edgeFactory.setPair(aNode, aNode) ;
+		anEdge = edgeFactory.createEdge() ;
 	}
 
 	@After
@@ -40,28 +44,28 @@ public class SubgraphFactoryTest {
 	@Test
 	public final void testSubgraphFactory() {
 		assertTrue ( "factory exists" , testSubGraphFactory!= null ) ;
-		assertTrue ( "same instance" , testSubGraphFactory == graph.subgraphFactory()) ;
+		assertTrue ( "same instance" , testSubGraphFactory != graph.subgraphFactory()) ;
 	}
 
 	@Test
 	public final void testAddNode() {
 		assertFalse ( "nodes empty" , testSubGraphFactory.nodeIterator().hasNext()) ;
-		graph.subgraphFactory().addNode(aNode) ;
+		testSubGraphFactory.addNode(aNode) ;
 		assertTrue ( "node added" , testSubGraphFactory.nodeIterator().hasNext()) ;
 	}
 
 	@Test
 	public final void testAddEdge() {
 		assertFalse ( "edges empty" , testSubGraphFactory.edgeIterator().hasNext()) ;
-		graph.subgraphFactory().addEdge(anEdge) ;
+		testSubGraphFactory.addEdge(anEdge) ;
 		assertTrue ( "edge added" , testSubGraphFactory.edgeIterator().hasNext()) ;
 	}
 
 	@Test
 	public final void testCreateSubgraph() {
 		Subgraph aSubgraph = testSubGraphFactory.createSubgraph() ;
-		graph.subgraphFactory().addEdge(anEdge) ;
-		graph.subgraphFactory().addNode(aNode) ;
+		testSubGraphFactory.addEdge(anEdge) ;
+		testSubGraphFactory.addNode(aNode) ;
 		
 		assertTrue ( "subgraph exists" , aSubgraph != null ) ;
 		assertEquals ( "subgraph have correct parent" , graph , aSubgraph.getSuperGraph() ) ;
@@ -94,8 +98,8 @@ public class SubgraphFactoryTest {
 	@Test
 	public final void testCreateInducedSubgraph() {
 		Subgraph aSubgraph = testSubGraphFactory.createInducedSubgraph() ;
-		graph.subgraphFactory().addEdge(anEdge) ;
-		graph.subgraphFactory().addNode(aNode) ;
+		testSubGraphFactory.addEdge(anEdge) ;
+		testSubGraphFactory.addNode(aNode) ;
 		
 		assertTrue ( "subgraph exists" , aSubgraph != null ) ;
 		assertEquals ( "subgraph have correct parent" , graph , aSubgraph.getSuperGraph() ) ;

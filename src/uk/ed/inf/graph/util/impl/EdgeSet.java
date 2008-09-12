@@ -116,7 +116,7 @@ public class EdgeSet <
 	}
 
 	public void clear() {
-		this.clear();
+		this.edgeSet.clear();
 	}
 
 	public boolean contains(Object o) {
@@ -124,7 +124,7 @@ public class EdgeSet <
 	}
 
 	public boolean containsAll(Collection<?> c) {
-		return this.containsAll(c);
+		return this.edgeSet.containsAll(c);
 	}
 
 	public boolean isEmpty() {

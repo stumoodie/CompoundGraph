@@ -31,6 +31,10 @@ public class ChildCompoundGraphTest {
 	}};
 	
 	private ChildCompoundGraph testChildCompoundGraph ;
+	
+	private ChildCompoundEdgeFactory edgeFactory ;
+	private CompoundNodeFactory nodeFactory ;
+	
 	private CompoundNode mockRootNode ;
 	private CompoundGraph mockGraph ;
 	
@@ -46,11 +50,14 @@ public class ChildCompoundGraphTest {
 		
 		testChildCompoundGraph = mockGraph.getRootNode().getChildCompoundGraph() ;
 		
-		inNode = testChildCompoundGraph.nodeFactory().createNode() ;
-		outNode = testChildCompoundGraph.nodeFactory().createNode() ;
+		nodeFactory = testChildCompoundGraph.nodeFactory() ;
+		edgeFactory = testChildCompoundGraph.edgeFactory() ;
 		
-		testChildCompoundGraph.edgeFactory().setPair(outNode, inNode) ;
-		anEdge = testChildCompoundGraph.edgeFactory().createEdge() ;
+		inNode = nodeFactory.createNode() ;
+		outNode = nodeFactory.createNode() ;
+		
+		edgeFactory.setPair(outNode, inNode) ;
+		anEdge = edgeFactory.createEdge() ;
 	}
 
 	@After
@@ -75,28 +82,18 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testCanCreateEdges() {
-		assertTrue ( "hasFactory" , testChildCompoundGraph.edgeFactory() != null ) ;
-		assertTrue ( "singleton factory" , testChildCompoundGraph.edgeFactory() == testChildCompoundGraph.edgeFactory() ) ;
-		testChildCompoundGraph.edgeFactory().createEdge() ;
+		assertTrue ( "hasFactory" , edgeFactory != null ) ;
+		assertTrue ( "non singleton factory" , edgeFactory != testChildCompoundGraph.edgeFactory() ) ;
+		edgeFactory.createEdge() ;
 		assertEquals ( "two edges" , NUMERIC[2] , testChildCompoundGraph.getNumEdges() ) ;
 	}
 
 	@Test
 	public final void testCanCreateNodes() {
-		assertTrue ( "hasFactory" , testChildCompoundGraph.nodeFactory() != null ) ;
-		assertTrue ( "singleton factory" , testChildCompoundGraph.nodeFactory() == testChildCompoundGraph.nodeFactory() ) ;
-		testChildCompoundGraph.nodeFactory().createNode() ;
+		assertTrue ( "hasFactory" , nodeFactory != null ) ;
+		assertTrue ( "non singleton factory" , testChildCompoundGraph.nodeFactory() != nodeFactory ) ;
+		nodeFactory.createNode() ;
 		assertEquals ( "one node" , NUMERIC[3] , testChildCompoundGraph.getNumNodes()) ;
-	}
-
-	@Test
-	public final void testCanCreateSubgraphs() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testCanRemoveSubgraphs() {
-		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
@@ -124,20 +121,6 @@ public class ChildCompoundGraphTest {
 		assertTrue ( "contains inNode" , testChildCompoundGraph.containsNode(inNode)) ;
 	}
 
-	@Test
-	public final void testBasicEdgeFactory() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testBasicNodeFactory() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testBasicSubgraphFactory() {
-		fail("Not yet implemented"); // TODO
-	}
 
 	@Test
 	public final void testGetEdge() {
@@ -195,11 +178,6 @@ public class ChildCompoundGraphTest {
 	}
 
 	@Test
-	public final void testRemoveSubgraph() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
 	public final void testCanCopyHere() {
 		IBasicSubgraph<BaseCompoundNode, BaseCompoundEdge> aBasicSubgraph =  mockGraph.subgraphFactory().createSubgraph() ;
 		
@@ -227,11 +205,6 @@ public class ChildCompoundGraphTest {
 	}
 
 	@Test
-	public final void testGetLcaNode() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
 	public final void testAddNewNode() {
 		CompoundNode newNode = testChildCompoundGraph.nodeFactory().createNode() ;
 		assertEquals ( "one more node" , NUMERIC[3] , testChildCompoundGraph.getNumNodes()) ;
@@ -240,7 +213,7 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testAddNewEdge() {
-		CompoundEdge newEdge = testChildCompoundGraph.edgeFactory().createEdge() ;
+		CompoundEdge newEdge = edgeFactory.createEdge() ;
 		assertEquals ( "one more edge" , NUMERIC[2] , testChildCompoundGraph.getNumEdges()) ;
 		assertTrue ( "contains new Node" , testChildCompoundGraph.containsEdge(newEdge)) ;
 	}

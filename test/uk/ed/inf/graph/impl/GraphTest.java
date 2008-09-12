@@ -308,7 +308,7 @@ public class GraphTest {
 		IBasicEdgeFactory<Node, Edge> fact1 = this.testInstance.edgeFactory();
 		IBasicEdgeFactory<Node, Edge> fact2 = this.testInstance.edgeFactory();
 		assertNotNull("factory created", fact1);
-		assertTrue("factory the same", fact1 == fact2);
+		assertTrue("factory not the same", fact1 != fact2);
 	}
 
 	@Test
@@ -316,7 +316,7 @@ public class GraphTest {
 		IBasicNodeFactory<Node, Edge> fact1 = this.testInstance.nodeFactory();
 		IBasicNodeFactory<Node, Edge> fact2 = this.testInstance.nodeFactory();
 		assertNotNull("factory created", fact1);
-		assertTrue("factory the same", fact1 == fact2);
+		assertTrue("factory not the same", fact1 != fact2);
 	}
 
 	@Test
@@ -324,7 +324,7 @@ public class GraphTest {
 		IBasicSubgraphFactory<Node, Edge> fact1 = this.testInstance.subgraphFactory();
 		IBasicSubgraphFactory<Node, Edge> fact2 = this.testInstance.subgraphFactory();
 		assertNotNull("factory created", fact1);
-		assertTrue("factory the same", fact1 == fact2);
+		assertTrue("factory not the same", fact1 != fact2);
 	}
 
 	@Test

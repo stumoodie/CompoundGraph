@@ -91,7 +91,7 @@ public final class Subgraph implements IUndirectedSubgraph<Node, Edge> {
 //	}
 
 	public boolean containsNode(Node node) {
-		return this.containsNode(node);
+		return this.nodeList.contains(node);
 	}
 
 	public boolean containsConnection(Node thisNode, Node thatNode) {

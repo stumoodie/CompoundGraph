@@ -24,6 +24,9 @@ public class NodeTest {
 	private static Node mockOneNode ;
 	private static Node mockTwoNode ;
 	
+	private static NodeFactory nodeFactory ;
+	private static EdgeFactory edgeFactory ;
+	
 	private static final int NODE_INDEX_ONE = 1 ;
 	private static final int NODE_INDEX_TWO = 2 ;
 	private static final int NODE_INDEX_THREE = 3 ;
@@ -41,17 +44,20 @@ public class NodeTest {
 		
 		mockGraph = new Graph () ;
 		
-		mockOneNode = mockGraph.nodeFactory().createNode() ;
-		mockTwoNode = mockGraph.nodeFactory().createNode() ;
+		nodeFactory = mockGraph.nodeFactory() ;
+		edgeFactory = mockGraph.edgeFactory() ;
+		
+		mockOneNode = nodeFactory.createNode() ;
+		mockTwoNode = nodeFactory.createNode() ;
 		
 
 		
-		mockGraph.edgeFactory().setPair(mockOneNode, mockTwoNode ) ;
-		mockEdge = mockGraph.edgeFactory().createEdge() ;
-		mockEdgeTwo = mockGraph.edgeFactory().createEdge() ;
+		edgeFactory.setPair(mockOneNode, mockTwoNode ) ;
+		mockEdge = edgeFactory.createEdge() ;
+		mockEdgeTwo = edgeFactory.createEdge() ;
 		
-		testNode = mockGraph.nodeFactory().createNode() ;
-		otherNode = mockGraph.nodeFactory().createNode() ;
+		testNode = nodeFactory.createNode() ;
+		otherNode = nodeFactory.createNode() ;
 		
 		mockOneNode.addEdge(mockEdge) ;
 		testNode.addEdge(mockEdge) ;
