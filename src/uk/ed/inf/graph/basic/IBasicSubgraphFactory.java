@@ -7,6 +7,11 @@ public interface IBasicSubgraphFactory<
 		E extends IBasicEdge<N, E>
 > {
 
+	/** The graph that this factory will create a subgraph for.
+	 * @return the owning graph, which cannot be null.
+	 */
+	IBasicGraph<N, E> getGraph();
+
 	void addNode(N node);
 	
 	void addEdge(E edge);
