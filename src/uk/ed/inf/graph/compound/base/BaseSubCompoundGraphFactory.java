@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import uk.ed.inf.graph.basic.IBasicSubgraphFactory;
+import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
-public abstract class BaseSubCompoundGraphFactory implements IBasicSubgraphFactory<BaseCompoundNode, BaseCompoundEdge> {
+public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFactory<BaseCompoundNode, BaseCompoundEdge> {
 	private final BaseSubCompoundGraphBuilder builder;
 	private final Set<BaseCompoundNode> nodeList = new HashSet<BaseCompoundNode>();
 	private final Set<BaseCompoundEdge> edgeList = new HashSet<BaseCompoundEdge>();
@@ -72,5 +72,9 @@ public abstract class BaseSubCompoundGraphFactory implements IBasicSubgraphFacto
 		builder.addIncidentEdges();
 		builder.buildSubgraph();
 		return builder.getSubgraph();
+	}
+	
+	public final BaseCompoundGraph getGraph(){
+		return this.getGraph();
 	}
 }
