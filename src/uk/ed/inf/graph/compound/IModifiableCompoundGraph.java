@@ -1,12 +1,14 @@
 package uk.ed.inf.graph.compound;
 
+import uk.ed.inf.graph.basic.IBasicSubgraph;
 import uk.ed.inf.graph.basic.IModifiableGraph;
-import uk.ed.inf.graph.directed.IDirectedEdgeFactory;
 
 public interface IModifiableCompoundGraph <
 		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
 		E extends ICompoundEdge<N, E>
 > extends IModifiableGraph<N, E> {
+
+	ICompoundNodeFactory<N, E> nodeFactory();
 
 	/**
 	 * Gets an edge factory that works out the LCA of two nodes making up the edge
@@ -16,6 +18,12 @@ public interface IModifiableCompoundGraph <
 	 * of the edge).  
 	 * @return The edge factory, which cannot be null.
 	 */
-	IDirectedEdgeFactory<N, E> edgeFactory();
+	
+	ICompoundEdgeFactory<N, E> edgeFactory();
 
+
+	ISubCompoundGraphFactory<N,E> subgraphFactory();
+
+
+	ISubCompoundGraph<N, E> getCopiedComponents();
 }
