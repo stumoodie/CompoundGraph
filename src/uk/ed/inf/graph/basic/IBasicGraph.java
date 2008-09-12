@@ -93,9 +93,4 @@ public interface IBasicGraph<
 	 * @return The edge iterator, guaranteed to be non-null.
 	 */
 	Iterator<E> edgeIterator();
-	
-	/**
-	 * Removed all nodes and edges from the graph.
-	 */
-	void clear();
 }
