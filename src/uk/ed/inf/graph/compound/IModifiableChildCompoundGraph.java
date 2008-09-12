@@ -23,7 +23,7 @@ public interface IModifiableChildCompoundGraph <
 	 *  this graph.
 	 * @return The edge factory.
 	 */
-	ICompoundEdgeFactory<N, E> edgeFactory();
+	ICompoundChildEdgeFactory<N, E> edgeFactory();
 	
 	/**
 	 * Tests whether the subGraph can be copied to this graph. To be true the subgraph must be an induced subgraph
