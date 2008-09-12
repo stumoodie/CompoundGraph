@@ -67,4 +67,8 @@ public final class SubgraphFactory implements IUndirectedSubgraphFactory<Node, E
 	public Iterator<Node> nodeIterator() {
 		return this.nodeList.iterator();
 	}
+
+	public Graph getGraph() {
+		return this.graph;
+	}
 }
