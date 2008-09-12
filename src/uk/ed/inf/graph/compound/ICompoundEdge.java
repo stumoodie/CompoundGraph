@@ -8,6 +8,8 @@ public interface ICompoundEdge<
 		E extends ICompoundEdge<N, E>
 > extends IDirectedEdge<N, E> {
 
+	ICompoundGraph<N, E> getGraph();
+
 	IChildCompoundGraph<N, E> getOwningChildGraph();
 	
 }
