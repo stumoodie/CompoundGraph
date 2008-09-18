@@ -7,8 +7,12 @@ import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 
 
 public class CompoundEdgeFactory extends BaseCompoundEdgeFactory {
+	private final CompoundGraph graph;
+	private CompoundNode outNode;
+	private CompoundNode inNode;
+	
 	CompoundEdgeFactory(CompoundGraph graph){
-		super(graph);
+		this.graph = graph;
 	}
 	
 	@Override
@@ -20,5 +24,47 @@ public class CompoundEdgeFactory extends BaseCompoundEdgeFactory {
 	@Override
 	public CompoundEdge createEdge(){
 		return (CompoundEdge)super.createEdge();
+	}
+
+	@Override
+	public CompoundNodePair getCurrentNodePair() {
+		return new CompoundNodePair(this.outNode, this.inNode);
+	}
+
+	@Override
+	public CompoundGraph getGraph() {
+		return this.graph;
+	}
+
+	@Override
+	protected BaseCompoundNode getInNode() {
+		return this.inNode;
+	}
+
+	@Override
+	protected BaseCompoundNode getOutNode() {
+		return this.outNode;
+	}
+
+	@Override
+	public void setPair(BaseCompoundNode outNode, BaseCompoundNode inNode) {
+		this.outNode = (CompoundNode)outNode;
+		this.inNode = (CompoundNode)inNode;		
+	}
+
+	@Override
+	public boolean canCreateEdge() {
+		return this.inNode != null && this.outNode != null;
+	}
+
+	@Override
+	public ChildCompoundGraph getOwningChildGraph() {
+		return (ChildCompoundGraph)super.getOwningChildGraph();
+	}
+
+	public boolean isValidNodePair(BaseCompoundNode outNode, BaseCompoundNode inNode) {
+		return this.outNode != null && this.inNode != null && this.outNode.getGraph().equals(this.graph)
+			&& this.outNode.equals(this.inNode) && this.outNode instanceof CompoundNode
+			&& this.inNode instanceof CompoundNode;
 	}
 }

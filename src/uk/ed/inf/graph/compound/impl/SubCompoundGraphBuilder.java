@@ -1,11 +1,11 @@
 package uk.ed.inf.graph.compound.impl;
 
-import uk.ed.inf.graph.compound.base.BaseCompoundGraph;
 import uk.ed.inf.graph.compound.base.BaseSubCompoundGraphBuilder;
 
 
 public class SubCompoundGraphBuilder extends BaseSubCompoundGraphBuilder {
 	private SubCompoundGraph subgraph;
+	private final CompoundGraph graph;
 	
 	/**
 	 * Construct the builder, providing it with a list of nodes and edges with which to populate
@@ -14,17 +14,22 @@ public class SubCompoundGraphBuilder extends BaseSubCompoundGraphBuilder {
 	 * @throws NullPointerException if any of the the parameters are null. 
 	 */
 	SubCompoundGraphBuilder(CompoundGraph graph){
-		super(graph);
+		super();
+		this.graph = graph;
 	}
 	
 	@Override
-	protected void newSubgraph(BaseCompoundGraph compoundGraph) {
-		this.subgraph = new SubCompoundGraph(compoundGraph);
+	protected void newSubgraph() {
+		this.subgraph = new SubCompoundGraph(this.getGraph());
 	}
 
 	@Override
 	public SubCompoundGraph getSubgraph() {
 		return this.subgraph;
+	}
+	
+	public CompoundGraph getGraph(){
+		return this.graph;
 	}
 	
 }

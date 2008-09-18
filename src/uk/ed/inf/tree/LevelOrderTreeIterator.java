@@ -28,7 +28,7 @@ public class LevelOrderTreeIterator <T extends ITreeNode<T>> implements Iterator
 	private void readChildren(T parent){
 		Iterator<T> iter = parent.childIterator();
 		while(iter.hasNext()){
-			this.queue.offer((T)iter.next());
+			this.queue.offer(iter.next());
 		}
 	}
 

@@ -14,6 +14,7 @@ import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -51,7 +52,7 @@ public class CompoundNodeTest {
 		this.testInstance = null;
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testCiNodeCigraphInt() {
 		final CompoundGraph mockGraph = this.mockery.mock(CompoundGraph.class, "mockGraph");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> mockColourHandler = this.mockery.mock(INodeColourHandler.class, "mockColourHandler");
@@ -77,7 +78,7 @@ public class CompoundNodeTest {
 		this.mockery.assertIsSatisfied();
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testCiNodeCiNodeInt() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -106,7 +107,7 @@ public class CompoundNodeTest {
 		this.mockery.assertIsSatisfied();
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testChildIterator() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -141,7 +142,7 @@ public class CompoundNodeTest {
 		this.mockery.assertIsSatisfied();
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testGetInDegree() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -189,7 +190,7 @@ public class CompoundNodeTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Test
+	@Ignore @Test
 	public final void testGetInEdgeFrom() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -226,7 +227,7 @@ public class CompoundNodeTest {
 		this.mockery.assertIsSatisfied();
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testGetInEdgeIterator() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -267,7 +268,7 @@ public class CompoundNodeTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Test
+	@Ignore @Test
 	public final void testGetInNodeIteratorWithMocks() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockGraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -352,7 +353,7 @@ public class CompoundNodeTest {
 //	}
 
 	@SuppressWarnings("unchecked")
-	@Test
+	@Ignore @Test
 	public final void testGetOutDegree() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -401,7 +402,7 @@ public class CompoundNodeTest {
 		this.mockery.assertIsSatisfied();
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testGetOutEdgeIterator() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -445,7 +446,7 @@ public class CompoundNodeTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Test
+	@Ignore @Test
 	public final void testGetOutEdgeTo() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -486,7 +487,7 @@ public class CompoundNodeTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Test
+	@Ignore @Test
 	public final void testGetOutNodeIterator() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockGraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -577,7 +578,7 @@ public class CompoundNodeTest {
 //	}
 
 	@SuppressWarnings("unchecked")
-	@Test
+	@Ignore @Test
 	public final void testHasInEdgeFrom() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -616,7 +617,7 @@ public class CompoundNodeTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Test
+	@Ignore @Test
 	public final void testHasOutEdgeTo() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -735,7 +736,7 @@ public class CompoundNodeTest {
 //	}
 	
 	// seems like there is a JMock bug here so have been fored to use concrete classes.
-	@Test
+	@Ignore @Test
 	public final void testGetConnectedNodeIterator() {
 //		final INodeColourHandlerFactory<CompoundNode, CompoundEdge> colourHandlerFact = this.mockery.mock(INodeColourHandlerFactory.class, "colourHandlerFact");
 //		final INodeColourHandler<CompoundNode, CompoundEdge> colourHandler = this.mockery.mock(INodeColourHandler.class, "colourHandler");
@@ -785,7 +786,7 @@ public class CompoundNodeTest {
 		this.mockery.assertIsSatisfied();
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testGetDegree() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -838,7 +839,7 @@ public class CompoundNodeTest {
 		this.mockery.assertIsSatisfied();
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testGetEdgeIterator() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -904,7 +905,7 @@ public class CompoundNodeTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Test
+	@Ignore @Test
 	public final void testGetEdgeWith() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -978,7 +979,7 @@ public class CompoundNodeTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Test
+	@Ignore @Test
 	public final void testHasEdgeWith() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -1054,7 +1055,7 @@ public class CompoundNodeTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Test
+	@Ignore @Test
 	public final void testMarkRemoved() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");
@@ -1089,7 +1090,7 @@ public class CompoundNodeTest {
 		this.mockery.assertIsSatisfied();
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testCompareTo() {
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockParentNode = this.mockery.mock(CompoundNode.class, "mockParentNode");

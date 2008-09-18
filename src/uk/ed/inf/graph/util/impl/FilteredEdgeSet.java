@@ -73,7 +73,7 @@ public class FilteredEdgeSet <
 			for(Object o : c){
 				if(o instanceof IBasicEdge){
 					E node = (E)o;
-					if(!this.criteria.matched((E)node)){
+					if(!this.criteria.matched(node)){
 						retVal = false;
 						break;
 					}
@@ -143,7 +143,7 @@ public class FilteredEdgeSet <
 	public E get(int edgeIdx) {
 		E retVal = this.edgeSet.get(edgeIdx);
 		if(retVal == null || !this.criteria.matched(retVal)){
-			throw new IllegalArgumentException("edgeIdx must point to an edge contained in this set that matches the filter criteria");
+			throw new IllegalArgumentException("edge matching edgeIdx=" + edgeIdx + " cannot be found");
 		}
 		return retVal;
 	}

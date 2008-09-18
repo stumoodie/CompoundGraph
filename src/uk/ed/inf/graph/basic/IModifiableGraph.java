@@ -16,8 +16,7 @@ public interface IModifiableGraph<
 	IBasicNodeFactory<N, E> nodeFactory();
 	
 	/**
-	 * Gets the edgeFactory for this class. This factory is a singleton so this method must always
-	 *  return the same instance of the factory. The factory is the only way that new edges can be added to
+	 * Gets the edgeFactory for this class. The factory is the only way that new edges can be added to
 	 *  this graph.
 	 * @return The edge factory.
 	 * @throws UnsupportedOperationException if this graph implementation does support new edge creation and so a factory
@@ -26,8 +25,7 @@ public interface IModifiableGraph<
 	IBasicEdgeFactory<N, E> edgeFactory();
 	
 	/**
-	 * Gets the subgraphFactory for this class. This factory is a singleton so this method must always
-	 *  return the same instance of the factory.
+	 * Gets the subgraphFactory for this class. 
 	 * @return The subgraph factory.
 	 * @throws UnsupportedOperationException if this graph implementation does support new subgraph creation and so a factory
 	 *  is not provided, i.e. <code>canCreateSubgraphs() == false</code>.

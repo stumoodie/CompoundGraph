@@ -57,7 +57,7 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder<
 	private void copyNodes(){
 		Iterator<BaseCompoundNode> sourceNodeIter = this.sourceSubCigraph.nodeIterator();
 		while(sourceNodeIter.hasNext()){
-			BaseCompoundNode srcNode = (BaseCompoundNode)sourceNodeIter.next(); 
+			BaseCompoundNode srcNode = sourceNodeIter.next(); 
 			copyNode(srcNode, this.destSubCigraph.getRootNode());
 		}
 	}
@@ -96,7 +96,7 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder<
 	private void copyEquivalentEdges(){
 		Iterator<BaseCompoundEdge> edgeIter = this.sourceSubCigraph.edgeIterator();
 		while(edgeIter.hasNext()){
-			BaseCompoundEdge srcEdge = (BaseCompoundEdge)edgeIter.next();
+			BaseCompoundEdge srcEdge = edgeIter.next();
 			IDirectedPair<BaseCompoundNode, BaseCompoundEdge> ends = srcEdge.getConnectedNodes();
 			BaseCompoundNode newInNode = this.oldNewEquivList.get(ends.getInNode());
 			BaseCompoundNode newOutNode = this.oldNewEquivList.get(ends.getOutNode());
@@ -130,7 +130,7 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder<
 												BaseCompoundNode outNode, BaseCompoundNode inNode);	
 
 
-	public ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> getCopiedComponents() {
+	public BaseSubCompoundGraph getCopiedComponents() {
 		return this.subGraphFactory.createSubgraph();
 	}
 }

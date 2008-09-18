@@ -1,6 +1,6 @@
 package uk.ed.inf.graph.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,7 +15,7 @@ public class EdgeFactoryTest {
 	private Node twoNode ;
 	
 	private static final int [] INDEX = { 1 , 2 , 3 , 4 , 5 } ;
-	private static final int [] NUMERIC = {0,1,2,3,4,5} ;
+//	private static final int [] NUMERIC = {0,1,2,3,4,5} ;
 
 	@Before
 	public void setUp() throws Exception {

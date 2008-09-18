@@ -1,9 +1,10 @@
 package uk.ed.inf.tree;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class AncestorTreeIteratorTest {
@@ -16,22 +17,22 @@ public class AncestorTreeIteratorTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testAncestorTreeIterator() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testHasNext() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testNext() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testRemove() {
 		fail("Not yet implemented"); // TODO
 	}

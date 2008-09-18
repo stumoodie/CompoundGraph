@@ -1,10 +1,7 @@
 package uk.ed.inf.graph.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

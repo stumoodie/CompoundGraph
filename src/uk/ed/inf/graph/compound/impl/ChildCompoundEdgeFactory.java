@@ -1,16 +1,20 @@
 package uk.ed.inf.graph.compound.impl;
 
 import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundEdge;
-import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
 import uk.ed.inf.graph.compound.base.BaseChildCompoundEdgeFactory;
 import uk.ed.inf.graph.compound.base.BaseChildCompoundGraph;
+import uk.ed.inf.graph.compound.base.BaseCompoundGraph;
 import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 
 
 public class ChildCompoundEdgeFactory extends BaseChildCompoundEdgeFactory {
+	private final CompoundNode parentNode;
+	private CompoundNode outNode;
+	private CompoundNode inNode;
 	
-	public ChildCompoundEdgeFactory(ArchetypalCompoundNode parentNode){
-		super(parentNode);
+	public ChildCompoundEdgeFactory(CompoundNode parentNode){
+		super();
+		this.parentNode = parentNode;
 	}
 
 	@Override
@@ -24,5 +28,53 @@ public class ChildCompoundEdgeFactory extends BaseChildCompoundEdgeFactory {
 	@Override
 	public CompoundEdge createEdge(){
 		return (CompoundEdge)super.createEdge();
+	}
+
+	@Override
+	public CompoundNodePair getCurrentNodePair() {
+		return new CompoundNodePair(this.getOutNode(), this.getInNode());
+	}
+
+	@Override
+	public BaseCompoundGraph getGraph() {
+		return this.parentNode.getGraph();
+	}
+
+	@Override
+	protected CompoundNode getInNode() {
+		return this.inNode;
+	}
+
+	@Override
+	protected CompoundNode getOutNode() {
+		return this.outNode;
+	}
+
+	@Override
+	public BaseChildCompoundGraph getOwningChildGraph() {
+		return this.parentNode.getChildCompoundGraph();
+	}
+
+	@Override
+	public void setPair(BaseCompoundNode outNode, BaseCompoundNode inNode) {
+		if(outNode instanceof CompoundNode && inNode instanceof CompoundNode){
+			this.outNode = (CompoundNode)outNode;
+			this.inNode = (CompoundNode)inNode;
+		}
+		else{
+			throw new ClassCastException("outNode and inNode must be of type CompoundNode");
+		}
+	}
+
+	public boolean canCreateEdge() {
+		return this.isValidNodePair(this.outNode, this.inNode);
+	}
+
+	public boolean isValidNodePair(BaseCompoundNode outNode, BaseCompoundNode inNode) {
+		boolean retVal = false;
+		if(super.isValidBaseNodePair(outNode, inNode)){
+			retVal = outNode instanceof CompoundNode && inNode instanceof CompoundNode;
+		}
+		return retVal;
 	}
 }

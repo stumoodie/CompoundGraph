@@ -16,13 +16,11 @@ public final class SubgraphFactory implements IUndirectedSubgraphFactory<Node, E
 		this.graph = graph;	
 	}
 	
-	public void addNode(Node iNode){
-		Node node = (Node)iNode;
+	public void addNode(Node node){
 		this.nodeList.add(node);
 	}
 	
-	public void addEdge(Edge iEdge){
-		Edge edge = (Edge)iEdge;
+	public void addEdge(Edge edge){
 		this.edgeList.add(edge);
 	}
 
@@ -45,7 +43,7 @@ public final class SubgraphFactory implements IUndirectedSubgraphFactory<Node, E
 		for(Node node : this.nodeList){
 			Iterator<Edge> edgeIter = node.edgeIterator();
 			while(edgeIter.hasNext()){
-				Edge edge = (Edge)edgeIter.next();
+				Edge edge = edgeIter.next();
 				IUndirectedPair<Node, Edge> ends = edge.getConnectedNodes();
 				if(this.nodeList.contains(ends.getOneNode())
 						&&  this.nodeList.contains(ends.getTwoNode())){

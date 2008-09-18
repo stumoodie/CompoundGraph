@@ -5,9 +5,11 @@ import uk.ed.inf.graph.compound.base.BaseCompoundNodeFactory;
 
 
 public class CompoundNodeFactory extends BaseCompoundNodeFactory {
+	private final CompoundNode parent;
 	
 	CompoundNodeFactory(CompoundNode parent){
-		super(parent);
+		super();
+		this.parent = parent;
 	}
 	
 	@Override
@@ -18,5 +20,15 @@ public class CompoundNodeFactory extends BaseCompoundNodeFactory {
 	@Override
 	public CompoundNode createNode(){
 		return (CompoundNode)super.createNode();
+	}
+
+	@Override
+	public CompoundGraph getGraph() {
+		return (CompoundGraph)this.parent.getGraph();
+	}
+
+	@Override
+	public BaseCompoundNode getParentNode() {
+		return this.parent;
 	}
 }

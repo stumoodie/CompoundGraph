@@ -1,16 +1,14 @@
 package uk.ed.inf.graph.util.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,47 +17,34 @@ import org.junit.runner.RunWith;
 import uk.ed.inf.graph.basic.IBasicEdge;
 import uk.ed.inf.graph.basic.IBasicNode;
 import uk.ed.inf.graph.basic.IBasicPair;
-import uk.ed.inf.graph.impl.Edge;
-import uk.ed.inf.graph.impl.Node;
 
 
 @RunWith(JMock.class)
 public class ConnectedNodeIteratorTest {
 	
-	private Mockery mockery = new JUnit4Mockery() {{
-		setImposteriser(ClassImposteriser.INSTANCE);
-	}};
+	private Mockery mockery = new JUnit4Mockery();
 	
 	private ConnectedNodeIterator<TestNode, TestEdge> testBasicNodeIterator ;
 	private TestNode mockNode ;
 	private TestEdge mockEdge ;
-	private TestEdge mockEdge2 ;
+	private TestNode mockNode2 ;
 	private Iterator<TestEdge> mockEdgeIterator ;
 	private IBasicPair<TestNode,TestEdge> mockPair ;
 
+	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws Exception {
-
-		
-		List<TestEdge> aList = new ArrayList <TestEdge> ();
-		mockEdge = mockery.mock(TestEdge.class , "mockEdge") ;
-		mockEdge2 = mockery.mock(TestEdge.class , "mockEdge2") ;
-		
-		
-		aList.add(mockEdge) ;
-		aList.add(mockEdge2) ;
-		
 		mockNode = mockery.mock(TestNode.class , "mockNode") ;
-		mockEdgeIterator = aList.iterator() ;
-		
+		mockEdge = mockery.mock(TestEdge.class, "mocEdge");
+		mockEdgeIterator = this.mockery.mock(Iterator.class, "mockEdgeIterator");
+		mockNode2 = mockery.mock(TestNode.class, "mockNode2");
 		mockPair = mockery.mock(IBasicPair.class , "mockPair") ;
 		
 		this.mockery.checking(new Expectations(){{
-//			atLeast(1).of(mockEdge).getConnectedNodes() ; returnValue(mockPair) ;
 		}});
 		
 		testBasicNodeIterator = new ConnectedNodeIterator<TestNode, TestEdge> (mockNode, mockEdgeIterator) ;
-		
+		this.mockery.assertIsSatisfied();
 	}
 
 	@After
@@ -68,13 +53,31 @@ public class ConnectedNodeIteratorTest {
 
 	@Test
 	public final void testHasNext() {
+		this.mockery.checking(new Expectations(){{
+//			atLeast(1).of(mockEdge).getConnectedNodes() ; will(returnValue(mockPair)) ;
+			
+			oneOf(mockEdgeIterator).hasNext(); will(returnValue(true));
+			oneOf(mockEdgeIterator).hasNext(); will(returnValue(false));
+		}});
+		
 		assertTrue ( "has next" , testBasicNodeIterator.hasNext()) ;
+		assertTrue ( "iter exhausted" , !testBasicNodeIterator.hasNext()) ;
+		this.mockery.assertIsSatisfied();
 	}
 
 	@Test
 	public final void testNext() {
+		this.mockery.checking(new Expectations(){{
+			atLeast(1).of(mockEdge).getConnectedNodes() ; will(returnValue(mockPair)) ;
+			atLeast(1).of(mockPair).getOtherNode(mockNode); will(returnValue(mockNode2));
+			
+			oneOf(mockEdgeIterator).next(); will(returnValue(mockEdge));
+			
+		}});
+		
 		TestNode nextNode = testBasicNodeIterator.next() ;
-		assertEquals ( "node" , mockNode , nextNode ) ;
+		assertEquals ( "node" , mockNode2 , nextNode ) ;
+		this.mockery.assertIsSatisfied();
 	}
 
 	@Test(expected=UnsupportedOperationException.class)
@@ -82,8 +85,8 @@ public class ConnectedNodeIteratorTest {
 		testBasicNodeIterator.remove() ;
 	}
 	
-	private static abstract class TestNode implements IBasicNode<TestNode, TestEdge> { }
+	private static interface TestNode extends IBasicNode<TestNode, TestEdge> { }
 	
-	private static abstract class TestEdge implements IBasicEdge<TestNode, TestEdge> {}
+	private static interface TestEdge extends IBasicEdge<TestNode, TestEdge> {}
 
 }

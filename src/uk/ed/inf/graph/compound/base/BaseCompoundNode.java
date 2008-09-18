@@ -139,10 +139,9 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		return retVal;
 	}
 	
-	public final boolean hasEdgeWith(BaseCompoundNode iOther) {
+	public final boolean hasEdgeWith(BaseCompoundNode other) {
 		boolean retVal = false;
-		if(iOther != null){ 
-			BaseCompoundNode other = (BaseCompoundNode)iOther;
+		if(other != null){ 
 			retVal = this.edgeInList.hasEdgesWith(other);
 			if(retVal == false){
 				retVal = this.edgeOutList.hasEdgesWith(other);

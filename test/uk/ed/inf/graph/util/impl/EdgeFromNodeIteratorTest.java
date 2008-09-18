@@ -1,6 +1,9 @@
 package uk.ed.inf.graph.util.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,7 +21,6 @@ import org.junit.runner.RunWith;
 
 import uk.ed.inf.graph.basic.IBasicEdge;
 import uk.ed.inf.graph.basic.IBasicNode;
-import uk.ed.inf.graph.util.impl.EdgeFromNodeIterator;
 
 @RunWith(JMock.class)
 public class EdgeFromNodeIteratorTest {

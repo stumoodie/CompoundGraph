@@ -24,7 +24,8 @@ public abstract class ArchetypalCompoundGraph extends BaseCompoundGraph {
 
 	protected abstract void createNewRootNode(int indexValue);
 	
-	protected abstract void createCopyOfRootNode(int newIndexValue, ArchetypalCompoundNode otherRootNode);
+	@Override
+	protected abstract void createCopyOfRootNode(int newIndexValue, BaseCompoundNode otherRootNode);
 
 	protected final ITree<BaseCompoundNode> getNodeTree(){
 		return this.nodeTree;

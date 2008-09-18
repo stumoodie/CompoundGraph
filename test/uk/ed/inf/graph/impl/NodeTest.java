@@ -1,11 +1,11 @@
 package uk.ed.inf.graph.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.SortedSet;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,11 +27,11 @@ public class NodeTest {
 	private static NodeFactory nodeFactory ;
 	private static EdgeFactory edgeFactory ;
 	
-	private static final int NODE_INDEX_ONE = 1 ;
+//	private static final int NODE_INDEX_ONE = 1 ;
 	private static final int NODE_INDEX_TWO = 2 ;
-	private static final int NODE_INDEX_THREE = 3 ;
-	private static final int EDGE_INDEX_ONE = 1 ;
-	private static final int EDGE_INDEX_TWO = 2 ;
+//	private static final int NODE_INDEX_THREE = 3 ;
+//	private static final int EDGE_INDEX_ONE = 1 ;
+//	private static final int EDGE_INDEX_TWO = 2 ;
 	
 	private static final int COMPARE_GREATER_INDEX = 1 ;
 	private static final int COMPARE_LESSER_INDEX = -1 ;

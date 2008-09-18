@@ -24,7 +24,6 @@ import uk.ed.inf.graph.basic.IBasicEdge;
 import uk.ed.inf.graph.basic.IBasicNode;
 import uk.ed.inf.graph.util.IFilterCriteria;
 import uk.ed.inf.graph.util.INodeSet;
-import uk.ed.inf.graph.util.impl.FilteredIterator;
 
 @RunWith(JMock.class)
 public class FilteredIteratorTest {

@@ -2,42 +2,31 @@ package uk.ed.inf.graph.compound.base;
 
 import uk.ed.inf.graph.directed.IDirectedPair;
 
-public class BaseCompoundNodePair implements IDirectedPair<BaseCompoundNode, BaseCompoundEdge> {
-	private final BaseCompoundNode outNode;
-	private final BaseCompoundNode inNode;
-
-	BaseCompoundNodePair(BaseCompoundNode outNode, BaseCompoundNode inNode) {
-		this.outNode = outNode;
-		this.inNode = inNode;
-	}
+public abstract class BaseCompoundNodePair implements IDirectedPair<BaseCompoundNode, BaseCompoundEdge> {
 
 	public boolean containsNode(BaseCompoundNode node) {
-		return node.equals(inNode) || node.equals(outNode);
+		return node.equals(getInNode()) || node.equals(getOutNode());
 	}
 
 	public BaseCompoundNode getOneNode() {
-		return inNode;
+		return getInNode();
 	}
 
 	public BaseCompoundNode getOtherNode(BaseCompoundNode node) {
-		BaseCompoundNode retVal = inNode;
-		if (node.equals(inNode)) {
-			retVal = outNode;
+		BaseCompoundNode retVal = getInNode();
+		if (node.equals(getInNode())) {
+			retVal = getOutNode();
 		}
 		return retVal;
 	}
 
 	public BaseCompoundNode getTwoNode() {
-		return outNode;
+		return getOutNode();
 	}
 
-	public BaseCompoundNode getInNode() {
-		return inNode;
-	}
+	public abstract BaseCompoundNode getInNode();
 
-	public BaseCompoundNode getOutNode() {
-		return outNode;
-	}
+	public abstract BaseCompoundNode getOutNode();
 
 	public boolean hasEnds(BaseCompoundNode endOne, BaseCompoundNode endTwo) {
 		boolean retVal = false;
@@ -51,7 +40,7 @@ public class BaseCompoundNodePair implements IDirectedPair<BaseCompoundNode, Bas
 	public boolean hasDirectedEnds(BaseCompoundNode outNode, BaseCompoundNode inNode) {
 		boolean retVal = false;
 		if (outNode != null && inNode != null) {
-			retVal = this.inNode.equals(inNode) && this.outNode.equals(outNode);
+			retVal = this.getInNode().equals(inNode) && this.getOutNode().equals(outNode);
 		}
 		return retVal;
 	}

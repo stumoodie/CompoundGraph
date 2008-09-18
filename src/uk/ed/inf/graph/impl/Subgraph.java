@@ -98,8 +98,7 @@ public final class Subgraph implements IUndirectedSubgraph<Node, Edge> {
 		return this.adjList.isConnected(thisNode.getIndex(), thatNode.getIndex());
 	}
 	
-	public boolean containsEdge(Edge iEdge){
-		Edge edge = (Edge)iEdge;
+	public boolean containsEdge(Edge edge){
 		return this.edgeSet.contains(edge);
 	}
 

@@ -1,9 +1,10 @@
 package uk.ed.inf.graph.util.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class DirectedAdjListTest {
@@ -16,37 +17,37 @@ public class DirectedAdjListTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testDirectedAdjList() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testDirectedAdjListInt() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testAddNode() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testContainsNode() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testAddEdge() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testIsConnected() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testGetEdge() {
 		fail("Not yet implemented"); // TODO
 	}

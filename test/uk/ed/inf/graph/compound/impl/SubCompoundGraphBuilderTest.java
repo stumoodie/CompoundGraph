@@ -1,9 +1,10 @@
 package uk.ed.inf.graph.compound.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SubCompoundGraphBuilderTest {
@@ -16,32 +17,32 @@ public class SubCompoundGraphBuilderTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testSubCigraphBuilderCigraphSetOfCiNodeSetOfCiEdge() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testSubCigraphBuilderCigraphSetOfCiNode() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testExpandChildCigraphs() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testAddIncidentEdges() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testBuildSubgraph() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testGetSubgraph() {
 		fail("Not yet implemented"); // TODO
 	}

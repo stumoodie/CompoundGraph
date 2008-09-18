@@ -1,15 +1,15 @@
 package uk.ed.inf.bitstring;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import java.util.BitSet;
 import java.lang.reflect.Array;
+import java.util.BitSet;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.sun.org.apache.xerces.internal.util.TeeXMLDocumentFilterImpl;
 
 public class BitStringTest {
 	
@@ -47,7 +47,7 @@ public class BitStringTest {
 		BitSet result = new BitSet (NUMERICAL[3]) ;
 		result.flip(NUMERICAL[1]) ;
 		
-		BitString newBitString = new BitString ( testBitString) ;
+//		BitString newBitString = new BitString ( testBitString) ;
 		assertEquals ( "new from BitString" , result.get(NUMERICAL[0]) , testBitString.get(NUMERICAL[0])) ;
 		assertEquals ( "new from BitString" , result.get(NUMERICAL[1]) , testBitString.get(NUMERICAL[1])) ;
 		assertEquals ( "new from BitString" , result.get(NUMERICAL[2]) , testBitString.get(NUMERICAL[2])) ;
@@ -58,7 +58,7 @@ public class BitStringTest {
 		BitSet result = new BitSet (NUMERICAL[3]) ;
 		result.flip(NUMERICAL[1]) ;
 		
-		BitString newBitString = new BitString ( result) ;
+//		BitString newBitString = new BitString ( result) ;
 		assertEquals ( "new from BitSet" , result.get(NUMERICAL[0]) , testBitString.get(NUMERICAL[0])) ;
 		assertEquals ( "new from BitSet" , result.get(NUMERICAL[1]) , testBitString.get(NUMERICAL[1])) ;
 		assertEquals ( "new from BitSet" , result.get(NUMERICAL[2]) , testBitString.get(NUMERICAL[2])) ;

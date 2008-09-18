@@ -3,10 +3,7 @@ package uk.ed.inf.graph.compound.base;
 import java.util.Iterator;
 
 import uk.ed.inf.graph.basic.IBasicPair;
-import uk.ed.inf.graph.basic.IBasicSubgraph;
-import uk.ed.inf.graph.basic.IBasicSubgraphFactory;
 import uk.ed.inf.graph.compound.ICompoundGraph;
-import uk.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
 import uk.ed.inf.graph.compound.IModifiableCompoundGraph;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.directed.IDirectedPair;
@@ -21,20 +18,24 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 		IRestorableGraph<BaseCompoundNode, BaseCompoundEdge>,
 		IModifiableCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
 	private final GraphStateHandler<BaseCompoundNode, BaseCompoundEdge> stateHandler;
-	private ICompoundGraphCopyBuilder<BaseCompoundNode, BaseCompoundEdge> copyBuilder;
+	private BaseGraphCopyBuilder copyBuilder;
 	
-	protected BaseCompoundGraph(ICompoundGraphCopyBuilder<BaseCompoundNode, BaseCompoundEdge> copyBuilder){
+	protected BaseCompoundGraph(BaseGraphCopyBuilder copyBuilder){
 		this.stateHandler = new GraphStateHandler<BaseCompoundNode, BaseCompoundEdge>(this);
 		this.copyBuilder = copyBuilder;
 	}
 
+	protected BaseCompoundGraph(BaseGraphCopyBuilder copyBuilder, BaseCompoundGraph otherGraph){
+		this(copyBuilder);
+		createCopyOfRootNode(getNodeCounter().getLastIndex(), otherGraph.getRootNode());
+		this.performCopy(otherGraph);
+	}
+	
 	protected abstract IndexCounter getNodeCounter();
-
-	protected abstract int getRootNodeIndex();
 	
 	protected abstract IndexCounter getEdgeCounter();
 
-//	protected abstract void createCopyOfRootNode(int newIndexValue, BaseCompoundNode otherRootNode);
+	protected abstract void createCopyOfRootNode(int newIndexValue, BaseCompoundNode otherRootNode);
 
 	protected abstract ITree<BaseCompoundNode> getNodeTree();
 
@@ -46,13 +47,13 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	 * @param otherGraph
 	 */
 	protected void performCopy(BaseCompoundGraph otherGraph){
-		IBasicSubgraphFactory<BaseCompoundNode, BaseCompoundEdge> fact = otherGraph.subgraphFactory();
+		BaseSubCompoundGraphFactory fact = otherGraph.subgraphFactory();
 		Iterator<BaseCompoundNode> iter = otherGraph.getNodeTree().getRootNode().getChildCompoundGraph().nodeIterator();
 		while(iter.hasNext()){
 			BaseCompoundNode level1Node = iter.next();
 			fact.addNode(level1Node);
 		}
-		IBasicSubgraph<BaseCompoundNode, BaseCompoundEdge> subgraph = fact.createInducedSubgraph();
+		BaseSubCompoundGraph subgraph = fact.createInducedSubgraph();
 		this.copyHere(subgraph);
 	}
 	
@@ -129,7 +130,7 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	 * Returns all edges in tree level-node iteration order. For each node the edges are returned in the same
 	 * order as the CiNode edge iterator. Returns both undirected and directed nodes.
 	 */
-	public final Iterator<BaseCompoundEdge> edgeIterator() {
+	public Iterator<BaseCompoundEdge> edgeIterator() {
 		return new EdgeFromNodeIterator<BaseCompoundNode, BaseCompoundEdge>(this.getNodeTree().levelOrderIterator());
 	}
 
@@ -137,7 +138,7 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 		return this.getNodeTree().get(nodeIdx);
 	}
 
-	public final Iterator<BaseCompoundNode> nodeIterator() {
+	public Iterator<BaseCompoundNode> nodeIterator() {
 		return this.getNodeTree().levelOrderIterator();
 	}
 
@@ -155,7 +156,7 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 		return this.getNodeTree().size();
 	}
 
-	public final void removeSubgraph(IBasicSubgraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
+	public final void removeSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
 		if(subgraph == null) throw new IllegalArgumentException("subgraph cannot be null");
 		if(subgraph.getSuperGraph() != this) throw new IllegalArgumentException("The subgraph must belong to this graph");
 		removeEdges(subgraph.edgeIterator());
@@ -186,11 +187,9 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 		}
 	}
 	
-	final BaseCompoundNode getLcaNode(BaseCompoundNode iInNode, BaseCompoundNode iOutNode){
-		if(iInNode == null || iOutNode == null) throw new IllegalArgumentException("parameters cannot be null");
+	final BaseCompoundNode getLcaNode(BaseCompoundNode inNode, BaseCompoundNode outNode){
+		if(inNode == null || outNode == null) throw new IllegalArgumentException("parameters cannot be null");
 		
-		BaseCompoundNode inNode = (BaseCompoundNode)iInNode;
-		BaseCompoundNode outNode = (BaseCompoundNode)iOutNode;
 		return this.getNodeTree().getLowestCommonAncestor(inNode, outNode);
 	}
 	
@@ -242,15 +241,13 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 		this.stateHandler.restoreState(previousState);
 	}
 
-	public final boolean canCopyHere(IBasicSubgraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph) {
-		return subGraph != null && subGraph instanceof ISubCompoundGraph && subGraph.isInducedSubgraph()
+	public final boolean canCopyHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph) {
+		return subGraph != null && subGraph.isInducedSubgraph()
 			&& subGraph.isConsistentSnapShot();
 	}
 	
-	public final void copyHere(IBasicSubgraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> iSubGraph) {
-		if(!canCopyHere(iSubGraph)) throw new IllegalArgumentException("Cannot copy graph here");
-		
-		ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph = (ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge>)iSubGraph;
+	public final void copyHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph) {
+		if(!canCopyHere(subGraph)) throw new IllegalArgumentException("Cannot copy graph here");
 		
 		BaseChildCompoundGraph rootCiGraph = this.getNodeTree().getRootNode().getChildCompoundGraph();
 		copyBuilder.setDestinatChildCompoundGraph(rootCiGraph);
@@ -267,14 +264,4 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	public abstract BaseCompoundEdgeFactory edgeFactory();
 
 	public abstract BaseSubCompoundGraphFactory subgraphFactory();
-	
-	public final void clear(){
-		Iterator<BaseCompoundNode> treeIter = this.getNodeTree().levelOrderIterator();
-		while(treeIter.hasNext()){
-			BaseCompoundNode node = treeIter.next();
-			node.getChildCompoundGraph().clear();
-		}
-		// root node must always exists so make sure it does
-		this.getRootNode().markRemoved(false);
-	}
 }

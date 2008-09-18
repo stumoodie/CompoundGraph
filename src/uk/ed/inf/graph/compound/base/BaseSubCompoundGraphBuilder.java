@@ -1,15 +1,16 @@
 package uk.ed.inf.graph.compound.base;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import uk.ed.inf.graph.compound.ISubCompoundGraphBuilder;
 import uk.ed.inf.graph.directed.IDirectedPair;
 
-public abstract class BaseSubCompoundGraphBuilder {
-	private final BaseCompoundGraph graph;
-	private final Set<BaseCompoundNode> nodeList;
-	private final Set<BaseCompoundEdge> edgeList;
+public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBuilder<BaseCompoundNode, BaseCompoundEdge> {
+	private Set<BaseCompoundNode> nodeList;
+	private Set<BaseCompoundEdge> edgeList;
 
 	/**
 	 * Construct the builder, providing it with a list of nodes and edges with which to populate
@@ -19,19 +20,17 @@ public abstract class BaseSubCompoundGraphBuilder {
 	 * @param edgeList the list of edges to be added to the subgraph, cannot be null.
 	 * @throws NullPointerException if any of the the parameters are null. 
 	 */
-	protected BaseSubCompoundGraphBuilder(BaseCompoundGraph graph){
-		if(graph == null) throw new IllegalArgumentException("graph cannot be null");
-		this.graph = graph;
-		this.nodeList = new HashSet<BaseCompoundNode>();
-		this.edgeList = new HashSet<BaseCompoundEdge>();
+	protected BaseSubCompoundGraphBuilder(){
+		this.nodeList = Collections.emptySet();
+		this.edgeList = Collections.emptySet();
 	}
 	
 	public void setNodeList(Set<? extends BaseCompoundNode> nodeList){
-		this.nodeList.addAll(nodeList);
+		this.nodeList = new HashSet<BaseCompoundNode>(nodeList);
 	}
 	
 	public void setEdgeList(Set<? extends BaseCompoundEdge> edgeList){
-		this.edgeList.addAll(edgeList);
+		this.edgeList = new HashSet<BaseCompoundEdge>(edgeList);
 	}
 	
 	/**
@@ -88,7 +87,7 @@ public abstract class BaseSubCompoundGraphBuilder {
 	 * Build the new subgraph, based on the previous processing of the initial nodes and edges.
 	 */
 	public void buildSubgraph() {
-		newSubgraph(this.graph);
+		newSubgraph();
 		for(BaseCompoundNode node : this.nodeList){
 			getSubgraph().addNode(node);
 		}
@@ -97,7 +96,7 @@ public abstract class BaseSubCompoundGraphBuilder {
 		}
 	}
 	
-	protected abstract void newSubgraph(BaseCompoundGraph compoundGraph);
+	protected abstract void newSubgraph();
 	
 	/**
 	 * Retrieve the created subgraph. If the subgraph has not been build then this method will fail.
@@ -105,4 +104,6 @@ public abstract class BaseSubCompoundGraphBuilder {
 	 * @throws IllegalStateException if the subgraph has not been created by a call to <code>buildSubgraph</code>.
 	 */
 	public abstract BaseSubCompoundGraph getSubgraph();
+	
+	public abstract BaseCompoundGraph getGraph();
 }

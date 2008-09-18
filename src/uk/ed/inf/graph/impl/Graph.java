@@ -163,7 +163,7 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 			// iterating as this modified the set being iterated upon
 			// and cause a concurrency exception
 			while(edgeIterator.hasNext()){
-				edgeDeletionSet.add((Edge)edgeIterator.next());
+				edgeDeletionSet.add(edgeIterator.next());
 			}
 			for(Edge edge : edgeDeletionSet){
 				edge.markRemoved(true);

@@ -10,20 +10,16 @@ import uk.ed.inf.graph.util.SubgraphAlgorithms;
 import uk.ed.inf.graph.util.impl.EdgeSet;
 import uk.ed.inf.graph.util.impl.NodeSet;
 
-public class BaseSubCompoundGraph implements ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
-	private final BaseCompoundGraph superGraph;
+public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
 	private final NodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet;
 	private final EdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet;
 	
-	public BaseSubCompoundGraph(BaseCompoundGraph superGraph){
-		this.superGraph = superGraph;
+	protected BaseSubCompoundGraph(){
 		this.nodeSet = new NodeSet<BaseCompoundNode, BaseCompoundEdge>();
 		this.edgeSet = new EdgeSet<BaseCompoundNode, BaseCompoundEdge>();
 	}
 	
-	public BaseCompoundGraph getSuperGraph() {
-		return this.superGraph;
-	}
+	public abstract BaseCompoundGraph getSuperGraph();
 
 	public boolean isInducedSubgraph() {
 		ISubgraphAlgorithms<BaseCompoundNode, BaseCompoundEdge> alg = new SubgraphAlgorithms<BaseCompoundNode, BaseCompoundEdge>(this);

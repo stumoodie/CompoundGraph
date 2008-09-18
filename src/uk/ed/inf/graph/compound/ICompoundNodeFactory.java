@@ -9,6 +9,6 @@ public interface ICompoundNodeFactory<
 
 	ICompoundGraph<N, E> getGraph();
 
-	IChildCompoundGraph<N, E> getOwningChildGraph();
+	N getParentNode();
 	
 }

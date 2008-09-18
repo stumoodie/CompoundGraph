@@ -1,7 +1,7 @@
 package uk.ed.inf.graph.compound.impl;
 
 import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundGraph;
-import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
+import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 
 
 public class CompoundGraph extends ArchetypalCompoundGraph {
@@ -41,7 +41,7 @@ public class CompoundGraph extends ArchetypalCompoundGraph {
 	}
 
 	@Override
-	protected void createCopyOfRootNode(int newIndexValue, ArchetypalCompoundNode otherRootNode) {
+	protected void createCopyOfRootNode(int newIndexValue, BaseCompoundNode otherRootNode) {
 		this.rootNode = new CompoundNode(this, newIndexValue);
 	}
 

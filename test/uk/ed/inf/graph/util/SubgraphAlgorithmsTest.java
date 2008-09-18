@@ -1,9 +1,10 @@
 package uk.ed.inf.graph.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SubgraphAlgorithmsTest {
@@ -16,17 +17,17 @@ public class SubgraphAlgorithmsTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testSubgraphAlgorithms() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testGetSubgraph() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testIsInducedSubgraph() {
 		fail("Not yet implemented"); // TODO
 	}

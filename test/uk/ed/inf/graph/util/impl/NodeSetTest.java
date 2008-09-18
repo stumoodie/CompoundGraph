@@ -1,11 +1,14 @@
 package uk.ed.inf.graph.util.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.lang.reflect.Array;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.lang.reflect.Array;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -14,13 +17,12 @@ import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import uk.ed.inf.graph.basic.IBasicEdge;
 import uk.ed.inf.graph.basic.IBasicNode;
-import uk.ed.inf.graph.impl.Edge;
-import uk.ed.inf.graph.impl.Node;
 
 @RunWith(JMock.class)
 public class NodeSetTest {
@@ -47,7 +49,7 @@ public class NodeSetTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testNodeSet() {
 		fail("Not yet implemented"); // TODO
 	}
@@ -60,7 +62,7 @@ public class NodeSetTest {
 		assertEquals ( "added node" , NUMERIC[1] , testNodeSet.size() ) ;
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testAddAll() {
 		final TestNode mockBasicNode ;
 		mockBasicNode = mockery.mock(TestNode.class ,"mockBasicNode") ;
@@ -87,7 +89,7 @@ public class NodeSetTest {
 		assertEquals ( "cleared" , NUMERIC[0] , testNodeSet.size() ) ;
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testComparator() {
 		fail("Not yet implemented"); // TODO
 	}
@@ -105,7 +107,7 @@ public class NodeSetTest {
 		assertTrue ( "contains at 0" , testNodeSet.contains(0) ) ;
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testContainsObject() {
 		final TestNode mockBasicNode ;
 		mockBasicNode = mockery.mock(TestNode.class ,"mockBasicNode") ;
@@ -131,7 +133,7 @@ public class NodeSetTest {
 		assertEquals ( "same with modkBasicNode" , mockBasicNode , testNodeSet.get(0) ) ;
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testContainsAll() {
 		fail("Not yet implemented"); // TODO
 	}
@@ -150,7 +152,7 @@ public class NodeSetTest {
 		
 		TestNode [] nodeArray = { mockBasicNode } ;
 		
-		Iterator nodeIterator = testNodeSet.iterator() ;
+		Iterator<TestNode> nodeIterator = testNodeSet.iterator() ;
 		
 		int counter = 0 ;
 		
@@ -164,7 +166,7 @@ public class NodeSetTest {
 		
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testRemove() {
 		final TestNode mockBasicNode ;
 		mockBasicNode = mockery.mock(TestNode.class ,"mockBasicNode") ;
@@ -181,12 +183,12 @@ public class NodeSetTest {
 		assertTrue ( "empty" , testNodeSet.isEmpty()) ;
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testRemoveAll() {
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testRetainAll() {
 		fail("Not yet implemented"); // TODO
 	}

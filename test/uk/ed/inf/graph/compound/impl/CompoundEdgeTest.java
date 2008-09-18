@@ -9,6 +9,7 @@ import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -35,7 +36,7 @@ public class CompoundEdgeTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testCiEdge() {
 		final ChildCompoundGraph mockSubgraph = this.mockery.mock(ChildCompoundGraph.class, "mockSubgraph");
 		final ArchetypalCompoundGraph mockGraph = this.mockery.mock(ArchetypalCompoundGraph.class, "mockGraph");
@@ -60,7 +61,7 @@ public class CompoundEdgeTest {
 		this.mockery.assertIsSatisfied();
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testCompareTo() {
 		final ChildCompoundGraph mockSubgraph = this.mockery.mock(ChildCompoundGraph.class, "mockSubgraph");
 		final CompoundNode mockInNode = this.mockery.mock(CompoundNode.class, "mockInNode");

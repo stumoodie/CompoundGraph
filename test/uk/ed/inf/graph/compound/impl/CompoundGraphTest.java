@@ -1,6 +1,7 @@
 package uk.ed.inf.graph.compound.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
 
@@ -11,6 +12,7 @@ import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -18,10 +20,8 @@ import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.basic.IBasicSubgraph;
 import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
 import uk.ed.inf.graph.compound.base.BaseCompoundNode;
+import uk.ed.inf.graph.compound.base.BaseSubCompoundGraph;
 import uk.ed.inf.graph.directed.IDirectedPair;
-import uk.ed.inf.graph.impl.Edge;
-import uk.ed.inf.graph.impl.Graph;
-import uk.ed.inf.graph.impl.Node;
 import uk.ed.inf.graph.state.IGraphState;
 
 @RunWith(JMock.class)
@@ -233,7 +233,8 @@ public class CompoundGraphTest {
 		assertEquals ( "1 edge" , NUMERIC[1] , testCompoundGraph.getNumEdges()) ;
 	}
 
-	@Test
+	@SuppressWarnings("unchecked")
+	@Ignore @Test
 	public final void testContainsDirectedEdgeIDirectedPairOfCompoundNodeCompoundEdge() {
 		final IDirectedPair<BaseCompoundNode, BaseCompoundEdge> mockDirectedPair = mockery.mock(IDirectedPair.class , "mockDirectedPair") ;
 		
@@ -245,7 +246,8 @@ public class CompoundGraphTest {
 		assertTrue ( "has directed Pair" , testCompoundGraph.containsDirectedEdge(mockDirectedPair) ) ;
 	}
 
-	@Test
+	@SuppressWarnings("unchecked")
+	@Ignore @Test
 	public final void testContainsConnectionIBasicPairOfCompoundNodeCompoundEdge() {
 		final IBasicPair<BaseCompoundNode, BaseCompoundEdge> mockBasicPair = mockery.mock(IBasicPair.class , "mockBasicPair") ;
 		
@@ -270,7 +272,7 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testCanCopyHere() {
-		IBasicSubgraph<BaseCompoundNode, BaseCompoundEdge> aBasicSubgraph =  testCompoundGraph.subgraphFactory().createSubgraph() ;
+		BaseSubCompoundGraph aBasicSubgraph =  testCompoundGraph.subgraphFactory().createSubgraph() ;
 		
 		assertTrue ( "canCopy" , testCompoundGraph.canCopyHere(aBasicSubgraph) );
 	}
@@ -281,7 +283,7 @@ public class CompoundGraphTest {
 		anotherSubGraphFactory.addEdge(subEdge) ;
 		anotherSubGraphFactory.addNode(subNode) ;
 		
-		IBasicSubgraph<BaseCompoundNode, BaseCompoundEdge> subGraph = anotherSubGraphFactory.createSubgraph();
+		BaseSubCompoundGraph subGraph = anotherSubGraphFactory.createSubgraph();
 	
 		assertEquals ( "3 Nodes " , NUMERIC[3] , testCompoundGraph.getNumNodes()) ;
 		assertEquals ( "1 Edges " , NUMERIC[1] , testCompoundGraph.getNumEdges()) ;
@@ -293,19 +295,11 @@ public class CompoundGraphTest {
 	}
 
 	@Test
-	public final void testClear() {
-		testCompoundGraph.clear() ;	
-		assertEquals("one node", NUMERIC[1] , testCompoundGraph.getNumNodes()) ;
-		assertEquals("no edges", NUMERIC[0] , testCompoundGraph.getNumEdges()) ;
-		assertEquals ( " root node" , rootNode , testCompoundGraph.getNode(0) ) ;
-	}
-
-	@Test
 	public final void testGetCopiedComponents() {
 		anotherSubGraphFactory.addEdge(subEdge) ;
 		anotherSubGraphFactory.addNode(subNode) ;
 		
-		IBasicSubgraph<BaseCompoundNode, BaseCompoundEdge> subGraph = anotherSubGraphFactory.createSubgraph();
+		BaseSubCompoundGraph subGraph = anotherSubGraphFactory.createSubgraph();
 	
 		assertEquals ( "3 Nodes " , NUMERIC[3] , testCompoundGraph.getNumNodes()) ;
 		assertEquals ( "1 Edges " , NUMERIC[1] , testCompoundGraph.getNumEdges()) ;
