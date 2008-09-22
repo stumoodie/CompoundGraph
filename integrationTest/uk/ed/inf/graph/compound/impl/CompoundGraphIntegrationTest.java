@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
@@ -143,7 +144,7 @@ public class CompoundGraphIntegrationTest {
 		assertTrue("expected root node iterator", iter.hasNext() == false);
 	}
 
-	@Test
+	@Ignore @Test
 	public final void testCopyConstructor(){
 		fail("Implement this test");
 	}
@@ -464,22 +465,22 @@ public class CompoundGraphIntegrationTest {
 //		}
 //	}
 	
-	@Test(expected=IllegalArgumentException.class)
+	@Ignore @Test(expected=IllegalArgumentException.class)
 	public final void testCopyNonInducedSubGraph(){
 		fail("Test not implemented yet!");
 	}
 	
-	@Test
+	@Ignore @Test
 	public final void testCopyInducedSubGraph(){
 		fail("Test not implemented yet!");
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
+	@Ignore @Test(expected=IllegalArgumentException.class)
 	public final void testCopyEmptySubGraph(){
 		fail("Test not implemented yet!");
 	}
 	
-	@Test
+	@Ignore @Test
 	public final void testSaveAndRestoreState(){
 		fail("Implement this test");
 	}
