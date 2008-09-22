@@ -193,6 +193,7 @@ public final class Subgraph implements IUndirectedSubgraph<Node, Edge> {
 		return retVal;
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean containsConnection(IBasicPair<? extends Node, ? extends Edge> ends) {
 		IUndirectedPair<? extends Node, ? extends Edge> undirectedEnds = (IUndirectedPair<? extends Node, ? extends Edge>)ends;
 		return this.adjList.isConnected(undirectedEnds.getOneNode().getIndex(),

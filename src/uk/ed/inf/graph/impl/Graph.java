@@ -220,6 +220,7 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 		this.nodeList.add(newNode);
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean containsConnection(IBasicPair<? extends Node, ? extends Edge> ends) {
 		boolean retVal = false;
 		if(ends != null && ends instanceof IUndirectedPair){

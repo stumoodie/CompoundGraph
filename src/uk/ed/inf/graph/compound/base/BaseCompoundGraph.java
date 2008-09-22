@@ -217,6 +217,7 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	 * @param ends the pair of nodes that may define the edges of an edge.
 	 * @return true if it does, false otherwise.  
 	 */
+	@SuppressWarnings("unchecked")
 	public final boolean containsConnection(IBasicPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ends) {
 		boolean retVal = false;
 		if(ends != null && ends instanceof IDirectedPair){
