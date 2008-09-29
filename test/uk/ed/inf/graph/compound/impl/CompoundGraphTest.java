@@ -120,7 +120,7 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testContainsEdgeInt() {
-		assertTrue ( "contains edge there " , testCompoundGraph.containsEdge(1)) ;
+		assertTrue ( "contains edge there " , testCompoundGraph.containsEdge(0)) ;
 	}
 
 	@Test
@@ -162,7 +162,7 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testGetEdge() {
-		assertEquals ( "get Edge" , anEdge , testCompoundGraph.getEdge(1)) ;
+		assertEquals ( "get Edge" , anEdge , testCompoundGraph.getEdge(0)) ;
 	}
 
 	@Test

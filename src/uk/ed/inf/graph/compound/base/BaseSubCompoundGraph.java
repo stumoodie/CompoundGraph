@@ -6,17 +6,44 @@ import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.basic.ISubgraphAlgorithms;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.directed.IDirectedPair;
+import uk.ed.inf.graph.util.IDirectedEdgeSet;
+import uk.ed.inf.graph.util.IEdgeSet;
+import uk.ed.inf.graph.util.IFilterCriteria;
+import uk.ed.inf.graph.util.INodeSet;
 import uk.ed.inf.graph.util.SubgraphAlgorithms;
 import uk.ed.inf.graph.util.impl.EdgeSet;
+import uk.ed.inf.graph.util.impl.FilteredEdgeSet;
+import uk.ed.inf.graph.util.impl.FilteredNodeSet;
 import uk.ed.inf.graph.util.impl.NodeSet;
 
 public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
-	private final NodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet;
-	private final EdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet;
+	private INodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet;
+	private IEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet;
 	
 	protected BaseSubCompoundGraph(){
-		this.nodeSet = new NodeSet<BaseCompoundNode, BaseCompoundEdge>();
-		this.edgeSet = new EdgeSet<BaseCompoundNode, BaseCompoundEdge>();
+//		this.nodeSet = new NodeSet<BaseCompoundNode, BaseCompoundEdge>();
+//		this.edgeSet = new EdgeSet<BaseCompoundNode, BaseCompoundEdge>();
+	}
+	
+	protected final void createNodeSet(INodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet){
+		this.nodeSet = new FilteredNodeSet<BaseCompoundNode, BaseCompoundEdge>(nodeSet, new IFilterCriteria<BaseCompoundNode>(){
+
+			public boolean matched(BaseCompoundNode testObj) {
+				return !testObj.isRemoved();
+			}
+	
+		});
+	}
+	
+	protected final void createEdgeSet(IDirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet){
+		this.edgeSet = new FilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge>(edgeSet,
+				new IFilterCriteria<BaseCompoundEdge>(){
+
+					public boolean matched(BaseCompoundEdge testObj) {
+						return !testObj.isRemoved();
+					}
+			
+		});
 	}
 	
 	public abstract BaseCompoundGraph getSuperGraph();
@@ -147,5 +174,18 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 			}
 		}
 		return retVal;
+	}
+	
+	/**
+	 * Checks if this SubGraph contains the RootNode of the CompoundGraph.
+	 * @return true if the rootNode is contained in this SubGraph.
+	 */
+	public boolean containsRoot () 
+	{
+		 return nodeSet.contains(this.getSuperGraph().getRootNode()) ;
+	}
+	
+	public Iterator<BaseCompoundNode> getTopLevelNodes() {
+		return this.nodeIterator();
 	}
 }

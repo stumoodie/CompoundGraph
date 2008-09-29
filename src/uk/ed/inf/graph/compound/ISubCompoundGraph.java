@@ -17,4 +17,9 @@ public interface ISubCompoundGraph<
 
 	Iterator<N> nodeIterator();
 	
-	Iterator<E> edgeIterator();}
+	Iterator<E> edgeIterator();
+	
+	boolean containsRoot () ;
+	
+	Iterator<N> getTopLevelNodes () ;
+}

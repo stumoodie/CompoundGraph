@@ -72,9 +72,11 @@ public class GraphStateHandler<
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.state.IGraphStateHandler#restoreState(uk.ed.inf.graph.state.IGraphState)
 	 */
-	public void restoreState(IGraphState<N, E> previousState){
+	public void restoreState(IGraphState<N, E> previousState) throws IllegalArgumentException{
 		// mark all nodes and edges as removed
 		// then mark those in bit list as restored.
+		if ( previousState.getGraph() != this.getGraph())
+			throw new IllegalArgumentException ( "The state must belong to the same Graph.") ;
 		this.nodeStatus = previousState.getNodeStates();
 		restoreNodes();
 		this.edgeStatus = previousState.getEdgeStates();
@@ -103,7 +105,8 @@ public class GraphStateHandler<
 			E edge = edgeIter.next();
 			int edgeIdx = edge.getIndex();
 			if(edgeIdx < edgeStatus.length()){
-				edge.markRemoved(edgeStatus.get(edgeIdx));
+				boolean edgeState = this.edgeStatus.get(edgeIdx);
+				edge.markRemoved(!edgeState);
 			}
 			else{
 				edge.markRemoved(true);

@@ -1,8 +1,10 @@
 package uk.ed.inf.graph.compound.base;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
@@ -14,6 +16,7 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder<
 	private BaseChildCompoundGraph destSubCigraph;
 	private BaseSubCompoundGraphFactory subGraphFactory;
 	private final Map<BaseCompoundNode, BaseCompoundNode> oldNewEquivList;
+	private Set<Integer> visited = new HashSet<Integer>(); 
 	
 	public BaseGraphCopyBuilder(){
 		this.oldNewEquivList = new HashMap<BaseCompoundNode, BaseCompoundNode>();
@@ -55,15 +58,19 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder<
 	 * @see uk.ed.inf.graph.compound.base.ICompoundGraphCopyBuilder#copyNodes()
 	 */
 	private void copyNodes(){
+		
 		Iterator<BaseCompoundNode> sourceNodeIter = this.sourceSubCigraph.nodeIterator();
 		while(sourceNodeIter.hasNext()){
-			BaseCompoundNode srcNode = sourceNodeIter.next(); 
-			copyNode(srcNode, this.destSubCigraph.getRootNode());
+			BaseCompoundNode srcNode = sourceNodeIter.next();
+			if(!visited.contains(srcNode.getIndex())){
+				copyNode(srcNode, this.destSubCigraph.getRootNode());
+			}
 		}
 	}
 
 	private void copyNode(BaseCompoundNode srcNode, BaseCompoundNode destParentNode){
 		BaseCompoundNode newNode = createCopyOfNode(srcNode, destParentNode);
+		this.visited.add(srcNode.getIndex()) ;
 		this.oldNewEquivList.put(srcNode, newNode);
 		this.subGraphFactory.addNode(newNode);
 		Iterator<? extends BaseCompoundNode> childIter = srcNode.childIterator();

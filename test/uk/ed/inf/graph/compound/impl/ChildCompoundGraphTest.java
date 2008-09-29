@@ -114,7 +114,7 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testContainsEdgeInt() {
-		assertTrue ( "contains edge" , testChildCompoundGraph.containsEdge(1)) ;
+		assertTrue ( "contains edge" , testChildCompoundGraph.containsEdge(0)) ;
 	}
 
 	@Test
@@ -130,7 +130,7 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testGetEdge() {
-		assertEquals ( "get edge" , anEdge , testChildCompoundGraph.getEdge(1)) ;
+		assertEquals ( "get edge" , anEdge , testChildCompoundGraph.getEdge(0)) ;
 	}
 
 	@Test

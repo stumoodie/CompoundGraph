@@ -47,6 +47,12 @@ public class CompoundGraphIntegrationTest {
 	private static final int EXPECTED_NODES_AFTER_NODES_1_AND_2_DELETED = 1;
 	private static final int EXPECTED_EDGES_AFTER_NODES_1_AND_2_DELETED = 0;
 	private static final int [] NUMERIC_VALUE = { 0,1,2,3,4,5,6,7,8,9,10 } ;
+	
+	private static final String SAVED_NODES = "{0, 1, 2, 3, 4, 5, 6, 7, 8}" ;
+	private static final String SAVED_EDGES = "{0, 1, 2, 3, 4, 5, 6, 7, 8}" ;
+	private static final String NEW_STATE_SAVED_NODES = "{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}" ;
+	private static final String NEW_STATE_SAVED_EDGES = "{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}" ;
+	
 
 	
 	private CompoundGraph testInstance;
@@ -373,7 +379,7 @@ public class CompoundGraphIntegrationTest {
 		assertEquals("node8 subgraph edges", NUM_NODE8_EDGES, node8.getChildCompoundGraph().getNumEdges());
 	}
 	
-	@Ignore @Test
+	@Test
 	public final void testCreateSubGraph () throws Exception
 	{
 		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
@@ -381,19 +387,19 @@ public class CompoundGraphIntegrationTest {
 		SubCompoundGraph  nonInducedSubGraph = subGraphfactory.createSubgraph() ;
 		assertEquals ( "from original Graph" , testInstance , nonInducedSubGraph.getSuperGraph()) ;
 		assertEquals ( "3 nodes" , NUMERIC_VALUE[3] , nonInducedSubGraph.getNumNodes()) ;
-		assertEquals ( "1 edges" , NUMERIC_VALUE[2] , nonInducedSubGraph.getNumEdges()) ;
+		assertEquals ( "2 edges" , NUMERIC_VALUE[2] , nonInducedSubGraph.getNumEdges()) ;
 	}
 	
-	@Ignore @Test
+	@Test
 	public final void testCreateInducedSubGraph () throws Exception
 	{
 		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addNode(node1) ;
 		subGraphfactory.addNode(node2) ;
-		SubCompoundGraph  nonInducedSubGraph = subGraphfactory.createSubgraph() ;
-		assertEquals ( "from original Graph" , testInstance , nonInducedSubGraph.getSuperGraph()) ;
-		assertEquals ( "8 nodes" , NUMERIC_VALUE[8] , nonInducedSubGraph.getNumNodes()) ;
-		assertEquals ( "9 edges" , NUMERIC_VALUE[9] , nonInducedSubGraph.getNumEdges()) ;
+		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , inducedSubGraph.getSuperGraph()) ;
+		assertEquals ( "8 nodes" , NUMERIC_VALUE[8] , inducedSubGraph.getNumNodes()) ;
+		assertEquals ( "9 edges" , NUMERIC_VALUE[9] , inducedSubGraph.getNumEdges()) ;
 	}
 	
 	@Test
@@ -554,25 +560,27 @@ public class CompoundGraphIntegrationTest {
 //		}
 //	}
 	
-	@Ignore @Test//(expected=IllegalArgumentException.class) == ?? 
+	@Test//(expected=IllegalArgumentException.class) == ?? 
 	public final void testCopyNonInducedSubGraph(){
 		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addNode(node1) ;
 		SubCompoundGraph  nonInducedSubGraph = subGraphfactory.createSubgraph() ;
 		this.testInstance.getRootNode().getChildCompoundGraph().copyHere(nonInducedSubGraph) ;
-		assertEquals ( "copied Edges nodes" , EXPECTED_NUM_NODES + 3 , testInstance.getNumNodes() ) ;
-		assertEquals ( "CopiedEdges edges" , EXPECTED_NUM_EDGES, testInstance.getNumEdges() ) ;
+		assertEquals ( "copied nodes" , EXPECTED_NUM_NODES + 3 , testInstance.getNumNodes() ) ;
+		assertEquals ( "copied edges" , EXPECTED_NUM_EDGES, testInstance.getNumEdges() ) ;
 	}
 	
-	@Ignore @Test
+	@Test
 	public final void testCopyInducedSubGraph(){
 		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addNode(node1) ;
 		subGraphfactory.addNode(node2) ;
 		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		assertEquals ( "rootNode has 2 Nodes" , NUMERIC_VALUE[2] , rootNode.getChildCompoundGraph().getNumNodes()) ;
 		this.testInstance.getRootNode().getChildCompoundGraph().copyHere(inducedSubGraph) ;
-		assertEquals ( "copied Edges nodes" , EXPECTED_NUM_NODES + 8 , testInstance.getNumNodes() ) ;
-		assertEquals ( "CopiedEdges edges" , EXPECTED_NUM_EDGES + 9, testInstance.getNumEdges() ) ;
+		assertEquals ( "copied nodes" , EXPECTED_NUM_NODES + 8 , testInstance.getNumNodes() ) ;
+		assertEquals ( "Copied edges" , EXPECTED_NUM_EDGES + 9, testInstance.getNumEdges() ) ;
+		assertEquals ( "rootNode has 3 Nodes" , NUMERIC_VALUE[3] , rootNode.getChildCompoundGraph().getNumNodes()) ;
 	}
 	
 	@Test//(expected=IllegalArgumentException.class) == ?? 
@@ -584,20 +592,87 @@ public class CompoundGraphIntegrationTest {
 		assertEquals ( "CopiedEdges edges" , EXPECTED_NUM_EDGES, testInstance.getNumEdges() ) ;
 	}
 	
-	@Ignore @Test
+	@Test
 	public final void testSaveAndRestoreState(){
 		IGraphState<BaseCompoundNode, BaseCompoundEdge> originalState = testInstance.getCurrentState() ;
-		
-		CompoundNode additionalNode = testInstance.nodeFactory().createNode() ;
 		assertTrue ( "state saved" , originalState != null) ;
 		assertEquals ( "state belongs to Graph" , testInstance , originalState.getGraph() ) ;
+		assertEquals ("check saved nodes" , SAVED_NODES , originalState.getNodeStates().toString()) ;
+		assertEquals ("check saved edges" , SAVED_EDGES , originalState.getEdgeStates().toString()) ;
+		CompoundNode additionalNode = testInstance.nodeFactory().createNode() ;
 		assertEquals ( "one more node" , EXPECTED_NUM_NODES + 1 , testInstance.getNumNodes() ) ;
 		CompoundEdgeFactory edgeFactory = testInstance.edgeFactory() ;
-		edgeFactory.setPair(node8, node3) ; 
+		edgeFactory.setPair(node8, node5) ; 
 		CompoundEdge additionalEdge = edgeFactory.createEdge() ;
 		assertEquals ( "one more edge" , EXPECTED_NUM_EDGES + 1 , testInstance.getNumEdges() ) ;
+		IGraphState<BaseCompoundNode, BaseCompoundEdge> newState = testInstance.getCurrentState() ;
+		assertEquals ("check saved nodes" , NEW_STATE_SAVED_NODES , newState.getNodeStates().toString()) ;
+		assertEquals ("check saved edges" , NEW_STATE_SAVED_EDGES , newState.getEdgeStates().toString()) ;
 		testInstance.restoreState(originalState) ;
 		assertEquals ( "original nodes" , EXPECTED_NUM_NODES , testInstance.getNumNodes() ) ;
 		assertEquals ( "original edges" , EXPECTED_NUM_EDGES , testInstance.getNumEdges() ) ;
+	}
+	
+	@Test
+	public final void testDeleteOrdinarySubGraph () throws Exception 
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		SubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
+		testInstance.removeSubgraph(ordinarySubGraph) ;
+		assertEquals ( "3 less Nodes" , EXPECTED_NUM_NODES - 3 , testInstance.getNumNodes()) ;
+		assertEquals ( "6 less Edges" , EXPECTED_NUM_EDGES - 6 , testInstance.getNumEdges()) ;
+		assertEquals ("empty nodes on subgraph" , NUMERIC_VALUE[0] , ordinarySubGraph.getNumNodes()) ;
+		assertEquals ("empty edges on subgraph" , NUMERIC_VALUE[0] , ordinarySubGraph.getNumEdges()) ;
+	}
+	
+	@Test
+	public final void testDeleteInducedSubGraph () throws Exception 
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		testInstance.removeSubgraph(inducedSubGraph) ;
+		assertEquals ( "3 less Nodes" , EXPECTED_NUM_NODES - 8 , testInstance.getNumNodes()) ;
+		assertEquals ( "6 less Edges" , EXPECTED_NUM_EDGES - 9 , testInstance.getNumEdges()) ;
+		assertEquals ("empty nodes on subgraph" , NUMERIC_VALUE[0] , inducedSubGraph.getNumNodes()) ;
+		assertEquals ("empty edges on subgraph" , NUMERIC_VALUE[0] , inducedSubGraph.getNumEdges()) ;
+	}
+	
+	@Test
+	public final void testMoveOrdinarySubGraph () throws Exception 
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node6) ;
+		SubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
+
+		
+		assertEquals ( "node1 has 2 nodes" , NUMERIC_VALUE[2] , node1.getChildCompoundGraph().getNumNodes()) ;
+		assertEquals ( "node2 has 2 nodes" , NUMERIC_VALUE[2] , node1.getChildCompoundGraph().getNumNodes()) ;
+		
+		rootNode.getChildCompoundGraph().moveHere(ordinarySubGraph) ;		
+		
+
+		assertEquals ( "same Nodes" , EXPECTED_NUM_NODES , testInstance.getNumNodes()) ;
+		assertEquals ( "2 less Edges" , EXPECTED_NUM_EDGES - 2 , testInstance.getNumEdges()) ;
+		assertEquals ( "rootNode has 3 nodes" , NUMERIC_VALUE[3] , node1.getChildCompoundGraph().getNumNodes()) ;
+		assertEquals ( "node2 has 1 node" , NUMERIC_VALUE[1] , node1.getChildCompoundGraph().getNumNodes()) ;
+		
+	}
+	
+	@Test
+	public final void testMoveInducedSubGraph () throws Exception 
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node6) ;
+		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		rootNode.getChildCompoundGraph().moveHere(inducedSubGraph) ;
+
+		assertEquals ( "same Nodes" , EXPECTED_NUM_NODES , testInstance.getNumNodes()) ;
+		assertEquals ( "2 less Edges" , EXPECTED_NUM_EDGES - 2 , testInstance.getNumEdges()) ;
+		
+		assertEquals ( "rootNode has 3 nodes" , NUMERIC_VALUE[3] , node1.getChildCompoundGraph().getNumNodes()) ;
+		assertEquals ( "node2 has 1 node" , NUMERIC_VALUE[1] , node1.getChildCompoundGraph().getNumNodes()) ;
 	}
 }

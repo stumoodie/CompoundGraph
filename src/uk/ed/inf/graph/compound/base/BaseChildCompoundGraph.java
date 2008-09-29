@@ -16,13 +16,15 @@ import uk.ed.inf.graph.util.impl.FilteredNodeSet;
 
 public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<BaseCompoundNode, BaseCompoundEdge>,	IModifiableChildCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
 	private final BaseGraphCopyBuilder copyBuilder;
+	private final BaseGraphMoveBuilder moveBuilder;
 	private IEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet;
 	private INodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet;
 	
-	protected BaseChildCompoundGraph(BaseGraphCopyBuilder builder){
-		if(builder == null) throw new IllegalArgumentException("builder cannot be null");
+	protected BaseChildCompoundGraph(BaseGraphCopyBuilder copyBuilder , BaseGraphMoveBuilder moveBuilder ){
+		if(copyBuilder == null || moveBuilder == null ) throw new IllegalArgumentException("builder cannot be null");
 		
-		this.copyBuilder = builder;
+		this.copyBuilder = copyBuilder;
+		this.moveBuilder = moveBuilder ;
 	}
 
 	protected final void createNodeSet(INodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet){
@@ -122,7 +124,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 
 	public final boolean canCopyHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph) {
 		return subGraph != null && subGraph instanceof ISubCompoundGraph && subGraph.isInducedSubgraph()
-			&& subGraph.isConsistentSnapShot();
+			&& subGraph.isConsistentSnapShot() && !subGraph.containsRoot();
 	}
 
 	
@@ -207,8 +209,12 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 	 * @throws IllegalArgumentException if <code>canMoveHere(subGraph) == false</code>.
 	 */
 	public void moveHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph){
-		//TODO:
-		throw new UnsupportedOperationException("Implement me!");
+		if(!canMoveHere(subGraph)) throw new IllegalArgumentException("Cannot move graph here");
+		
+		moveBuilder.setDestinatChildCompoundGraph(this);
+		moveBuilder.setSourceSubgraph(subGraph);
+		moveBuilder.makeMove();
+		this.getSuperGraph().removeSubgraph(subGraph) ;
 	}
 	
 	/**
@@ -229,8 +235,22 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 	 * @return true if the subgraph intersects with this child graph, false otherwise.
 	 */
 	public final boolean intersects(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph){
-		//TODO:
-		throw new UnsupportedOperationException("Implement me!");
+		Iterator<? extends BaseCompoundNode>  nodesIterator = this.nodeIterator() ;
+		Iterator<? extends BaseCompoundEdge>  edgesIterator = this.edgeIterator() ;
+		
+		boolean retVal = false ;
+		
+		while (nodesIterator.hasNext())
+		{
+			retVal =  subgraph.containsNode(nodesIterator.next().getIndex()) ;
+		}
+		
+		if ( !retVal)
+		{
+			retVal =  subgraph.containsEdge(edgesIterator.next().getIndex()) ;
+		}
+		
+		return retVal ;
 	}
 
 	public BaseSubCompoundGraph getCopiedComponents(){

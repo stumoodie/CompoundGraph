@@ -5,7 +5,7 @@ import uk.ed.inf.graph.compound.archetypal.ArchetypalChildCompoundGraph;
 
 public class ChildCompoundGraph extends ArchetypalChildCompoundGraph {
 	ChildCompoundGraph(CompoundNode root){
-		super(root, new CompoundGraphCopyBuilder());
+		super(root, new CompoundGraphCopyBuilder() , new CompoundGraphMoveBuilder());
 	}
 	
 	@Override

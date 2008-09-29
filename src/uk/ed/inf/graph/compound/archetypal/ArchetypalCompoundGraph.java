@@ -9,7 +9,7 @@ import uk.ed.inf.tree.ITree;
 
 public abstract class ArchetypalCompoundGraph extends BaseCompoundGraph {
 	private final static int ROOT_NODE_IDX = 0;
-	private final static int INIT_EDGE_IDX = 0;
+	private final static int INIT_EDGE_IDX = -1;
 	private final IndexCounter nodeCounter;
 	private final IndexCounter edgeCounter;
 	private final GeneralTree<BaseCompoundNode> nodeTree;
