@@ -7,6 +7,7 @@ import java.util.Set;
 
 import uk.ed.inf.graph.compound.ISubCompoundGraphBuilder;
 import uk.ed.inf.graph.directed.IDirectedPair;
+import uk.ed.inf.graph.util.impl.NodeTreeIterator;
 
 public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBuilder<BaseCompoundNode, BaseCompoundEdge> {
 	private Set<BaseCompoundNode> nodeList;
@@ -46,12 +47,12 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 			iter.next(); // skip the current node
 			while(iter.hasNext()){
 				BaseCompoundNode childNode = iter.next();
-				this.nodeList.add(childNode);
+				this.nodeList.remove(childNode);
 				// now add edges in this node's compound graph.
 				Iterator<? extends BaseCompoundEdge> edgeIter = childNode.getChildCompoundGraph().edgeIterator();
 				while(edgeIter.hasNext()){
 					BaseCompoundEdge childEdge = edgeIter.next();
-					this.edgeList.add(childEdge);
+					this.edgeList.remove(childEdge);
 				}
 			}
 		}
@@ -62,7 +63,10 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 	 * produce an induced subgraph. 
 	 */
 	public void addIncidentEdges(){
-		for(BaseCompoundNode node : this.nodeList){
+//		for(BaseCompoundNode node : this.nodeList){
+		Iterator<BaseCompoundNode> nodeTreeIter = new NodeTreeIterator<BaseCompoundNode, BaseCompoundEdge>(this.nodeList.iterator());
+		while(nodeTreeIter.hasNext()){
+			BaseCompoundNode node = nodeTreeIter.next();
 			// we only consider out edges as this will reduce the number edges we have
 			// to consider twice. If an edge is directed and incident to the nodes in the
 			// subgraph then we are guaranteed to traverse it once.

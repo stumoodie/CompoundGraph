@@ -1,7 +1,5 @@
 package uk.ed.inf.graph.compound.impl;
 
-import java.util.Iterator;
-
 import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
 import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 import uk.ed.inf.graph.compound.base.BaseSubCompoundGraph;

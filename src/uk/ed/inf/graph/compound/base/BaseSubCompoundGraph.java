@@ -11,10 +11,9 @@ import uk.ed.inf.graph.util.IEdgeSet;
 import uk.ed.inf.graph.util.IFilterCriteria;
 import uk.ed.inf.graph.util.INodeSet;
 import uk.ed.inf.graph.util.SubgraphAlgorithms;
-import uk.ed.inf.graph.util.impl.EdgeSet;
 import uk.ed.inf.graph.util.impl.FilteredEdgeSet;
 import uk.ed.inf.graph.util.impl.FilteredNodeSet;
-import uk.ed.inf.graph.util.impl.NodeSet;
+import uk.ed.inf.graph.util.impl.NodeTreeIterator;
 
 public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
 	private INodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet;
@@ -90,15 +89,27 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 	}
 
 	public Iterator<BaseCompoundNode> nodeIterator() {
-		return this.nodeSet.iterator();
+		return new NodeTreeIterator<BaseCompoundNode, BaseCompoundEdge>(this.nodeSet.iterator());
 	}
 
 	public int getNumEdges() {
-		return this.edgeSet.size();
+		int count = 0;
+		Iterator<BaseCompoundEdge> iter = this.edgeIterator();
+		while(iter.hasNext()){
+			iter.next();
+			count++;
+		}
+		return count;
 	}
 
 	public int getNumNodes() {
-		return this.nodeSet.size();
+		int count = 0;
+		Iterator<BaseCompoundNode> iter = this.nodeIterator();
+		while(iter.hasNext()){
+			iter.next();
+			count++;
+		}
+		return count;
 	}
 
 	void addNode(BaseCompoundNode newNode){
@@ -175,6 +186,14 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 		}
 		return retVal;
 	}
+
+	public Iterator<BaseCompoundNode> topNodeIterator(){
+		return this.nodeIterator();
+	}
+	
+	public int getNumTopNodes(){
+		return this.nodeSet.size();
+	}
 	
 	/**
 	 * Checks if this SubGraph contains the RootNode of the CompoundGraph.
@@ -185,7 +204,4 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 		 return nodeSet.contains(this.getSuperGraph().getRootNode()) ;
 	}
 	
-	public Iterator<BaseCompoundNode> getTopLevelNodes() {
-		return this.nodeIterator();
-	}
 }

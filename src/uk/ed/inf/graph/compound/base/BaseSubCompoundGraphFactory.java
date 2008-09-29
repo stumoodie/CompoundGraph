@@ -77,4 +77,5 @@ public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFa
 	public final BaseCompoundGraph getGraph(){
 		return this.getGraph();
 	}
+	
 }

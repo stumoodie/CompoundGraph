@@ -58,8 +58,7 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder<
 	 * @see uk.ed.inf.graph.compound.base.ICompoundGraphCopyBuilder#copyNodes()
 	 */
 	private void copyNodes(){
-		
-		Iterator<BaseCompoundNode> sourceNodeIter = this.sourceSubCigraph.nodeIterator();
+		Iterator<BaseCompoundNode> sourceNodeIter = this.sourceSubCigraph.topNodeIterator();
 		while(sourceNodeIter.hasNext()){
 			BaseCompoundNode srcNode = sourceNodeIter.next();
 			if(!visited.contains(srcNode.getIndex())){

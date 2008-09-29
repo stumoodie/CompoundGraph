@@ -8,9 +8,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.sun.corba.se.impl.naming.cosnaming.NamingUtils;
-
-import uk.ed.inf.bitstring.IBitString;
 import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
 import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 import uk.ed.inf.graph.state.IGraphState;

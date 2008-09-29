@@ -15,11 +15,9 @@ public interface ISubCompoundGraph<
 
 	E getEdge(int edgeIdx);
 
-	Iterator<N> nodeIterator();
+	int getNumTopNodes();
 	
-	Iterator<E> edgeIterator();
-	
+	Iterator<N> topNodeIterator();
+
 	boolean containsRoot () ;
-	
-	Iterator<N> getTopLevelNodes () ;
 }
