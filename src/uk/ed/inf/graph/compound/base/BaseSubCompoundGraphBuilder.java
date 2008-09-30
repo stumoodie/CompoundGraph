@@ -44,17 +44,21 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 		Set<BaseCompoundNode> initialNodes = new HashSet<BaseCompoundNode>(this.nodeList); 
 		for(BaseCompoundNode compoundNode : initialNodes){
 			Iterator<? extends BaseCompoundNode> iter = compoundNode.levelOrderIterator();
-			iter.next(); // skip the current node
+			addEdges(iter.next()); // get edges of the the current node's child graph
 			while(iter.hasNext()){
 				BaseCompoundNode childNode = iter.next();
 				this.nodeList.remove(childNode);
 				// now add edges in this node's compound graph.
-				Iterator<? extends BaseCompoundEdge> edgeIter = childNode.getChildCompoundGraph().edgeIterator();
-				while(edgeIter.hasNext()){
-					BaseCompoundEdge childEdge = edgeIter.next();
-					this.edgeList.remove(childEdge);
-				}
+				addEdges(childNode);
 			}
+		}
+	}
+
+	private void addEdges(BaseCompoundNode node){
+		Iterator<? extends BaseCompoundEdge> edgeIter = node.getChildCompoundGraph().edgeIterator();
+		while(edgeIter.hasNext()){
+			BaseCompoundEdge childEdge = edgeIter.next();
+			this.edgeList.add(childEdge);
 		}
 	}
 	
@@ -64,6 +68,7 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 	 */
 	public void addIncidentEdges(){
 //		for(BaseCompoundNode node : this.nodeList){
+		final Set<BaseCompoundNode> expandedNodes = createExpandedNodes();
 		Iterator<BaseCompoundNode> nodeTreeIter = new NodeTreeIterator<BaseCompoundNode, BaseCompoundEdge>(this.nodeList.iterator());
 		while(nodeTreeIter.hasNext()){
 			BaseCompoundNode node = nodeTreeIter.next();
@@ -77,7 +82,7 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 				if(!this.edgeList.contains(edge)){
 					// only do this if the edge is not already in the set of edges
 					IDirectedPair<BaseCompoundNode, BaseCompoundEdge> ends = edge.getConnectedNodes();
-					if(nodeList.contains(ends.getInNode())){
+					if(expandedNodes.contains(ends.getInNode())){
 						// the edge links two nodes that will be in the subgraph so it is
 						// incident and so we add it.
 						this.edgeList.add(edge);
@@ -86,6 +91,16 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 			}
 		}
 	}
+	
+	//TODO: replace with a tree search !
+	private Set<BaseCompoundNode> createExpandedNodes(){
+		Set<BaseCompoundNode> retVal = new HashSet<BaseCompoundNode>();
+		Iterator<BaseCompoundNode> iter = new NodeTreeIterator<BaseCompoundNode, BaseCompoundEdge>(this.nodeList.iterator());
+		while(iter.hasNext()){
+			retVal.add(iter.next());
+		}
+		return retVal;
+	}
 
 	/**
 	 * Build the new subgraph, based on the previous processing of the initial nodes and edges.
@@ -93,7 +108,7 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 	public void buildSubgraph() {
 		newSubgraph();
 		for(BaseCompoundNode node : this.nodeList){
-			getSubgraph().addNode(node);
+			getSubgraph().addTopNode(node);
 		}
 		for(BaseCompoundEdge edge : this.edgeList){
 			getSubgraph().addEdge(edge);

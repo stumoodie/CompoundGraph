@@ -143,6 +143,8 @@ public class AdditionalTests {
 	@Test
 	public final void testRestoreStateFromDeletedElementsGraph () throws Exception 
 	{
+		assertEquals ( "two Nodes" , NUMERIC_VALUES[2] , testInstance.getNumNodes() ) ;
+		assertEquals ( "one Edge" , NUMERIC_VALUES[1] , testInstance.getNumEdges() ) ;
 		IGraphState<BaseCompoundNode, BaseCompoundEdge> nonEmptyGraphState = testInstance.getCurrentState() ;
 		assertNotNull ( "state exists" , nonEmptyGraphState) ;
 		assertEquals ( "has Nodes" , NOT_EMPTY_NODE_BITSTRING , nonEmptyGraphState.getNodeStates().toString() ) ;
@@ -161,6 +163,8 @@ public class AdditionalTests {
 	@Test
 	public final void testRestoreStateFromDeletedSingleEdge () throws Exception
 	{
+		assertEquals ( "two Nodes" , NUMERIC_VALUES[2] , testInstance.getNumNodes() ) ;
+		assertEquals ( "one Edge" , NUMERIC_VALUES[1] , testInstance.getNumEdges() ) ;
 		IGraphState<BaseCompoundNode, BaseCompoundEdge> nonEmptyGraphState = testInstance.getCurrentState() ;
 		assertNotNull ( "state exists" , nonEmptyGraphState) ;
 		assertEquals ( "has Nodes" , NOT_EMPTY_NODE_BITSTRING , nonEmptyGraphState.getNodeStates().toString() ) ;
@@ -174,7 +178,6 @@ public class AdditionalTests {
 		testInstance.restoreState(nonEmptyGraphState) ;
 		assertEquals ( "two Nodes" , NUMERIC_VALUES[2] , testInstance.getNumNodes() ) ;
 		assertEquals ( "one Edge" , NUMERIC_VALUES[1] , testInstance.getNumEdges() ) ;
-		
 	}
 
 }

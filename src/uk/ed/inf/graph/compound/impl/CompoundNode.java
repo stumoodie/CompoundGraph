@@ -30,5 +30,9 @@ public class CompoundNode extends ArchetypalCompoundNode {
 	public ChildCompoundGraph getChildCompoundGraph() {
 		return this.childCompoundGraph;
 	}
-	
+
+	@Override
+	public String toString(){
+		return this.getClass().getSimpleName() + "[index=" + this.getIndex() + "]";
+	}
 }

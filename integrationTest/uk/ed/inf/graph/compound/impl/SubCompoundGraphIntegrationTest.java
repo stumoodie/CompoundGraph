@@ -1,6 +1,8 @@
 package uk.ed.inf.graph.compound.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
@@ -138,9 +140,37 @@ public class SubCompoundGraphIntegrationTest {
 		subGraphfactory.addNode(node1) ;
 		SubCompoundGraph  nonInducedSubGraph = subGraphfactory.createSubgraph() ;
 		assertEquals ( "from original Graph" , testInstance , nonInducedSubGraph.getSuperGraph()) ;
-		assertEquals ( "3 nodes" , NUMERIC_VALUE[3] , nonInducedSubGraph.getNumNodes()) ;
-		assertEquals ( "1 edges" , NUMERIC_VALUE[2] , nonInducedSubGraph.getNumEdges()) ;
 		assertEquals ( "1 nodes" , NUMERIC_VALUE[1] , nonInducedSubGraph.getNumTopNodes()) ;
+		assertEquals ( "3 nodes" , NUMERIC_VALUE[3] , nonInducedSubGraph.getNumNodes()) ;
+		assertEquals ( "2 edges" , NUMERIC_VALUE[2] , nonInducedSubGraph.getNumEdges()) ;
+	}
+	
+	@Test
+	public final void testCreateNonInducedSubGraph () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  nonInducedSubGraph = subGraphfactory.createSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , nonInducedSubGraph.getSuperGraph()) ;
+		assertEquals ( "8 nodes" , NUMERIC_VALUE[8] , nonInducedSubGraph.getNumNodes()) ;
+		assertEquals ( "5 edges" , NUMERIC_VALUE[5] , nonInducedSubGraph.getNumEdges()) ;
+		assertEquals ( "2 top nodes" , NUMERIC_VALUE[2] , nonInducedSubGraph.getNumTopNodes()) ;
+	}
+	
+	@Test
+	public final void testCreateNonInducedSubGraphWithAddedEdge () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		subGraphfactory.addEdge(edge4);
+		subGraphfactory.addEdge(edge7);
+		SubCompoundGraph  nonInducedSubGraph = subGraphfactory.createSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , nonInducedSubGraph.getSuperGraph()) ;
+		assertEquals ( "8 nodes" , NUMERIC_VALUE[8] , nonInducedSubGraph.getNumNodes()) ;
+		assertEquals ( "7 edges" , NUMERIC_VALUE[7] , nonInducedSubGraph.getNumEdges()) ;
+		assertEquals ( "2 top nodes" , NUMERIC_VALUE[2] , nonInducedSubGraph.getNumTopNodes()) ;
 	}
 	
 	@Test
@@ -149,11 +179,262 @@ public class SubCompoundGraphIntegrationTest {
 		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addNode(node1) ;
 		subGraphfactory.addNode(node2) ;
-		SubCompoundGraph  nonInducedSubGraph = subGraphfactory.createSubgraph() ;
-		assertEquals ( "from original Graph" , testInstance , nonInducedSubGraph.getSuperGraph()) ;
-		assertEquals ( "8 nodes" , NUMERIC_VALUE[8] , nonInducedSubGraph.getNumNodes()) ;
-		assertEquals ( "9 edges" , NUMERIC_VALUE[9] , nonInducedSubGraph.getNumEdges()) ;
-		assertEquals ( "2 top nodes" , NUMERIC_VALUE[2] , nonInducedSubGraph.getNumTopNodes()) ;
+		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , inducedSubGraph.getSuperGraph()) ;
+		assertEquals ( "8 nodes" , NUMERIC_VALUE[8] , inducedSubGraph.getNumNodes()) ;
+		assertEquals ( "9 edges" , NUMERIC_VALUE[9] , inducedSubGraph.getNumEdges()) ;
+		assertEquals ( "2 top nodes" , NUMERIC_VALUE[2] , inducedSubGraph.getNumTopNodes()) ;
+	}
+	
+	@Test
+	public final void testCreateNonInducedSubGraphContainsNodeByIndx () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  actualSubGraph = subGraphfactory.createSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , actualSubGraph.getSuperGraph()) ;
+		assertTrue ( "no root" , !actualSubGraph.containsNode(this.rootNode.getIndex())) ;
+		assertTrue ( "has node 1" , actualSubGraph.containsNode(this.node1.getIndex())) ;
+		assertTrue ( "has node 2" , actualSubGraph.containsNode(this.node2.getIndex())) ;
+		assertTrue ( "has node 3" , actualSubGraph.containsNode(this.node3.getIndex())) ;
+		assertTrue ( "has node 4" , actualSubGraph.containsNode(this.node4.getIndex())) ;
+		assertTrue ( "has node 5" , actualSubGraph.containsNode(this.node5.getIndex())) ;
+		assertTrue ( "has node 6" , actualSubGraph.containsNode(this.node6.getIndex())) ;
+		assertTrue ( "has node 7" , actualSubGraph.containsNode(this.node7.getIndex())) ;
+		assertTrue ( "has node 8" , actualSubGraph.containsNode(this.node8.getIndex())) ;
+	}
+	
+	@Test
+	public final void testCreateNonInducedSubGraphGetNode () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  actualSubGraph = subGraphfactory.createSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , actualSubGraph.getSuperGraph()) ;
+		assertEquals ( "has node 1" , node1, actualSubGraph.getNode(this.node1.getIndex())) ;
+		assertEquals ( "has node 2" , node2, actualSubGraph.getNode(this.node2.getIndex())) ;
+		assertEquals ( "has node 3" , node3, actualSubGraph.getNode(this.node3.getIndex())) ;
+		assertEquals ( "has node 4" , node4, actualSubGraph.getNode(this.node4.getIndex())) ;
+		assertEquals ( "has node 5" , node5, actualSubGraph.getNode(this.node5.getIndex())) ;
+		assertEquals ( "has node 6" , node6, actualSubGraph.getNode(this.node6.getIndex())) ;
+		assertEquals ( "has node 7" , node7, actualSubGraph.getNode(this.node7.getIndex())) ;
+		assertEquals ( "has node 8" , node8, actualSubGraph.getNode(this.node8.getIndex())) ;
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public final void testCreateNonInducedSubGraphGetNodeThrowsExceptionWhenNodeNotPresent (){
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  actualSubGraph = subGraphfactory.createSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , actualSubGraph.getSuperGraph()) ;
+		actualSubGraph.getNode(this.rootNode.getIndex());
+	}
+	
+	@Test
+	public final void testCreateNonInducedSubGraphContainsNode () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  actualSubGraph = subGraphfactory.createSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , actualSubGraph.getSuperGraph()) ;
+		assertTrue ( "no root" , !actualSubGraph.containsNode(this.rootNode)) ;
+		assertTrue ( "has node 1" , actualSubGraph.containsNode(this.node1)) ;
+		assertTrue ( "has node 2" , actualSubGraph.containsNode(this.node2)) ;
+		assertTrue ( "has node 3" , actualSubGraph.containsNode(this.node3)) ;
+		assertTrue ( "has node 4" , actualSubGraph.containsNode(this.node4)) ;
+		assertTrue ( "has node 5" , actualSubGraph.containsNode(this.node5)) ;
+		assertTrue ( "has node 6" , actualSubGraph.containsNode(this.node6)) ;
+		assertTrue ( "has node 7" , actualSubGraph.containsNode(this.node7)) ;
+		assertTrue ( "has node 8" , actualSubGraph.containsNode(this.node8)) ;
+	}
+	
+	@Test
+	public final void testCreateNonInducedSubGraphContainsConnectionPair () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  actualSubGraph = subGraphfactory.createSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , actualSubGraph.getSuperGraph()) ;
+		assertTrue ( "has edge 3", actualSubGraph.containsConnection(edge3.getConnectedNodes())) ;
+		assertTrue ( "has edge 5", actualSubGraph.containsConnection(edge5.getConnectedNodes())) ;
+		assertTrue ( "has edge 6", actualSubGraph.containsConnection(edge6.getConnectedNodes())) ;
+		assertTrue ( "has edge 8/9", actualSubGraph.containsConnection(edge8.getConnectedNodes())) ;
+	}
+	
+	@Test
+	public final void testCreateNonInducedSubGraphContainsConnectionNodeNode () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  actualSubGraph = subGraphfactory.createSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , actualSubGraph.getSuperGraph()) ;
+		assertTrue ( "has edge 3", actualSubGraph.containsConnection(node2, node6)) ;
+		assertTrue ( "has edge 3 reversed", actualSubGraph.containsConnection(node6, node2)) ;
+		assertTrue ( "has edge 5", actualSubGraph.containsConnection(node7, node6)) ;
+		assertTrue ( "has edge 6", actualSubGraph.containsConnection(node6, node7)) ;
+		assertTrue ( "has edge 8 or 9", actualSubGraph.containsConnection(node1, node1)) ;
+	}
+	
+	@Test
+	public final void testCreateNonInducedSubGraphContainsDirectedEdgeNodeNode () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  actualSubGraph = subGraphfactory.createSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , actualSubGraph.getSuperGraph()) ;
+		assertTrue ( "has edge 3", actualSubGraph.containsDirectedEdge(node2, node6)) ;
+		assertTrue ( "has edge 5", actualSubGraph.containsDirectedEdge(node7, node6)) ;
+		assertTrue ( "has edge 6", actualSubGraph.containsDirectedEdge(node6, node7)) ;
+		assertTrue ( "has edge 8 or 9", actualSubGraph.containsDirectedEdge(node1, node1)) ;
+	}
+	
+	@Test
+	public final void testCreateNonInducedSubGraphContainsEdge () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  actualSubGraph = subGraphfactory.createSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , actualSubGraph.getSuperGraph()) ;
+		assertTrue ( "has edge 3", actualSubGraph.containsEdge(this.edge3)) ;
+		assertFalse ( "has edge 4", actualSubGraph.containsEdge(this.edge4)) ;
+		assertTrue ( "has edge 5", actualSubGraph.containsEdge(this.edge5)) ;
+		assertTrue ( "has edge 6", actualSubGraph.containsEdge(this.edge6)) ;
+		assertTrue ( "has edge 8", actualSubGraph.containsEdge(this.edge8)) ;
+		assertTrue ( "has edge 9", actualSubGraph.containsEdge(this.edge9)) ;
+	}
+	
+	@Test
+	public final void testCreateInducedSubGraphContainsNode () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , inducedSubGraph.getSuperGraph()) ;
+		assertTrue ( "no root" , !inducedSubGraph.containsNode(this.rootNode)) ;
+		assertTrue ( "has node 1" , inducedSubGraph.containsNode(this.node1)) ;
+		assertTrue ( "has node 2" , inducedSubGraph.containsNode(this.node2)) ;
+		assertTrue ( "has node 3" , inducedSubGraph.containsNode(this.node3)) ;
+		assertTrue ( "has node 4" , inducedSubGraph.containsNode(this.node4)) ;
+		assertTrue ( "has node 5" , inducedSubGraph.containsNode(this.node5)) ;
+		assertTrue ( "has node 6" , inducedSubGraph.containsNode(this.node6)) ;
+		assertTrue ( "has node 7" , inducedSubGraph.containsNode(this.node7)) ;
+		assertTrue ( "has node 8" , inducedSubGraph.containsNode(this.node8)) ;
+	}
+	
+	@Test
+	public final void testCreateInducedSubGraphContainsConnectionPair () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , inducedSubGraph.getSuperGraph()) ;
+		assertTrue ( "has edge 1", inducedSubGraph.containsConnection(edge1.getConnectedNodes())) ;
+		assertTrue ( "has edge 2", inducedSubGraph.containsConnection(edge2.getConnectedNodes())) ;
+		assertTrue ( "has edge 3", inducedSubGraph.containsConnection(edge3.getConnectedNodes())) ;
+		assertTrue ( "has edge 4", inducedSubGraph.containsConnection(edge4.getConnectedNodes())) ;
+		assertTrue ( "has edge 5", inducedSubGraph.containsConnection(edge5.getConnectedNodes())) ;
+		assertTrue ( "has edge 6", inducedSubGraph.containsConnection(edge6.getConnectedNodes())) ;
+		assertTrue ( "has edge 7", inducedSubGraph.containsConnection(edge7.getConnectedNodes())) ;
+		assertTrue ( "has edge 8", inducedSubGraph.containsConnection(edge8.getConnectedNodes())) ;
+		assertTrue ( "has edge 1 reversed", inducedSubGraph.containsConnection(edge1.getConnectedNodes().reversedNodes())) ;
+		assertTrue ( "has edge 2 reversed", inducedSubGraph.containsConnection(edge2.getConnectedNodes().reversedNodes())) ;
+		assertTrue ( "has edge 3 reversed", inducedSubGraph.containsConnection(edge3.getConnectedNodes().reversedNodes())) ;
+		assertTrue ( "has edge 4 reversed", inducedSubGraph.containsConnection(edge4.getConnectedNodes().reversedNodes())) ;
+		assertTrue ( "has edge 5 reversed", inducedSubGraph.containsConnection(edge5.getConnectedNodes().reversedNodes())) ;
+		assertTrue ( "has edge 6 reversed", inducedSubGraph.containsConnection(edge6.getConnectedNodes().reversedNodes())) ;
+		assertTrue ( "has edge 7 reversed", inducedSubGraph.containsConnection(edge7.getConnectedNodes().reversedNodes())) ;
+		assertTrue ( "has edge 8 reversed", inducedSubGraph.containsConnection(edge8.getConnectedNodes().reversedNodes())) ;
+	}
+	
+	@Test
+	public final void testCreateInducedSubGraphContainsConnectionNodeNode () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , inducedSubGraph.getSuperGraph()) ;
+		assertTrue ( "has edge 1", inducedSubGraph.containsConnection(node1, node2)) ;
+		assertTrue ( "has edge 2", inducedSubGraph.containsConnection(node2, node1)) ;
+		assertTrue ( "has edge 3", inducedSubGraph.containsConnection(node2, node6)) ;
+		assertTrue ( "has edge 3 reversed", inducedSubGraph.containsConnection(node6, node2)) ;
+		assertTrue ( "has edge 4", inducedSubGraph.containsConnection(node2, node4)) ;
+		assertTrue ( "has edge 4", inducedSubGraph.containsConnection(node4, node2)) ;
+		assertTrue ( "has edge 5", inducedSubGraph.containsConnection(node7, node6)) ;
+		assertTrue ( "has edge 6", inducedSubGraph.containsConnection(node6, node7)) ;
+		assertTrue ( "has edge 7", inducedSubGraph.containsConnection(node7, node3)) ;
+		assertTrue ( "has edge 7 reversed", inducedSubGraph.containsConnection(node3, node7)) ;
+		assertTrue ( "has edge 8 or 9", inducedSubGraph.containsConnection(node1, node1)) ;
+	}
+	
+	@Test
+	public final void testCreateInducedSubGraphContainsEdge () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  actualSubGraph = subGraphfactory.createInducedSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , actualSubGraph.getSuperGraph()) ;
+		assertTrue ( "has edge 1", actualSubGraph.containsEdge(this.edge1)) ;
+		assertTrue ( "has edge 2", actualSubGraph.containsEdge(this.edge2)) ;
+		assertTrue ( "has edge 3", actualSubGraph.containsEdge(this.edge3)) ;
+		assertTrue ( "has edge 4", actualSubGraph.containsEdge(this.edge4)) ;
+		assertTrue ( "has edge 5", actualSubGraph.containsEdge(this.edge5)) ;
+		assertTrue ( "has edge 6", actualSubGraph.containsEdge(this.edge6)) ;
+		assertTrue ( "has edge 7", actualSubGraph.containsEdge(this.edge7)) ;
+		assertTrue ( "has edge 8", actualSubGraph.containsEdge(this.edge8)) ;
+		assertTrue ( "has edge 9", actualSubGraph.containsEdge(this.edge9)) ;
+	}
+	
+	@Test
+	public final void testCreateSubGraphOnlyEdge () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addEdge(edge1) ;
+		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , inducedSubGraph.getSuperGraph()) ;
+		assertEquals ( "0 nodes" , NUMERIC_VALUE[0] , inducedSubGraph.getNumNodes()) ;
+		assertEquals ( "1 edges" , NUMERIC_VALUE[1] , inducedSubGraph.getNumEdges()) ;
+		assertEquals ( "0 top nodes" , NUMERIC_VALUE[0] , inducedSubGraph.getNumTopNodes()) ;
+	}
+	
+	@Test
+	public final void testCreateInducedSubGraphFromBranches () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node3) ;
+		subGraphfactory.addNode(node4) ;
+		subGraphfactory.addNode(node6) ;
+		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , inducedSubGraph.getSuperGraph()) ;
+		assertEquals ( "5 nodes" , NUMERIC_VALUE[5] , inducedSubGraph.getNumNodes()) ;
+		assertEquals ( "3 edges" , NUMERIC_VALUE[3] , inducedSubGraph.getNumEdges()) ;
+		assertEquals ( "3 top nodes" , NUMERIC_VALUE[3] , inducedSubGraph.getNumTopNodes()) ;
+	}
+	
+	@Test
+	public final void testCreateInducedSubGraphFromBranchesWithExplicitEdge () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node3) ;
+		subGraphfactory.addNode(node4) ;
+		subGraphfactory.addNode(node6) ;
+		subGraphfactory.addEdge(edge8);
+		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , inducedSubGraph.getSuperGraph()) ;
+		assertEquals ( "5 nodes" , NUMERIC_VALUE[5] , inducedSubGraph.getNumNodes()) ;
+		assertEquals ( "4 edges" , NUMERIC_VALUE[4] , inducedSubGraph.getNumEdges()) ;
+		assertEquals ( "3 top nodes" , NUMERIC_VALUE[3] , inducedSubGraph.getNumTopNodes()) ;
 	}
 	
 //	@Test

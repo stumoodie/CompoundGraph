@@ -567,7 +567,7 @@ public class CompoundGraphIntegrationTest {
 		SubCompoundGraph  nonInducedSubGraph = subGraphfactory.createSubgraph() ;
 		this.testInstance.getRootNode().getChildCompoundGraph().copyHere(nonInducedSubGraph) ;
 		assertEquals ( "copied nodes" , EXPECTED_NUM_NODES + 3 , testInstance.getNumNodes() ) ;
-		assertEquals ( "copied edges" , EXPECTED_NUM_EDGES, testInstance.getNumEdges() ) ;
+		assertEquals ( "copied edges" , EXPECTED_NUM_EDGES + 2, testInstance.getNumEdges() ) ;
 	}
 	
 	@Test
@@ -580,7 +580,7 @@ public class CompoundGraphIntegrationTest {
 		this.testInstance.getRootNode().getChildCompoundGraph().copyHere(inducedSubGraph) ;
 		assertEquals ( "copied nodes" , EXPECTED_NUM_NODES + 8 , testInstance.getNumNodes() ) ;
 		assertEquals ( "Copied edges" , EXPECTED_NUM_EDGES + 9, testInstance.getNumEdges() ) ;
-		assertEquals ( "rootNode has 3 Nodes" , NUMERIC_VALUE[3] , rootNode.getChildCompoundGraph().getNumNodes()) ;
+		assertEquals ( "rootNode has 4 Nodes" , NUMERIC_VALUE[4] , rootNode.getChildCompoundGraph().getNumNodes()) ;
 	}
 	
 	@Test//(expected=IllegalArgumentException.class) == ?? 

@@ -16,7 +16,7 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder<
 	private BaseChildCompoundGraph destSubCigraph;
 	private BaseSubCompoundGraphFactory subGraphFactory;
 	private final Map<BaseCompoundNode, BaseCompoundNode> oldNewEquivList;
-	private Set<Integer> visited = new HashSet<Integer>(); 
+	private final Set<Integer> visited = new HashSet<Integer>(); 
 	
 	public BaseGraphCopyBuilder(){
 		this.oldNewEquivList = new HashMap<BaseCompoundNode, BaseCompoundNode>();
@@ -49,6 +49,7 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder<
 	
 	public void makeCopy(){
 		this.oldNewEquivList.clear();
+		this.visited.clear();
 		this.subGraphFactory = this.destSubCigraph.getSuperGraph().subgraphFactory();
 		copyNodes();
 		copyEquivalentEdges();

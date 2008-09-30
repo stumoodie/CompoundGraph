@@ -22,4 +22,8 @@ public class CompoundNodePair extends BaseCompoundNodePair {
 		return this.outNode;
 	}
 
+	public CompoundNodePair reversedNodes() {
+		return new CompoundNodePair(this.inNode, this.outNode);
+	}
+
 }

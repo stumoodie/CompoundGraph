@@ -116,15 +116,15 @@ public class DirectedEdgeSet <
 	}
 
 	public void clear() {
-		this.clear();
+		this.edgeSet.clear();
 	}
 
 	public boolean contains(Object o) {
-		return this.contains(o);
+		return this.edgeSet.contains(o);
 	}
 
 	public boolean containsAll(Collection<?> c) {
-		return this.containsAll(c);
+		return this.edgeSet.containsAll(c);
 	}
 
 	public boolean isEmpty() {

@@ -9,4 +9,8 @@ public class CompoundEdge extends ArchetypalCompoundEdge {
 		super(owningSubgraph, index, outNode, inNode);
 	}
 	
+	@Override
+	public String toString(){
+		return this.getClass().getSimpleName() + "[index=" + this.getIndex() + "]";
+	}
 }

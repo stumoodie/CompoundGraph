@@ -30,7 +30,7 @@ class LevelOrderTreeWalker<T extends ITreeNode<T>> implements ITreeWalker<T> {
 	 */
 	public void visitTree(){
 		Iterator<T> iter = new LevelOrderTreeIterator<T>(this.rootNode);
-		while(iter.hasNext()){
+		while(iter.hasNext() && visitor.canContinue()){
 			T node = iter.next();
 			visitor.visit(node);
 		}

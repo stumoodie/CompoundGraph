@@ -47,13 +47,13 @@ public interface ITree<T extends ITreeNode<T>> {
 	
 	Iterator<T> levelOrderIterator();
 
-//	/**
-//	 * Obtain a visitor that will traverse the tree from the root node in level-order.
-//	 * At each node the actions specified bu <code>visitorAction</code> will be performed.
-//	 * @param visitorAction the action to be executed at each node visited.
-//	 * @return a new instance of the tree visitor, which cannot be null.
-//	 */
-//	ITreeWalker<T> levelOrderTreeWalker(ITreeNodeAction<T> visitorAction);
+	/**
+	 * Obtain a visitor that will traverse the tree from the root node in level-order.
+	 * At each node the actions specified by <code>visitorAction</code> will be performed.
+	 * @param visitorAction the action to be executed at each node visited.
+	 * @return a new instance of the tree visitor, which cannot be null.
+	 */
+	ITreeWalker<T> levelOrderTreeWalker(ITreeNodeAction<T> visitorAction);
 	
 	int size();
 }

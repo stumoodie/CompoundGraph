@@ -128,6 +128,10 @@ public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode
 			}
 			return retVal;
 		}
+
+		public IDirectedPair<BaseCompoundNode, BaseCompoundEdge> reversedNodes() {
+			return new CiNodePair(this.inNode, this.outNode);
+		}
 		
 	}
 }

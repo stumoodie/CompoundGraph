@@ -111,4 +111,8 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 		}
 		return retVal;
 	}
+
+	public ITreeWalker<T> levelOrderTreeWalker(ITreeNodeAction<T> visitorAction) {
+		return new LevelOrderTreeWalker<T>(this.rootNode, visitorAction);
+	}
 }

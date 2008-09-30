@@ -27,5 +27,11 @@ public interface IDirectedPair<
 	 * @return The node, which will not be null.
 	 */
 	N getOutNode();
+
+	/**
+	 * Create a new node pair, with the nodes reversed as if this edge was pointing in the other direction.
+	 * @return the new directed edge with the in and out nodes switched relative to this one. Cannot be null.
+	 */
+	IDirectedPair<N, E> reversedNodes();
 	
 }
