@@ -1,101 +1,139 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <project basedir="." default="all" name="CompoundGraph">
-    <property environment="env"/>
-    <property name="junit.output.dir" value="junit"/>
-    <property name="debuglevel" value="source,lines,vars"/>
-    <property name="target" value="1.5"/>
-    <property name="source" value="1.5"/>
-    <path id="CompoundGraph.classpath">
-        <pathelement location="bin"/>
-        <pathelement location="lib/apache-log4j-1.2.15/log4j-1.2.15.jar"/>
-        <pathelement location="lib/junit4.4/junit-4.4.jar"/>
-        <pathelement location="lib/jmock-2.5.1/jmock-2.5.1.jar"/>
-        <pathelement location="lib/jmock-2.5.1/jmock-junit4-2.5.1.jar"/>
-        <pathelement location="lib/jmock-2.5.1/cglib-nodep-2.1_3.jar"/>
-        <pathelement location="lib/jmock-2.5.1/hamcrest-core-1.1.jar"/>
-        <pathelement location="lib/jmock-2.5.1/hamcrest-library-1.1.jar"/>
-        <pathelement location="lib/jmock-2.5.1/jmock-junit3-2.5.1.jar"/>
-        <pathelement location="lib/jmock-2.5.1/jmock-legacy-2.5.1.jar"/>
-        <pathelement location="lib/jmock-2.5.1/objenesis-1.0.jar"/>
-    </path>
+	<property environment="env" />
+	<property name="junit.output.dir" value="junit" />
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.5" />
+	<property name="source" value="1.5" />
+	<property name="build.dir" value="./bin" />
 
-	<target name="all" depends="cleanall,build-project,api-docs"/>
+
+	<path id="CompoundGraph.classpath">
+		<pathelement location="lib/junit4.4/junit-4.4.jar" />
+		<pathelement location="lib/apache-log4j-1.2.15/log4j-1.2.15.jar" />
+		<pathelement location="lib/jmock-2.5.1/jmock-2.5.1.jar" />
+		<pathelement location="lib/jmock-2.5.1/jmock-junit4-2.5.1.jar" />
+		<pathelement location="lib/jmock-2.5.1/jmock-legacy-2.5.1.jar" />
+		<pathelement location="lib/jmock-2.5.1/hamcrest-core-1.1.jar" />
+		<pathelement location="lib/jmock-2.5.1/hamcrest-library-1.1.jar" />
+		<pathelement location="lib/jmock-2.5.1/objenesis-1.0.jar" />
+		<pathelement location="lib/jdave-parent-1.1-rc1/lib/asm-3.0.jar" />
+		<pathelement location="lib/jmock-2.5.1/cglib-nodep-2.1_3.jar" />
+	</path>
+
+	<path id="test.classpath">
+		<path refid="CompoundGraph.classpath" />
+		<pathelement location="${build.dir}" />
+	</path>
+
+
+	<target name="all" depends="cleanall,build-project,api-docs" />
 
 	<target name="init">
-        <mkdir dir="bin"/>
-        <copy includeemptydirs="false" todir="bin">
-            <fileset dir="src" excludes="**/*.launch, **/*.java"/>
-        </copy>
-        <copy includeemptydirs="false" todir="bin">
-            <fileset dir="test" excludes="**/*.launch, **/*.java"/>
-        </copy>
-    </target>
+		<mkdir dir="${build.dir}" />
+		<copy includeemptydirs="false" todir="${build.dir}">
+			<fileset dir="src" excludes="**/*.launch, **/*.java" />
+		</copy>
+		<copy includeemptydirs="false" todir="${build.dir}">
+			<fileset dir="test" excludes="**/*.launch, **/*.java" />
+		</copy>
+	</target>
 
 	<target name="clean">
-        <delete dir="bin"/>
-    </target>
+		<delete dir="${build.dir}" />
+	</target>
 
-	<target depends="clean" name="cleanall"/>
+	<target depends="clean" name="cleanall" />
 
-	<target depends="build-subprojects,build-project" name="build"/>
+	<target depends="build-subprojects,build-project" name="build" />
 
-	<target name="build-subprojects"/>
-	
-    <target depends="init,build-src,build-test" name="build-project"/>
+	<target name="build-subprojects" />
+
+	<target depends="init,build-src,build-test" name="build-project" />
 
 	<target depends="init" name="build-src">
-        <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}"
-        	nowarn="false" target="${target}">
-            <src path="src"/>
-            <exclude name="uk/ed/inf/graph/compound/impl/GeneralSubgraph.java"/>
-            <exclude name="uk/ed/inf/graph/impl/GraphState.java"/>
-            <classpath refid="CompoundGraph.classpath"/>
-        	<compilerarg value="-Xlint"/>
-        </javac>
-    </target>
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir}" source="${source}" nowarn="false" target="${target}">
+			<src path="src" />
+			<exclude name="uk/ed/inf/graph/compound/archetypal/ArchetypalChildCompoundEdgeFactory.java" />
+			<exclude name="uk/ed/inf/graph/compound/archetypal/ArchetypalCompoundEdgeFactory.java" />
+			<exclude name="uk/ed/inf/graph/compound/archetypal/ArchetypalCompoundNodeFactory.java" />
+			<exclude name="uk/ed/inf/graph/compound/archetypal/ArchetypalGraphCopyBuilder.java" />
+			<exclude name="uk/ed/inf/graph/compound/archetypal/ArchetypalSubCompoundGraph.java" />
+			<exclude name="uk/ed/inf/graph/compound/archetypal/ArchetypalSubCompoundGraphBuilder.java" />
+			<exclude name="uk/ed/inf/graph/compound/archetypal/ArchetypalSubCompoundGraphFactory.java" />
+			<classpath refid="CompoundGraph.classpath" />
+			<compilerarg value="-Xlint" />
+		</javac>
+	</target>
 
-    <target depends="init" name="build-test">
-        <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}"
-	        	nowarn="false"
-        		target="${target}">
-            <src path="test"/>
-            <classpath refid="CompoundGraph.classpath"/>
-			<compilerarg value="-Xlint"/>
-        </javac>
-    </target>
+	<target depends="init" name="build-test">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir}" source="${source}" nowarn="false" target="${target}">
+			<src path="test" />
+			<classpath refid="test.classpath" />
+			<compilerarg value="-Xlint" />
+		</javac>
+	</target>
 
-	
-	
-    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+
+
+	<target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects" />
 
 	<target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
-        <copy todir="${ant.library.dir}">
-            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
-        </copy>
-        <unzip dest="${ant.library.dir}">
-            <patternset includes="jdtCompilerAdapter.jar"/>
-            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
-        </unzip>
-    </target>
+		<copy todir="${ant.library.dir}">
+			<fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar" />
+		</copy>
+		<unzip dest="${ant.library.dir}">
+			<patternset includes="jdtCompilerAdapter.jar" />
+			<fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar" />
+		</unzip>
+	</target>
 
 	<target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
-        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-        <antcall target="build"/>
-    </target>
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter" />
+		<antcall target="build" />
+	</target>
 
-    <target name="jar" depends="build-src">
-        <jar destfile="compoundgraph.jar" basedir="bin">
-        </jar>
-    </target>
-	
-    <target name="api-docs">
-        <javadoc access="package" author="true" splitindex="true" use="true" version="true" source="1.5" sourcepath="src"
-        	destdir="doc" doctitle="Compund Graph API" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false">
-            <classpath refid="CompoundGraph.classpath"/>
-        </javadoc>
-    </target>
+	<target name="jar" depends="build-src">
+		<jar destfile="compoundgraph.jar" basedir="${build.dir}">
+		</jar>
+	</target>
+
+	<target name="api-docs">
+		<javadoc access="package" author="true" splitindex="true" use="true" version="true" source="1.5" sourcepath="src" destdir="doc" doctitle="Compund Graph API" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false">
+			<classpath refid="CompoundGraph.classpath" />
+		</javadoc>
+	</target>
+
+	<target name="tests">
+		<delete dir="${build.dir}/test/logs" />
+		<mkdir dir="${build.dir}/test/logs" />
+		<!-- <echo>running with classpath ${toString:test.classpath}</echo>-->
+		<!--run test cases. All test class names  should end in 'Test' to avoid
+				inclusion of inner classes. -->
+		<junit printsummary="yes" haltonfailure="no" fork="true">
+			<classpath>
+				<path refid="test.classpath" />
+			</classpath>
+			<batchtest todir="${build.dir}/test/logs">
+				<formatter type="xml" />
+				<fileset dir="${build.dir}">
+					<include name="**/*Test.class" />
+				</fileset>
+			</batchtest>
+		</junit>
+
+		<!-- clean report directory -->
+		<delete dir="${build.dir}/test/junitReports" />
+		<mkdir dir="${build.dir}/test/junitReports" />
+
+		<!-- generate report -->
+		<junitreport todir="${build.dir}/test/junitReports">
+			<fileset dir="${build.dir}/test/logs" includes="**/*.xml" />
+			<report todir="${build.dir}/test/junitReports" />
+		</junitreport>
+	</target>
 
 </project>
