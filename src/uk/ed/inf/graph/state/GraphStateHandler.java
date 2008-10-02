@@ -48,7 +48,7 @@ public class GraphStateHandler<
 				nodeStatus.set(node.getIndex(), true);
 			}
 			else{
-				nodeStatus.set(node.getIndex(), true);
+				nodeStatus.set(node.getIndex(), false);
 			}
 		}
 		this.nodeStatus = nodeStatus.toBitString();

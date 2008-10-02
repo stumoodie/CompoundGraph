@@ -1,6 +1,8 @@
 package uk.ed.inf.graph.compound.base;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.basic.ISubgraphAlgorithms;
@@ -11,8 +13,10 @@ import uk.ed.inf.graph.util.IEdgeSet;
 import uk.ed.inf.graph.util.IFilterCriteria;
 import uk.ed.inf.graph.util.INodeSet;
 import uk.ed.inf.graph.util.SubgraphAlgorithms;
+import uk.ed.inf.graph.util.impl.EdgeSet;
 import uk.ed.inf.graph.util.impl.FilteredEdgeSet;
 import uk.ed.inf.graph.util.impl.FilteredNodeSet;
+import uk.ed.inf.graph.util.impl.NodeSet;
 import uk.ed.inf.graph.util.impl.NodeTreeIterator;
 import uk.ed.inf.tree.GeneralTree;
 import uk.ed.inf.tree.ITree;
@@ -21,6 +25,8 @@ import uk.ed.inf.tree.ITreeNodeAction;
 public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
 	private INodeSet<BaseCompoundNode, BaseCompoundEdge> topNodeSet;
 	private IEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet;
+	private Set<Integer> initialNodeSet = new HashSet<Integer> () ;
+	private Set<Integer> initialEdgeSet = new HashSet<Integer> () ;
 	
 	protected BaseSubCompoundGraph(){
 //		this.nodeSet = new NodeSet<BaseCompoundNode, BaseCompoundEdge>();
@@ -164,6 +170,23 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 		
 		this.edgeSet.add(newEdge);
 	}
+	
+	void buildComplete(){
+		Iterator<BaseCompoundNode> nodeIter = this.nodeIterator() ;
+		while ( nodeIter.hasNext())
+		{
+			BaseCompoundNode node = nodeIter.next() ;
+			this.initialNodeSet.add(node.getIndex()) ;
+		}
+		
+		Iterator<BaseCompoundEdge> edgeIter = this.edgeIterator() ;
+		while ( edgeIter.hasNext())
+		{
+			BaseCompoundEdge edge = edgeIter.next() ;
+			this.initialEdgeSet.add(edge.getIndex()) ;
+		}
+
+	}
 
 	public boolean containsDirectedEdge(BaseCompoundNode outNode, BaseCompoundNode inNode) {
 		boolean retVal = false;
@@ -174,24 +197,23 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 	}
 
 	public boolean isConsistentSnapShot() {
-		boolean retVal = true;
-		Iterator<BaseCompoundNode> iter = this.nodeIterator();
-		while(iter.hasNext()){
-			BaseCompoundNode compoundNode = iter.next();
-			if(compoundNode.isRemoved()){
-				retVal = false;
-				break;
-			}
+		Set <Integer> cloneOfInitialNodes = new HashSet <Integer> ( this.initialNodeSet) ;
+		Set <Integer> cloneOfInitialEdges = new HashSet <Integer> ( this.initialEdgeSet) ;
+		
+		Iterator <BaseCompoundNode> nodeIter = this.nodeIterator() ;
+		Iterator <BaseCompoundEdge> edgeIter = this.edgeIterator() ;
+		
+		while ( nodeIter.hasNext())
+		{
+			cloneOfInitialNodes.remove(nodeIter.next().getIndex()) ;
 		}
-		if(retVal){
-			for(BaseCompoundEdge compoundEdge : this.edgeSet){
-				if(compoundEdge.isRemoved()){
-					retVal = false;
-					break;
-				}
-			}
-		}
-		return retVal;
+		
+		while ( edgeIter.hasNext())
+		{
+			cloneOfInitialEdges.remove(edgeIter.next().getIndex()) ;
+		}		
+		
+		return ( cloneOfInitialEdges.isEmpty() && cloneOfInitialNodes.isEmpty()) ;
 	}
 
 	/**
@@ -230,7 +252,7 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 	}
 
 	public Iterator<BaseCompoundNode> topNodeIterator(){
-		return this.nodeIterator();
+		return this.topNodeSet.iterator();
 	}
 	
 	public int getNumTopNodes(){

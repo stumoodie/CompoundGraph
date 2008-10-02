@@ -1,6 +1,8 @@
 package uk.ed.inf.graph.compound.base;
 
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
@@ -17,8 +19,8 @@ import uk.ed.inf.graph.util.impl.FilteredNodeSet;
 public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<BaseCompoundNode, BaseCompoundEdge>,	IModifiableChildCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
 	private final BaseGraphCopyBuilder copyBuilder;
 	private final BaseGraphMoveBuilder moveBuilder;
-	private IEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet;
-	private INodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet;
+	private FilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet;
+	private FilteredNodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet;
 	
 	protected BaseChildCompoundGraph(BaseGraphCopyBuilder copyBuilder , BaseGraphMoveBuilder moveBuilder ){
 		if(copyBuilder == null || moveBuilder == null ) throw new IllegalArgumentException("builder cannot be null");
@@ -104,6 +106,14 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 
 	public final Iterator<BaseCompoundEdge> edgeIterator() {
 		return this.edgeSet.iterator();
+	}
+
+	protected final Iterator<BaseCompoundEdge> unfilteredEdgeIterator() {
+		return this.edgeSet.getUnfilteredEdgeSet().iterator();
+	}
+	
+	protected final Iterator<BaseCompoundNode> unfilteredNodeIterator() {
+		return this.nodeSet.getUnfilteredNodeSet().iterator();
 	}
 
 	public BaseCompoundNode getNode(int nodeIdx) {
@@ -214,7 +224,6 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		moveBuilder.setDestinatChildCompoundGraph(this);
 		moveBuilder.setSourceSubgraph(subGraph);
 		moveBuilder.makeMove();
-		this.getSuperGraph().removeSubgraph(subGraph) ;
 	}
 	
 	/**
@@ -256,6 +265,5 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 	public BaseSubCompoundGraph getCopiedComponents(){
 		return this.copyBuilder.getCopiedComponents();
 	}
-
 
 }

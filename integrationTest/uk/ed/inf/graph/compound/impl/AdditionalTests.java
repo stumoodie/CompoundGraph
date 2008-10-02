@@ -3,6 +3,7 @@ package uk.ed.inf.graph.compound.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,13 +19,17 @@ public class AdditionalTests {
 	private CompoundGraph emptyTestInstance ;
 	private CompoundNode rootNode;
 	private CompoundNode node1;
+	private CompoundNode node2;
 	private CompoundEdge edge1;
 	
 	private static final String EMPTY_NODE_BITSTRING = "{0}" ;
 	private static final String EMPTY_EDGE_BITSTRING = "{}" ;
 	
-	private static final String NOT_EMPTY_NODE_BITSTRING = "{0, 1}" ;
+	private static final String NOT_EMPTY_NODE_BITSTRING = "{0, 1, 2}" ;
 	private static final String NOT_EMPTY_EDGE_BITSTRING = "{0}" ;
+	
+	private static final String REMOVED_NODE_BITSTRING = "{0, 2}" ;
+	private static final String REMOVED_NODE_EDGES_BITSTRING = "{}" ;
 	
 	private static final int ONLY_ROOT_NODE = 1 ;
 	private static final int NO_EDGES = 0 ;
@@ -38,6 +43,8 @@ public class AdditionalTests {
 		this.rootNode = this.testInstance.getRootNode();
 		CompoundNodeFactory rootNodeFact = this.testInstance.getRootNode().getChildCompoundGraph().nodeFactory();
 		node1 = rootNodeFact.createNode();
+		node2 = rootNodeFact.createNode();
+		
 		
 		CompoundEdgeFactory edgeFact = this.testInstance.edgeFactory();
 		edgeFact.setPair(node1, node1);
@@ -143,7 +150,7 @@ public class AdditionalTests {
 	@Test
 	public final void testRestoreStateFromDeletedElementsGraph () throws Exception 
 	{
-		assertEquals ( "two Nodes" , NUMERIC_VALUES[2] , testInstance.getNumNodes() ) ;
+		assertEquals ( "three Nodes" , NUMERIC_VALUES[3] , testInstance.getNumNodes() ) ;
 		assertEquals ( "one Edge" , NUMERIC_VALUES[1] , testInstance.getNumEdges() ) ;
 		IGraphState<BaseCompoundNode, BaseCompoundEdge> nonEmptyGraphState = testInstance.getCurrentState() ;
 		assertNotNull ( "state exists" , nonEmptyGraphState) ;
@@ -153,17 +160,20 @@ public class AdditionalTests {
 		subGraphFactory.addNode(node1) ;
 		SubCompoundGraph subGraph = subGraphFactory.createSubgraph() ;
 		testInstance.removeSubgraph(subGraph) ;
-		assertEquals ( "only one node" , NUMERIC_VALUES[1] , testInstance.getNumNodes() ) ;
+		IGraphState<BaseCompoundNode, BaseCompoundEdge> removedNodeGraphState = testInstance.getCurrentState() ;
+		assertEquals ( "removed one node" , REMOVED_NODE_BITSTRING , removedNodeGraphState.getNodeStates().toString()) ;
+		assertEquals ( "removed one node" , REMOVED_NODE_EDGES_BITSTRING , removedNodeGraphState.getEdgeStates().toString()) ;
+		assertEquals ( "only two nodes" , NUMERIC_VALUES[2] , testInstance.getNumNodes() ) ;
 		assertEquals ( "no edges" , NUMERIC_VALUES[0] , testInstance.getNumEdges() ) ;
 		testInstance.restoreState(nonEmptyGraphState) ;
-		assertEquals ( "two Nodes" , NUMERIC_VALUES[2] , testInstance.getNumNodes() ) ;
-		assertEquals ( "one Edge" , NUMERIC_VALUES[1] , testInstance.getNumEdges() ) ;
+		assertEquals ( "three Nodes" , nonEmptyGraphState.getNodeStates() , testInstance.getCurrentState().getNodeStates() ) ;
+		assertEquals ( "one Edge" , nonEmptyGraphState.getEdgeStates() , testInstance.getCurrentState().getEdgeStates() ) ;
 	}
 	
 	@Test
 	public final void testRestoreStateFromDeletedSingleEdge () throws Exception
 	{
-		assertEquals ( "two Nodes" , NUMERIC_VALUES[2] , testInstance.getNumNodes() ) ;
+		assertEquals ( "three Nodes" , NUMERIC_VALUES[3] , testInstance.getNumNodes() ) ;
 		assertEquals ( "one Edge" , NUMERIC_VALUES[1] , testInstance.getNumEdges() ) ;
 		IGraphState<BaseCompoundNode, BaseCompoundEdge> nonEmptyGraphState = testInstance.getCurrentState() ;
 		assertNotNull ( "state exists" , nonEmptyGraphState) ;
@@ -173,11 +183,48 @@ public class AdditionalTests {
 		subGraphFactory.addEdge(edge1) ;
 		SubCompoundGraph subGraph = subGraphFactory.createSubgraph() ;
 		testInstance.removeSubgraph(subGraph) ;
-		assertEquals ( "two nodes" , NUMERIC_VALUES[2] , testInstance.getNumNodes() ) ;
+		assertEquals ( "three nodes" , NUMERIC_VALUES[3] , testInstance.getNumNodes() ) ;
 		assertEquals ( "no edges" , NUMERIC_VALUES[0] , testInstance.getNumEdges() ) ;
 		testInstance.restoreState(nonEmptyGraphState) ;
-		assertEquals ( "two Nodes" , NUMERIC_VALUES[2] , testInstance.getNumNodes() ) ;
+		assertEquals ( "three Nodes" , NUMERIC_VALUES[3] , testInstance.getNumNodes() ) ;
 		assertEquals ( "one Edge" , NUMERIC_VALUES[1] , testInstance.getNumEdges() ) ;
 	}
-
+	
+	@Test
+	public final void testCanMoveBetweenDifferentGraphs () throws Exception
+	{
+		SubCompoundGraphFactory subGraphFactory = testInstance.subgraphFactory() ;
+		subGraphFactory.addNode(node1) ;
+		SubCompoundGraph subGraph = subGraphFactory.createSubgraph() ;
+		assertFalse ("cannot move to other diagram" , this.emptyTestInstance.getRootNode().getChildCompoundGraph().canMoveHere(subGraph)) ;
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public final void testTryToMoveBetweenDifferentGraphs () throws Exception
+	{
+		SubCompoundGraphFactory subGraphFactory = testInstance.subgraphFactory() ;
+		subGraphFactory.addNode(node1) ;
+		SubCompoundGraph subGraph = subGraphFactory.createSubgraph() ;
+		this.emptyTestInstance.getRootNode().getChildCompoundGraph().moveHere(subGraph) ;
+	}
+	
+	@Test
+	public final void testCanCopyBetweenDifferentGraphs () throws Exception
+	{
+		SubCompoundGraphFactory subGraphFactory = testInstance.subgraphFactory() ;
+		subGraphFactory.addNode(node1) ;
+		SubCompoundGraph subGraph = subGraphFactory.createSubgraph() ;
+		assertTrue ("cannot move to other diagram" , this.emptyTestInstance.getRootNode().getChildCompoundGraph().canCopyHere(subGraph)) ;
+	}
+	
+	@Test
+	public final void testTryToCopyBetweenDifferentGraphs () throws Exception
+	{
+		SubCompoundGraphFactory subGraphFactory = testInstance.subgraphFactory() ;
+		subGraphFactory.addNode(node1) ;
+		SubCompoundGraph subGraph = subGraphFactory.createSubgraph() ;
+		this.emptyTestInstance.getRootNode().getChildCompoundGraph().canCopyHere(subGraph) ;
+		assertEquals ( "emptyGraph has one node" , NUMERIC_VALUES[1] , this.emptyTestInstance.getNumNodes() ) ;
+	}
+	
 }

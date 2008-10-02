@@ -17,11 +17,11 @@ import uk.ed.inf.tree.ITree;
 public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNode, BaseCompoundEdge>,
 		IRestorableGraph<BaseCompoundNode, BaseCompoundEdge>,
 		IModifiableCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
-	private final GraphStateHandler<BaseCompoundNode, BaseCompoundEdge> stateHandler;
+	private final BaseCompoundGraphStateHandler stateHandler;
 	private BaseGraphCopyBuilder copyBuilder;
 	
 	protected BaseCompoundGraph(BaseGraphCopyBuilder copyBuilder){
-		this.stateHandler = new GraphStateHandler<BaseCompoundNode, BaseCompoundEdge>(this);
+		this.stateHandler = new BaseCompoundGraphStateHandler(this);
 		this.copyBuilder = copyBuilder;
 	}
 

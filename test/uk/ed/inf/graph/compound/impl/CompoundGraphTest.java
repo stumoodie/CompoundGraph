@@ -55,6 +55,9 @@ public class CompoundGraphTest {
 	
 	private static final int [] NUMERIC = {0,1,2,3,4,5} ;
 	
+	private static final String ORIGINAL_NODE_STATE = "{0}" ;
+	private static final String ORIGINAL_EDGE_STATE = "{}" ;
+	
 	
 	@Before
 	public void setUp() throws Exception {
@@ -263,11 +266,12 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testRestoreState() {
+		assertEquals ("correct Original node State" , ORIGINAL_NODE_STATE , originalState.getNodeStates().toString() ) ;
+		assertEquals ("correct Original edge State" , ORIGINAL_EDGE_STATE , originalState.getEdgeStates().toString() ) ;
 		testCompoundGraph.restoreState(originalState) ;
-		
 		assertEquals("current state graph" , originalState.getGraph() , testCompoundGraph.getCurrentState().getGraph() );
-		assertEquals("current state edges" , originalState.getEdgeStates() , testCompoundGraph.getCurrentState().getEdgeStates());
-		assertEquals("current state nodes" , originalState.getNodeStates() , testCompoundGraph.getCurrentState().getNodeStates() );
+		assertEquals ( "Only one node" , NUMERIC[1] , testCompoundGraph.getNumNodes()) ;
+		assertEquals ( "no edges" , NUMERIC[0] , testCompoundGraph.getNumEdges()) ;
 	}
 
 	@Test

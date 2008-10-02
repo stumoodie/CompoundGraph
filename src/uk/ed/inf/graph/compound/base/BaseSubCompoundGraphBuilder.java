@@ -113,6 +113,8 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 		for(BaseCompoundEdge edge : this.edgeList){
 			getSubgraph().addEdge(edge);
 		}
+		
+		getSubgraph().buildComplete() ;
 	}
 	
 	protected abstract void newSubgraph();

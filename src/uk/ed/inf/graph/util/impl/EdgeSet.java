@@ -120,7 +120,7 @@ public class EdgeSet <
 	}
 
 	public boolean contains(Object o) {
-		return this.contains(o);
+		return this.edgeSet.contains(o);
 	}
 
 	public boolean containsAll(Collection<?> c) {

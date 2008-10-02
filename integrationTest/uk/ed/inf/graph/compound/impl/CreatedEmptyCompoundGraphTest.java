@@ -9,16 +9,21 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.ed.inf.graph.state.IGraphState;
+
 
 public class CreatedEmptyCompoundGraphTest {
 	
 	private CompoundGraph testGraph ;
+	private IGraphState emptyState ;
+	
 	
 	private static final int NUMERIC[] = {0,1,2,3,4,5,6,7,8,9,10} ;
 	
 	@Before
 	public void setUp() throws Exception {
 		testGraph = new CompoundGraph () ;
+		emptyState = testGraph.getCurrentState() ;
 	}
 	
 	@After
@@ -98,4 +103,25 @@ public class CreatedEmptyCompoundGraphTest {
 		
 		testGraph.removeSubgraph(producedSubGraph) ;
 	}
+	
+	@Test
+	public void testRestoreEmptyState () throws Exception
+	{
+		CompoundNodeFactory nodeFactory = testGraph.nodeFactory() ;
+		CompoundNode node1 = nodeFactory.createNode() ;
+		CompoundNode node2 = nodeFactory.createNode() ;
+		
+		CompoundEdgeFactory edgeFactory = testGraph.edgeFactory() ;
+		edgeFactory.setPair(node1, node2) ;
+		CompoundEdge edge1 = edgeFactory.createEdge() ;
+		
+		assertEquals ( "three nodes" , NUMERIC[3] , testGraph.getNumNodes()) ;
+		assertEquals ( "an edge" , NUMERIC[1] , testGraph.getNumEdges()) ;
+		
+		testGraph.restoreState(emptyState) ;
+		assertEquals ( "one node" , NUMERIC[1] , testGraph.getNumNodes()) ;
+		assertEquals ( "no edges" , NUMERIC[0] , testGraph.getNumEdges()) ;		
+		
+	} 
+	
 }

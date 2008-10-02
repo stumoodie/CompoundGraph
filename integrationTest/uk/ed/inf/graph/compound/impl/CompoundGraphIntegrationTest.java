@@ -380,7 +380,7 @@ public class CompoundGraphIntegrationTest {
 	}
 	
 	@Test
-	public final void testCreateSubGraph () throws Exception
+	public final void testCreateSubGraphWithSelfEdges () throws Exception
 	{
 		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addNode(node1) ;
@@ -388,6 +388,17 @@ public class CompoundGraphIntegrationTest {
 		assertEquals ( "from original Graph" , testInstance , nonInducedSubGraph.getSuperGraph()) ;
 		assertEquals ( "3 nodes" , NUMERIC_VALUE[3] , nonInducedSubGraph.getNumNodes()) ;
 		assertEquals ( "2 edges" , NUMERIC_VALUE[2] , nonInducedSubGraph.getNumEdges()) ;
+	}
+	
+	@Test
+	public final void testCreateSubGraphWithInternalEdges () throws Exception
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node2) ;
+		SubCompoundGraph  nonInducedSubGraph = subGraphfactory.createSubgraph() ;
+		assertEquals ( "from original Graph" , testInstance , nonInducedSubGraph.getSuperGraph()) ;
+		assertEquals ( "5 nodes" , NUMERIC_VALUE[5] , nonInducedSubGraph.getNumNodes()) ;
+		assertEquals ( "3 edges" , NUMERIC_VALUE[3] , nonInducedSubGraph.getNumEdges()) ;
 	}
 	
 	@Test
@@ -622,8 +633,8 @@ public class CompoundGraphIntegrationTest {
 		testInstance.removeSubgraph(ordinarySubGraph) ;
 		assertEquals ( "3 less Nodes" , EXPECTED_NUM_NODES - 3 , testInstance.getNumNodes()) ;
 		assertEquals ( "6 less Edges" , EXPECTED_NUM_EDGES - 6 , testInstance.getNumEdges()) ;
-		assertEquals ("empty nodes on subgraph" , NUMERIC_VALUE[0] , ordinarySubGraph.getNumNodes()) ;
-		assertEquals ("empty edges on subgraph" , NUMERIC_VALUE[0] , ordinarySubGraph.getNumEdges()) ;
+		assertEquals ("no nodes on subgraph" , NUMERIC_VALUE[0] , ordinarySubGraph.getNumNodes()) ;
+		assertEquals ("no edges on subgraph" , NUMERIC_VALUE[0] , ordinarySubGraph.getNumEdges()) ;
 	}
 	
 	@Test
@@ -646,18 +657,13 @@ public class CompoundGraphIntegrationTest {
 		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addNode(node6) ;
 		SubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
-
-		
 		assertEquals ( "node1 has 2 nodes" , NUMERIC_VALUE[2] , node1.getChildCompoundGraph().getNumNodes()) ;
 		assertEquals ( "node2 has 2 nodes" , NUMERIC_VALUE[2] , node1.getChildCompoundGraph().getNumNodes()) ;
-		
 		rootNode.getChildCompoundGraph().moveHere(ordinarySubGraph) ;		
-		
-
 		assertEquals ( "same Nodes" , EXPECTED_NUM_NODES , testInstance.getNumNodes()) ;
 		assertEquals ( "2 less Edges" , EXPECTED_NUM_EDGES - 2 , testInstance.getNumEdges()) ;
-		assertEquals ( "rootNode has 3 nodes" , NUMERIC_VALUE[3] , node1.getChildCompoundGraph().getNumNodes()) ;
-		assertEquals ( "node2 has 1 node" , NUMERIC_VALUE[1] , node1.getChildCompoundGraph().getNumNodes()) ;
+		assertEquals ( "rootNode has 3 nodes" , NUMERIC_VALUE[3] , rootNode.getChildCompoundGraph().getNumNodes()) ;
+		assertEquals ( "node2 has 1 node" , NUMERIC_VALUE[1] , node2.getChildCompoundGraph().getNumNodes()) ;
 		
 	}
 	
@@ -672,7 +678,24 @@ public class CompoundGraphIntegrationTest {
 		assertEquals ( "same Nodes" , EXPECTED_NUM_NODES , testInstance.getNumNodes()) ;
 		assertEquals ( "2 less Edges" , EXPECTED_NUM_EDGES - 2 , testInstance.getNumEdges()) ;
 		
-		assertEquals ( "rootNode has 3 nodes" , NUMERIC_VALUE[3] , node1.getChildCompoundGraph().getNumNodes()) ;
-		assertEquals ( "node2 has 1 node" , NUMERIC_VALUE[1] , node1.getChildCompoundGraph().getNumNodes()) ;
+		assertEquals ( "rootNode has 3 nodes" , NUMERIC_VALUE[3] , rootNode.getChildCompoundGraph().getNumNodes()) ;
+		assertEquals ( "node2 has 1 node" , NUMERIC_VALUE[1] , node2.getChildCompoundGraph().getNumNodes()) ;
+	}
+	
+	@Test
+	public final void testIsSubGraphConsistent () throws Exception 
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		SubCompoundGraph  node1SubGraph = subGraphfactory.createSubgraph() ;
+		assertFalse("node 4 removed", node4.isRemoved());
+		assertTrue ( "is Consistent with diagram" , node1SubGraph.isConsistentSnapShot()) ;
+		SubCompoundGraphFactory subGraphfactory2 = testInstance.subgraphFactory() ; 
+		subGraphfactory2.addNode(node4) ;
+		SubCompoundGraph  node4SubGraph = subGraphfactory2.createSubgraph() ;
+		testInstance.removeSubgraph(node4SubGraph) ;
+		assertTrue("node 4 removed", node4.isRemoved());
+		assertEquals ( "one less Node" , EXPECTED_NUM_NODES - 1 , testInstance.getNumNodes()) ;
+		assertFalse ( "is not Consistent with diagram" , node1SubGraph.isConsistentSnapShot()) ;
 	}
 }
