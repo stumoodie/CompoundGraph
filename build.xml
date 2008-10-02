@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project basedir="." default="all" name="CompoundGraph">
+<project basedir="." default="buildAll" name="CompoundGraph">
 	<property environment="env" />
 	<property name="junit.output.dir" value="junit" />
 	<property name="debuglevel" value="source,lines,vars" />
@@ -28,7 +28,7 @@
 	</path>
 
 
-	<target name="all" depends="cleanall,build-project,api-docs" />
+	<target name="buildAll" depends="cleanall,build-project,api-docs" />
 
 	<target name="init">
 		<mkdir dir="${build.dir}" />
