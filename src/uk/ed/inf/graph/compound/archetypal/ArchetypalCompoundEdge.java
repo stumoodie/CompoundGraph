@@ -19,23 +19,28 @@ public abstract class ArchetypalCompoundEdge extends BaseCompoundEdge {
 		this.changeOutNode();
 	}
 	
+	@Override
 	protected final ArchetypalCompoundNode getInNode(){
 		return this.inNode;
 	}
 	
+	@Override
 	protected final ArchetypalCompoundNode getOutNode(){
 		return this.outNode;
 	}
 	
 	
+	@Override
 	public ArchetypalChildCompoundGraph getOwningChildGraph() {
 		return this.owningSubgraph;
 	}
 
+	@Override
 	public BaseCompoundGraph getGraph() {
 		return this.owningSubgraph.getSuperGraph();
 	}
 
+	@Override
 	public int getIndex() {
 		return this.index;
 	}

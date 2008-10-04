@@ -9,15 +9,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class SubCompoundGraphIntegrationTest {
-	private static final int EXPECTED_INITIAL_EDGES = 0;
-	private static final int EXPECTED_INITIAL_NODES = 1;
-	private static final int EXPECTED_NUM_EDGES = 9;
-	private static final int EXPECTED_NUM_NODES = 9;
-	private static final int EXPECTED_ROOT_NODE_IDX = 0;
-	private static final int UNKNOWN_EDGE_HIGH_IDX = 99;
-	private static final int UNKNOWN_EDGE_LOW_IDX = -1;
-	private static final int UNKNOWN_NODE_HIGH_IDX = 99;
-	private static final int UNKNOWN_NODE_LOW_IDX = -1;
+//	private static final int EXPECTED_INITIAL_EDGES = 0;
+//	private static final int EXPECTED_INITIAL_NODES = 1;
+//	private static final int EXPECTED_NUM_EDGES = 9;
+//	private static final int EXPECTED_NUM_NODES = 9;
+//	private static final int EXPECTED_ROOT_NODE_IDX = 0;
+//	private static final int UNKNOWN_EDGE_HIGH_IDX = 99;
+//	private static final int UNKNOWN_EDGE_LOW_IDX = -1;
+//	private static final int UNKNOWN_NODE_HIGH_IDX = 99;
+//	private static final int UNKNOWN_NODE_LOW_IDX = -1;
 //	private static final int EXPECTED_LAST_NODE = 8;
 	private static final int NUM_ROOT_NODE_EDGES = 4;
 	private static final int NUM_NODE1_EDGES = 2;
@@ -28,13 +28,13 @@ public class SubCompoundGraphIntegrationTest {
 	private static final int NUM_NODE6_EDGES = 2;
 	private static final int NUM_NODE7_EDGES = 0;
 	private static final int NUM_NODE8_EDGES = 0;
-	private static final int EXPECTED_NODES_AFTER_NODE2_DELETED = 4;
-	private static final int EXPECTED_EDGES_AFTER_NODE2_DELETED = 2;
-	private static final int EXPECTED_EDGES_AFTER_EDGE2_DELETED = 8;
-	private static final int EXPECTED_NODES_AFTER_NODE5_DELETED = 8;
-	private static final int EXPECTED_EDGES_AFTER_EDGE2_NODE5_DELETED = 8;
-	private static final int EXPECTED_NODES_AFTER_NODES_1_AND_2_DELETED = 1;
-	private static final int EXPECTED_EDGES_AFTER_NODES_1_AND_2_DELETED = 0;
+//	private static final int EXPECTED_NODES_AFTER_NODE2_DELETED = 4;
+//	private static final int EXPECTED_EDGES_AFTER_NODE2_DELETED = 2;
+//	private static final int EXPECTED_EDGES_AFTER_EDGE2_DELETED = 8;
+//	private static final int EXPECTED_NODES_AFTER_NODE5_DELETED = 8;
+//	private static final int EXPECTED_EDGES_AFTER_EDGE2_NODE5_DELETED = 8;
+//	private static final int EXPECTED_NODES_AFTER_NODES_1_AND_2_DELETED = 1;
+//	private static final int EXPECTED_EDGES_AFTER_NODES_1_AND_2_DELETED = 0;
 	private static final int [] NUMERIC_VALUE = { 0,1,2,3,4,5,6,7,8,9,10 } ;
 
 	

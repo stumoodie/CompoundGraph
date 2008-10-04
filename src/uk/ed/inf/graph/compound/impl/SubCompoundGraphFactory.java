@@ -10,6 +10,7 @@ public class SubCompoundGraphFactory extends BaseSubCompoundGraphFactory {
 		super(new SubCompoundGraphBuilder(graph));
 	}
 
+	@Override
 	public SubCompoundGraph createInducedSubgraph(){
 		return (SubCompoundGraph)super.createInducedSubgraph();
 	}

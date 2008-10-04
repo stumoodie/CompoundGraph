@@ -68,10 +68,12 @@ public final class NodeSet<
 		return nodeList.containsAll(c);
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		return nodeList.equals(o);
 	}
 
+	@Override
 	public int hashCode() {
 		return nodeList.hashCode();
 	}

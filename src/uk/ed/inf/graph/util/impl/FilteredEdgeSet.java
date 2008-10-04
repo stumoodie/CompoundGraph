@@ -41,14 +41,17 @@ public class FilteredEdgeSet <
 		this.edgeSet.clear();
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		return edgeSet.equals(obj);
 	}
 
+	@Override
 	public int hashCode() {
 		return edgeSet.hashCode();
 	}
 
+	@Override
 	public String toString() {
 		return edgeSet.toString();
 	}

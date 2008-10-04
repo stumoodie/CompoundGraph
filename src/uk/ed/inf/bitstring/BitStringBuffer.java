@@ -109,6 +109,7 @@ public class BitStringBuffer {
 		return bitVector.size();
 	}
 
+	@Override
 	public String toString() {
 		return bitVector.toString();
 	}

@@ -20,6 +20,7 @@ public abstract class ArchetypalChildCompoundGraph extends BaseChildCompoundGrap
 		createNodeSet(new NodeSet<BaseCompoundNode, BaseCompoundEdge>());
 	}
 	
+	@Override
 	public ArchetypalCompoundNode getRootNode() {
 		return this.root;
 	}

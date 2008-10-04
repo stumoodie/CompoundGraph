@@ -7,9 +7,6 @@ import java.util.List;
 
 import uk.ed.inf.graph.basic.IBasicEdge;
 import uk.ed.inf.graph.basic.IBasicNode;
-import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
-import uk.ed.inf.graph.compound.base.BaseCompoundNode;
-import uk.ed.inf.graph.util.IEdgeSet;
 import uk.ed.inf.graph.util.IFilterCriteria;
 import uk.ed.inf.graph.util.INodeSet;
 
@@ -38,6 +35,7 @@ public class FilteredNodeSet<
 		this.nodeSet.clear();
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		return nodeSet.equals(o);
 	}
@@ -46,6 +44,7 @@ public class FilteredNodeSet<
 		return nodeSet.get(nodeIdx);
 	}
 
+	@Override
 	public int hashCode() {
 		return nodeSet.hashCode();
 	}
@@ -62,6 +61,7 @@ public class FilteredNodeSet<
 		throw new UnsupportedOperationException("Modification that may lead to removals is not supported by this collection");
 	}
 
+	@Override
 	public String toString() {
 		return nodeSet.toString();
 	}

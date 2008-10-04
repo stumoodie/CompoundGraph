@@ -66,6 +66,7 @@ public class ChildCompoundEdgeFactory extends BaseChildCompoundEdgeFactory {
 		}
 	}
 
+	@Override
 	public boolean canCreateEdge() {
 		return this.isValidNodePair(this.outNode, this.inNode);
 	}

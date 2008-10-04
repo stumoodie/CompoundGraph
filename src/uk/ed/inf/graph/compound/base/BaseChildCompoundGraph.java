@@ -1,8 +1,6 @@
 package uk.ed.inf.graph.compound.base;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.compound.IChildCompoundGraph;

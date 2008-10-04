@@ -7,7 +7,6 @@ import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.IModifiableCompoundGraph;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.directed.IDirectedPair;
-import uk.ed.inf.graph.state.GraphStateHandler;
 import uk.ed.inf.graph.state.IGraphState;
 import uk.ed.inf.graph.state.IRestorableGraph;
 import uk.ed.inf.graph.util.IndexCounter;

@@ -28,6 +28,7 @@ public class SubCompoundGraphBuilder extends BaseSubCompoundGraphBuilder {
 		return this.subgraph;
 	}
 	
+	@Override
 	public CompoundGraph getGraph(){
 		return this.graph;
 	}

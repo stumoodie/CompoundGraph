@@ -86,6 +86,7 @@ public final class Edge implements IUndirectedEdge<Node, Edge>, IRestorableGraph
 		return this.connectedNodes.equals(ends);
 	}
 
+	@Override
 	public String toString(){
 		return "[" + this.getClass().getName() + ": index=" + this.index + ", removed=" + this.removed + "]";
 	}

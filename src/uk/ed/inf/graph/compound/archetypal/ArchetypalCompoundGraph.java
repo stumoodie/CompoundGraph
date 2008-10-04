@@ -27,6 +27,7 @@ public abstract class ArchetypalCompoundGraph extends BaseCompoundGraph {
 	@Override
 	protected abstract void createCopyOfRootNode(int newIndexValue, BaseCompoundNode otherRootNode);
 
+	@Override
 	protected final ITree<BaseCompoundNode> getNodeTree(){
 		return this.nodeTree;
 	}
@@ -44,13 +45,16 @@ public abstract class ArchetypalCompoundGraph extends BaseCompoundGraph {
 		this.performCopy(otherGraph);
 	}
 	
+	@Override
 	public abstract ArchetypalCompoundNode getRootNode();
 
+	@Override
 	protected final IndexCounter getNodeCounter(){
 		return this.nodeCounter;
 	}
 	
 	
+	@Override
 	protected final IndexCounter getEdgeCounter(){
 		return this.edgeCounter;
 	}

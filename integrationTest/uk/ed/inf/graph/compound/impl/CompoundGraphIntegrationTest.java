@@ -610,11 +610,11 @@ public class CompoundGraphIntegrationTest {
 		assertEquals ( "state belongs to Graph" , testInstance , originalState.getGraph() ) ;
 		assertEquals ("check saved nodes" , SAVED_NODES , originalState.getNodeStates().toString()) ;
 		assertEquals ("check saved edges" , SAVED_EDGES , originalState.getEdgeStates().toString()) ;
-		CompoundNode additionalNode = testInstance.nodeFactory().createNode() ;
+//		CompoundNode additionalNode = testInstance.nodeFactory().createNode() ;
 		assertEquals ( "one more node" , EXPECTED_NUM_NODES + 1 , testInstance.getNumNodes() ) ;
 		CompoundEdgeFactory edgeFactory = testInstance.edgeFactory() ;
 		edgeFactory.setPair(node8, node5) ; 
-		CompoundEdge additionalEdge = edgeFactory.createEdge() ;
+//		CompoundEdge additionalEdge = edgeFactory.createEdge() ;
 		assertEquals ( "one more edge" , EXPECTED_NUM_EDGES + 1 , testInstance.getNumEdges() ) ;
 		IGraphState<BaseCompoundNode, BaseCompoundEdge> newState = testInstance.getCurrentState() ;
 		assertEquals ("check saved nodes" , NEW_STATE_SAVED_NODES , newState.getNodeStates().toString()) ;

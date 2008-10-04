@@ -9,13 +9,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
+import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 import uk.ed.inf.graph.state.IGraphState;
 
 
 public class CreatedEmptyCompoundGraphTest {
 	
 	private CompoundGraph testGraph ;
-	private IGraphState emptyState ;
+	private IGraphState<BaseCompoundNode, BaseCompoundEdge> emptyState ;
 	
 	
 	private static final int NUMERIC[] = {0,1,2,3,4,5,6,7,8,9,10} ;
@@ -113,7 +115,7 @@ public class CreatedEmptyCompoundGraphTest {
 		
 		CompoundEdgeFactory edgeFactory = testGraph.edgeFactory() ;
 		edgeFactory.setPair(node1, node2) ;
-		CompoundEdge edge1 = edgeFactory.createEdge() ;
+//		CompoundEdge edge1 = edgeFactory.createEdge() ;
 		
 		assertEquals ( "three nodes" , NUMERIC[3] , testGraph.getNumNodes()) ;
 		assertEquals ( "an edge" , NUMERIC[1] , testGraph.getNumEdges()) ;

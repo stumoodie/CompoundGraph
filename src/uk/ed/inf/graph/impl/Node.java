@@ -123,6 +123,7 @@ public final class Node implements IUndirectedNode<Node, Edge>, IRestorableGraph
 		this.removed = removeFlag;
 	}
 	
+	@Override
 	public String toString(){
 		return "[" + this.getClass().getName() + ": index=" + this.index + ", removed=" + this.removed + "]";
 	}

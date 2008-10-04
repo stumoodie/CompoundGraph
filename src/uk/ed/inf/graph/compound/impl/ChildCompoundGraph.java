@@ -13,10 +13,12 @@ public class ChildCompoundGraph extends ArchetypalChildCompoundGraph {
 		return (CompoundNode)super.getRootNode();
 	}
 
+	@Override
 	public ChildCompoundEdgeFactory edgeFactory() {
 		return new ChildCompoundEdgeFactory(this.getRootNode());
 	}
 
+	@Override
 	public CompoundNodeFactory nodeFactory() {
 		return new CompoundNodeFactory(this.getRootNode());
 	}

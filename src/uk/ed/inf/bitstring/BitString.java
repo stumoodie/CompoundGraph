@@ -127,6 +127,7 @@ public class BitString implements IBitString {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.IBitString#toString()
 	 */
+	@Override
 	public String toString() {
 		return bitVector.toString();
 	}

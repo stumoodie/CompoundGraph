@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
-import uk.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
 import uk.ed.inf.graph.compound.ICompoundGraphMoveBuilder;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.directed.IDirectedPair;

@@ -32,18 +32,22 @@ public abstract class ArchetypalCompoundNode extends BaseCompoundNode {
 		createChildCompoundGraph(this);
 	}
 	
+	@Override
 	public ArchetypalCompoundNode getParent() {
 		return this.parent;
 	}
 
 	protected abstract void createChildCompoundGraph(ArchetypalCompoundNode rootNode);
 
+	@Override
 	public abstract ArchetypalChildCompoundGraph getChildCompoundGraph();
 
+	@Override
 	public ArchetypalCompoundGraph getGraph() {
 		return this.superGraph;
 	}
 
+	@Override
 	public int getIndex() {
 		return this.index;
 	}
