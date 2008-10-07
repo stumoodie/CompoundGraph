@@ -7,6 +7,10 @@
 	<property name="target" value="1.5" />
 	<property name="source" value="1.5" />
 	<property name="build.dir" value="./bin" />
+	<property name="build.src.dir" value="./bin/src" />
+	<property name="jar.dir" value="./jars" />
+	<property name="jar.name" value="compoundgraph.jar" />
+	<property name = "businessobjects.dir" value="../BusinessObjects/lib/compoundgraph"/>
 
 
 	<path id="CompoundGraph.classpath">
@@ -28,10 +32,11 @@
 	</path>
 
 
-	<target name="buildAll" depends="cleanall,build-project,api-docs" />
+	<target name="buildAll" depends="cleanall,build-project,api-docs,jar" />
 
 	<target name="init">
 		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.src.dir}" />
 		<copy includeemptydirs="false" todir="${build.dir}">
 			<fileset dir="src" excludes="**/*.launch, **/*.java" />
 		</copy>
@@ -50,7 +55,7 @@
 
 	<target name="build-subprojects" />
 
-	<target depends="init,build-src,build-test" name="build-project" />
+	<target depends="init,build-src,build-test, build-integration-test" name="build-project" />
 
 	<target depends="init" name="build-src">
 		<echo message="${ant.project.name}: ${ant.file}" />
@@ -59,13 +64,16 @@
 			<exclude name="uk/ed/inf/graph/compound/archetypal/ArchetypalChildCompoundEdgeFactory.java" />
 			<exclude name="uk/ed/inf/graph/compound/archetypal/ArchetypalCompoundEdgeFactory.java" />
 			<exclude name="uk/ed/inf/graph/compound/archetypal/ArchetypalCompoundNodeFactory.java" />
-			<exclude name="uk/ed/inf/graph/compound/archetypal/ArchetypalGraphCopyBuilder.java" />
+			<exclude name="uk/ed	/inf/graph/compound/archetypal/ArchetypalGraphCopyBuilder.java" />
 			<exclude name="uk/ed/inf/graph/compound/archetypal/ArchetypalSubCompoundGraph.java" />
 			<exclude name="uk/ed/inf/graph/compound/archetypal/ArchetypalSubCompoundGraphBuilder.java" />
 			<exclude name="uk/ed/inf/graph/compound/archetypal/ArchetypalSubCompoundGraphFactory.java" />
 			<classpath refid="CompoundGraph.classpath" />
 			<compilerarg value="-Xlint" />
 		</javac>
+		<copy todir="${build.src.dir}">
+			<fileset dir="${build.dir}" />
+		</copy>
 	</target>
 
 	<target depends="init" name="build-test">
@@ -76,6 +84,15 @@
 			<compilerarg value="-Xlint" />
 		</javac>
 	</target>
+	
+	<target depends="init" name="build-integration-test">
+			<echo message="${ant.project.name}: ${ant.file}" />
+			<javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir}" source="${source}" nowarn="false" target="${target}">
+				<src path="integrationTest" />
+				<classpath refid="test.classpath" />
+				<compilerarg value="-Xlint" />
+			</javac>
+		</target>
 
 
 
@@ -96,10 +113,19 @@
 		<antcall target="build" />
 	</target>
 
-	<target name="jar" depends="build-src">
-		<jar destfile="compoundgraph.jar" basedir="${build.dir}">
+	<target name="jar">
+		<delete dir="${jar.dir}" />
+		<mkdir dir="${jar.dir}" />
+		<jar destfile="${jar.dir}/${jar.name}" basedir="${build.src.dir}">
 		</jar>
 	</target>
+
+	<target name="jar-and-export" depends="jar">
+		<copy todir="${businessobjects.dir}">
+			<fileset dir="${jar.dir}" />
+		</copy>
+	</target>
+
 
 	<target name="api-docs">
 		<javadoc access="package" author="true" splitindex="true" use="true" version="true" source="1.5" sourcepath="src" destdir="doc" doctitle="Compund Graph API" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false">

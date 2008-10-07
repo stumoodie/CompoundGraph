@@ -13,7 +13,7 @@ import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
 import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 import uk.ed.inf.graph.state.IGraphState;
 
-public class AdditionalTests {
+public class AdditionalTest {
 	
 	private CompoundGraph testInstance ;
 	private CompoundGraph emptyTestInstance ;
