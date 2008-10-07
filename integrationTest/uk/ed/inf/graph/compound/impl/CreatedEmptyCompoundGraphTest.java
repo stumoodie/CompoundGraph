@@ -115,7 +115,7 @@ public class CreatedEmptyCompoundGraphTest {
 		
 		CompoundEdgeFactory edgeFactory = testGraph.edgeFactory() ;
 		edgeFactory.setPair(node1, node2) ;
-//		CompoundEdge edge1 = edgeFactory.createEdge() ;
+		edgeFactory.createEdge() ;
 		
 		assertEquals ( "three nodes" , NUMERIC[3] , testGraph.getNumNodes()) ;
 		assertEquals ( "an edge" , NUMERIC[1] , testGraph.getNumEdges()) ;

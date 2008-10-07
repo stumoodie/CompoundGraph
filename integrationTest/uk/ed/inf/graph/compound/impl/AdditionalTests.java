@@ -43,7 +43,7 @@ public class AdditionalTests {
 		this.rootNode = this.testInstance.getRootNode();
 		CompoundNodeFactory rootNodeFact = this.testInstance.getRootNode().getChildCompoundGraph().nodeFactory();
 		node1 = rootNodeFact.createNode();
-//		node2 = rootNodeFact.createNode();
+		rootNodeFact.createNode();
 		
 		
 		CompoundEdgeFactory edgeFact = this.testInstance.edgeFactory();
