@@ -362,8 +362,8 @@ public class CompoundGraphIntegrationTest {
 		assertEquals("expected node 6", node6, this.testInstance.getNode(this.node6.getIndex()));
 		assertEquals("expected node 7", node7, this.testInstance.getNode(this.node7.getIndex()));
 		assertEquals("expected node 8", node8, this.testInstance.getNode(this.node8.getIndex()));
-		assertTrue("expected no node", this.testInstance.getNode(UNKNOWN_NODE_HIGH_IDX) == null);
-		assertTrue("expected no node", this.testInstance.getNode(UNKNOWN_NODE_LOW_IDX) == null);
+		assertTrue("expected no node", this.testInstance.containsNode(UNKNOWN_NODE_HIGH_IDX) == false);
+		assertTrue("expected no node", this.testInstance.containsEdge(UNKNOWN_NODE_LOW_IDX) == false);
 	}
 
 	@Test
