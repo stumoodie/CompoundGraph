@@ -134,7 +134,9 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	}
 
 	public BaseCompoundNode getNode(int nodeIdx) {
-		return this.getNodeTree().get(nodeIdx);
+		BaseCompoundNode retVal = this.getNodeTree().get(nodeIdx);
+		if(retVal == null) throw new IllegalArgumentException("nodeIdx does not refer toa  node contained in this graph");
+		return retVal;
 	}
 
 	public Iterator<BaseCompoundNode> nodeIterator() {
