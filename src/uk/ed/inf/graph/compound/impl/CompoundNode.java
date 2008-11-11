@@ -35,4 +35,8 @@ public class CompoundNode extends ArchetypalCompoundNode {
 	public String toString(){
 		return this.getClass().getSimpleName() + "[index=" + this.getIndex() + "]";
 	}
+
+	@Override
+	protected void removalAction(boolean removed) {
+	}
 }

@@ -13,4 +13,8 @@ public class CompoundEdge extends ArchetypalCompoundEdge {
 	public String toString(){
 		return this.getClass().getSimpleName() + "[index=" + this.getIndex() + "]";
 	}
+
+	@Override
+	protected void removalAction(boolean removed) {
+	}
 }

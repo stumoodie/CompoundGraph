@@ -168,7 +168,14 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 
 	public final void markRemoved(boolean removed){
 		this.removed = removed;
+		this.removalAction(removed);
 	}
+	
+	/**
+	 * additional actions to be executed upon this node being
+	 * marked as removed.
+	 */
+	protected abstract void removalAction(boolean removed);
 	
 	private class CombinedConnectedNodeIterator implements Iterator<BaseCompoundNode> {
 		private final ConnectedNodeIterator<BaseCompoundNode, BaseCompoundEdge> inNodeIterator;

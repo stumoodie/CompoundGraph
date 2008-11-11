@@ -60,8 +60,15 @@ public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode
 	
 	public final void markRemoved(boolean removed){
 		this.removed = removed;
+		removalAction(removed);
 	}
 
+	/**
+	 * additional actions to be executed upon this node being
+	 * marked as removed.
+	 */
+	protected abstract void removalAction(boolean removed);
+	
 	public final boolean hasEnds(IBasicPair<? super BaseCompoundNode, ? super BaseCompoundEdge> ends) {
 		return ends.hasEnds(getInNode(), getOutNode());
 	}

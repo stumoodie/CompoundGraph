@@ -6,11 +6,13 @@
 	<property name="debuglevel" value="source,lines,vars" />
 	<property name="target" value="1.5" />
 	<property name="source" value="1.5" />
-	<property name="build.dir" value="./bin" />
-	<property name="build.src.dir" value="./bin/src" />
+	<property name="build.dir" value="./ant-build" />
+	<property name="docs.build.dir" value="./doc"/>
+	<property name="src.dir" value="./src" />
 	<property name="jar.dir" value="./jars" />
-	<property name="jar.name" value="compoundgraph.jar" />
-	<property name = "businessobjects.dir" value="../BusinessObjects/lib/compoundgraph"/>
+	<property name="jar.name.bin" value="CompoundGraph.jar" />
+	<property name="jar.name.src" value="CompoundGraph-src.jar" />
+	<property name="jar.name.doc" value="CompoundGraph-docs.jar" />
 
 
 	<path id="CompoundGraph.classpath">
@@ -32,11 +34,10 @@
 	</path>
 
 
-	<target name="buildAll" depends="cleanall,build-project,api-docs,jar" />
+	<target name="buildAll" depends="cleanall,build-project,api-docs,jarAll" />
 
 	<target name="init">
 		<mkdir dir="${build.dir}" />
-		<mkdir dir="${build.src.dir}" />
 		<copy includeemptydirs="false" todir="${build.dir}">
 			<fileset dir="src" excludes="**/*.launch, **/*.java" />
 		</copy>
@@ -71,7 +72,7 @@
 			<classpath refid="CompoundGraph.classpath" />
 			<compilerarg value="-Xlint" />
 		</javac>
-		<copy todir="${build.src.dir}">
+		<copy todir="${build.dir}">
 			<fileset dir="${build.dir}" />
 		</copy>
 	</target>
@@ -113,14 +114,12 @@
 		<antcall target="build" />
 	</target>
 
-	<target name="jar">
-		<delete dir="${jar.dir}" />
-		<mkdir dir="${jar.dir}" />
-		<jar destfile="${jar.dir}/${jar.name}" basedir="${build.src.dir}">
+	<target name="jar-bin" depends="build-src,init-jardirs">
+		<jar destfile="${jar.dir}/${jar.name.bin}" basedir="${build.dir}">
 		</jar>
 	</target>
 
-	<target name="jar-and-export" depends="jar">
+	<target name="jar-and-export" depends="jarAll">
 		<copy todir="${businessobjects.dir}">
 			<fileset dir="${jar.dir}" />
 		</copy>
@@ -160,6 +159,26 @@
 			<fileset dir="${build.dir}/test/logs" includes="**/*.xml" />
 			<report todir="${build.dir}/test/junitReports" />
 		</junitreport>
+	</target>
+
+	<target name="jarAll" depends="jar-bin, jar-src, jar-docs"/>
+	
+	<target name="jar-docs" depends="api-docs">
+		<mkdir dir="${jar.dir}" />
+		<jar destfile="${jar.dir}/${jar.name.doc}">
+			<fileset dir="${docs.build.dir}" />
+		</jar>
+	</target>
+				
+	<target name="init-jardirs">
+		<delete dir="${jar.dir}" />
+		<mkdir dir="${jar.dir}" />
+	</target>
+
+	<target name="jar-src" depends="init-jardirs">
+		<jar destfile="${jar.dir}/${jar.name.src}">
+			<fileset dir="${src.dir}" />
+		</jar>
 	</target>
 
 </project>
