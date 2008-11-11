@@ -33,6 +33,10 @@ public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFa
 		return this.nodeList.iterator();
 	}
 	
+	public int numNodes(){
+		return this.nodeList.size();
+	}
+	
 	/**
 	 * Get an iterator of the set of edges added to this factory. It will not return any incident
 	 * edges derived from the nodes selected here or between nodes in any child compound graphs of
@@ -40,6 +44,10 @@ public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFa
 	 */
 	public Iterator<BaseCompoundEdge> edgeIterator(){
 		return this.edgeList.iterator();
+	}
+	
+	public int numEdges(){
+		return this.edgeList.size();
 	}
 	
 	/**

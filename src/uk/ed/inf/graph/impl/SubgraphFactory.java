@@ -69,4 +69,12 @@ public final class SubgraphFactory implements IUndirectedSubgraphFactory<Node, E
 	public Graph getGraph() {
 		return this.graph;
 	}
+
+	public int numEdges() {
+		return this.edgeList.size();
+	}
+
+	public int numNodes() {
+		return this.nodeList.size();
+	}
 }

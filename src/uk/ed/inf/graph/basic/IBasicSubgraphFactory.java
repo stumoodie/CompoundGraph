@@ -22,6 +22,12 @@ public interface IBasicSubgraphFactory<
 	void addNode(N node);
 	
 	/**
+	 * Get the number of nodes added to the factory;
+	 * @return the number of nodes.
+	 */
+	int numNodes();
+	
+	/**
 	 * Add an edge to the factory to be used to compose the subgraph. 
 	 * @param edge
 	 * @throws NullPointerException if <code>edge</code> is null.
@@ -29,6 +35,12 @@ public interface IBasicSubgraphFactory<
 	 * the the same graph as the factory.
 	 */
 	void addEdge(E edge);
+	
+	/**
+	 * The number of edges added to the factory.
+	 * @return the number of edges.
+	 */
+	int numEdges();
 	
 	/**
 	 * Iterate over the nodes that have been added to this factory.

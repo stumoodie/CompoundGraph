@@ -231,8 +231,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 	 * @return the subgraph of copied components, or an empty subset of not copy operation has been perfromed. 
 	 */
 	public BaseSubCompoundGraph getMovedComponents(){
-		//TODO:
-		throw new UnsupportedOperationException("Implement me!");
+		return this.moveBuilder.getMovedComponents();
 	}
 	
 	/**
@@ -247,14 +246,13 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		
 		boolean retVal = false ;
 		
-		while (nodesIterator.hasNext())
-		{
+		while (nodesIterator.hasNext()){
 			retVal =  subgraph.containsNode(nodesIterator.next().getIndex()) ;
 		}
-		
-		if ( !retVal)
-		{
-			retVal =  subgraph.containsEdge(edgesIterator.next().getIndex()) ;
+		if ( !retVal){
+			while(edgesIterator.hasNext()){
+				retVal =  subgraph.containsEdge(edgesIterator.next().getIndex()) ;
+			}
 		}
 		
 		return retVal ;
