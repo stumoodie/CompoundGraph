@@ -109,4 +109,9 @@ public final class NodeSet<
 	public <T> T[] toArray(T[] a) {
 		return nodeList.toArray(a);
 	}
+	
+	@Override
+	public String toString(){
+		return this.nodeList.toString();
+	}
 }

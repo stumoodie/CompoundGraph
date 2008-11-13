@@ -150,4 +150,10 @@ public class EdgeSet <
 	public <T> T[] toArray(T[] a) {
 		return this.edgeSet.toArray(a);
 	}
+	
+	@Override
+	public String toString(){
+		return this.edgeSet.toString();
+	}
+
 }

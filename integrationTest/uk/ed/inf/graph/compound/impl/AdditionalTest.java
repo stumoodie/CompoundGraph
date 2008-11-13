@@ -166,8 +166,11 @@ public class AdditionalTest {
 		assertEquals ( "only two nodes" , NUMERIC_VALUES[2] , testInstance.getNumNodes() ) ;
 		assertEquals ( "no edges" , NUMERIC_VALUES[0] , testInstance.getNumEdges() ) ;
 		testInstance.restoreState(nonEmptyGraphState) ;
-		assertEquals ( "three Nodes" , nonEmptyGraphState.getNodeStates() , testInstance.getCurrentState().getNodeStates() ) ;
-		assertEquals ( "one Edge" , nonEmptyGraphState.getEdgeStates() , testInstance.getCurrentState().getEdgeStates() ) ;
+		assertEquals ( "three Nodes" , NUMERIC_VALUES[3] , testInstance.getNumNodes() ) ;
+		assertEquals ( "one Edge" , NUMERIC_VALUES[1] , testInstance.getNumEdges() ) ;
+		testInstance.restoreState(removedNodeGraphState) ;
+		assertEquals ( "only two nodes" , NUMERIC_VALUES[2] , testInstance.getNumNodes() ) ;
+		assertEquals ( "no edges" , NUMERIC_VALUES[0] , testInstance.getNumEdges() ) ;
 	}
 	
 	@Test
