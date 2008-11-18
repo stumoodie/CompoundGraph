@@ -16,6 +16,11 @@ public class SubCompoundGraphFactory extends BaseSubCompoundGraphFactory {
 	}
 
 	@Override
+	public SubCompoundGraph createPermissiveInducedSubgraph(){
+		return (SubCompoundGraph)super.createPermissiveInducedSubgraph();
+	}
+
+	@Override
 	public SubCompoundGraph createSubgraph(){
 		return (SubCompoundGraph)super.createSubgraph();
 	}
