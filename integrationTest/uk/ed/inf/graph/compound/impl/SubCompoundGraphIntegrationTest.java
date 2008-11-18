@@ -401,7 +401,7 @@ public class SubCompoundGraphIntegrationTest {
 	{
 		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addEdge(edge1) ;
-		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		SubCompoundGraph  inducedSubGraph = subGraphfactory.createSubgraph() ;
 		assertEquals ( "from original Graph" , testInstance , inducedSubGraph.getSuperGraph()) ;
 		assertEquals ( "0 nodes" , NUMERIC_VALUE[0] , inducedSubGraph.getNumNodes()) ;
 		assertEquals ( "1 edges" , NUMERIC_VALUE[1] , inducedSubGraph.getNumEdges()) ;
@@ -429,11 +429,11 @@ public class SubCompoundGraphIntegrationTest {
 		subGraphfactory.addNode(node3) ;
 		subGraphfactory.addNode(node4) ;
 		subGraphfactory.addNode(node6) ;
-		subGraphfactory.addEdge(edge8);
+		subGraphfactory.addEdge(edge7);
 		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
 		assertEquals ( "from original Graph" , testInstance , inducedSubGraph.getSuperGraph()) ;
 		assertEquals ( "5 nodes" , NUMERIC_VALUE[5] , inducedSubGraph.getNumNodes()) ;
-		assertEquals ( "4 edges" , NUMERIC_VALUE[4] , inducedSubGraph.getNumEdges()) ;
+		assertEquals ( "3 edges" , NUMERIC_VALUE[3] , inducedSubGraph.getNumEdges()) ;
 		assertEquals ( "3 top nodes" , NUMERIC_VALUE[3] , inducedSubGraph.getNumTopNodes()) ;
 	}
 	

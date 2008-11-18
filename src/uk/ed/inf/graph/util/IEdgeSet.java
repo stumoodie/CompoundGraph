@@ -47,19 +47,21 @@ public interface IEdgeSet<
 	/**
 	 * Does this edge set contain one or more edges associated with this
 	 * node?
-	 * @param node The node to be tested. Can be null.
+	 * @param thisNode The node that is the point of reference.
+	 * @param otherNode The node to be tested. Can be null.
 	 * @return True if one or more edges conatin the node, false otherwise.
 	 */
-	boolean hasEdgesWith(N node);
+	boolean hasEdgesWith(N thisNode, N otherNode);
 
 	/**
 	 * Gets the edges that contain this node as one of its ends.
-	 * @param node The node associated with the edges. Cannot be null.
+	 * @param thisNode the node that is the point of reference.
+	 * @param otherNode The node associated with the edges. Cannot be null.
 	 * @return The set of edges containing the matched nodes. The set will contain at least one node.
 	 * @throws NullPointerException of node is null.
 	 * @throws IllegalArgumentException if <code>hasEdgesWith(node) == false</code>.  
 	 */
-	SortedSet<E> getEdgesWith(N node);
+	SortedSet<E> getEdgesWith(N thisNode, N otherNode);
 	
 	/**
 	 * Does an edge with this index exist in the set. 

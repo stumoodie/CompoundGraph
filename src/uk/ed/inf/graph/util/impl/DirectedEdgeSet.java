@@ -26,12 +26,12 @@ public class DirectedEdgeSet <
 		return this.edgeSet.iterator();
 	}
 
-	public SortedSet<E> getEdgesWith(N other) {
-		return this.findConnectingEdge(other);
+	public SortedSet<E> getEdgesWith(N thisNode, N other) {
+		return this.findConnectingEdge(thisNode, other);
 	}
 
-	public boolean hasEdgesWith(N other) {
-		Set<E> edges = findConnectingEdge(other);
+	public boolean hasEdgesWith(N thisNode, N other) {
+		Set<E> edges = findConnectingEdge(thisNode, other);
 		return !edges.isEmpty();
 	}
 
@@ -100,11 +100,11 @@ public class DirectedEdgeSet <
 		return this.edgeSet.size();
 	}
 	
-	private SortedSet<E> findConnectingEdge(N otherNode){
+	private SortedSet<E> findConnectingEdge(N thisNode, N otherNode){
 		final SortedSet<E> retVal = new TreeSet<E>();
 		for(E edge : this.edgeSet){
 			IDirectedPair<N, E> pair = edge.getConnectedNodes();
-			if(pair.containsNode(otherNode)){
+			if(pair.containsNode(otherNode) && pair.getOtherNode(thisNode).equals(otherNode)){
 				retVal.add(edge);
 			}
 		}

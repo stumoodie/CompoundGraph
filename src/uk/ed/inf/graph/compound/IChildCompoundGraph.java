@@ -13,11 +13,11 @@ public interface IChildCompoundGraph<
 	 */
 	ICompoundGraph<N, E> getSuperGraph();
 	
-	/**
-	 * Tests if the subgraph contains nodes or edges that are contained by this
-	 * child graph or its children.
-	 * @param subgraph the subgraph to test, which can be null.
-	 * @return true if the subgraph intersects with this child graph, false otherwise.
-	 */
-	boolean intersects(ISubCompoundGraph<? extends N, ? extends E> subgraph);
+//	/**
+//	 * Tests if the subgraph contains nodes or edges that are contained by this
+//	 * child graph or its children.
+//	 * @param subgraph the subgraph to test, which can be null.
+//	 * @return true if the subgraph intersects with this child graph, false otherwise.
+//	 */
+//	boolean intersects(ISubCompoundGraph<? extends N, ? extends E> subgraph);
 }

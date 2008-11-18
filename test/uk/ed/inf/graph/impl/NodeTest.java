@@ -16,7 +16,7 @@ import uk.ed.inf.graph.util.impl.ConnectedNodeIterator;
 public class NodeTest {
 	
 	private Node testNode ;
-	private Node otherNode ;
+//	private Node otherNode ;
 	
 	private static Graph mockGraph ;
 	private static Edge mockEdge ;
@@ -37,7 +37,9 @@ public class NodeTest {
 	private static final int COMPARE_LESSER_INDEX = -1 ;
 	private static final int COMPARE_SAME_INDEX = 0 ;
 	
-	private static final int NUMERIC_VALUE_ONE = 1 ;
+	private static final int EXPECTED_NUM_NODE1_EDGES = 2;
+	private static final int EXPECTED_NODE1_DEGREE = 2;
+	private static final int EXPECTED_NODE2_IDX = 1;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -56,11 +58,11 @@ public class NodeTest {
 		mockEdge = edgeFactory.createEdge() ;
 		mockEdgeTwo = edgeFactory.createEdge() ;
 		
-		testNode = nodeFactory.createNode() ;
-		otherNode = nodeFactory.createNode() ;
-		
-		mockOneNode.addEdge(mockEdge) ;
-		testNode.addEdge(mockEdge) ;
+//		testNode = nodeFactory.createNode() ;
+//		otherNode = nodeFactory.createNode() ;
+		testNode = mockOneNode;
+//		mockOneNode.addEdge(mockEdge) ;
+//		testNode.addEdge(mockEdge) ;
 		
 	}
 
@@ -90,12 +92,12 @@ public class NodeTest {
 
 	@Test
 	public final void testGetDegree() {
-		assertEquals ( "degree" ,NUMERIC_VALUE_ONE , testNode.getDegree() );
+		assertEquals ( "degree" ,EXPECTED_NODE1_DEGREE , testNode.getDegree() );
 	}
 
 	@Test
 	public final void testEdgeIterator() {
-		Edge edgeArray [] = {mockEdge} ;
+		Edge edgeArray [] = {mockEdge, mockEdgeTwo} ;
 		
 		Iterator<Edge> edgeIterator = testNode.edgeIterator() ;
 		
@@ -110,8 +112,8 @@ public class NodeTest {
 
 	@Test
 	public final void testGetEdgesWith() {
-		assertEquals ( "get Edges" , NUMERIC_VALUE_ONE , testNode.getEdgesWith(mockOneNode ).size() );
-		assertTrue ( "contains edge" , testNode.getEdgesWith(mockOneNode).contains(mockEdge) );
+		assertEquals ( "get Edges" , EXPECTED_NUM_NODE1_EDGES , mockOneNode.getEdgesWith(mockTwoNode ).size() );
+		assertTrue ( "contains edge" , mockOneNode.getEdgesWith(mockTwoNode).contains(mockEdge) );
 	}
 
 	@Test
@@ -121,7 +123,7 @@ public class NodeTest {
 
 	@Test
 	public final void testGetIndex() {
-		assertEquals ( "index" , NODE_INDEX_TWO , testNode.getIndex()) ;
+		assertEquals ( "index" , EXPECTED_NODE2_IDX , mockTwoNode.getIndex()) ;
 	}
 
 	@Test
@@ -148,15 +150,15 @@ public class NodeTest {
 
 	@Test
 	public final void testCompareTo() {
-		assertEquals ( "same Node" , COMPARE_SAME_INDEX , testNode.compareTo(testNode) ) ;
-		assertEquals ( "greater index" , COMPARE_GREATER_INDEX , otherNode.compareTo(testNode) ) ;
-		assertEquals ( "lesser index" , COMPARE_LESSER_INDEX , testNode.compareTo(otherNode) ) ;
+		assertEquals ( "same Node" , COMPARE_SAME_INDEX , mockOneNode.compareTo(mockOneNode) ) ;
+		assertEquals ( "greater index" , COMPARE_GREATER_INDEX , mockTwoNode.compareTo(mockOneNode) ) ;
+		assertEquals ( "lesser index" , COMPARE_LESSER_INDEX , mockOneNode.compareTo(mockTwoNode) ) ;
 	}
 
 	@Test
 	public final void testEqualsObject() {
 		assertTrue ( "same" , testNode.equals(testNode)) ;
-		assertFalse ( "not same" , testNode.equals(otherNode)) ;
+		assertFalse ( "not same" , testNode.equals(mockTwoNode)) ;
 	}
 
 	@Test
@@ -172,8 +174,8 @@ public class NodeTest {
 
 	@Test
 	public final void testToString() {
-		assertEquals ( "test node" , "[uk.ed.inf.graph.impl.Node: index=2, removed=false]",  testNode.toString()) ;
-		assertNotSame ( "other node" , "[uk.ed.inf.graph.impl.Node: index=3, removed=false]",  testNode.toString()) ;
+		assertEquals ( "test node" , "[uk.ed.inf.graph.impl.Node: index=0, removed=false]",  mockOneNode.toString()) ;
+		assertNotSame ( "other node" , "[uk.ed.inf.graph.impl.Node: index=1, removed=false]",  mockTwoNode.toString()) ;
 	}
 
 }

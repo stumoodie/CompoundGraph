@@ -2,6 +2,7 @@ package uk.ed.inf.graph.compound.base;
 
 import java.util.Iterator;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.state.IRestorableGraphElement;
@@ -58,7 +59,7 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 	}
 
 	public final SortedSet<BaseCompoundEdge> getInEdgesFrom(BaseCompoundNode outNode) {
-		return this.edgeInList.getEdgesWith(outNode);
+		return this.edgeInList.getEdgesWith(this, outNode);
 	}
 
 	public final Iterator<BaseCompoundEdge> getInEdgeIterator() {
@@ -78,7 +79,7 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 	}
 
 	public final SortedSet<BaseCompoundEdge> getOutEdgesTo(BaseCompoundNode inNode) {
-		return this.edgeOutList.getEdgesWith(inNode);
+		return this.edgeOutList.getEdgesWith(this, inNode);
 	}
 
 	public final Iterator<BaseCompoundNode> getOutNodeIterator() {
@@ -86,11 +87,11 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 	}
 
 	public final boolean hasInEdgeFrom(BaseCompoundNode outNode) {
-		return this.edgeInList.hasEdgesWith(outNode);
+		return this.edgeInList.hasEdgesWith(this, outNode);
 	}
 
 	public final boolean hasOutEdgeTo(BaseCompoundNode inNode) {
-		return this.edgeOutList.hasEdgesWith(inNode);
+		return this.edgeOutList.hasEdgesWith(this, inNode);
 	}
 
 	public final Iterator<BaseCompoundNode> connectedNodeIterator() {
@@ -108,14 +109,14 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 	public final SortedSet<BaseCompoundEdge> getEdgesWith(BaseCompoundNode other) {
 		if(other == null) throw new IllegalArgumentException("IOther cannot be null");
 //		BaseCompoundNode other = (BaseCompoundNode)iOther;
-		SortedSet<BaseCompoundEdge> retVal = null;
-		if(this.edgeInList.hasEdgesWith(other)){
-			retVal = this.edgeInList.getEdgesWith(other);
+		final SortedSet<BaseCompoundEdge> retVal = new TreeSet<BaseCompoundEdge>();
+		if(this.edgeInList.hasEdgesWith(this, other)){
+			retVal.addAll(this.edgeInList.getEdgesWith(this, other));
 		}
-		else if(this.edgeOutList.hasEdgesWith(other)){
-			retVal = this.edgeOutList.getEdgesWith(other);
+		if(this.edgeOutList.hasEdgesWith(this, other)){
+			retVal.addAll(this.edgeOutList.getEdgesWith(this, other));
 		}
-		else{
+		if(retVal.isEmpty()){
 			throw new IllegalArgumentException("edge must be contained by this node");
 		}
 		return retVal;
@@ -142,9 +143,9 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 	public final boolean hasEdgeWith(BaseCompoundNode other) {
 		boolean retVal = false;
 		if(other != null){ 
-			retVal = this.edgeInList.hasEdgesWith(other);
+			retVal = this.edgeInList.hasEdgesWith(this, other);
 			if(retVal == false){
-				retVal = this.edgeOutList.hasEdgesWith(other);
+				retVal = this.edgeOutList.hasEdgesWith(this, other);
 			}
 		}
 		return retVal;
@@ -237,8 +238,10 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		private final Iterator<BaseCompoundEdge> outEdgeIterator;
 		
 		public CombinedEdgeIterator(){
-			this.inEdgeIterator = edgeInList.iterator();
-			this.outEdgeIterator = edgeOutList.iterator();
+			final SortedSet<BaseCompoundEdge> inEdgesCopy = new TreeSet<BaseCompoundEdge>(edgeInList);
+			final SortedSet<BaseCompoundEdge> outEdgesCopy = new TreeSet<BaseCompoundEdge>(edgeOutList);
+			this.inEdgeIterator = inEdgesCopy.iterator();
+			this.outEdgeIterator = outEdgesCopy.iterator();
 		}
 		
 		

@@ -50,7 +50,16 @@ public final class Node implements IUndirectedNode<Node, Edge>, IRestorableGraph
 	}
 
 	public int getDegree() {
-		return this.edgeSet.size();
+		int degree = 0;
+		for(Edge e : this.edgeSet){
+			if(e.isSelfEdge()){
+				degree += 2;
+			}
+			else{
+				degree++;
+			}
+		}
+		return degree;
 	}
 
 	public Iterator<Edge> edgeIterator() {
@@ -58,7 +67,7 @@ public final class Node implements IUndirectedNode<Node, Edge>, IRestorableGraph
 	}
 
 	public SortedSet<Edge> getEdgesWith(Node other) {
-		return this.edgeSet.getEdgesWith(other);
+		return this.edgeSet.getEdgesWith(this, other);
 	}
 
 	public Graph getGraph() {

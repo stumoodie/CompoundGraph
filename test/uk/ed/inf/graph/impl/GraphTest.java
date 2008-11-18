@@ -18,7 +18,6 @@ import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -110,7 +109,6 @@ public class GraphTest {
 		this.testEmptyInstance = null;
 	}
 	
-	@Ignore
 	@Test
 	public final void testGraphSetupAsExpected(){
 		// FIXME there is a bug in the getDegree method. Self edges count as one instead of 2. 
@@ -230,7 +228,6 @@ public class GraphTest {
 		assertFalse("expected no null node", this.testInstance.containsNode(null));
 	}
 	
-	@Ignore
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testContainsAfterNodeRemoval(){
@@ -265,16 +262,15 @@ public class GraphTest {
 		assertFalse("expected node missing", actualNode4IdxExists);
 	}
 	
-	@Ignore
 	@SuppressWarnings("unchecked")
 	@Test(expected=IllegalArgumentException.class)
 	public final void testContainsAfterNodeRemovalWithDifferentSupergraph(){
 		// FIXME there is a bug in the getDegree method. Self edges count as one instead of 2. 
 		final IBasicSubgraph<Node, Edge> mockSubgraph = mockery.mock(IBasicSubgraph.class, "mockSubgraph");
 		mockery.checking(new Expectations() {{
-			atLeast(1).of(mockSubgraph).nodeIterator(); will(returnIterator(node1, node4));
-			atLeast(1).of(mockSubgraph).edgeIterator(); will(returnIterator(edge5));
-			atLeast(1).of(mockSubgraph).getSuperGraph(); will(returnValue(testInstance));
+			allowing(mockSubgraph).nodeIterator(); will(returnIterator(node1, node4));
+			allowing(mockSubgraph).edgeIterator(); will(returnIterator(edge5));
+			allowing(mockSubgraph).getSuperGraph(); will(returnValue(testInstance));
 		}});
 		this.testEmptyInstance.removeSubgraph(mockSubgraph);
 	}

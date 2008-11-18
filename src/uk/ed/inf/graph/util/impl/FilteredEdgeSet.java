@@ -151,8 +151,8 @@ public class FilteredEdgeSet <
 		return retVal;
 	}
 
-	public SortedSet<E> getEdgesWith(N otherNode) {
-		SortedSet<E> retVal = this.edgeSet.getEdgesWith(otherNode);
+	public SortedSet<E> getEdgesWith(N thisNode, N otherNode) {
+		SortedSet<E> retVal = this.edgeSet.getEdgesWith(thisNode, otherNode);
 		Iterator<E> iter = retVal.iterator();
 		while(iter.hasNext()){
 			E edge = iter.next();
@@ -166,11 +166,11 @@ public class FilteredEdgeSet <
 		return retVal;
 	}
 
-	public boolean hasEdgesWith(N otherNode) {
-		boolean retVal = this.edgeSet.hasEdgesWith(otherNode);
+	public boolean hasEdgesWith(N thisNode, N otherNode) {
+		boolean retVal = this.edgeSet.hasEdgesWith(thisNode, otherNode);
 		if(retVal){
 			// now check edge matches filter criteria
-			Set<E> edges = this.edgeSet.getEdgesWith(otherNode);
+			Set<E> edges = this.edgeSet.getEdgesWith(thisNode, otherNode);
 			int unmatchedCnt = 0;
 			Iterator<E> iter = edges.iterator();
 			while(iter.hasNext()){

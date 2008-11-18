@@ -194,16 +194,26 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 	 * Tests whether the subGraph can be moved to this graph. To be true the subgraph must be an induced subgraph
 	 *  that is a consistent of the super graph. It must also be not null and belong to the
 	 *  same graph as this one. The subgraph must also be valid.
-	 *  Also no nodes in the induced sub-graph of <code>subGraph</code> can be children
+	 *  Also no nodes in the induced sub-graph of <code>subGraph</code> can be children.
+	 *  In addition at least one node must be moving to a new child graph.
 	 *  of this child compound graph. 
 	 * @param subGraph the subgraph to test, can be null. 
 	 * @return true if the subgraph is valid to copy from, false otherwise.
 	 */
-	public boolean canMoveHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph){
+	public boolean canMoveHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> iSubGraph){
+		BaseSubCompoundGraph subGraph = (BaseSubCompoundGraph)iSubGraph;
 		boolean retVal = subGraph != null && subGraph.getSuperGraph().equals(this.getSuperGraph())
-			&& subGraph.isInducedSubgraph() && subGraph.isConsistentSnapShot();
+			&& subGraph.isInducedSubgraph() && subGraph.isConsistentSnapShot()
+			&& !subGraph.containsNode(this.getRootNode());
 		if(retVal){
-			retVal = !this.intersects(subGraph);
+			retVal = false;
+			Iterator<? extends BaseCompoundNode> topNodeIter = subGraph.topNodeIterator();
+			while(topNodeIter.hasNext()){
+				BaseCompoundNode topNode = topNodeIter.next();
+				if(!topNode.getParent().equals(this.getRootNode())){
+					retVal = true;
+				}
+			}
 		}
 		return retVal;
 	}
@@ -213,6 +223,8 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 	 * nodes in this subgraph and removing the nodes defined in <code>subGraph</code>.
 	 * The new nodes from the move can be found in <code>getMovedComponents()</code> 
 	 * and the removed nodes will be found in <code>subGraph</code>.
+	 * At least one node must be moving to a new child graph. Only those nodes and edges
+	 * that have a new owning child graph will be moved, other nodes will remain where they are.
 	 * @param subGraph the subgraph to move.
 	 * @throws IllegalArgumentException if <code>canMoveHere(subGraph) == false</code>.
 	 */
@@ -234,29 +246,28 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		return this.moveBuilder.getMovedComponents();
 	}
 	
-	/**
-	 * Tests if the subgraph contains nodes or edges that are contained by this
-	 * child graph or its children.
-	 * @param subgraph the subgraph to test, which can be null.
-	 * @return true if the subgraph intersects with this child graph, false otherwise.
-	 */
-	public final boolean intersects(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph){
-		Iterator<? extends BaseCompoundNode>  nodesIterator = this.nodeIterator() ;
-		Iterator<? extends BaseCompoundEdge>  edgesIterator = this.edgeIterator() ;
-		
-		boolean retVal = false ;
-		
-		while (nodesIterator.hasNext()){
-			retVal =  subgraph.containsNode(nodesIterator.next().getIndex()) ;
-		}
-		if ( !retVal){
-			while(edgesIterator.hasNext()){
-				retVal =  subgraph.containsEdge(edgesIterator.next().getIndex()) ;
-			}
-		}
-		
-		return retVal ;
-	}
+//	/**
+//	 * Tests if the subgraph contains this child graph. If it
+//	 * does then the move is recursive and cannot be performed.
+//	 * @param subgraph the subgraph to test, which cannot be null.
+//	 * @return true if the subgraph intersects with this child graph, false otherwise.
+//	 */
+//	private boolean intersects(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph){
+//		Iterator<? extends BaseCompoundNode>  nodesIterator = this.nodeIterator() ;
+//		
+//		boolean retVal = false ;
+//		
+//		while (nodesIterator.hasNext()){
+//			retVal =  subgraph.containsNode(nodesIterator.next().getIndex()) ;
+//		}
+//		if ( !retVal){
+//			while(edgesIterator.hasNext()){
+//				retVal =  subgraph.containsEdge(edgesIterator.next().getIndex()) ;
+//			}
+//		}
+//		
+//		return retVal ;
+//	}
 
 	public BaseSubCompoundGraph getCopiedComponents(){
 		return this.copyBuilder.getCopiedComponents();

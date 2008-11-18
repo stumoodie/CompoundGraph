@@ -5,11 +5,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import uk.ed.inf.graph.compound.ISubCompoundGraphBuilder;
 import uk.ed.inf.graph.directed.IDirectedPair;
 import uk.ed.inf.graph.util.impl.NodeTreeIterator;
 
 public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBuilder<BaseCompoundNode, BaseCompoundEdge> {
+	private final Logger logger = Logger.getLogger(this.getClass());
+	
 	private Set<BaseCompoundNode> nodeList;
 	private Set<BaseCompoundEdge> edgeList;
 
@@ -72,6 +76,7 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 		Iterator<BaseCompoundNode> nodeTreeIter = new NodeTreeIterator<BaseCompoundNode, BaseCompoundEdge>(this.nodeList.iterator());
 		while(nodeTreeIter.hasNext()){
 			BaseCompoundNode node = nodeTreeIter.next();
+			logger.debug("Investigating node: " + node);
 			// we only consider out edges as this will reduce the number edges we have
 			// to consider twice. If an edge is directed and incident to the nodes in the
 			// subgraph then we are guaranteed to traverse it once.
@@ -79,14 +84,24 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 			Iterator<BaseCompoundEdge> edgeIter = node.getOutEdgeIterator();
 			while(edgeIter.hasNext()){
 				BaseCompoundEdge edge = edgeIter.next();
+				logger.debug("Testing edge: " + edge);
 				if(!this.edgeList.contains(edge)){
+					logger.debug("Edge not observed before");
 					// only do this if the edge is not already in the set of edges
 					IDirectedPair<BaseCompoundNode, BaseCompoundEdge> ends = edge.getConnectedNodes();
+					logger.debug("Testing other node: " + ends.getInNode());
 					if(expandedNodes.contains(ends.getInNode())){
+						logger.debug("Storing edge: " + edge + ", iNode= " + ends.getInNode());
 						// the edge links two nodes that will be in the subgraph so it is
 						// incident and so we add it.
 						this.edgeList.add(edge);
 					}
+					else{
+						logger.debug("Node not present in subgraph");
+					}
+				}
+				else{
+					logger.debug("Edge already in subgraph");
 				}
 			}
 		}

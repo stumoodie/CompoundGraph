@@ -23,8 +23,9 @@ import uk.ed.inf.tree.ITreeNodeAction;
 public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
 	private INodeSet<BaseCompoundNode, BaseCompoundEdge> topNodeSet;
 	private IEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet;
-	private Set<Integer> initialNodeSet = new HashSet<Integer> () ;
-	private Set<Integer> initialEdgeSet = new HashSet<Integer> () ;
+	private final Set<Integer> initialNodeSet = new HashSet<Integer> () ;
+	private final Set<Integer> initialEdgeSet = new HashSet<Integer> () ;
+	private Boolean isInducedSubgraphFlag = null;
 	
 	protected BaseSubCompoundGraph(){
 //		this.nodeSet = new NodeSet<BaseCompoundNode, BaseCompoundEdge>();
@@ -55,8 +56,11 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 	public abstract BaseCompoundGraph getSuperGraph();
 
 	public boolean isInducedSubgraph() {
-		ISubgraphAlgorithms<BaseCompoundNode, BaseCompoundEdge> alg = new SubgraphAlgorithms<BaseCompoundNode, BaseCompoundEdge>(this);
-		return alg.isInducedSubgraph();
+		if(isInducedSubgraphFlag  == null){
+			ISubgraphAlgorithms<BaseCompoundNode, BaseCompoundEdge> alg = new SubgraphAlgorithms<BaseCompoundNode, BaseCompoundEdge>(this);
+			this.isInducedSubgraphFlag = new Boolean(alg.isInducedSubgraph());
+		}
+		return this.isInducedSubgraphFlag;
 	}
 
 	public boolean containsConnection(BaseCompoundNode thisNode, BaseCompoundNode thatNode) {

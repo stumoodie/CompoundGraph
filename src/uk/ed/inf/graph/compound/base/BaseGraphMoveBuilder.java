@@ -15,6 +15,7 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 	private BaseSubCompoundGraph sourceSubCigraph;
 	private BaseChildCompoundGraph destSubCigraph;
 	private BaseSubCompoundGraphFactory subGraphFactory;
+	private BaseSubCompoundGraphFactory removalSubGraphFactory;
 	private final Map<BaseCompoundNode, BaseCompoundNode> oldNewEquivList;
 	private final Set<Integer> visited = new HashSet<Integer>(); 
 	
@@ -51,9 +52,11 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 		this.oldNewEquivList.clear();
 		this.visited.clear();
 		this.subGraphFactory = this.destSubCigraph.getSuperGraph().subgraphFactory();
+		this.removalSubGraphFactory = this.destSubCigraph.getSuperGraph().subgraphFactory();
 		moveNodes();
 		moveEquivalentEdges();
-		this.sourceSubCigraph.getSuperGraph().removeSubgraph(sourceSubCigraph);
+		moveLinkedEdges();
+		this.sourceSubCigraph.getSuperGraph().removeSubgraph(this.removalSubGraphFactory.createSubgraph());
 	}
 	
 	/* (non-Javadoc)
@@ -64,8 +67,32 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 		while(sourceNodeIter.hasNext()){
 			BaseCompoundNode srcNode = sourceNodeIter.next();
 			if(!visited.contains(srcNode.getIndex())){
-				moveNode(srcNode, this.destSubCigraph.getRootNode());
+				if(srcNode.getParent().equals(this.destSubCigraph.getRootNode())){
+					//the source and destination are the same so don't move the top node
+					markUnmovedNode(srcNode, this.destSubCigraph.getRootNode());
+				}
+				else{
+					moveNode(srcNode, this.destSubCigraph.getRootNode());
+				}
 			}
+		}
+	}
+	
+	
+	/**
+	 * Marks nodes that are not to be moved to the same location. Since no move 
+	 * is actually required the equivalence and visit lists are updated so that the
+	 * rest of the move operation can perform as if these nodes were actually moved.
+	 * @param srcNode the node to be moved
+	 * @param destParentNode the destination for th move, which should in fact be the <code>srcNode</code> parent.
+	 */
+	private void markUnmovedNode(BaseCompoundNode srcNode, BaseCompoundNode destParentNode){
+		this.visited.add(srcNode.getIndex()) ;
+		this.oldNewEquivList.put(srcNode, srcNode);
+		Iterator<? extends BaseCompoundNode> childIter = srcNode.childIterator();
+		while(childIter.hasNext()){
+			BaseCompoundNode childNode = childIter.next();
+			markUnmovedNode(childNode, srcNode);
 		}
 	}
 
@@ -74,6 +101,7 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 		this.visited.add(srcNode.getIndex()) ;
 		this.oldNewEquivList.put(srcNode, newNode);
 		this.subGraphFactory.addNode(newNode);
+		this.removalSubGraphFactory.addNode(srcNode);
 		Iterator<? extends BaseCompoundNode> childIter = srcNode.childIterator();
 		while(childIter.hasNext()){
 			BaseCompoundNode childNode = childIter.next();
@@ -110,19 +138,67 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 			BaseCompoundNode newOutNode = this.oldNewEquivList.get(ends.getOutNode());
 			BaseCompoundNode oldOwner = srcEdge.getOwningChildGraph().getRootNode();
 			// find the owning node if it is part of the subgraph.
-			BaseCompoundNode linkOwner = this.oldNewEquivList.get(oldOwner);
-			if(linkOwner == null){
+			BaseCompoundNode newOwner = this.oldNewEquivList.get(oldOwner);
+			if(newOwner == null){
 				// the submap does not contain the lca of this edge so it must be calculated from
 				// scratch
 				BaseCompoundGraph ciGraph = this.destSubCigraph.getSuperGraph();
 				BaseCompoundNode lca = ciGraph.getLcaNode(newInNode, newOutNode);
 				if(lca == null){
-					throw new IllegalStateException("The graph and subgraph are inconsisten: an lca for a copied edge could not be found");
+					throw new IllegalStateException("The graph and subgraph are inconsistent: an lca for a copied edge could not be found");
 				}
-				linkOwner = lca;
+				newOwner = lca;
 			}
-			BaseCompoundEdge newEdge = createMoveOfEdge(srcEdge, linkOwner.getChildCompoundGraph(),	newOutNode, newInNode);
+			BaseCompoundEdge newEdge = srcEdge;
+			// now we move the edge only if it's connecting nodes and parent have changed
+			if(!(newOwner.equals(oldOwner) && newInNode.equals(ends.getInNode()) && newOutNode.equals(ends.getOutNode()))){
+				newEdge = createMoveOfEdge(srcEdge, newOwner.getChildCompoundGraph(),	newOutNode, newInNode);
+				this.removalSubGraphFactory.addEdge(srcEdge);
+			}
 			this.subGraphFactory.addEdge(newEdge);
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see uk.ed.inf.graph.compound.base.ICompoundGraphCopyBuilder#copyEquivalentEdges()
+	 */
+	private void moveLinkedEdges(){
+		Iterator<BaseCompoundNode> nodeIter = this.sourceSubCigraph
+				.nodeIterator();
+		Set<Integer> visited = new HashSet<Integer>();
+		while (nodeIter.hasNext()) {
+			BaseCompoundNode srcNode = nodeIter.next();
+			Iterator<BaseCompoundEdge> edgeIter = srcNode.edgeIterator();
+			while (edgeIter.hasNext()) {
+				boolean foundLinkedNode = true;
+				BaseCompoundEdge srcEdge = edgeIter.next();
+				if (!visited.contains(srcEdge.getIndex())) {
+					visited.add(srcEdge.getIndex());
+					IDirectedPair<BaseCompoundNode, BaseCompoundEdge> ends = srcEdge.getConnectedNodes();
+					BaseCompoundNode newInNode = this.oldNewEquivList.get(ends.getInNode());
+					BaseCompoundNode newOutNode = this.oldNewEquivList.get(ends.getOutNode());
+					if(newInNode == null){
+						newInNode = ends.getInNode();
+					}
+					else if(newOutNode == null){
+						newOutNode = ends.getOutNode();
+					}
+					else{
+						foundLinkedNode = false;
+					}
+					if(foundLinkedNode){
+						BaseCompoundGraph ciGraph = this.destSubCigraph.getSuperGraph();
+						BaseCompoundNode lca = ciGraph.getLcaNode(newInNode, newOutNode);
+						if (lca == null) {
+							throw new IllegalStateException(
+							"The graph and subgraph are inconsistent: an lca for a copied edge could not be found");
+						}
+						BaseCompoundEdge newEdge = createMoveOfEdge(srcEdge, lca.getChildCompoundGraph(), newOutNode, newInNode);
+						this.removalSubGraphFactory.addEdge(srcEdge);
+						this.subGraphFactory.addEdge(newEdge);
+					}
+				}
+			}
 		}
 	}
 	

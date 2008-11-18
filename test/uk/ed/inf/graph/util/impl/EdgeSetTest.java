@@ -80,7 +80,7 @@ public class EdgeSetTest {
 
 	@Test
 	public final void testGetEdgesWith() {
-		SortedSet<Edge> egdeSortedSet = testEdgeSet.getEdgesWith(aNode) ;
+		SortedSet<Edge> egdeSortedSet = testEdgeSet.getEdgesWith(aNode, aNode) ;
 		
 		assertEquals ( "one edge" , NUMERIC[1] , egdeSortedSet.size() ) ;
 		assertTrue ( "contains anEdge" , egdeSortedSet.contains(anEdge)) ;
@@ -88,7 +88,7 @@ public class EdgeSetTest {
 
 	@Test
 	public final void testHasEdgesWith() {
-		assertTrue ( "has with aNode" , testEdgeSet.hasEdgesWith(aNode)) ;
+		assertTrue ( "has with aNode" , testEdgeSet.hasEdgesWith(aNode, aNode)) ;
 	}
 
 	@Test

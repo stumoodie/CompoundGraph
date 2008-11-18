@@ -1,6 +1,7 @@
 package uk.ed.inf.graph.util;
 
 import java.util.Iterator;
+import java.util.SortedSet;
 
 import uk.ed.inf.graph.basic.IBasicEdge;
 import uk.ed.inf.graph.basic.IBasicNode;
@@ -29,8 +30,29 @@ public final class SubgraphAlgorithms<
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.ISubgraphAlgorithms#isInducedSubgraph()
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean isInducedSubgraph(){
 		boolean retVal = true;
+		Iterator<N> graphNodeIter = this.basicSubgraph.getSuperGraph().nodeIterator();
+		while(graphNodeIter.hasNext() && retVal == true){
+			N thisNode = graphNodeIter.next();
+			if(this.basicSubgraph.containsNode(thisNode)){
+				Iterator<N> thatNodeIter = thisNode.connectedNodeIterator();
+				while(thatNodeIter.hasNext() && retVal == true){
+					N thatNode = thatNodeIter.next();
+					if(this.basicSubgraph.containsNode(thatNode)){
+						// subgraph contains both nodes. To be induced it must contain
+						// any edges that exist between them.
+						for(E edge : (SortedSet<E>) thisNode.getEdgesWith(thatNode)){
+							if(this.basicSubgraph.containsEdge(edge) == false){
+								retVal = false;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
 		Iterator<E> edgeIter = this.basicSubgraph.edgeIterator();
 		while(edgeIter.hasNext()){
 			E edge = edgeIter.next();

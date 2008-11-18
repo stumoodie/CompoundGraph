@@ -13,4 +13,6 @@ public interface ISubCompoundGraphFactory<
 	
 	ISubCompoundGraph<N, E> createInducedSubgraph();
 
+	ISubCompoundGraph<N, E> createPermissiveInducedSubgraph();
+
 }

@@ -7,6 +7,8 @@ import java.util.Set;
 import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
 public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFactory<BaseCompoundNode, BaseCompoundEdge> {
+	// added debug checks to graph
+	private static final boolean DEBUG = true;
 	private final BaseSubCompoundGraphBuilder builder;
 	private final Set<BaseCompoundNode> nodeList = new HashSet<BaseCompoundNode>();
 	private final Set<BaseCompoundEdge> edgeList = new HashSet<BaseCompoundEdge>();
@@ -74,12 +76,21 @@ public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFa
 	 * @return the newly created induced subgraph.    
 	 */
 	public BaseSubCompoundGraph createInducedSubgraph(){
+		BaseSubCompoundGraph retVal = this.createPermissiveInducedSubgraph();
+		if(DEBUG && !retVal.isInducedSubgraph()){
+			throw new IllegalStateException("The nodes and edges chosen in the factory would not permit the creation of an induced subgraph");
+		}
+		return retVal;
+	}
+	
+	public BaseSubCompoundGraph createPermissiveInducedSubgraph(){
 		builder.setNodeList(this.nodeList);
 		builder.setEdgeList(this.edgeList);
 		builder.expandChildNodes();
 		builder.addIncidentEdges();
 		builder.buildSubgraph();
-		return builder.getSubgraph();
+		BaseSubCompoundGraph retVal = builder.getSubgraph();
+		return retVal;
 	}
 	
 	public final BaseCompoundGraph getGraph(){
