@@ -32,5 +32,17 @@ public class SubCompoundGraphBuilder extends BaseSubCompoundGraphBuilder {
 	public CompoundGraph getGraph(){
 		return this.graph;
 	}
+
+	@Override
+	protected void addAdditionalEdges() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void addAdditionalNodes() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

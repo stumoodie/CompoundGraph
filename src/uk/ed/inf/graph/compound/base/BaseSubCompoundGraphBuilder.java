@@ -1,6 +1,5 @@
 package uk.ed.inf.graph.compound.base;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -14,8 +13,8 @@ import uk.ed.inf.graph.util.impl.NodeTreeIterator;
 public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBuilder<BaseCompoundNode, BaseCompoundEdge> {
 	private final Logger logger = Logger.getLogger(this.getClass());
 	
-	private Set<BaseCompoundNode> nodeList;
-	private Set<BaseCompoundEdge> edgeList;
+	private final Set<BaseCompoundNode> nodeList;
+	private final Set<BaseCompoundEdge> edgeList;
 
 	/**
 	 * Construct the builder, providing it with a list of nodes and edges with which to populate
@@ -26,16 +25,16 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 	 * @throws NullPointerException if any of the the parameters are null. 
 	 */
 	protected BaseSubCompoundGraphBuilder(){
-		this.nodeList = Collections.emptySet();
-		this.edgeList = Collections.emptySet();
+		this.nodeList = new HashSet<BaseCompoundNode>();
+		this.edgeList = new HashSet<BaseCompoundEdge>();
 	}
 	
 	public void setNodeList(Set<? extends BaseCompoundNode> nodeList){
-		this.nodeList = new HashSet<BaseCompoundNode>(nodeList);
+		this.nodeList.addAll(nodeList);
 	}
 	
 	public void setEdgeList(Set<? extends BaseCompoundEdge> edgeList){
-		this.edgeList = new HashSet<BaseCompoundEdge>(edgeList);
+		this.edgeList.addAll(edgeList);
 	}
 	
 	/**
@@ -117,6 +116,10 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 		return retVal;
 	}
 
+	protected abstract void addAdditionalNodes();
+	
+	protected abstract void addAdditionalEdges();
+	
 	/**
 	 * Build the new subgraph, based on the previous processing of the initial nodes and edges.
 	 */
@@ -142,4 +145,9 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 	public abstract BaseSubCompoundGraph getSubgraph();
 	
 	public abstract BaseCompoundGraph getGraph();
+
+	public boolean hasAdditionalNodes() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

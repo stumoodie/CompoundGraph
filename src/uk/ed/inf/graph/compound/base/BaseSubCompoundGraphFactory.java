@@ -61,6 +61,11 @@ public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFa
 		builder.setNodeList(this.nodeList);
 		builder.setEdgeList(this.edgeList);
 		builder.expandChildNodes();
+		builder.addAdditionalNodes();
+		builder.addAdditionalEdges();
+		if(builder.hasAdditionalNodes()){
+			builder.expandChildNodes();
+		}
 		builder.buildSubgraph();
 		return builder.getSubgraph();
 	}
@@ -76,7 +81,21 @@ public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFa
 	 * @return the newly created induced subgraph.    
 	 */
 	public BaseSubCompoundGraph createInducedSubgraph(){
-		BaseSubCompoundGraph retVal = this.createPermissiveInducedSubgraph();
+		builder.setNodeList(this.nodeList);
+		
+		// because we are creating an induced graph we ignore any edges that are selected since if they are
+		// not incident to the selected nodes they will result in a non-induced graph.
+		builder.expandChildNodes();
+		builder.addIncidentEdges();
+		builder.addAdditionalNodes();
+		// don't add additional edges since this must break "inducedness" of the graph if the edge is not already in the graph.  
+		if(builder.hasAdditionalNodes()){
+			// since new nodes have been added we need to recalculate children and incident edges. 
+			builder.expandChildNodes();
+			builder.addIncidentEdges();
+		}
+		builder.buildSubgraph();
+		BaseSubCompoundGraph retVal = builder.getSubgraph();
 		if(DEBUG && !retVal.isInducedSubgraph()){
 			throw new IllegalStateException("The nodes and edges chosen in the factory would not permit the creation of an induced subgraph");
 		}
@@ -88,6 +107,13 @@ public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFa
 		builder.setEdgeList(this.edgeList);
 		builder.expandChildNodes();
 		builder.addIncidentEdges();
+		builder.addAdditionalNodes();
+		builder.addAdditionalEdges();
+		if(builder.hasAdditionalNodes()){
+			// since new nodes have been added we need to recalculate children and incident edges. 
+			builder.expandChildNodes();
+			builder.addIncidentEdges();
+		}
 		builder.buildSubgraph();
 		BaseSubCompoundGraph retVal = builder.getSubgraph();
 		return retVal;
