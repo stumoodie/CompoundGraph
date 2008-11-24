@@ -12,7 +12,6 @@ import java.util.NoSuchElementException;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
@@ -163,7 +162,7 @@ public class CompoundGraphIntegrationTest {
 		assertTrue("expected root node iterator", iter.hasNext() == false);
 	}
 
-	@Ignore @Test
+	@Test
 	public final void testCopyConstructor(){
 		CompoundGraph testGraphFromCopyConstructor = new CompoundGraph ( testInstance) ;
 		
@@ -713,7 +712,42 @@ public class CompoundGraphIntegrationTest {
 		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addNode(node6) ;
 		SubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
+		assertTrue("is induced", ordinarySubGraph.isInducedSubgraph()) ;
+		assertTrue("is consistent", ordinarySubGraph.isConsistentSnapShot()) ;
 		assertFalse("cannot move to same destination", this.node2.getChildCompoundGraph().canMoveHere(ordinarySubGraph));		
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public final void testMoveInducedToSameChildGraphSubGraph () throws Exception 
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node6) ;
+		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		assertTrue("is induced", inducedSubGraph.isInducedSubgraph()) ;
+		assertTrue("is consistent", inducedSubGraph.isConsistentSnapShot()) ;
+		node6.getParent().getChildCompoundGraph().moveHere(inducedSubGraph) ;
+	}
+	
+	@Test
+	public final void testCanMoveInducedToSameChildGraphSubGraph () throws Exception 
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node6) ;
+		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		assertTrue("is induced", inducedSubGraph.isInducedSubgraph()) ;
+		assertTrue("is consistent", inducedSubGraph.isConsistentSnapShot()) ;
+		assertFalse("cannot move to same node", node6.getParent().getChildCompoundGraph().canMoveHere(inducedSubGraph)) ;
+	}
+	
+	@Test
+	public final void testCanMoveInducedToSameChildGraphSubGraphWhenRootIsParent () throws Exception 
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node1) ;
+		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		assertTrue("is induced", inducedSubGraph.isInducedSubgraph()) ;
+		assertTrue("is consistent", inducedSubGraph.isConsistentSnapShot()) ;
+		assertFalse("cannot move to same root node", node1.getParent().getChildCompoundGraph().canMoveHere(inducedSubGraph)) ;
 	}
 	
 	@Test

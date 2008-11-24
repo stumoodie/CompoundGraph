@@ -157,9 +157,13 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 		return this.getNodeTree().size();
 	}
 
+	
+	public boolean canRemoveSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph){
+		return subgraph != null && subgraph.getSuperGraph().equals(this) && subgraph.isConsistentSnapShot();
+	}
+	
 	public final void removeSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
-		if(subgraph == null) throw new IllegalArgumentException("subgraph cannot be null");
-		if(subgraph.getSuperGraph() != this) throw new IllegalArgumentException("The subgraph must belong to this graph");
+		if(!this.canRemoveSubgraph(subgraph)) throw new IllegalArgumentException("subgraph does not satify canRemoveSubgraph()");
 		removeEdges(subgraph.edgeIterator());
 		removeNodes(subgraph.nodeIterator());
 	}

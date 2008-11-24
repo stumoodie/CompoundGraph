@@ -28,7 +28,7 @@ public class NodeTest {
 	private static EdgeFactory edgeFactory ;
 	
 //	private static final int NODE_INDEX_ONE = 1 ;
-	private static final int NODE_INDEX_TWO = 2 ;
+//	private static final int NODE_INDEX_TWO = 2 ;
 //	private static final int NODE_INDEX_THREE = 3 ;
 //	private static final int EDGE_INDEX_ONE = 1 ;
 //	private static final int EDGE_INDEX_TWO = 2 ;
