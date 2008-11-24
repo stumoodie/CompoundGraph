@@ -37,6 +37,14 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 		this.edgeList.addAll(edgeList);
 	}
 	
+	protected Set<BaseCompoundNode> getNodeList(){
+	    return this.nodeList;
+	}
+	
+    protected Set<BaseCompoundEdge> getEdgeList(){
+        return this.edgeList;
+    }
+    
 	/**
 	 * Expand the nodes provided to the builder so that all the contents of their compound graphs
 	 * are included in the new subgraph. This is done recursively so that the branches from each of
