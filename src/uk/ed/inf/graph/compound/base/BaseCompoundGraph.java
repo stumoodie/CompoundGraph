@@ -2,6 +2,8 @@ package uk.ed.inf.graph.compound.base;
 
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
+
 import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.IModifiableCompoundGraph;
@@ -16,6 +18,7 @@ import uk.ed.inf.tree.ITree;
 public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNode, BaseCompoundEdge>,
 		IRestorableGraph<BaseCompoundNode, BaseCompoundEdge>,
 		IModifiableCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
+    private final Logger logger = Logger.getLogger(this.getClass());
 	private final BaseCompoundGraphStateHandler stateHandler;
 	private BaseGraphCopyBuilder copyBuilder;
 	
@@ -270,4 +273,33 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	public abstract BaseCompoundEdgeFactory edgeFactory();
 
 	public abstract BaseSubCompoundGraphFactory subgraphFactory();
+	
+	   /**
+     * A hook method that should be used to provide addition validation for the class inheriting from 
+     * this one.
+     * @return
+     */
+    protected abstract boolean hasPassedAdditionalValidation();
+	
+	public boolean isValid() {
+	    boolean retVal = true;
+	    retVal = this.getRootNode().getEdgeInList().getUnfilteredEdgeSet().isEmpty()
+	        && this.getRootNode().getEdgeOutList().getUnfilteredEdgeSet().isEmpty()
+	        && this.getRootNode().getParent() == this.getRootNode()
+	        && this.getRootNode().isRemoved() == false;
+	    if(retVal) {
+	        retVal = this.getRootNode().getChildCompoundGraph().isValid();
+	    }
+	    else {
+	        logger.error("Graph Invalid: root node is inconsistent: " + this.getRootNode());
+	    }
+	    if(retVal) {
+	        retVal = this.hasPassedAdditionalValidation();
+	    }
+	    else {
+	        logger.error("Graph Invalid: addition validation from super class has failed");
+	    }
+	    return retVal;
+	}
+
 }

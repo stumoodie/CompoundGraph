@@ -22,4 +22,9 @@ public class ChildCompoundGraph extends ArchetypalChildCompoundGraph {
 	public CompoundNodeFactory nodeFactory() {
 		return new CompoundNodeFactory(this.getRootNode());
 	}
+
+    @Override
+    protected boolean hasPassedAdditionalValidation() {
+        return true;
+    }
 }

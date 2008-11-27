@@ -27,4 +27,14 @@ public class CompoundGraphMoveBuilder extends BaseGraphMoveBuilder {
 		return edgefact.createEdge();
 	}
 
+    @Override
+    protected void additionalInitialisation() {
+        
+    }
+
+    @Override
+    protected void additionalMoveTasks() {
+        
+    }
+
 }

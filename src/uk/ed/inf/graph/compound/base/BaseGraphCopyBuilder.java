@@ -47,13 +47,40 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder<
 		this.destSubCigraph = (BaseChildCompoundGraph)childCompoundGraph;
 	}
 	
+	/**
+	 * Gets the equivalent copied node to the specified node, if it exists. 
+	 * @param originalNode the original node that we want to get the copy of.
+	 * @return the copied node, or null if none exists.
+	 */
+	protected final BaseCompoundNode getCopiedNode(BaseCompoundNode originalNode) {
+	    return this.oldNewEquivList.get(originalNode);
+	}
+	
 	public void makeCopy(){
 		this.oldNewEquivList.clear();
 		this.visited.clear();
 		this.subGraphFactory = this.destSubCigraph.getSuperGraph().subgraphFactory();
+		additionalInitialisation();
 		copyNodes();
 		copyEquivalentEdges();
+		additionalCopyTasks();
+		// avoid holding onto additional unneeded memory
+		this.oldNewEquivList.clear();
+		this.visited.clear();
 	}
+	
+	
+	/**
+	 * Provides a hook for super classes to initialise its data-structures before
+	 * copying begins, but after this classes copy data-structures have been initialised.         
+	 */
+	protected abstract void additionalInitialisation(); 
+	
+	/**
+	 * Provide a hook for super classes to perform additional operations after this class has
+	 * completed copying the compound graph.
+	 */
+	protected abstract void additionalCopyTasks();
 	
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.compound.base.ICompoundGraphCopyBuilder#copyNodes()

@@ -6,10 +6,9 @@ import uk.ed.inf.graph.directed.IDirectedPair;
 import uk.ed.inf.graph.state.IRestorableGraphElement;
 
 public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode, BaseCompoundEdge>, IRestorableGraphElement {
-	private boolean removed;
 	
 	protected BaseCompoundEdge(){
-		this.removed = false;
+		this.setRemoved(false);
 	}
 	
 //	protected abstract void setInNode(BaseCompoundNode outNode);
@@ -30,7 +29,14 @@ public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode
 	
 	protected abstract BaseCompoundNode getOutNode();
 	
-	/**
+    /**
+     * This should be used to set the removal status variable only. No other actions#
+     * should be performed here. To perform an action on removal then use {@link #removalAction(boolean)}. 
+     * @param removed the removal status: true means the edge is removed.
+     */
+    protected abstract void setRemoved(boolean removed);
+
+    /**
 	 * Ensures that edge is added to Out Node 
 	 * @throws IllegalStateException if getOutNode() == null  
 	 */
@@ -54,12 +60,10 @@ public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode
 		return this.getIndex() < o.getIndex() ? -1 : (this.getIndex() == o.getIndex() ? 0 : 1);
 	}
 
-	public final boolean isRemoved() {
-		return this.removed;
-	}
+	public abstract boolean isRemoved();
 	
 	public final void markRemoved(boolean removed){
-		this.removed = removed;
+		this.setRemoved(removed);
 		removalAction(removed);
 	}
 

@@ -8,12 +8,13 @@ import java.util.List;
 import uk.ed.inf.graph.basic.IBasicEdge;
 import uk.ed.inf.graph.basic.IBasicNode;
 import uk.ed.inf.graph.util.IFilterCriteria;
+import uk.ed.inf.graph.util.IFilteredNodeSet;
 import uk.ed.inf.graph.util.INodeSet;
 
 public class FilteredNodeSet<
 		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 		E extends IBasicEdge<N, E>
-> implements INodeSet<N, E> {
+> implements IFilteredNodeSet<N, E> {
 	
 	private final INodeSet<N, E> nodeSet;
 	private final IFilterCriteria<N> criteria;

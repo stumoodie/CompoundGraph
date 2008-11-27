@@ -7,8 +7,8 @@ import java.util.TreeSet;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.state.IRestorableGraphElement;
 import uk.ed.inf.graph.util.IDirectedEdgeSet;
-import uk.ed.inf.graph.util.IEdgeSet;
 import uk.ed.inf.graph.util.IFilterCriteria;
+import uk.ed.inf.graph.util.IFilteredEdgeSet;
 import uk.ed.inf.graph.util.impl.ConnectedNodeIterator;
 import uk.ed.inf.graph.util.impl.FilteredEdgeSet;
 import uk.ed.inf.tree.AncestorTreeIterator;
@@ -16,16 +16,16 @@ import uk.ed.inf.tree.LevelOrderTreeIterator;
 
 public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode, BaseCompoundEdge>, IRestorableGraphElement {
 //	private final BaseCompoundNode parent;
-	private IEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeInList;
-	private IEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeOutList;
+	private IFilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeInList;
+	private IFilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeOutList;
 //	private final BaseCompoundGraph superGraph; 
 //	private final int index;
-	private boolean removed;
+//	private boolean removed;
 	
 	protected BaseCompoundNode(){
 		this.edgeInList = null;
 		this.edgeOutList = null;
-		this.removed = false;
+		this.setRemoved(false);
 	}
 	
 	
@@ -33,6 +33,10 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		return this.getChildCompoundGraph().nodeIterator();
 	}
 
+	/**
+	 * The parent node cannot be null and should be the root node if the current node is the root
+	 * node. This follows the standard conversion for tree data structures.
+	 */
 	public abstract BaseCompoundNode getParent();
 	
 	protected final void createInEdgeSet(IDirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet){
@@ -43,14 +47,20 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		this.edgeOutList = new FilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge>(edgeSet, new CiEdgeExistanceCriteria());
 	}
 
-	protected final IEdgeSet<BaseCompoundNode, BaseCompoundEdge> getEdgeInList(){
+	protected final IFilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> getEdgeInList(){
 		return this.edgeInList;
 	}
 
-	protected final IEdgeSet<BaseCompoundNode, BaseCompoundEdge> getEdgeOutList(){
+	protected final IFilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> getEdgeOutList(){
 		return this.edgeOutList;
 	}
 
+	/**
+	 * This should be used to set the removal status variable only. No other actions#
+	 * should be performed here. To perform an action on removal then use {@link #removalAction(boolean)}. 
+	 * @param removed the removal status: true means the nodes is removed.
+	 */
+	protected abstract void setRemoved(boolean removed);
 	
 	public abstract BaseChildCompoundGraph getChildCompoundGraph();
 
@@ -163,12 +173,10 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		return this.getIndex() < o.getIndex() ? -1 : (this.getIndex() == o.getIndex() ? 0 : 1);
 	}
 
-	public final boolean isRemoved() {
-		return this.removed;
-	}
+	public abstract boolean isRemoved();
 
 	public final void markRemoved(boolean removed){
-		this.removed = removed;
+		this.setRemoved(removed);
 		this.removalAction(removed);
 	}
 	

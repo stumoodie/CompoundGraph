@@ -11,11 +11,12 @@ import uk.ed.inf.graph.basic.IBasicEdge;
 import uk.ed.inf.graph.basic.IBasicNode;
 import uk.ed.inf.graph.util.IEdgeSet;
 import uk.ed.inf.graph.util.IFilterCriteria;
+import uk.ed.inf.graph.util.IFilteredEdgeSet;
 
 public class FilteredEdgeSet <
 		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 		E extends IBasicEdge<N, E>
-> implements IEdgeSet<N, E> {
+> implements IFilteredEdgeSet<N, E> {
 
 	private final IEdgeSet<N, E> edgeSet;
 	private final IFilterCriteria<E> criteria;

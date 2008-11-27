@@ -53,13 +53,31 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 		this.visited.clear();
 		this.subGraphFactory = this.destSubCigraph.getSuperGraph().subgraphFactory();
 		this.removalSubGraphFactory = this.destSubCigraph.getSuperGraph().subgraphFactory();
+		this.additionalInitialisation();
 		moveNodes();
 		moveEquivalentEdges();
 		moveLinkedEdges();
+		this.additionalMoveTasks();
 		this.sourceSubCigraph.getSuperGraph().removeSubgraph(this.removalSubGraphFactory.createSubgraph());
+        // avoid holding onto additional unneeded memory
+        this.oldNewEquivList.clear();
+        this.visited.clear();
+        this.removalSubGraphFactory = null;
 	}
 	
-	/* (non-Javadoc)
+    /**
+     * Provides a hook for super classes to initialise its data-structures before
+     * copying begins, but after this classes move data-structures have been initialised.         
+     */
+    protected abstract void additionalInitialisation(); 
+    
+    /**
+     * Provide a hook for super classes to perform additional operations after this class has
+     * completed moving the compound graph.
+     */
+    protected abstract void additionalMoveTasks();
+
+    /* (non-Javadoc)
 	 * @see uk.ed.inf.graph.compound.base.ICompoundGraphCopyBuilder#copyNodes()
 	 */
 	private void moveNodes(){

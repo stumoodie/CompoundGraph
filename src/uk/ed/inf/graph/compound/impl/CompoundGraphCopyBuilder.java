@@ -26,4 +26,16 @@ public class CompoundGraphCopyBuilder extends BaseGraphCopyBuilder {
 		edgefact.setPair(outNode, inNode);
 		return edgefact.createEdge();
 	}
+
+    @Override
+    protected void additionalCopyTasks() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected void additionalInitialisation() {
+        // TODO Auto-generated method stub
+        
+    }
 }

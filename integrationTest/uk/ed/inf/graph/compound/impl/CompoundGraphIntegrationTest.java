@@ -147,6 +147,11 @@ public class CompoundGraphIntegrationTest {
 	}
 
 	@Test
+	public void testValidity() {
+	    assertTrue("is valid", this.testInstance.isValid());
+	}
+	
+	@Test
 	public final void testCompoundGraph() {
 		CompoundGraph testEmptyInstance = new CompoundGraph();
 		assertEquals("empty edges", EXPECTED_INITIAL_EDGES, testEmptyInstance.getNumEdges());

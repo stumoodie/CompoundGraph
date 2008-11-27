@@ -2,6 +2,8 @@ package uk.ed.inf.graph.compound.base;
 
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
+
 import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.IModifiableChildCompoundGraph;
@@ -15,6 +17,7 @@ import uk.ed.inf.graph.util.impl.FilteredEdgeSet;
 import uk.ed.inf.graph.util.impl.FilteredNodeSet;
 
 public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<BaseCompoundNode, BaseCompoundEdge>,	IModifiableChildCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
+    private final Logger logger = Logger.getLogger(this.getClass());
 	private final BaseGraphCopyBuilder copyBuilder;
 	private final BaseGraphMoveBuilder moveBuilder;
 	private FilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet;
@@ -272,5 +275,76 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 	public BaseSubCompoundGraph getCopiedComponents(){
 		return this.copyBuilder.getCopiedComponents();
 	}
+	
+	/**
+	 * A hook method that should be used to provide addition validation for the class inheriting from 
+	 * this one.
+	 * @return
+	 */
+	protected abstract boolean hasPassedAdditionalValidation();
 
+	public boolean isValid() {
+        boolean retVal = true;
+        BaseCompoundGraph graph = this.getSuperGraph();
+        BaseCompoundNode rootNode = this.getRootNode();
+        retVal = rootNode.getChildCompoundGraph().equals(this);
+        if (retVal) {
+            for (BaseCompoundNode node : this.nodeSet.getUnfilteredNodeSet()) {
+                retVal = node.getParent().getChildCompoundGraph().equals(this)
+                        && node.getGraph().equals(graph)
+                        && node.getParent().equals(rootNode);
+                if (retVal) {
+                    // now do the same on this nodes child graph
+                    retVal = node.getChildCompoundGraph().isValid();
+                } else {
+                    logger
+                            .error("Graph Invalid: node: "
+                                    + node
+                                    + " has inconsistent relationships or belongs to another graph");
+                    break;
+                }
+            }
+        }
+        if (retVal) {
+            for (BaseCompoundEdge edge : this.edgeSet.getUnfilteredEdgeSet()) {
+                BaseCompoundNode inNode = edge.getInNode();
+                BaseCompoundNode outNode = edge.getOutNode();
+                if (edge.getOwningChildGraph().equals(this)) {
+                    if (inNode != null && outNode != null) {
+                        retVal = inNode.getEdgeInList().getUnfilteredEdgeSet()
+                                .contains(edge)
+                                && outNode.getEdgeOutList()
+                                        .getUnfilteredEdgeSet().contains(edge)
+                                && graph.getLcaNode(inNode, outNode).equals(
+                                        rootNode);
+                        if (!retVal) {
+                            logger
+                                    .error("Graph invalid: edge: "
+                                            + edge
+                                            + " has inconsistent nodes or has the wrong owning child graph (not LCA).");
+                        }
+                    } else {
+                        logger
+                                .error("Graph invalid: edge: "
+                                        + edge
+                                        + " has one or node null nodes assigned to it.");
+                        retVal = false;
+                        break;
+                    }
+                } else {
+                    logger.equals("Graph Invalid: edge " + edge
+                            + " has in inconsistent child graph assignment");
+                }
+            }
+        }
+        logger.debug("Child Compound Graph: " + this + " has validity = "
+                + retVal);
+        if(retVal) {
+            retVal = this.hasPassedAdditionalValidation();
+        }
+        else {
+            logger.error("Graph Invalid: addition validation from super class has failed");
+        }
+        return retVal;
+    }
 }

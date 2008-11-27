@@ -27,4 +27,12 @@ public class IndexCounter {
 		return this.indexCntr.get();
 	}
 	
+	@Override
+	public String toString() {
+	    StringBuilder builder = new StringBuilder(this.getClass().getSimpleName());
+	    builder.append("(indexCntr=");
+	    builder.append(this.indexCntr.get());
+	    builder.append(")");
+	    return builder.toString();
+	}
 }

@@ -45,4 +45,9 @@ public class CompoundGraph extends ArchetypalCompoundGraph {
 		this.rootNode = new CompoundNode(this, newIndexValue);
 	}
 
+    @Override
+    protected boolean hasPassedAdditionalValidation() {
+        return true;
+    }
+
 }

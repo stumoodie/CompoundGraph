@@ -10,7 +10,7 @@ public class CompoundNode extends ArchetypalCompoundNode {
 	private ChildCompoundGraph childCompoundGraph;
 //	private final CompoundGraph superGraph; 
 //	private final int index;
-//	private boolean removed;
+	private boolean removed;
 //	private final INodeColourHandler<CompoundNode, CompoundEdge> colour;
 	
 	CompoundNode(CompoundGraph superGraph, int index){
@@ -39,4 +39,14 @@ public class CompoundNode extends ArchetypalCompoundNode {
 	@Override
 	protected void removalAction(boolean removed) {
 	}
+
+	@Override
+    protected void setRemoved(boolean removed) {
+        this.removed = removed;
+    }
+    
+    @Override
+    public boolean isRemoved() {
+        return this.removed;
+    }
 }
