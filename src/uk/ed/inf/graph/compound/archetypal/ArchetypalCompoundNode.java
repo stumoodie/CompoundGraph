@@ -26,6 +26,7 @@ public abstract class ArchetypalCompoundNode extends BaseCompoundNode {
 		}
 		else{
 			this.parent = parent;
+			this.parent.getChildCompoundGraph().addNewNode(this);
 		}
 		createInEdgeSet(new DirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge>());
 		createOutEdgeSet(new DirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge>());

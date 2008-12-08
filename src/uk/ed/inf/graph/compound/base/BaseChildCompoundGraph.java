@@ -155,11 +155,11 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		return false;
 	}
 
-	final void addNewNode(BaseCompoundNode newNode){
+	protected void addNewNode(BaseCompoundNode newNode){
 		this.nodeSet.add(newNode);
 	}
 	
-	final void addNewEdge(BaseCompoundEdge newEdge){
+	protected void addNewEdge(BaseCompoundEdge newEdge){
 		this.edgeSet.add(newEdge);
 	}
 

@@ -15,12 +15,8 @@ import uk.ed.inf.tree.AncestorTreeIterator;
 import uk.ed.inf.tree.LevelOrderTreeIterator;
 
 public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode, BaseCompoundEdge>, IRestorableGraphElement {
-//	private final BaseCompoundNode parent;
 	private IFilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeInList;
 	private IFilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeOutList;
-//	private final BaseCompoundGraph superGraph; 
-//	private final int index;
-//	private boolean removed;
 	
 	protected BaseCompoundNode(){
 		this.edgeInList = null;
@@ -241,6 +237,22 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		return new LevelOrderTreeIterator<BaseCompoundNode>(this);
 	}
 
+	public boolean isAncestor(BaseCompoundNode testNode) {
+	    boolean retVal = false;
+	    if(testNode != null) {
+	        retVal = this.getGraph().getNodeTree().isAncestor(this, testNode);
+	    }
+	    return retVal;
+	}
+	
+	public boolean isDescendent(BaseCompoundNode testNode) {
+        boolean retVal = false;
+        if(testNode != null) {
+            retVal = this.getGraph().getNodeTree().isDescendant(this, testNode);
+        }
+        return retVal;
+	}
+	
 	private class CombinedEdgeIterator implements Iterator<BaseCompoundEdge> {
 		private final Iterator<BaseCompoundEdge> inEdgeIterator;
 		private final Iterator<BaseCompoundEdge> outEdgeIterator;

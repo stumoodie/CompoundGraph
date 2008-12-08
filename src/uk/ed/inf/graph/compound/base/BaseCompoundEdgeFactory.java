@@ -24,7 +24,7 @@ public abstract class BaseCompoundEdgeFactory implements ICompoundEdgeFactory<Ba
 		BaseCompoundNode lcmNode = this.getGraph().getLcaNode(this.getOutNode(), this.getInNode());
 		int cntr = this.getGraph().getEdgeCounter().nextIndex();
 		BaseCompoundEdge newEdge = newEdge(lcmNode.getChildCompoundGraph(), cntr, this.getOutNode(), this.getInNode()); 
-		lcmNode.getChildCompoundGraph().addNewEdge(newEdge);
+//		lcmNode.getChildCompoundGraph().addNewEdge(newEdge);
 		return newEdge;
 	}
 

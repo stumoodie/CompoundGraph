@@ -24,5 +24,14 @@ public abstract class ArchetypalChildCompoundGraph extends BaseChildCompoundGrap
 	public ArchetypalCompoundNode getRootNode() {
 		return this.root;
 	}
+	
+	@Override
+	protected void addNewNode(BaseCompoundNode node) {
+	    super.addNewNode(node);
+	}
 
+	@Override
+	protected void addNewEdge(BaseCompoundEdge edge) {
+	    super.addNewEdge(edge);
+	}
 }

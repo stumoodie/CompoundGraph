@@ -33,7 +33,7 @@ public abstract class BaseChildCompoundEdgeFactory implements ICompoundChildEdge
 	public BaseCompoundEdge createEdge() {
 		int idx = this.getGraph().getEdgeCounter().nextIndex();
 		BaseCompoundEdge newCompoundEdge = newEdge(this.getOwningChildGraph(), idx, this.getOutNode(), this.getInNode());
-		this.getOwningChildGraph().addNewEdge(newCompoundEdge) ;
+//		this.getOwningChildGraph().addNewEdge(newCompoundEdge) ;
 		return newCompoundEdge ;
 	}
 

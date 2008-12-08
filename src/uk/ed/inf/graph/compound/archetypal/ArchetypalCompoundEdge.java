@@ -17,6 +17,7 @@ public abstract class ArchetypalCompoundEdge extends BaseCompoundEdge {
 		this.changeInEdge();
 		this.outNode = outNode;
 		this.changeOutNode();
+		this.owningSubgraph.addNewEdge(this);
 	}
 	
 	@Override

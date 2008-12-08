@@ -14,4 +14,8 @@ public interface ICompoundNode<
 	 * @return
 	 */
 	IChildCompoundGraph<N, E> getChildCompoundGraph();
+	
+	boolean isDescendent(N testNode);
+
+    boolean isAncestor(N testNode);
 }
