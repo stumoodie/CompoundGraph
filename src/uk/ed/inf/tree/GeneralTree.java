@@ -80,7 +80,8 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 	 */
 	public boolean isDescendant(T startNode, T testNode){
 		boolean retVal = false;
-		Iterator<T> iter = this.levelOrderIterator();
+		Iterator<T> iter = new LevelOrderTreeIterator<T>(startNode);
+		iter.next(); // skip startNode - something cannot be a descendant of itself
 		while(iter.hasNext() && retVal == false){
 			T node = iter.next();
 			if(node.equals(testNode)){
