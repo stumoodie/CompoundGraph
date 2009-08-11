@@ -16,8 +16,6 @@ limitations under the License.
 package uk.ed.inf.graph.compound.base;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import uk.ed.inf.bitstring.BitStringBuffer;
 import uk.ed.inf.bitstring.IBitString;

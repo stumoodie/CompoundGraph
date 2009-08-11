@@ -305,17 +305,17 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
         retVal = rootNode.getChildCompoundGraph().equals(this);
         if (retVal) {
             for (BaseCompoundNode node : this.nodeSet.getUnfilteredNodeSet()) {
-                retVal = node.getParent().getChildCompoundGraph().equals(this)
+                if(!(retVal = node.getParent().getChildCompoundGraph().equals(this)
                         && node.getGraph().equals(graph)
-                        && node.getParent().equals(rootNode);
-                if (retVal) {
-                    // now do the same on this nodes child graph
-                    retVal = node.getChildCompoundGraph().isValid();
-                } else {
-                    logger
-                            .error("Graph Invalid: node: "
-                                    + node
-                                    + " has inconsistent relationships or belongs to another graph");
+                        && node.getParent().equals(rootNode))){
+                    logger.error("Graph Invalid: node: " + node
+                            + " has inconsistent relationships or belongs to another graph");
+                    retVal = false;
+                    break;
+                }
+                else if(!node.getChildCompoundGraph().isValid()){
+                    logger.error("Invalid child graph: " + node);
+                    retVal = false;
                     break;
                 }
             }
@@ -326,17 +326,13 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
                 BaseCompoundNode outNode = edge.getOutNode();
                 if (edge.getOwningChildGraph().equals(this)) {
                     if (inNode != null && outNode != null) {
-                        retVal = inNode.getEdgeInList().getUnfilteredEdgeSet()
-                                .contains(edge)
-                                && outNode.getEdgeOutList()
-                                        .getUnfilteredEdgeSet().contains(edge)
-                                && graph.getLcaNode(inNode, outNode).equals(
-                                        rootNode);
-                        if (!retVal) {
-                            logger
-                                    .error("Graph invalid: edge: "
-                                            + edge
-                                            + " has inconsistent nodes or has the wrong owning child graph (not LCA).");
+                        if(!(inNode.getEdgeInList().getUnfilteredEdgeSet().contains(edge)
+                                && outNode.getEdgeOutList().getUnfilteredEdgeSet().contains(edge)
+                                && graph.getLcaNode(inNode, outNode).equals(rootNode))){
+                            logger.error("Graph invalid: edge: " + edge
+                                    + " has inconsistent nodes or has the wrong owning child graph (not LCA).");
+                            retVal = false;
+                            break;
                         }
                     } else {
                         logger
@@ -349,16 +345,16 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
                 } else {
                     logger.equals("Graph Invalid: edge " + edge
                             + " has in inconsistent child graph assignment");
+                    retVal = false;
+                    break;
                 }
             }
         }
         logger.debug("Child Compound Graph: " + this + " has validity = "
                 + retVal);
-        if(retVal) {
-            retVal = this.hasPassedAdditionalValidation();
-        }
-        else {
+        if(!this.hasPassedAdditionalValidation()){
             logger.error("Graph Invalid: addition validation from super class has failed");
+        	retVal = false;
         }
         return retVal;
     }
