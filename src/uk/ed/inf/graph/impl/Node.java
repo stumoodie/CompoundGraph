@@ -20,6 +20,9 @@ import java.util.SortedSet;
 
 import org.apache.log4j.Logger;
 
+import uk.ed.inf.graph.basic.listeners.GraphStructureChangeType;
+import uk.ed.inf.graph.basic.listeners.INodeChangeListener;
+import uk.ed.inf.graph.basic.listeners.NodeStructureChangeListenee;
 import uk.ed.inf.graph.state.IRestorableGraphElement;
 import uk.ed.inf.graph.undirected.IUndirectedNode;
 import uk.ed.inf.graph.util.IFilterCriteria;
@@ -33,6 +36,7 @@ public final class Node implements IUndirectedNode<Node, Edge>, IRestorableGraph
 	private final Graph owningGraph;
 	private final FilteredEdgeSet<Node, Edge> edgeSet;
 	private boolean removed;
+	private final NodeStructureChangeListenee<Node, Edge> listenableHelper;
 	
 	/**
 	 * Creates a new node belonging to a graph. Note the node is not added to the
@@ -56,6 +60,7 @@ public final class Node implements IUndirectedNode<Node, Edge>, IRestorableGraph
 			}
 		});
 		this.removed = false;
+		this.listenableHelper = new NodeStructureChangeListenee<Node, Edge>(this);
 		this.logger.debug("Created new node idx=" + index);
 	}
 	
@@ -99,7 +104,12 @@ public final class Node implements IUndirectedNode<Node, Edge>, IRestorableGraph
 
 	void addEdge(Edge edge){
 		this.edgeSet.add(edge);
+		this.listenableHelper.notifyNodeStructureChange(GraphStructureChangeType.ADDED, edge);
 		this.logger.debug("node(" + index + "): added edge=" + edge);
+	}
+	
+	void removedEdge(Edge edge){
+		this.listenableHelper.notifyNodeStructureChange(GraphStructureChangeType.DELETED, edge);
 	}
 	
 	public int compareTo(Node o) {
@@ -145,10 +155,32 @@ public final class Node implements IUndirectedNode<Node, Edge>, IRestorableGraph
 	public void markRemoved(boolean removeFlag) {
 		this.logger.debug("node id(" + this.index + "), changing removal status to: " + removeFlag);
 		this.removed = removeFlag;
+		this.listenableHelper.setListenersEnabled(!removeFlag);
 	}
 	
 	@Override
 	public String toString(){
-		return "[" + this.getClass().getName() + ": index=" + this.index + ", removed=" + this.removed + "]";
+		StringBuilder buf = new StringBuilder(this.getClass().getSimpleName());
+		buf.append("(idx=");
+		buf.append(this.index);
+		buf.append(",removed=");
+		buf.append(this.removed);
+		buf.append(")");
+		return buf.toString();
+	}
+
+
+	public void addNodeChangeListener(INodeChangeListener<Node, Edge> listener) {
+		this.listenableHelper.addNodeChangeListener(listener);
+	}
+
+
+	public Iterator<INodeChangeListener<Node, Edge>> nodeChangeListenerIterator() {
+		return this.listenableHelper.nodeChangeListenerIterator();
+	}
+
+
+	public void removeNodeChangeListener(INodeChangeListener<Node, Edge> listener) {
+		this.listenableHelper.removeNodeChangeListener(listener);
 	}
 }

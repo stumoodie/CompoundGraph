@@ -151,6 +151,7 @@ public final class Subgraph implements IUndirectedSubgraph<Node, Edge> {
 
 	void addNode(Node node) {
 		this.nodeList.add(node);
+		this.adjList.addNode(node.getIndex());
 	}
 	
 	void addConnectedEdge(Edge edge){

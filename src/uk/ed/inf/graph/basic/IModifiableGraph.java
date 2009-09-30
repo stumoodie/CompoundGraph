@@ -15,10 +15,12 @@ limitations under the License.
 */
 package uk.ed.inf.graph.basic;
 
+import uk.ed.inf.graph.basic.listeners.IGraphChangeListenee;
+
 public interface IModifiableGraph<
 		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 		E extends IBasicEdge<N, E>
-> {
+> extends IGraphChangeListenee<N, E> {
 
 	/**
 	 * Gets the nodeFactory for this class. This factory is a singleton so this method must always

@@ -126,7 +126,6 @@ public class GraphTest {
 	
 	@Test
 	public final void testGraphSetupAsExpected(){
-		// FIXME there is a bug in the getDegree method. Self edges count as one instead of 2. 
 		assertEquals("empty has no nodes", this.testEmptyInstance.getNumNodes(), EXPECTED_EMPTY_NODES);
 		assertEquals("empty has no edges", this.testEmptyInstance.getNumEdges(), EXPECTED_EMPTY_EDGES);
 		assertEquals("expected test nodes", this.testInstance.getNumNodes(), EXPECTED_NUM_NODES);
@@ -246,7 +245,6 @@ public class GraphTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testContainsAfterNodeRemoval(){
-		// FIXME there is a bug in the getDegree method. Self edges count as one instead of 2. 
 		final IBasicSubgraph<Node, Edge> mockSubgraph = mockery.mock(IBasicSubgraph.class, "mockSubgraph");
 		mockery.checking(new Expectations() {{
 			atLeast(1).of(mockSubgraph).nodeIterator(); will(returnIterator(node1, node4));
@@ -280,7 +278,6 @@ public class GraphTest {
 	@SuppressWarnings("unchecked")
 	@Test(expected=IllegalArgumentException.class)
 	public final void testContainsAfterNodeRemovalWithDifferentSupergraph(){
-		// FIXME there is a bug in the getDegree method. Self edges count as one instead of 2. 
 		final IBasicSubgraph<Node, Edge> mockSubgraph = mockery.mock(IBasicSubgraph.class, "mockSubgraph");
 		mockery.checking(new Expectations() {{
 			allowing(mockSubgraph).nodeIterator(); will(returnIterator(node1, node4));

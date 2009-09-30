@@ -28,6 +28,9 @@ import uk.ed.inf.graph.basic.IBasicEdge;
 import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.basic.IBasicSubgraph;
 import uk.ed.inf.graph.basic.IModifiableGraph;
+import uk.ed.inf.graph.basic.listeners.GraphStructureChangeListenee;
+import uk.ed.inf.graph.basic.listeners.GraphStructureChangeType;
+import uk.ed.inf.graph.basic.listeners.IGraphChangeListener;
 import uk.ed.inf.graph.state.GraphStateHandler;
 import uk.ed.inf.graph.state.IGraphState;
 import uk.ed.inf.graph.state.IRestorableGraph;
@@ -35,6 +38,7 @@ import uk.ed.inf.graph.undirected.IUndirectedGraph;
 import uk.ed.inf.graph.undirected.IUndirectedPair;
 import uk.ed.inf.graph.util.IFilterCriteria;
 import uk.ed.inf.graph.util.INodeEdgeFilterCriteria;
+import uk.ed.inf.graph.util.IndexCounter;
 import uk.ed.inf.graph.util.impl.EdgeFromNodeIterator;
 import uk.ed.inf.graph.util.impl.FilteredIterator;
 
@@ -42,17 +46,20 @@ import uk.ed.inf.graph.util.impl.FilteredIterator;
 public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGraph<Node, Edge>,
 			IModifiableGraph<Node, Edge> {
 	private final Logger logger = Logger.getLogger(this.getClass()); 
-//	private final EdgeFactory edgeFactory;
-//	private final NodeFactory nodeFactory;
-//	private final SubgraphFactory subgraphFactory;
 	private final ArrayList<Node> nodeList;
 	private final GraphStateHandler<Node, Edge> stateHandler;
 	private SubgraphFactory copiedComponentsFact;
+	private final GraphStructureChangeListenee<Node, Edge> listeneeHelper;
+	private final IndexCounter nodeCounter;
+	private final IndexCounter edgeCounter;
 	
 	public Graph(){
 		this.nodeList = new ArrayList<Node>();
 		this.stateHandler = new GraphStateHandler<Node, Edge>(this);
 		this.copiedComponentsFact = this.subgraphFactory();
+		this.listeneeHelper = new GraphStructureChangeListenee<Node, Edge>();
+		this.nodeCounter = new IndexCounter(-1);
+		this.edgeCounter = new IndexCounter(-1);
 	}
 	
 	public Graph(Graph other){
@@ -66,6 +73,15 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 		// and then add in the incident edges by creating an induced subgraph.
 		Subgraph copySubgraph = fact.createInducedSubgraph();
 		this.copyHere(copySubgraph);
+	}
+	
+	
+	IndexCounter getNodeCounter(){
+		return this.nodeCounter;
+	}
+	
+	IndexCounter getEdgeCounter(){
+		return this.edgeCounter;
 	}
 	
 	public Node getNode(int index){
@@ -151,22 +167,37 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 		this.logger.debug("entering method removeSubgraph");
 		if(subgraph == null) throw new IllegalArgumentException("subgraph cannot be null");
 		if(subgraph.getSuperGraph() != this) throw new IllegalArgumentException("The subgraph must belong to this graph");
-		removeEdges(subgraph.edgeIterator());
-		removeNodes(subgraph.nodeIterator());
+		Set<Node> removedNodes = new HashSet<Node>();
+		Set<Edge> removedEdges = new HashSet<Edge>();
+		findEdgesToRemove(subgraph.edgeIterator(), removedEdges);
+		findNodesToRemove(subgraph.nodeIterator(), removedNodes, removedEdges);
+		doRemoval(removedNodes, removedEdges);
 		this.logger.debug("exiting method removeSubgraph");
 	}
+	
+	private void doRemoval(Set<Node> removedNodes, Set<Edge> removedEdges){
+		for(Node node : removedNodes){
+			node.markRemoved(true);
+		}
+		for(Edge edge : removedEdges){
+			edge.markRemoved(true);
+		}
+		this.listeneeHelper.notifyNodeStructureChange(GraphStructureChangeType.DELETED, removedNodes);
+		this.listeneeHelper.notifyEdgeStructureChange(GraphStructureChangeType.DELETED, removedEdges);
+	}
 
-	private void removeEdges(Iterator<? extends Edge> edgeIterator){
+	private void findEdgesToRemove(Iterator<? extends Edge> edgeIterator, Set<Edge> removedEdges){
 		this.logger.debug("entering method removeEdges");
 		while(edgeIterator.hasNext()){
 			Edge edge = (Edge)edgeIterator.next();
-			edge.markRemoved(true);
+//			edge.markRemoved(true);
+			removedEdges.add(edge);
 			this.logger.debug("removed edge: " + edge);
 		}
 		this.logger.debug("exiting method removeEdges");
 	}
 	
-	private void removeNodes(Iterator<? extends Node> nodeIterator){
+	private void findNodesToRemove(Iterator<? extends Node> nodeIterator, Set<Node> removedNodes, Set<Edge> removedEdges){
 		this.logger.debug("entering method removeNodes");
 		while(nodeIterator.hasNext()){
 			Node node = (Node)nodeIterator.next();
@@ -181,11 +212,13 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 				edgeDeletionSet.add(edgeIterator.next());
 			}
 			for(Edge edge : edgeDeletionSet){
-				edge.markRemoved(true);
+//				edge.markRemoved(true);
+				removedEdges.add(edge);
 				this.logger.debug("removed edge: " + edge);
 			}
 			// remove node
-			node.markRemoved(true);
+//			node.markRemoved(true);
+			removedNodes.add(node);
 			this.logger.debug("removed node: " + node);
 		}
 		this.logger.debug("exiting method removeNodes");
@@ -233,6 +266,16 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 		if(newNode.getIndex() != this.nodeList.size()) throw new IllegalArgumentException("The index of the node must equal to its order of addition to the graph");
 		if(newNode.isRemoved()) throw new IllegalArgumentException("The node cannot be marked as removed when added to the graph");
 		this.nodeList.add(newNode);
+		final Set<Node> changeSet = new HashSet<Node>();
+		changeSet.add(newNode);
+		this.listeneeHelper.notifyNodeStructureChange(GraphStructureChangeType.ADDED, changeSet);
+	}
+
+	void addNewEdge(Edge newEdge) {
+		// added are not stored here, so this just registers the new node being added
+		final Set<Edge> changeSet = new HashSet<Edge>();
+		changeSet.add(newEdge);
+		this.listeneeHelper.notifyEdgeStructureChange(GraphStructureChangeType.ADDED, changeSet);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -285,6 +328,8 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 			Edge newEdge = edgeFactory.createEdge();
 			this.copiedComponentsFact.addEdge(newEdge);
 		}
+		this.listeneeHelper.notifyNodeStructureChange(GraphStructureChangeType.ADDED, this.copiedComponentsFact.getNodes());
+		this.listeneeHelper.notifyEdgeStructureChange(GraphStructureChangeType.ADDED, this.copiedComponentsFact.getEdges());
 	}
 
 	private class NodeFilter implements IFilterCriteria<Node> {
@@ -308,5 +353,17 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 
 	public Subgraph getCopiedComponents() {
 		return this.copiedComponentsFact.createSubgraph();
+	}
+
+	public void addGraphChangeListener(IGraphChangeListener<Node, Edge> listener) {
+		listeneeHelper.addGraphChangeListener(listener);
+	}
+
+	public Iterator<IGraphChangeListener<Node, Edge>> modelChangeListenerIterator() {
+		return listeneeHelper.modelChangeListenerIterator();
+	}
+
+	public void removeGraphChangeListener(IGraphChangeListener<Node, Edge> listener) {
+		listeneeHelper.removeGraphChangeListener(listener);
 	}
 }

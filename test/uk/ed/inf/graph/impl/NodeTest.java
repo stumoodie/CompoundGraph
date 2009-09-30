@@ -17,7 +17,6 @@ package uk.ed.inf.graph.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
@@ -185,12 +184,6 @@ public class NodeTest {
 	public final void testMarkRemoved() {
 		testNode.markRemoved(true) ;
 		assertTrue ( "removed" , testNode.isRemoved()) ;
-	}
-
-	@Test
-	public final void testToString() {
-		assertEquals ( "test node" , "[uk.ed.inf.graph.impl.Node: index=0, removed=false]",  mockOneNode.toString()) ;
-		assertNotSame ( "other node" , "[uk.ed.inf.graph.impl.Node: index=1, removed=false]",  mockTwoNode.toString()) ;
 	}
 
 }

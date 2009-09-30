@@ -95,6 +95,10 @@ public final class Edge implements IUndirectedEdge<Node, Edge>, IRestorableGraph
 	public void markRemoved(boolean markRemoved) {
 		this.logger.debug("edge id(" + this.index + "), changing removal status to: " + markRemoved);
 		this.removed = markRemoved;
+		this.connectedNodes.getOneNode().removedEdge(this);
+		if(!this.isSelfEdge()){
+			this.connectedNodes.getTwoNode().removedEdge(this);
+		}
 	}
 
 	public boolean hasEnds(IBasicPair<? super Node, ? super Edge> ends) {
@@ -103,6 +107,17 @@ public final class Edge implements IUndirectedEdge<Node, Edge>, IRestorableGraph
 
 	@Override
 	public String toString(){
-		return "[" + this.getClass().getName() + ": index=" + this.index + ", removed=" + this.removed + "]";
+		StringBuilder buf = new StringBuilder(this.getClass().getSimpleName());
+		buf.append("(idx=");
+		buf.append(this.index);
+		buf.append(",nodes=[");
+		buf.append(this.connectedNodes.getOneNode().getIndex());
+		buf.append(", ");
+		buf.append(this.connectedNodes.getTwoNode().getIndex());
+		buf.append("]");
+		buf.append(",removed=");
+		buf.append(this.removed);
+		buf.append(")");
+		return buf.toString();
 	}
 }

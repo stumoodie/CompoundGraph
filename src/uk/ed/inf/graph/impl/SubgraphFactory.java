@@ -39,6 +39,14 @@ public final class SubgraphFactory implements IUndirectedSubgraphFactory<Node, E
 		this.edgeList.add(edge);
 	}
 
+	Set<Node> getNodes(){
+		return new HashSet<Node>(this.nodeList);
+	}
+	
+	Set<Edge> getEdges(){
+		return new HashSet<Edge>(this.edgeList);
+	}
+	
 	/**
 	 * Creates a subgraph, that includes dangling edges.
 	 */

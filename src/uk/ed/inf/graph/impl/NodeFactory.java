@@ -20,14 +20,13 @@ import uk.ed.inf.graph.undirected.IUndirectedNodeFactory;
 
 public final class NodeFactory implements IUndirectedNodeFactory<Node, Edge> {
 	private final Graph graph;
-	private int indexCntr = 0;
 	
 	NodeFactory(Graph graph){
 		this.graph = graph;
 	}
 	
 	public Node createNode() {
-		Node retVal = new Node(this.graph, indexCntr++);
+		Node retVal = new Node(this.graph, this.graph.getNodeCounter().nextIndex());
 		this.graph.addNewNode(retVal);
 		return retVal;
 	}

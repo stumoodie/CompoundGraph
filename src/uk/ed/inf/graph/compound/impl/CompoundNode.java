@@ -15,18 +15,17 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.impl;
 
+import java.util.Iterator;
+
+import uk.ed.inf.graph.basic.listeners.INodeChangeListener;
 import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
+import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
+import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 
 
 public class CompoundNode extends ArchetypalCompoundNode {
-//	private final CompoundNode parent;
-//	private final IEdgeSet<CompoundNode, CompoundEdge> edgeInList;
-//	private final IEdgeSet<CompoundNode, CompoundEdge> edgeOutList;
 	private ChildCompoundGraph childCompoundGraph;
-//	private final CompoundGraph superGraph; 
-//	private final int index;
 	private boolean removed;
-//	private final INodeColourHandler<CompoundNode, CompoundEdge> colour;
 	
 	// root node constructor
 	CompoundNode(CompoundGraph superGraph, int index){
@@ -65,4 +64,21 @@ public class CompoundNode extends ArchetypalCompoundNode {
     public boolean isRemoved() {
         return this.removed;
     }
+
+	public void addNodeChangeListener(
+			INodeChangeListener<BaseCompoundNode, BaseCompoundEdge> listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Iterator<INodeChangeListener<BaseCompoundNode, BaseCompoundEdge>> nodeChangeListenerIterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void removeNodeChangeListener(
+			INodeChangeListener<BaseCompoundNode, BaseCompoundEdge> listener) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -17,7 +17,6 @@ package uk.ed.inf.graph.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
@@ -46,11 +45,6 @@ public class EdgeTest {
 	private static final int COMPARE_LESSER_INDEX = -1 ;
 	private static final int COMPARE_SAME_INDEX = 0 ;
 	
-	private static final String TO_STRING_TESTEDGE = "[uk.ed.inf.graph.impl.Edge: index=1, removed=false]" ;
-	private static final String TO_STRING_OTHEREDGE = "[uk.ed.inf.graph.impl.Edge: index=2, removed=false]" ;
-	
-	
-
 	@Before
 	public void setUp() throws Exception {
 		
@@ -121,12 +115,4 @@ public class EdgeTest {
 	public final void testHasEnds() {
 		assertTrue ( "has Ends" , testEdge.hasEnds(testNodePair ) );
 	}
-
-	@Test
-	public final void testToString() {
-		assertEquals ("same edge" , TO_STRING_TESTEDGE , testEdge.toString() );
-		assertNotSame("not same edge" , TO_STRING_OTHEREDGE , testEdge.toString() );
-		
-	}
-
 }

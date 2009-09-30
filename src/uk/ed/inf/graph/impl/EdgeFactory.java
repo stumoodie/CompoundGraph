@@ -23,7 +23,6 @@ import uk.ed.inf.graph.undirected.IUndirectedEdgeFactory;
 
 public class EdgeFactory implements IUndirectedEdgeFactory<Node, Edge> {
 	private final Logger logger = Logger.getLogger(this.getClass());
-	private int indexCntr;
 	private final Graph graph;
 	private Node oneNode;
 	private Node twoNode;
@@ -39,7 +38,9 @@ public class EdgeFactory implements IUndirectedEdgeFactory<Node, Edge> {
 	
 	public Edge createEdge() {
 		logger.debug("Creating edge between nodes(" + oneNode + ", " + twoNode + ")");
-		return new Edge(this.graph, indexCntr++, oneNode, twoNode);
+		Edge retVal = new Edge(this.graph, this.graph.getEdgeCounter().nextIndex(), oneNode, twoNode);
+		this.graph.addNewEdge(retVal);
+		return retVal;
 	}
 
 	public IBasicGraph<Node, Edge> getGraph() {

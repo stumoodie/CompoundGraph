@@ -91,4 +91,15 @@ public final class NodePair implements IUndirectedPair<Node, Edge> {
 		return retVal;
 	}
 
+	@Override
+	public String toString(){
+		StringBuilder buf = new StringBuilder(this.getClass().getSimpleName());
+		buf.append("(nodes=[");
+		buf.append(this.oneNode);
+		buf.append(", ");
+		buf.append(this.twoNode);
+		buf.append("])");
+		return buf.toString();
+	}
+	
 }
