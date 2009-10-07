@@ -15,12 +15,7 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.impl;
 
-import java.util.Iterator;
-
-import uk.ed.inf.graph.basic.listeners.INodeChangeListener;
 import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
-import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
-import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 
 
 public class CompoundNode extends ArchetypalCompoundNode {
@@ -64,21 +59,4 @@ public class CompoundNode extends ArchetypalCompoundNode {
     public boolean isRemoved() {
         return this.removed;
     }
-
-	public void addNodeChangeListener(
-			INodeChangeListener<BaseCompoundNode, BaseCompoundEdge> listener) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public Iterator<INodeChangeListener<BaseCompoundNode, BaseCompoundEdge>> nodeChangeListenerIterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void removeNodeChangeListener(
-			INodeChangeListener<BaseCompoundNode, BaseCompoundEdge> listener) {
-		// TODO Auto-generated method stub
-		
-	}
 }

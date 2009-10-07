@@ -235,6 +235,20 @@ public class CompoundGraphIntegrationTest {
 	}
 	
 	@Test
+	public final void testExpectedTreeLevels () throws Exception
+	{
+		assertEquals ( "rootNode" , 0, this.rootNode.getLevel() ) ;
+		assertEquals ( "node1" , 1, node1.getLevel() ) ;
+		assertEquals ( "node2" , 1, node2.getLevel() ) ;
+		assertEquals ( "node3" , 2, node3.getLevel() ) ;
+		assertEquals ( "node4" , 2, node4.getLevel() ) ;
+		assertEquals ( "node5" , 2, node5.getLevel() ) ;
+		assertEquals ( "node6" , 2, node6.getLevel() ) ;
+		assertEquals ( "node7" , 3, node7.getLevel() ) ;
+		assertEquals ( "node8" , 4, node8.getLevel() ) ;
+	}
+	
+	@Test
 	public final void testNodesAndEdgesBelongToGraph () throws Exception
 	{
 		Iterator<BaseCompoundNode> nodesIterator = testInstance.nodeIterator() ;

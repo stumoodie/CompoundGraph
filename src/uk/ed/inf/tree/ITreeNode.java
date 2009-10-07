@@ -34,6 +34,11 @@ public interface ITreeNode<T extends ITreeNode<T>> {
 	 */
 	int getIndex();
 	
+	/**
+	 * Gets the level of the tree.
+	 * @return the level of this node in the tree.
+	 */
+	int getLevel();
 	
 	/**
 	 * Get the root node for the tree that this node belongs to.

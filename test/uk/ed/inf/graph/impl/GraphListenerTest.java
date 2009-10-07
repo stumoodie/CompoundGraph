@@ -46,7 +46,7 @@ public class GraphListenerTest {
 		edgeFact.setPair(node3, node4);
 		edgeFact.createEdge();
 		edgeFact.setPair(node1, node2);
-		edgeFact.createEdge();
+		this.edge3 = edgeFact.createEdge();
 		edgeFact.setPair(node5, node5);
 		edgeFact.createEdge();
 		edgeFact.setPair(node3, node5);

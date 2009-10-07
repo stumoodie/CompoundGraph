@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import uk.ed.inf.graph.basic.IBasicEdge;
@@ -58,6 +59,12 @@ public final class GraphStructureChangeListenee<
 		}
 	}
 	
+	public final void notifyNodeStructureChange(final GraphStructureChangeType type, N changedNode){
+		Set<N> items = new TreeSet<N>();
+		items.add(changedNode);
+		notifyNodeStructureChange(type, items);
+	}
+		
 	public final void notifyNodeStructureChange(final GraphStructureChangeType type, final Set<N> changedNodes){
 		IGraphNodeChangeEvent<N, E> event = new IGraphNodeChangeEvent<N, E>(){
 
@@ -80,6 +87,12 @@ public final class GraphStructureChangeListenee<
 		fireNodeChange(event);
 	}
 
+	public final void notifyEdgeStructureChange(final GraphStructureChangeType type, E changedEdge){
+		Set<E> items = new TreeSet<E>();
+		items.add(changedEdge);
+		notifyEdgeStructureChange(type, items);
+	}
+		
 	public final void notifyEdgeStructureChange(final GraphStructureChangeType type, final Set<E> changedEdge){
 		IGraphEdgeChangeEvent<N, E> event = new IGraphEdgeChangeEvent<N, E>(){
 

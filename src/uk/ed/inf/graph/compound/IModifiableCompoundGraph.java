@@ -15,11 +15,13 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound;
 
+import uk.ed.inf.graph.basic.listeners.IGraphChangeListenee;
+
 
 public interface IModifiableCompoundGraph <
 		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
 		E extends ICompoundEdge<N, E>
-> {
+> extends IGraphChangeListenee<N, E> {
 
 	/**
 	 * Gets the node factory to add new nodes to the root child graph of this compound graph.

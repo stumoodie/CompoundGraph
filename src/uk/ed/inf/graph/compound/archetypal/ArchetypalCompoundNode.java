@@ -23,6 +23,7 @@ public abstract class ArchetypalCompoundNode extends BaseCompoundNode {
 	private final ArchetypalCompoundNode parent;
 	private final ArchetypalCompoundGraph superGraph; 
 	private final int index;
+	private final int treeLevel;
 	
 	protected ArchetypalCompoundNode(ArchetypalCompoundGraph superGraph, int index){
 		this(superGraph, null, index);
@@ -46,6 +47,11 @@ public abstract class ArchetypalCompoundNode extends BaseCompoundNode {
 		createInEdgeSet(new DirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge>());
 		createOutEdgeSet(new DirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge>());
 		createChildCompoundGraph(this);
+		this.treeLevel = calcTreeLevel();
+	}
+	
+	public int getLevel(){
+		return this.treeLevel;
 	}
 	
 	@Override

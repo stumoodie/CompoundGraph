@@ -26,6 +26,7 @@ public abstract class BaseCompoundNodeFactory implements ICompoundNodeFactory<Ba
 		int cntr = this.getGraph().getNodeCounter().nextIndex();
 		BaseCompoundNode retVal = newNode(this.getParentNode(), cntr);
 //		this.getParentNode().getChildCompoundGraph().addNewNode(retVal);
+		getGraph().registerNewNode(retVal);
 		return retVal;
 	}
 	
