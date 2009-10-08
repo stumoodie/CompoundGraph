@@ -20,9 +20,6 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 
 import uk.ed.inf.graph.basic.IBasicPair;
-import uk.ed.inf.graph.basic.listeners.GraphStructureChangeListenee;
-import uk.ed.inf.graph.basic.listeners.GraphStructureChangeType;
-import uk.ed.inf.graph.basic.listeners.IGraphChangeListener;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.IModifiableCompoundGraph;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
@@ -39,12 +36,10 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
     private final Logger logger = Logger.getLogger(this.getClass());
 	private final BaseCompoundGraphStateHandler stateHandler;
 	private BaseGraphCopyBuilder copyBuilder;
-	private final GraphStructureChangeListenee<BaseCompoundNode, BaseCompoundEdge> listeneeHandler;
 	
 	protected BaseCompoundGraph(BaseGraphCopyBuilder copyBuilder){
 		this.stateHandler = new BaseCompoundGraphStateHandler(this);
 		this.copyBuilder = copyBuilder;
-		this.listeneeHandler = new GraphStructureChangeListenee<BaseCompoundNode, BaseCompoundEdge>();
 	}
 
 	protected BaseCompoundGraph(BaseGraphCopyBuilder copyBuilder, BaseCompoundGraph otherGraph){
@@ -56,20 +51,6 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	protected abstract IndexCounter getNodeCounter();
 	
 	protected abstract IndexCounter getEdgeCounter();
-
-	public void addGraphChangeListener(
-			IGraphChangeListener<BaseCompoundNode, BaseCompoundEdge> listener) {
-		listeneeHandler.addGraphChangeListener(listener);
-	}
-
-	public Iterator<IGraphChangeListener<BaseCompoundNode, BaseCompoundEdge>> modelChangeListenerIterator() {
-		return listeneeHandler.modelChangeListenerIterator();
-	}
-
-	public void removeGraphChangeListener(
-			IGraphChangeListener<BaseCompoundNode, BaseCompoundEdge> listener) {
-		listeneeHandler.removeGraphChangeListener(listener);
-	}
 
 	protected abstract void createCopyOfRootNode(int newIndexValue, BaseCompoundNode otherRootNode);
 
@@ -337,11 +318,9 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	}
 
 	public void registerNewNode(BaseCompoundNode newNode) {
-		this.listeneeHandler.notifyNodeStructureChange(GraphStructureChangeType.ADDED, newNode);
 	}
 
 	public void registerNewEdge(BaseCompoundEdge newEdge) {
-		this.listeneeHandler.notifyEdgeStructureChange(GraphStructureChangeType.ADDED, newEdge);
 	}
 
 }

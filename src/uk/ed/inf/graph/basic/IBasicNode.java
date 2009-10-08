@@ -18,8 +18,6 @@ package uk.ed.inf.graph.basic;
 import java.util.Iterator;
 import java.util.SortedSet;
 
-import uk.ed.inf.graph.basic.listeners.INodeChangeListenee;
-
 
 /**
  * A basic graph node useable by all graphs.
@@ -31,7 +29,7 @@ import uk.ed.inf.graph.basic.listeners.INodeChangeListenee;
 public interface IBasicNode<
 	N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 	E extends IBasicEdge<N, E>
-> extends Comparable<N>, INodeChangeListenee<N, E> {
+> extends Comparable<N> {
 
 	/**
 	 * Get the graph that owns this node.  

@@ -19,8 +19,6 @@ import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import uk.ed.inf.graph.basic.listeners.INodeChangeListener;
-import uk.ed.inf.graph.basic.listeners.NodeStructureChangeListenee;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.state.IRestorableGraphElement;
 import uk.ed.inf.graph.util.IDirectedEdgeSet;
@@ -35,12 +33,10 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 	public static final int ROOT_LEVEL = 0;
 	private IFilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeInList;
 	private IFilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeOutList;
-	private final NodeStructureChangeListenee<BaseCompoundNode, BaseCompoundEdge> listeneeHandler;
 	
 	protected BaseCompoundNode(){
 		this.edgeInList = null;
 		this.edgeOutList = null;
-		this.listeneeHandler = new NodeStructureChangeListenee<BaseCompoundNode, BaseCompoundEdge>(this);
 		this.setRemoved(false);
 	}
 	
@@ -54,23 +50,6 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		return level;
 	}
 	
-	public void addNodeChangeListener(
-			INodeChangeListener<BaseCompoundNode, BaseCompoundEdge> listener) {
-		listeneeHandler.addNodeChangeListener(listener);
-	}
-
-
-	public Iterator<INodeChangeListener<BaseCompoundNode, BaseCompoundEdge>> nodeChangeListenerIterator() {
-		return listeneeHandler.nodeChangeListenerIterator();
-	}
-
-
-	public void removeNodeChangeListener(
-			INodeChangeListener<BaseCompoundNode, BaseCompoundEdge> listener) {
-		listeneeHandler.removeNodeChangeListener(listener);
-	}
-
-
 	public final Iterator<BaseCompoundNode> childIterator() {
 		return this.getChildCompoundGraph().nodeIterator();
 	}
