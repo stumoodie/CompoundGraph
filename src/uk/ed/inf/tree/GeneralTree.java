@@ -85,6 +85,10 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 		return new LevelOrderTreeIterator<T>(this.rootNode);
 	}
 	
+	public Iterator<T> preOrderIterator(){
+		return new PreOrderTreeIterator<T>(this.rootNode);
+	}
+	
 	/**
 	 * Tests if <code>testNode</code> is a descendant of <code>startNode</code>. This means traversing
 	 * from the <code>startNode</code> until it finds the <code>testNode</code>.

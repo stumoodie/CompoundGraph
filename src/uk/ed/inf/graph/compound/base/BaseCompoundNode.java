@@ -28,6 +28,7 @@ import uk.ed.inf.graph.util.impl.ConnectedNodeIterator;
 import uk.ed.inf.graph.util.impl.FilteredEdgeSet;
 import uk.ed.inf.tree.AncestorTreeIterator;
 import uk.ed.inf.tree.LevelOrderTreeIterator;
+import uk.ed.inf.tree.PreOrderTreeIterator;
 
 public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode, BaseCompoundEdge>, IRestorableGraphElement {
 	public static final int ROOT_LEVEL = 0;
@@ -260,6 +261,10 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 
 	public final Iterator<BaseCompoundNode> levelOrderIterator() {
 		return new LevelOrderTreeIterator<BaseCompoundNode>(this);
+	}
+
+	public final Iterator<BaseCompoundNode> preOrderIterator() {
+		return new PreOrderTreeIterator<BaseCompoundNode>(this);
 	}
 
 	public boolean isAncestor(BaseCompoundNode testNode) {

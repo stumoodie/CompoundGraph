@@ -62,6 +62,8 @@ public interface ITree<T extends ITreeNode<T>> {
 	
 	Iterator<T> levelOrderIterator();
 
+	Iterator<T> preOrderIterator();
+
 	/**
 	 * Obtain a visitor that will traverse the tree from the root node in level-order.
 	 * At each node the actions specified by <code>visitorAction</code> will be performed.

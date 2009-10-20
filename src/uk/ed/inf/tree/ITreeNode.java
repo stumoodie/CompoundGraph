@@ -85,4 +85,10 @@ public interface ITreeNode<T extends ITreeNode<T>> {
 	 * @return a new instance of the iterator, which cannot be null.
 	 */
 	Iterator<T> levelOrderIterator();
+
+	/**
+	 * Iterator that traverses down the tree from this node in pre-order, i.e., node, 1st child subtree, 2nd child subtree etc. 
+	 * @return a new instance of the iterator, which cannot be null.
+	 */
+	Iterator<T> preOrderIterator();
 }
