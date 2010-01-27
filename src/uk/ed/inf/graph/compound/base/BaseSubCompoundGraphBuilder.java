@@ -23,37 +23,43 @@ import org.apache.log4j.Logger;
 
 import uk.ed.inf.graph.compound.ISubCompoundGraphBuilder;
 import uk.ed.inf.graph.directed.IDirectedPair;
-import uk.ed.inf.graph.util.impl.NodeTreeIterator;
 
 public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBuilder<BaseCompoundNode, BaseCompoundEdge> {
 	private final Logger logger = Logger.getLogger(this.getClass());
 	
-	private final Set<BaseCompoundNode> nodeList;
+	private final Set<BaseCompoundNode> topNodeList;
+	private final Set<BaseCompoundNode> allNodeList;
 	private final Set<BaseCompoundEdge> edgeList;
 
 	/**
 	 * Construct the builder, providing it with a list of nodes and edges with which to populate
 	 * the subgraph that will be constructed.
 	 * @param graph the graph to which the subgraph will refer, cannot be null.
-	 * @param nodeList the list of nodes to be added to the subgraph, cannot be null.
+	 * @param topNodeList the list of nodes to be added to the subgraph, cannot be null.
 	 * @param edgeList the list of edges to be added to the subgraph, cannot be null.
 	 * @throws NullPointerException if any of the the parameters are null. 
 	 */
 	protected BaseSubCompoundGraphBuilder(){
-		this.nodeList = new HashSet<BaseCompoundNode>();
+		this.topNodeList = new HashSet<BaseCompoundNode>();
+		this.allNodeList = new HashSet<BaseCompoundNode>();
 		this.edgeList = new HashSet<BaseCompoundEdge>();
 	}
 	
 	public void setNodeList(Set<? extends BaseCompoundNode> nodeList){
-		this.nodeList.addAll(nodeList);
+		this.topNodeList.addAll(nodeList);
+		this.allNodeList.addAll(nodeList);
 	}
 	
 	public void setEdgeList(Set<? extends BaseCompoundEdge> edgeList){
 		this.edgeList.addAll(edgeList);
 	}
 	
+	protected Set<BaseCompoundNode> getTopNodeList(){
+	    return this.topNodeList;
+	}
+	
 	protected Set<BaseCompoundNode> getNodeList(){
-	    return this.nodeList;
+	    return this.allNodeList;
 	}
 	
     protected Set<BaseCompoundEdge> getEdgeList(){
@@ -67,13 +73,16 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 	 * respective branches.
 	 */
 	public void expandChildNodes(){
-		Set<BaseCompoundNode> initialNodes = new HashSet<BaseCompoundNode>(this.nodeList); 
+		Set<BaseCompoundNode> initialNodes = new HashSet<BaseCompoundNode>(this.topNodeList);
 		for(BaseCompoundNode compoundNode : initialNodes){
 			Iterator<? extends BaseCompoundNode> iter = compoundNode.levelOrderIterator();
 			addEdges(iter.next()); // get edges of the the current node's child graph
 			while(iter.hasNext()){
 				BaseCompoundNode childNode = iter.next();
-				this.nodeList.remove(childNode);
+				// prune children from top node list
+				this.topNodeList.remove(childNode);
+				// add node to allNode list
+				this.allNodeList.add(childNode);
 				// now add edges in this node's compound graph.
 				addEdges(childNode);
 			}
@@ -93,11 +102,11 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 	 * produce an induced subgraph. 
 	 */
 	public void addIncidentEdges(){
-//		for(BaseCompoundNode node : this.nodeList){
-		final Set<BaseCompoundNode> expandedNodes = createExpandedNodes();
-		Iterator<BaseCompoundNode> nodeTreeIter = new NodeTreeIterator<BaseCompoundNode, BaseCompoundEdge>(this.nodeList.iterator());
-		while(nodeTreeIter.hasNext()){
-			BaseCompoundNode node = nodeTreeIter.next();
+		for(BaseCompoundNode node : this.allNodeList){
+//		final Set<BaseCompoundNode> expandedNodes = createExpandedNodes();
+//		Iterator<BaseCompoundNode> nodeTreeIter = new NodeTreeIterator<BaseCompoundNode, BaseCompoundEdge>(this.nodeList.iterator());
+//		while(nodeTreeIter.hasNext()){
+//			BaseCompoundNode node = nodeTreeIter.next();
 			logger.debug("Investigating node: " + node);
 			// we only consider out edges as this will reduce the number edges we have
 			// to consider twice. If an edge is directed and incident to the nodes in the
@@ -112,7 +121,8 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 					// only do this if the edge is not already in the set of edges
 					IDirectedPair<BaseCompoundNode, BaseCompoundEdge> ends = edge.getConnectedNodes();
 					logger.debug("Testing other node: " + ends.getInNode());
-					if(expandedNodes.contains(ends.getInNode())){
+					if(this.allNodeList.contains(ends.getInNode())){
+//					if(expandedNodes.contains(ends.getInNode())){
 						logger.debug("Storing edge: " + edge + ", iNode= " + ends.getInNode());
 						// the edge links two nodes that will be in the subgraph so it is
 						// incident and so we add it.
@@ -129,15 +139,14 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 		}
 	}
 	
-	//TODO: replace with a tree search !
-	private Set<BaseCompoundNode> createExpandedNodes(){
-		Set<BaseCompoundNode> retVal = new HashSet<BaseCompoundNode>();
-		Iterator<BaseCompoundNode> iter = new NodeTreeIterator<BaseCompoundNode, BaseCompoundEdge>(this.nodeList.iterator());
-		while(iter.hasNext()){
-			retVal.add(iter.next());
-		}
-		return retVal;
-	}
+//	private Set<BaseCompoundNode> createExpandedNodes(){
+//		Set<BaseCompoundNode> retVal = new HashSet<BaseCompoundNode>();
+//		Iterator<BaseCompoundNode> iter = new NodeTreeIterator<BaseCompoundNode, BaseCompoundEdge>(this.nodeList.iterator());
+//		while(iter.hasNext()){
+//			retVal.add(iter.next());
+//		}
+//		return retVal;
+//	}
 
 	protected abstract void addAdditionalNodes();
 	
@@ -148,8 +157,11 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 	 */
 	public void buildSubgraph() {
 		newSubgraph();
-		for(BaseCompoundNode node : this.nodeList){
+		for(BaseCompoundNode node : this.topNodeList){
 			getSubgraph().addTopNode(node);
+		}
+		for(BaseCompoundNode node : this.allNodeList){
+			getSubgraph().addNode(node);
 		}
 		for(BaseCompoundEdge edge : this.edgeList){
 			getSubgraph().addEdge(edge);
@@ -170,7 +182,6 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 	public abstract BaseCompoundGraph getGraph();
 
 	public boolean hasAdditionalNodes() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }

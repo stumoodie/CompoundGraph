@@ -27,9 +27,9 @@ import java.util.SortedSet;
  * @param <E> The edge type that must implement the <code>IEdge</code> class. 
  */
 public interface IBasicNode<
-	N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-	E extends IBasicEdge<N, E>
-> extends Comparable<N> {
+	N extends INode,
+	E extends IEdge
+> extends INode, Comparable<N> {
 
 	/**
 	 * Get the graph that owns this node.  

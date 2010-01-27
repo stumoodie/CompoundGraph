@@ -15,8 +15,6 @@ limitations under the License.
 */
 package uk.ed.inf.graph.util;
 
-import java.util.SortedSet;
-
 import uk.ed.inf.graph.directed.IDirectedEdge;
 import uk.ed.inf.graph.directed.IDirectedNode;
 
@@ -36,27 +34,27 @@ public interface IDirectedEdgeSet<
 		E extends IDirectedEdge<N, E>
 > extends IEdgeSet<N, E> {
 
-	/**
-	 * Does the edge set contain at least one edge with these nodes.
-	 * This assumes a direction to the nodes so if the edges are undirected
-	 * the method must be called for both orientations of the edge.
-	 * @param outNode The node from which the edge is leading out from.
-	 * @param inNode The node from which the edge is leading into.
-	 * @return True if one or more edges has this connectivity, false otherwise. 
-	 */
-	boolean contains(N outNode, N inNode);
+//	/**
+//	 * Does the edge set contain at least one edge with these nodes.
+//	 * This assumes a direction to the nodes so if the edges are undirected
+//	 * the method must be called for both orientations of the edge.
+//	 * @param outNode The node from which the edge is leading out from.
+//	 * @param inNode The node from which the edge is leading into.
+//	 * @return True if one or more edges has this connectivity, false otherwise. 
+//	 */
+//	boolean contains(N outNode, N inNode);
 	
-	/**
-	 * Get the edges that match the given node connectivity.
-	 * The connectivity is directed so to find an undirected edge the reciprocal
-	 * node connectivity may need to be used. 
-	 * @param outNode The node that the edge is leading out from. Cannot be null.
-	 * @param inNode The node that the edge is leading into. Cannot be null.
-	 * @return The set of edges containing this connectivity. Note that the set is guaranteed to
-	 *  contain at least one edge.
-	 *  @throws NullPointerException if the parameters are null.
-	 *  @throws IllegalArgumentException if <code>contains(N outNode, N inNode) == false</code>
-	 */
-	SortedSet<E> get(N inNode, N outNode);
+//	/**
+//	 * Get the edges that match the given node connectivity.
+//	 * The connectivity is directed so to find an undirected edge the reciprocal
+//	 * node connectivity may need to be used. 
+//	 * @param outNode The node that the edge is leading out from. Cannot be null.
+//	 * @param inNode The node that the edge is leading into. Cannot be null.
+//	 * @return The set of edges containing this connectivity. Note that the set is guaranteed to
+//	 *  contain at least one edge.
+//	 *  @throws NullPointerException if the parameters are null.
+//	 *  @throws IllegalArgumentException if <code>contains(N outNode, N inNode) == false</code>
+//	 */
+//	SortedSet<E> get(N inNode, N outNode);
 
 }

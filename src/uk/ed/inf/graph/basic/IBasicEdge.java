@@ -24,9 +24,9 @@ package uk.ed.inf.graph.basic;
  * @param <E> The edge class that must implement this interface.
  */
 public interface IBasicEdge<
-	N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-	E extends IBasicEdge<N, E>
-> extends Comparable<E> {
+	N extends INode,
+	E extends IEdge
+> extends IEdge, Comparable<E> {
 
 	/**
 	 * Get the owning graph of this edge.

@@ -15,9 +15,7 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.base;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.basic.ISubgraphAlgorithms;
@@ -30,28 +28,31 @@ import uk.ed.inf.graph.util.INodeSet;
 import uk.ed.inf.graph.util.SubgraphAlgorithms;
 import uk.ed.inf.graph.util.impl.FilteredEdgeSet;
 import uk.ed.inf.graph.util.impl.FilteredNodeSet;
-import uk.ed.inf.graph.util.impl.NodeTreeIterator;
-import uk.ed.inf.tree.GeneralTree;
-import uk.ed.inf.tree.ITree;
-import uk.ed.inf.tree.ITreeNodeAction;
 
 public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
 	private INodeSet<BaseCompoundNode, BaseCompoundEdge> topNodeSet;
+	private INodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet;
 	private IEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet;
-	private final Set<Integer> initialNodeSet = new HashSet<Integer> () ;
-	private final Set<Integer> initialEdgeSet = new HashSet<Integer> () ;
 	private Boolean isInducedSubgraphFlag = null;
 	
 	protected BaseSubCompoundGraph(){
-//		this.nodeSet = new NodeSet<BaseCompoundNode, BaseCompoundEdge>();
-//		this.edgeSet = new EdgeSet<BaseCompoundNode, BaseCompoundEdge>();
+	}
+	
+	protected final void createTopNodeSet(INodeSet<BaseCompoundNode, BaseCompoundEdge> topNodeSet){
+		this.topNodeSet = new FilteredNodeSet<BaseCompoundNode, BaseCompoundEdge>(topNodeSet, new IFilterCriteria<BaseCompoundNode>(){
+
+			public boolean matched(BaseCompoundNode testObj) {
+//				return !testObj.isRemoved();
+				return true;
+			}
+	
+		});
 	}
 	
 	protected final void createNodeSet(INodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet){
-		this.topNodeSet = new FilteredNodeSet<BaseCompoundNode, BaseCompoundEdge>(nodeSet, new IFilterCriteria<BaseCompoundNode>(){
-
+		this.nodeSet = new FilteredNodeSet<BaseCompoundNode, BaseCompoundEdge>(nodeSet, new IFilterCriteria<BaseCompoundNode>(){
 			public boolean matched(BaseCompoundNode testObj) {
-				return !testObj.isRemoved();
+				return true;
 			}
 	
 		});
@@ -62,7 +63,8 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 				new IFilterCriteria<BaseCompoundEdge>(){
 
 					public boolean matched(BaseCompoundEdge testObj) {
-						return !testObj.isRemoved();
+//						return !testObj.isRemoved();
+						return true;
 					}
 			
 		});
@@ -97,35 +99,11 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 	}
 
 	public boolean containsNode(int nodeIdx) {
-		boolean retVal = false;
-		for(BaseCompoundNode topNode : this.topNodeSet){
-			if(!retVal){
-				ITree<BaseCompoundNode> topTree = new GeneralTree<BaseCompoundNode>(topNode);
-				TopNodeContainsIndexAction queryAction = new TopNodeContainsIndexAction(nodeIdx); 
-				topTree.levelOrderTreeWalker(queryAction).visitTree();
-				retVal = queryAction.wasMatchFound();
-			}
-			else{
-				break;
-			}
-		}
-		return retVal;
+		return this.nodeSet.contains(nodeIdx);
 	}
 
 	public boolean containsNode(BaseCompoundNode node) {
-		boolean retVal = false;
-		for(BaseCompoundNode topNode : this.topNodeSet){
-			if(!retVal){
-				ITree<BaseCompoundNode> topTree = new GeneralTree<BaseCompoundNode>(topNode);
-				TopNodeContainsNodeAction queryAction = new TopNodeContainsNodeAction(node); 
-				topTree.levelOrderTreeWalker(queryAction).visitTree();
-				retVal = queryAction.wasMatchFound();
-			}
-			else{
-				break;
-			}
-		}
-		return retVal;
+		return this.nodeSet.contains(node);
 	}
 
 	public BaseCompoundEdge getEdge(int edgeIdx) {
@@ -137,46 +115,19 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 	}
 
 	public BaseCompoundNode getNode(int nodeIdx) {
-		BaseCompoundNode retVal = null;
-		for(BaseCompoundNode topNode : this.topNodeSet){
-			if(retVal == null){
-				ITree<BaseCompoundNode> topTree = new GeneralTree<BaseCompoundNode>(topNode);
-				TopNodeFindNodeByIdxAction queryAction = new TopNodeFindNodeByIdxAction(nodeIdx); 
-				topTree.levelOrderTreeWalker(queryAction).visitTree();
-				retVal = queryAction.getMatchedNode();
-			}
-			else{
-				break;
-			}
-		}
-		if(retVal == null){
-			throw new IllegalArgumentException("Node matching nodeIdx is not present");
-		}
-		return retVal;
+		return this.nodeSet.get(nodeIdx);
 	}
 
 	public Iterator<BaseCompoundNode> nodeIterator() {
-		return new NodeTreeIterator<BaseCompoundNode, BaseCompoundEdge>(this.topNodeSet.iterator());
+		return this.nodeSet.iterator();
 	}
 
 	public int getNumEdges() {
-		int count = 0;
-		Iterator<BaseCompoundEdge> iter = this.edgeIterator();
-		while(iter.hasNext()){
-			iter.next();
-			count++;
-		}
-		return count;
+		return this.edgeSet.size();
 	}
 
 	public int getNumNodes() {
-		int count = 0;
-		Iterator<BaseCompoundNode> iter = this.nodeIterator();
-		while(iter.hasNext()){
-			iter.next();
-			count++;
-		}
-		return count;
+		return this.nodeSet.size();
 	}
 
 	void addTopNode(BaseCompoundNode newNode){
@@ -184,25 +135,10 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 	}
 	
 	void addEdge(BaseCompoundEdge newEdge){
-		
 		this.edgeSet.add(newEdge);
 	}
 	
 	void buildComplete(){
-		Iterator<BaseCompoundNode> nodeIter = this.nodeIterator() ;
-		while ( nodeIter.hasNext())
-		{
-			BaseCompoundNode node = nodeIter.next() ;
-			this.initialNodeSet.add(node.getIndex()) ;
-		}
-		
-		Iterator<BaseCompoundEdge> edgeIter = this.edgeIterator() ;
-		while ( edgeIter.hasNext())
-		{
-			BaseCompoundEdge edge = edgeIter.next() ;
-			this.initialEdgeSet.add(edge.getIndex()) ;
-		}
-
 	}
 
 	public boolean containsDirectedEdge(BaseCompoundNode outNode, BaseCompoundNode inNode) {
@@ -214,23 +150,17 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 	}
 
 	public boolean isConsistentSnapShot() {
-		Set <Integer> cloneOfInitialNodes = new HashSet <Integer> ( this.initialNodeSet) ;
-		Set <Integer> cloneOfInitialEdges = new HashSet <Integer> ( this.initialEdgeSet) ;
-		
+		boolean retVal = true;
 		Iterator <BaseCompoundNode> nodeIter = this.nodeIterator() ;
-		Iterator <BaseCompoundEdge> edgeIter = this.edgeIterator() ;
-		
-		while ( nodeIter.hasNext())
-		{
-			cloneOfInitialNodes.remove(nodeIter.next().getIndex()) ;
+		while ( nodeIter.hasNext() && retVal){
+			retVal = !nodeIter.next().isRemoved();
 		}
-		
-		while ( edgeIter.hasNext())
-		{
-			cloneOfInitialEdges.remove(edgeIter.next().getIndex()) ;
+		Iterator<BaseCompoundEdge> edgeIter = this.edgeIterator();
+		while ( edgeIter.hasNext() && retVal){
+			retVal = !edgeIter.next().isRemoved();
 		}		
 		
-		return ( cloneOfInitialEdges.isEmpty() && cloneOfInitialNodes.isEmpty()) ;
+		return retVal;
 	}
 
 	/**
@@ -284,78 +214,8 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 	{
 		 return this.containsNode(this.getSuperGraph().getRootNode()) ;
 	}
-	
-	
-	private static class TopNodeContainsIndexAction implements ITreeNodeAction<BaseCompoundNode>{ 
-		private final int query;
-		private boolean queryMatched = false;
-		
-		public TopNodeContainsIndexAction(int query){
-			this.query = query;
-		}
 
-		public boolean canContinue() {
-			return !this.queryMatched;
-		}
-
-		public void visit(BaseCompoundNode node) {
-			if(node.getIndex() == query){
-				this.queryMatched = true;
-			}
-		}
-		
-		public boolean wasMatchFound(){
-			return this.queryMatched;
-		}
-	}
-
-	private static class TopNodeFindNodeByIdxAction implements ITreeNodeAction<BaseCompoundNode>{ 
-		private final int query;
-		private BaseCompoundNode queryMatch = null;
-		
-		public TopNodeFindNodeByIdxAction(int query){
-			this.query = query;
-		}
-
-		public BaseCompoundNode getMatchedNode() {
-			return this.queryMatch;
-		}
-
-		public boolean canContinue() {
-			return this.queryMatch == null;
-		}
-
-		public void visit(BaseCompoundNode node) {
-			if(node.getIndex() == query){
-				this.queryMatch = node;
-			}
-		}
-		
-		public boolean wasMatchFound(){
-			return this.queryMatch != null;
-		}
-	}
-
-	private static class TopNodeContainsNodeAction implements ITreeNodeAction<BaseCompoundNode>{ 
-		private final BaseCompoundNode query;
-		private boolean queryMatched = false;
-		
-		public TopNodeContainsNodeAction(BaseCompoundNode query){
-			this.query = query;
-		}
-
-		public boolean canContinue() {
-			return !this.queryMatched;
-		}
-
-		public void visit(BaseCompoundNode node) {
-			if(node.equals(query)){
-				this.queryMatched = true;
-			}
-		}
-		
-		public boolean wasMatchFound(){
-			return this.queryMatched;
-		}
+	public final void addNode(BaseCompoundNode node) {
+		this.nodeSet.add(node);
 	}
 }

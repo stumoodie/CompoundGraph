@@ -675,11 +675,13 @@ public class CompoundGraphIntegrationTest {
 		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addNode(node1) ;
 		SubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
+		assertTrue("snapshot consistent", ordinarySubGraph.isConsistentSnapShot());
 		testInstance.removeSubgraph(ordinarySubGraph) ;
 		assertEquals ( "3 less Nodes" , EXPECTED_NUM_NODES - 3 , testInstance.getNumNodes()) ;
 		assertEquals ( "6 less Edges" , EXPECTED_NUM_EDGES - 6 , testInstance.getNumEdges()) ;
-		assertEquals ("no nodes on subgraph" , NUMERIC_VALUE[0] , ordinarySubGraph.getNumNodes()) ;
-		assertEquals ("no edges on subgraph" , NUMERIC_VALUE[0] , ordinarySubGraph.getNumEdges()) ;
+		assertEquals ("no nodes on subgraph" , 3 , ordinarySubGraph.getNumNodes()) ;
+		assertEquals ("no edges on subgraph" , 2 , ordinarySubGraph.getNumEdges()) ;
+		assertFalse("snapshot not consistent", ordinarySubGraph.isConsistentSnapShot());
 	}
 	
 	@Test
@@ -689,11 +691,13 @@ public class CompoundGraphIntegrationTest {
 		subGraphfactory.addNode(node1) ;
 		subGraphfactory.addNode(node2) ;
 		SubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
+		assertTrue("snapshot consistent", inducedSubGraph.isConsistentSnapShot());
 		testInstance.removeSubgraph(inducedSubGraph) ;
 		assertEquals ( "3 less Nodes" , EXPECTED_NUM_NODES - 8 , testInstance.getNumNodes()) ;
 		assertEquals ( "6 less Edges" , EXPECTED_NUM_EDGES - 9 , testInstance.getNumEdges()) ;
-		assertEquals ("empty nodes on subgraph" , NUMERIC_VALUE[0] , inducedSubGraph.getNumNodes()) ;
-		assertEquals ("empty edges on subgraph" , NUMERIC_VALUE[0] , inducedSubGraph.getNumEdges()) ;
+		assertEquals ("empty nodes on subgraph" , 8 , inducedSubGraph.getNumNodes()) ;
+		assertEquals ("empty edges on subgraph" , 9 , inducedSubGraph.getNumEdges()) ;
+		assertFalse("snapshot not consistent", inducedSubGraph.isConsistentSnapShot());
 	}
 	
 	@Test

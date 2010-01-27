@@ -73,7 +73,7 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 		moveEquivalentEdges();
 		moveLinkedEdges();
 		this.additionalMoveTasks();
-		this.sourceSubCigraph.getSuperGraph().removeSubgraph(this.removalSubGraphFactory.createSubgraph());
+		this.sourceSubCigraph.getSuperGraph().internalRemoveSubgraph(this.removalSubGraphFactory.createSubgraph());
         // avoid holding onto additional unneeded memory
         this.oldNewEquivList.clear();
         this.visited.clear();

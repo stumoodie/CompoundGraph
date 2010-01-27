@@ -19,8 +19,8 @@ import java.util.Iterator;
 
 
 public interface IBasicGraph<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
+		N extends INode,
+		E extends IEdge
 > {
 
 	/**

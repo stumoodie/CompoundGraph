@@ -148,6 +148,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		return this.nodeSet.size();
 	}
 
+	@SuppressWarnings("unchecked")
 	public final boolean canCopyHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph) {
 		return subGraph != null && subGraph instanceof ISubCompoundGraph && subGraph.isInducedSubgraph()
 			&& subGraph.isConsistentSnapShot() && !subGraph.containsRoot();
@@ -160,6 +161,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		copyBuilder.setDestinatChildCompoundGraph(this);
 		copyBuilder.setSourceSubgraph(subGraph);
 		copyBuilder.makeCopy();
+		notifyCopyOperationComplete(copyBuilder.getSourceSubgraph(), copyBuilder.getCopiedComponents());
 	}
 
 	public BaseCompoundGraph getSuperGraph() {
@@ -252,8 +254,15 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		moveBuilder.setDestinatChildCompoundGraph(this);
 		moveBuilder.setSourceSubgraph(subGraph);
 		moveBuilder.makeMove();
+		notifyMoveOperationComplete(moveBuilder.getSourceSubgraph(), moveBuilder.getMovedComponents());
 	}
 	
+	protected abstract void notifyCopyOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> originalSubgraph,
+			ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> copiedSubgraph);
+
+	protected abstract void notifyMoveOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> originalSubgraph,
+			ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> movedSubgraph);
+
 	/**
 	 * Retrieves the nodes and edges created in this graph by the last copy operation. The subgraph
 	 * is <b>not</b> guaranteed to be a consistent snapshot of this graph.   If not copy operation has

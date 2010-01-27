@@ -30,6 +30,7 @@ public class SubCompoundGraph extends BaseSubCompoundGraph {
 		this.superGraph = superGraph;
 		createEdgeSet(new DirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge>());
 		createNodeSet(new NodeSet<BaseCompoundNode, BaseCompoundEdge>());
+		createTopNodeSet(new NodeSet<BaseCompoundNode, BaseCompoundEdge>());
 	}
 
 	@Override

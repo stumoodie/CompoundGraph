@@ -15,9 +15,10 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.impl;
 
+import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundGraph;
+import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
 import uk.ed.inf.graph.compound.base.BaseCompoundNode;
-
 
 public class CompoundGraph extends ArchetypalCompoundGraph {
 	private CompoundNode rootNode;
@@ -64,5 +65,16 @@ public class CompoundGraph extends ArchetypalCompoundGraph {
     protected boolean hasPassedAdditionalValidation() {
         return true;
     }
+	@Override
+	protected void notifyCopyOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> originalSubgraph,
+			ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> copiedNodes) {
+		
+	}
+
+	@Override
+	protected void notifyRemovalOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

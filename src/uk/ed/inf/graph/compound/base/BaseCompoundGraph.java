@@ -74,6 +74,11 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 		this.copyHere(subgraph);
 	}
 	
+	protected abstract void notifyCopyOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> originalSubgraph,
+			ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> copiedNodes);
+	
+	protected abstract void notifyRemovalOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph);
+
 	public abstract BaseCompoundNode getRootNode();
 
 	public final boolean containsDirectedEdge(BaseCompoundNode outNode, BaseCompoundNode inNode) {
@@ -182,10 +187,9 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	
 	public final void removeSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
 		if(!this.canRemoveSubgraph(subgraph)) throw new IllegalArgumentException("subgraph does not satify canRemoveSubgraph()");
-		removeEdges(subgraph.edgeIterator());
-		removeNodes(subgraph.nodeIterator());
+		internalRemoveSubgraph(subgraph);
+		notifyRemovalOperationComplete(subgraph);
 	}
-
 
 	private void removeEdges(Iterator<? extends BaseCompoundEdge> edgeIterator){
 		while(edgeIterator.hasNext()){
@@ -277,6 +281,7 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 		copyBuilder.setDestinatChildCompoundGraph(rootCiGraph);
 		copyBuilder.setSourceSubgraph(subGraph);
 		copyBuilder.makeCopy();
+		notifyCopyOperationComplete(copyBuilder.getSourceSubgraph(), copyBuilder.getCopiedComponents());
 	}
 	
 	public final ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> getCopiedComponents() {
@@ -321,6 +326,11 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	}
 
 	public void registerNewEdge(BaseCompoundEdge newEdge) {
+	}
+
+	void internalRemoveSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
+		removeEdges(subgraph.edgeIterator());
+		removeNodes(subgraph.nodeIterator());
 	}
 
 }

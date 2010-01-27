@@ -115,20 +115,12 @@ public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode
 			return node.equals(inNode) || node.equals(outNode);
 		}
 
-		public BaseCompoundNode getOneNode() {
-			return inNode;
-		}
-
 		public BaseCompoundNode getOtherNode(BaseCompoundNode node) {
 			BaseCompoundNode retVal = inNode;
 			if(node.equals(inNode)){
 				retVal = outNode;
 			}
 			return retVal;
-		}
-
-		public BaseCompoundNode getTwoNode() {
-			return outNode;
 		}
 
 		public BaseCompoundNode getInNode() {
