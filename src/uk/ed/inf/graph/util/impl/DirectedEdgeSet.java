@@ -58,21 +58,46 @@ public class DirectedEdgeSet <
 		return this.edgeSet.contains(edge);
 	}
 	
-	public boolean contains(N outNode, N inNode){
-		boolean retVal = !findEdges(outNode, inNode).isEmpty();
+	public boolean containsDirectedEdge(N outNode, N inNode){
+		boolean retVal = !findDirectedEdges(outNode, inNode).isEmpty();
 		
 		return retVal;
 	}
 	
-	public SortedSet<E> get(N outNode, N inNode){
-		SortedSet<E> retVal = findEdges(outNode, inNode);
+	public boolean contains(N thisNode, N thatNode){
+		boolean retVal = !findEdges(thisNode, thatNode).isEmpty();
+		
+		return retVal;
+	}
+	
+	public SortedSet<E> get(N thisNode, N thatNode){
+		SortedSet<E> retVal = findEdges(thisNode, thatNode);
 		if(retVal.isEmpty()){
 			throw new IllegalArgumentException("Nodes do not have at least one edge as expected");
 		}
 		return retVal;
 	}
 	
-	private SortedSet<E> findEdges(N outNode, N inNode){
+	public SortedSet<E> getDirectedEdge(N outNode, N inNode){
+		SortedSet<E> retVal = findDirectedEdges(outNode, inNode);
+		if(retVal.isEmpty()){
+			throw new IllegalArgumentException("Nodes do not have at least one edge as expected");
+		}
+		return retVal;
+	}
+	
+	private SortedSet<E> findEdges(N thisNode, N thatNode){
+		final SortedSet<E> retVal = new TreeSet<E>();
+		for(E edge : this.edgeSet){
+			IDirectedPair<N, E> ends = edge.getConnectedNodes();
+			if(ends.hasEnds(thisNode, thatNode)){
+				retVal.add(edge);
+			}
+		}
+		return retVal;
+	}
+	
+	private SortedSet<E> findDirectedEdges(N outNode, N inNode){
 		final SortedSet<E> retVal = new TreeSet<E>();
 		for(E edge : this.edgeSet){
 			IDirectedPair<N, E> ends = edge.getConnectedNodes();
