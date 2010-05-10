@@ -679,8 +679,42 @@ public class CompoundGraphIntegrationTest {
 		testInstance.removeSubgraph(ordinarySubGraph) ;
 		assertEquals ( "3 less Nodes" , EXPECTED_NUM_NODES - 3 , testInstance.getNumNodes()) ;
 		assertEquals ( "6 less Edges" , EXPECTED_NUM_EDGES - 6 , testInstance.getNumEdges()) ;
-		assertEquals ("no nodes on subgraph" , 3 , ordinarySubGraph.getNumNodes()) ;
-		assertEquals ("no edges on subgraph" , 2 , ordinarySubGraph.getNumEdges()) ;
+		assertEquals ("expected nodes on subgraph" , 3 , ordinarySubGraph.getNumNodes()) ;
+		assertEquals ("expected edges on subgraph" , 2 , ordinarySubGraph.getNumEdges()) ;
+		assertFalse("incident edge1 removed", testInstance.containsEdge(this.edge1));
+		assertFalse("incident edge2 removed", testInstance.containsEdge(this.edge2));
+		assertFalse("snapshot not consistent", ordinarySubGraph.isConsistentSnapShot());
+	}
+	
+	@Test
+	public final void testDeleteNode3OrdinarySubGraph () throws Exception 
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node3) ;
+		SubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
+		assertTrue("snapshot consistent", ordinarySubGraph.isConsistentSnapShot());
+		testInstance.removeSubgraph(ordinarySubGraph) ;
+		assertEquals ( "1 less Nodes" , EXPECTED_NUM_NODES - 1 , testInstance.getNumNodes()) ;
+		assertEquals ( "1 less Edges" , EXPECTED_NUM_EDGES - 1 , testInstance.getNumEdges()) ;
+		assertEquals ("expected nodes on subgraph" , 1 , ordinarySubGraph.getNumNodes()) ;
+		assertEquals ("expected edges on subgraph" , 0 , ordinarySubGraph.getNumEdges()) ;
+		assertFalse("incident edge1 removed", testInstance.containsEdge(this.edge7));
+		assertFalse("snapshot not consistent", ordinarySubGraph.isConsistentSnapShot());
+	}
+	
+	@Test
+	public final void testDeleteNode7OrdinarySubGraph () throws Exception 
+	{
+		SubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
+		subGraphfactory.addNode(node7) ;
+		SubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
+		assertTrue("snapshot consistent", ordinarySubGraph.isConsistentSnapShot());
+		testInstance.removeSubgraph(ordinarySubGraph) ;
+		assertEquals ( "2 less Nodes" , EXPECTED_NUM_NODES - 2 , testInstance.getNumNodes()) ;
+		assertEquals ( "2 less Edges" , EXPECTED_NUM_EDGES - 3 , testInstance.getNumEdges()) ;
+		assertEquals ("expected nodes on subgraph" , 2 , ordinarySubGraph.getNumNodes()) ;
+		assertEquals ("expected edges on subgraph" , 0 , ordinarySubGraph.getNumEdges()) ;
+		assertFalse("incident edge1 removed", testInstance.containsEdge(this.edge7));
 		assertFalse("snapshot not consistent", ordinarySubGraph.isConsistentSnapShot());
 	}
 	

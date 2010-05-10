@@ -187,29 +187,32 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	
 	public final void removeSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
 		if(!this.canRemoveSubgraph(subgraph)) throw new IllegalArgumentException("subgraph does not satify canRemoveSubgraph()");
-		internalRemoveSubgraph(subgraph);
-		notifyRemovalOperationComplete(subgraph);
+		BaseSubCompoundGraph removedGraph = internalRemoveSubgraph(subgraph);
+		notifyRemovalOperationComplete(removedGraph);
 	}
 
-	private void removeEdges(Iterator<? extends BaseCompoundEdge> edgeIterator){
+	private void removeEdges(BaseSubCompoundGraphFactory selnFactory, Iterator<? extends BaseCompoundEdge> edgeIterator){
 		while(edgeIterator.hasNext()){
 			BaseCompoundEdge edge = (BaseCompoundEdge)edgeIterator.next();
 			edge.markRemoved(true);
+			selnFactory.addEdge(edge);
 		}
 	}
 	
-	private void removeNodes(Iterator<? extends BaseCompoundNode> nodeIterator){
+	private void removeNodes(BaseSubCompoundGraphFactory selnFactory, Iterator<? extends BaseCompoundNode> nodeIterator){
 		while(nodeIterator.hasNext()){
 			BaseCompoundNode node = (BaseCompoundNode)nodeIterator.next();
 			if(node.equals(this.getRootNode())){
 				throw new IllegalStateException("Cannot remove the root node from a compound graph");
 			}
 			node.markRemoved(true);
+			selnFactory.addNode(node);
 			// remove edges associated with node
 			Iterator<BaseCompoundEdge> edgeIter = node.edgeIterator();
 			while(edgeIter.hasNext()){
 				BaseCompoundEdge edge = edgeIter.next();
 				edge.markRemoved(true);
+				selnFactory.addEdge(edge);
 			}
 		}
 	}
@@ -328,9 +331,11 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	public void registerNewEdge(BaseCompoundEdge newEdge) {
 	}
 
-	void internalRemoveSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
-		removeEdges(subgraph.edgeIterator());
-		removeNodes(subgraph.nodeIterator());
+	BaseSubCompoundGraph internalRemoveSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
+		BaseSubCompoundGraphFactory selnFactory = this.subgraphFactory();
+		removeEdges(selnFactory, subgraph.edgeIterator());
+		removeNodes(selnFactory, subgraph.nodeIterator());
+		return selnFactory.createPermissiveInducedSubgraph();
 	}
 
 }
