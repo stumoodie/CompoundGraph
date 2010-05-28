@@ -55,4 +55,13 @@ public class ChildCompoundGraph extends ArchetypalChildCompoundGraph {
 	protected void notifyMoveOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> originalSubgraph,
 			ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> movedSubgraph) {
 	}
+
+	@Override
+	public void notifyNewEdge(BaseCompoundEdge newEdge) {
+	}
+
+	@Override
+	public void notifyNewNode(BaseCompoundNode newNode) {
+	}
+	
 }

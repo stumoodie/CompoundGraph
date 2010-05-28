@@ -325,11 +325,9 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	    return retVal;
 	}
 
-	public void registerNewNode(BaseCompoundNode newNode) {
-	}
+	public abstract void notifyNewNode(BaseCompoundNode newNode);
 
-	public void registerNewEdge(BaseCompoundEdge newEdge) {
-	}
+	public abstract void notifyNewEdge(BaseCompoundEdge newEdge);
 
 	BaseSubCompoundGraph internalRemoveSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
 		BaseSubCompoundGraphFactory selnFactory = this.subgraphFactory();

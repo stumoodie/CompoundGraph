@@ -367,4 +367,9 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
         }
         return retVal;
     }
+
+	public abstract void notifyNewNode(BaseCompoundNode newNode);
+
+	public abstract void notifyNewEdge(BaseCompoundEdge newEdge);
+
 }
