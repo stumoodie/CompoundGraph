@@ -38,5 +38,4 @@ public class SubCompoundGraph extends BaseSubCompoundGraph {
 		return this.superGraph;
 	}
 
-	
 }

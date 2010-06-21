@@ -73,8 +73,15 @@ public class CompoundGraph extends ArchetypalCompoundGraph {
 
 	@Override
 	protected void notifyRemovalOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
-		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void notifyNewEdge(BaseCompoundEdge newEdge) {
+	}
+
+	@Override
+	public void notifyNewNode(BaseCompoundNode newNode) {
 	}
 
 }

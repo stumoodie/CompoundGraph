@@ -33,11 +33,15 @@ import uk.ed.inf.tree.ITree;
 public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNode, BaseCompoundEdge>,
 		IRestorableGraph<BaseCompoundNode, BaseCompoundEdge>,
 		IModifiableCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
+	private static final String DEBUG_PROP_NAME = "uk.ed.inf.graph.compound.base.debugging";
+	// added debug checks to graph
+	private final boolean debuggingEnabled;
     private final Logger logger = Logger.getLogger(this.getClass());
 	private final BaseCompoundGraphStateHandler stateHandler;
 	private BaseGraphCopyBuilder copyBuilder;
 	
 	protected BaseCompoundGraph(BaseGraphCopyBuilder copyBuilder){
+		this.debuggingEnabled = Boolean.getBoolean(DEBUG_PROP_NAME);
 		this.stateHandler = new BaseCompoundGraphStateHandler(this);
 		this.copyBuilder = copyBuilder;
 	}
@@ -186,30 +190,33 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	}
 	
 	public final void removeSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
-		if(!this.canRemoveSubgraph(subgraph)) throw new IllegalArgumentException("subgraph does not satify canRemoveSubgraph()");
-		internalRemoveSubgraph(subgraph);
-		notifyRemovalOperationComplete(subgraph);
+		if(this.debuggingEnabled && !this.canRemoveSubgraph(subgraph)) throw new IllegalArgumentException("subgraph does not satify canRemoveSubgraph()");
+		BaseSubCompoundGraph removedGraph = internalRemoveSubgraph(subgraph);
+		notifyRemovalOperationComplete(removedGraph);
 	}
 
-	private void removeEdges(Iterator<? extends BaseCompoundEdge> edgeIterator){
+	private void removeEdges(BaseSubCompoundGraphFactory selnFactory, Iterator<? extends BaseCompoundEdge> edgeIterator){
 		while(edgeIterator.hasNext()){
 			BaseCompoundEdge edge = (BaseCompoundEdge)edgeIterator.next();
 			edge.markRemoved(true);
+			selnFactory.addEdge(edge);
 		}
 	}
 	
-	private void removeNodes(Iterator<? extends BaseCompoundNode> nodeIterator){
+	private void removeNodes(BaseSubCompoundGraphFactory selnFactory, Iterator<? extends BaseCompoundNode> nodeIterator){
 		while(nodeIterator.hasNext()){
 			BaseCompoundNode node = (BaseCompoundNode)nodeIterator.next();
 			if(node.equals(this.getRootNode())){
 				throw new IllegalStateException("Cannot remove the root node from a compound graph");
 			}
 			node.markRemoved(true);
+			selnFactory.addNode(node);
 			// remove edges associated with node
 			Iterator<BaseCompoundEdge> edgeIter = node.edgeIterator();
 			while(edgeIter.hasNext()){
 				BaseCompoundEdge edge = edgeIter.next();
 				edge.markRemoved(true);
+				selnFactory.addEdge(edge);
 			}
 		}
 	}
@@ -275,7 +282,7 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	}
 	
 	public final void copyHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph) {
-		if(!canCopyHere(subGraph)) throw new IllegalArgumentException("Cannot copy graph here");
+		if(this.debuggingEnabled && !canCopyHere(subGraph)) throw new IllegalArgumentException("Cannot copy graph here");
 		
 		BaseChildCompoundGraph rootCiGraph = this.getNodeTree().getRootNode().getChildCompoundGraph();
 		copyBuilder.setDestinatChildCompoundGraph(rootCiGraph);
@@ -322,15 +329,15 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	    return retVal;
 	}
 
-	public void registerNewNode(BaseCompoundNode newNode) {
-	}
+	public abstract void notifyNewNode(BaseCompoundNode newNode);
 
-	public void registerNewEdge(BaseCompoundEdge newEdge) {
-	}
+	public abstract void notifyNewEdge(BaseCompoundEdge newEdge);
 
-	void internalRemoveSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
-		removeEdges(subgraph.edgeIterator());
-		removeNodes(subgraph.nodeIterator());
+	BaseSubCompoundGraph internalRemoveSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
+		BaseSubCompoundGraphFactory selnFactory = this.subgraphFactory();
+		removeEdges(selnFactory, subgraph.edgeIterator());
+		removeNodes(selnFactory, subgraph.nodeIterator());
+		return selnFactory.createPermissiveInducedSubgraph();
 	}
 
 }

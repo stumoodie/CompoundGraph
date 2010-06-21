@@ -37,7 +37,9 @@ public class EdgeFactory implements IUndirectedEdgeFactory<Node, Edge> {
 	}
 	
 	public Edge createEdge() {
-		logger.debug("Creating edge between nodes(" + oneNode + ", " + twoNode + ")");
+		if(logger.isDebugEnabled()){
+			logger.debug("Creating edge between nodes(" + oneNode + ", " + twoNode + ")");
+		}
 		Edge retVal = new Edge(this.graph, this.graph.getEdgeCounter().nextIndex(), oneNode, twoNode);
 		this.graph.addNewEdge(retVal);
 		return retVal;

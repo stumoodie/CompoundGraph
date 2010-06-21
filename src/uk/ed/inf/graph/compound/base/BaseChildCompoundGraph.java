@@ -32,6 +32,10 @@ import uk.ed.inf.graph.util.impl.FilteredEdgeSet;
 import uk.ed.inf.graph.util.impl.FilteredNodeSet;
 
 public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<BaseCompoundNode, BaseCompoundEdge>,	IModifiableChildCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
+	private static final String DEBUG_PROP_NAME = "uk.ed.inf.graph.compound.base.debugging";
+	// added debug checks to graph
+	private final boolean debuggingEnabled;
+	
     private final Logger logger = Logger.getLogger(this.getClass());
 	private final BaseGraphCopyBuilder copyBuilder;
 	private final BaseGraphMoveBuilder moveBuilder;
@@ -41,6 +45,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 	protected BaseChildCompoundGraph(BaseGraphCopyBuilder copyBuilder , BaseGraphMoveBuilder moveBuilder ){
 		if(copyBuilder == null || moveBuilder == null ) throw new IllegalArgumentException("builder cannot be null");
 		
+		this.debuggingEnabled = Boolean.getBoolean(DEBUG_PROP_NAME);
 		this.copyBuilder = copyBuilder;
 		this.moveBuilder = moveBuilder ;
 	}
@@ -156,7 +161,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 
 	
 	public final void copyHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph) {
-		if(!canCopyHere(subGraph)) throw new IllegalArgumentException("Cannot copy graph here");
+		if(this.debuggingEnabled && !canCopyHere(subGraph)) throw new IllegalArgumentException("Cannot copy graph here");
 		
 		copyBuilder.setDestinatChildCompoundGraph(this);
 		copyBuilder.setSourceSubgraph(subGraph);
@@ -249,7 +254,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 	 * @throws IllegalArgumentException if <code>canMoveHere(subGraph) == false</code>.
 	 */
 	public void moveHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph){
-		if(!canMoveHere(subGraph)) throw new IllegalArgumentException("Cannot move graph here");
+		if(this.debuggingEnabled && !canMoveHere(subGraph)) throw new IllegalArgumentException("Cannot move graph here");
 		
 		moveBuilder.setDestinatChildCompoundGraph(this);
 		moveBuilder.setSourceSubgraph(subGraph);
@@ -359,12 +364,19 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
                 }
             }
         }
-        logger.debug("Child Compound Graph: " + this + " has validity = "
-                + retVal);
+		if(logger.isDebugEnabled()){
+			logger.debug("Child Compound Graph: " + this + " has validity = "
+					+ retVal);
+		}
         if(!this.hasPassedAdditionalValidation()){
             logger.error("Graph Invalid: addition validation from super class has failed");
         	retVal = false;
         }
         return retVal;
     }
+
+	public abstract void notifyNewNode(BaseCompoundNode newNode);
+
+	public abstract void notifyNewEdge(BaseCompoundEdge newEdge);
+
 }

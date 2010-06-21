@@ -218,4 +218,5 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseComp
 	public final void addNode(BaseCompoundNode node) {
 		this.nodeSet.add(node);
 	}
+	
 }
