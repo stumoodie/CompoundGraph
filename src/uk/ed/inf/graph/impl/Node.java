@@ -61,7 +61,9 @@ public final class Node implements IUndirectedNode<Node, Edge>, IRestorableGraph
 		});
 		this.removed = false;
 		this.listenableHelper = new NodeStructureChangeListenee<Node, Edge>(this);
-		this.logger.debug("Created new node idx=" + index);
+		if(logger.isDebugEnabled()){
+			this.logger.debug("Created new node idx=" + index);
+		}
 	}
 	
 	
@@ -105,7 +107,9 @@ public final class Node implements IUndirectedNode<Node, Edge>, IRestorableGraph
 	void addEdge(Edge edge){
 		this.edgeSet.add(edge);
 		this.listenableHelper.notifyNodeStructureChange(GraphStructureChangeType.ADDED, edge);
-		this.logger.debug("node(" + index + "): added edge=" + edge);
+		if(logger.isDebugEnabled()){
+			this.logger.debug("node(" + index + "): added edge=" + edge);
+		}
 	}
 	
 	void removedEdge(Edge edge){
@@ -153,7 +157,9 @@ public final class Node implements IUndirectedNode<Node, Edge>, IRestorableGraph
 
 
 	public void markRemoved(boolean removeFlag) {
-		this.logger.debug("node id(" + this.index + "), changing removal status to: " + removeFlag);
+		if(logger.isDebugEnabled()){
+			this.logger.debug("node id(" + this.index + "), changing removal status to: " + removeFlag);
+		}
 		this.removed = removeFlag;
 		this.listenableHelper.setListenersEnabled(!removeFlag);
 	}

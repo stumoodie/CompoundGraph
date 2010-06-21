@@ -35,7 +35,9 @@ public final class Edge implements IUndirectedEdge<Node, Edge>, IRestorableGraph
 		oneNode.addEdge(this);
 		twoNode.addEdge(this);
 		this.removed = false;
-		this.logger.debug("Created new edge id=" + index + ", nodes(" + oneNode + ", " + twoNode + ")");
+		if(logger.isDebugEnabled()){
+			this.logger.debug("Created new edge id=" + index + ", nodes(" + oneNode + ", " + twoNode + ")");
+		}
 	}
 	
 	public NodePair getConnectedNodes() {
@@ -93,7 +95,9 @@ public final class Edge implements IUndirectedEdge<Node, Edge>, IRestorableGraph
 	}
 
 	public void markRemoved(boolean markRemoved) {
-		this.logger.debug("edge id(" + this.index + "), changing removal status to: " + markRemoved);
+		if(logger.isDebugEnabled()){
+			this.logger.debug("edge id(" + this.index + "), changing removal status to: " + markRemoved);
+		}
 		this.removed = markRemoved;
 		this.connectedNodes.getOneNode().removedEdge(this);
 		if(!this.isSelfEdge()){

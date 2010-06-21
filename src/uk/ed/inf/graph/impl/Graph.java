@@ -192,7 +192,9 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 			Edge edge = (Edge)edgeIterator.next();
 //			edge.markRemoved(true);
 			removedEdges.add(edge);
-			this.logger.debug("removed edge: " + edge);
+			if(logger.isDebugEnabled()){
+				this.logger.debug("removed edge: " + edge);
+			}
 		}
 		this.logger.debug("exiting method removeEdges");
 	}
@@ -214,12 +216,16 @@ public final class Graph implements IUndirectedGraph<Node, Edge>, IRestorableGra
 			for(Edge edge : edgeDeletionSet){
 //				edge.markRemoved(true);
 				removedEdges.add(edge);
-				this.logger.debug("removed edge: " + edge);
+				if(logger.isDebugEnabled()){
+					this.logger.debug("removed edge: " + edge);
+				}
 			}
 			// remove node
 //			node.markRemoved(true);
 			removedNodes.add(node);
-			this.logger.debug("removed node: " + node);
+			if(logger.isDebugEnabled()){
+				this.logger.debug("removed node: " + node);
+			}
 		}
 		this.logger.debug("exiting method removeNodes");
 	}
