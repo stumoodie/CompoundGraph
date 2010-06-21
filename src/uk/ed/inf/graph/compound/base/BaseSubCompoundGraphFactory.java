@@ -22,14 +22,16 @@ import java.util.Set;
 import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
 public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFactory<BaseCompoundNode, BaseCompoundEdge> {
+	private static final String DEBUG_PROP_NAME = "uk.ed.inf.graph.compound.base.debugging";
 	// added debug checks to graph
-	private static final boolean DEBUG = true;
+	private final boolean debuggingEnabled;
 	private final BaseSubCompoundGraphBuilder builder;
 	private final Set<BaseCompoundNode> nodeList = new HashSet<BaseCompoundNode>();
 	private final Set<BaseCompoundEdge> edgeList = new HashSet<BaseCompoundEdge>();
 
 	protected BaseSubCompoundGraphFactory(BaseSubCompoundGraphBuilder builder){
 		this.builder = builder;
+		this.debuggingEnabled = Boolean.getBoolean(DEBUG_PROP_NAME);
 	}
 	
 	public final void addNode(BaseCompoundNode node){
@@ -111,7 +113,7 @@ public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFa
 		}
 		builder.buildSubgraph();
 		BaseSubCompoundGraph retVal = builder.getSubgraph();
-		if(DEBUG && !retVal.isInducedSubgraph()){
+		if(debuggingEnabled && !retVal.isInducedSubgraph()){
 			throw new IllegalStateException("The nodes and edges chosen in the factory would not permit the creation of an induced subgraph");
 		}
 		return retVal;

@@ -33,11 +33,15 @@ import uk.ed.inf.tree.ITree;
 public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNode, BaseCompoundEdge>,
 		IRestorableGraph<BaseCompoundNode, BaseCompoundEdge>,
 		IModifiableCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
+	private static final String DEBUG_PROP_NAME = "uk.ed.inf.graph.compound.base.debugging";
+	// added debug checks to graph
+	private final boolean debuggingEnabled;
     private final Logger logger = Logger.getLogger(this.getClass());
 	private final BaseCompoundGraphStateHandler stateHandler;
 	private BaseGraphCopyBuilder copyBuilder;
 	
 	protected BaseCompoundGraph(BaseGraphCopyBuilder copyBuilder){
+		this.debuggingEnabled = Boolean.getBoolean(DEBUG_PROP_NAME);
 		this.stateHandler = new BaseCompoundGraphStateHandler(this);
 		this.copyBuilder = copyBuilder;
 	}
@@ -186,7 +190,7 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	}
 	
 	public final void removeSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
-		if(!this.canRemoveSubgraph(subgraph)) throw new IllegalArgumentException("subgraph does not satify canRemoveSubgraph()");
+		if(this.debuggingEnabled && !this.canRemoveSubgraph(subgraph)) throw new IllegalArgumentException("subgraph does not satify canRemoveSubgraph()");
 		BaseSubCompoundGraph removedGraph = internalRemoveSubgraph(subgraph);
 		notifyRemovalOperationComplete(removedGraph);
 	}
@@ -278,7 +282,7 @@ public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNo
 	}
 	
 	public final void copyHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph) {
-		if(!canCopyHere(subGraph)) throw new IllegalArgumentException("Cannot copy graph here");
+		if(this.debuggingEnabled && !canCopyHere(subGraph)) throw new IllegalArgumentException("Cannot copy graph here");
 		
 		BaseChildCompoundGraph rootCiGraph = this.getNodeTree().getRootNode().getChildCompoundGraph();
 		copyBuilder.setDestinatChildCompoundGraph(rootCiGraph);
