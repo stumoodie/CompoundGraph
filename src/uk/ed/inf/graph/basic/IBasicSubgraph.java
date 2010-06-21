@@ -16,12 +16,9 @@ limitations under the License.
 package uk.ed.inf.graph.basic;
 
 
-public interface IBasicSubgraph<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-> extends IBasicGraph<N, E> {
+public interface IBasicSubgraph extends IBasicGraph {
 
-	IBasicGraph<N, E> getSuperGraph();
+	IBasicGraph getSuperGraph();
 	
 	boolean isInducedSubgraph();
 	

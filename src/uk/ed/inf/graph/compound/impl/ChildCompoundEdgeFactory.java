@@ -15,6 +15,7 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.impl;
 
+import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundEdge;
 import uk.ed.inf.graph.compound.base.BaseChildCompoundEdgeFactory;
 import uk.ed.inf.graph.compound.base.BaseChildCompoundGraph;
@@ -71,7 +72,7 @@ public class ChildCompoundEdgeFactory extends BaseChildCompoundEdgeFactory {
 	}
 
 	@Override
-	public void setPair(BaseCompoundNode outNode, BaseCompoundNode inNode) {
+	public void setPair(ICompoundNode outNode, ICompoundNode inNode) {
 		if(outNode instanceof CompoundNode && inNode instanceof CompoundNode){
 			this.outNode = (CompoundNode)outNode;
 			this.inNode = (CompoundNode)inNode;
@@ -86,7 +87,8 @@ public class ChildCompoundEdgeFactory extends BaseChildCompoundEdgeFactory {
 		return this.isValidNodePair(this.outNode, this.inNode);
 	}
 
-	public boolean isValidNodePair(BaseCompoundNode outNode, BaseCompoundNode inNode) {
+	@Override
+	public boolean isValidNodePair(ICompoundNode outNode, ICompoundNode inNode) {
 		boolean retVal = false;
 		if(super.isValidBaseNodePair(outNode, inNode)){
 			retVal = outNode instanceof CompoundNode && inNode instanceof CompoundNode;

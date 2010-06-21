@@ -15,15 +15,12 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound;
 
-import uk.ed.inf.graph.basic.IBasicNodeFactory;
+public interface ICompoundNodeFactory {
 
-public interface ICompoundNodeFactory<
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
-		E extends ICompoundEdge<N, E>
-> extends IBasicNodeFactory<N, E> {
+	ICompoundGraph getGraph();
 
-	ICompoundGraph<N, E> getGraph();
-
-	N getParentNode();
+	ICompoundNode getParentNode();
+	
+	ICompoundNode createNode();
 	
 }

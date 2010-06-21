@@ -28,29 +28,26 @@ import uk.ed.inf.graph.basic.IBasicNode;
  * @author smoodie
  *
  */
-public interface INodeChangeListenee<
-N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-> {
+public interface INodeChangeListenee {
 
 	/**
 	 * Add the property change listener.
 	 * @param listener the listener to be added, which cannot be null.
 	 * @throws IllegalArgumentException if <code>listener</code> is null.
 	 */
-	void addNodeChangeListener(INodeChangeListener<N, E> listener);
+	void addNodeChangeListener(INodeChangeListener listener);
 	
 	/**
 	 * Remove the property change listener.
 	 * @param listener the listener to be removed, which cannot be null.
 	 * @throws IllegalArgumentException if <code>listener</code> is null.
 	 */
-	void removeNodeChangeListener(INodeChangeListener<N, E> listener);
+	void removeNodeChangeListener(INodeChangeListener listener);
 	
 	/**
 	 * Gets an iterator of listeners.
 	 * @return The list of listeners which can be modified without affecting this instance.
 	 */
-	Iterator<INodeChangeListener<N, E>> nodeChangeListenerIterator();
+	Iterator<INodeChangeListener> nodeChangeListenerIterator();
 	
 }

@@ -25,10 +25,7 @@ import uk.ed.inf.graph.basic.IBasicNode;
  * @author smoodie
  *
  */
-public interface INodeChangeEvent<
-N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-> {
+public interface INodeChangeEvent {
 	/**
 	 * Determines what the change to the node's structure. 
 	 * @return the change type.
@@ -39,12 +36,12 @@ N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 	 * Returns the edge that was changed. 
 	 * @return the edge that was changed.
 	 */
-	E getChangedEdge();
+	IBasicEdge getChangedEdge();
 	
 	/**
 	 * Gets the node whose structure has been changed by this event.
 	 * @return the node that was changed
 	 */
-	N getChangedNode();
+	IBasicNode getChangedNode();
 
 }

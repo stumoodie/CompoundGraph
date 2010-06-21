@@ -16,49 +16,45 @@ limitations under the License.
 package uk.ed.inf.graph.util;
 
 import java.util.Iterator;
-import java.util.SortedSet;
 
-import uk.ed.inf.graph.basic.IBasicEdge;
-import uk.ed.inf.graph.basic.IBasicNode;
-import uk.ed.inf.graph.basic.IBasicPair;
-import uk.ed.inf.graph.basic.IBasicSubgraph;
-import uk.ed.inf.graph.basic.ISubgraphAlgorithms;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodePair;
+import uk.ed.inf.graph.compound.ISubCompoundGraph;
+import uk.ed.inf.graph.compound.ISubgraphAlgorithms;
 
-public final class SubgraphAlgorithms<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-> implements ISubgraphAlgorithms<N, E> {
+
+public final class SubgraphAlgorithms implements ISubgraphAlgorithms {
 	
-	private final IBasicSubgraph<N, E> basicSubgraph;
+	private final ISubCompoundGraph basicSubgraph;
 	
-	public SubgraphAlgorithms(IBasicSubgraph<N, E> subgraph){
+	public SubgraphAlgorithms(ISubCompoundGraph subgraph){
 		this.basicSubgraph = subgraph;
 	}
 	
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.ISubgraphAlgorithms#getSubgraph()
 	 */
-	public IBasicSubgraph<N, E> getSubgraph(){
+	public ISubCompoundGraph getSubgraph(){
 		return this.basicSubgraph;
 	}
 	
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.ISubgraphAlgorithms#isInducedSubgraph()
 	 */
-	@SuppressWarnings("unchecked")
 	public boolean isInducedSubgraph(){
 		boolean retVal = true;
-		Iterator<N> graphNodeIter = this.basicSubgraph.getSuperGraph().nodeIterator();
+		Iterator<ICompoundNode> graphNodeIter = this.basicSubgraph.getSuperGraph().nodeIterator();
 		while(graphNodeIter.hasNext() && retVal == true){
-			N thisNode = graphNodeIter.next();
+			ICompoundNode thisNode = graphNodeIter.next();
 			if(this.basicSubgraph.containsNode(thisNode)){
-				Iterator<N> thatNodeIter = thisNode.connectedNodeIterator();
+				Iterator<ICompoundNode> thatNodeIter = thisNode.connectedNodeIterator();
 				while(thatNodeIter.hasNext() && retVal == true){
-					N thatNode = thatNodeIter.next();
+					ICompoundNode thatNode = thatNodeIter.next();
 					if(this.basicSubgraph.containsNode(thatNode)){
 						// subgraph contains both nodes. To be induced it must contain
 						// any edges that exist between them.
-						for(E edge : (SortedSet<E>) thisNode.getEdgesWith(thatNode)){
+						for(ICompoundEdge edge : thisNode.getEdgesWith(thatNode)){
 							if(this.basicSubgraph.containsEdge(edge) == false){
 								retVal = false;
 								break;
@@ -68,10 +64,10 @@ public final class SubgraphAlgorithms<
 				}
 			}
 		}
-		Iterator<E> edgeIter = this.basicSubgraph.edgeIterator();
+		Iterator<ICompoundEdge> edgeIter = this.basicSubgraph.edgeIterator();
 		while(edgeIter.hasNext()){
-			E edge = edgeIter.next();
-			IBasicPair<N, E> pair = edge.getConnectedNodes();
+			ICompoundEdge edge = edgeIter.next();
+			ICompoundNodePair pair = edge.getConnectedNodes();
 			if(this.basicSubgraph.containsConnection(pair) == false){
 				retVal = false;
 				break;

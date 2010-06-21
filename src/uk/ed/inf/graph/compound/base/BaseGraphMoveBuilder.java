@@ -22,11 +22,13 @@ import java.util.Map;
 import java.util.Set;
 
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
+import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraphMoveBuilder;
+import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
-import uk.ed.inf.graph.directed.IDirectedPair;
 
-public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<BaseCompoundNode, BaseCompoundEdge> {
+public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	private BaseSubCompoundGraph sourceSubCigraph;
 	private BaseChildCompoundGraph destSubCigraph;
 	private BaseSubCompoundGraphFactory subGraphFactory;
@@ -44,7 +46,7 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 	 * @param sourceSubCompoundGraph source subgraph to be moved
 	 * @throws IllegalArgumentException if <code>sourceSubCompoundGraph</code> is not of type <code>BaseSubCompoundGraph</code>. 
 	 */
-	public void setSourceSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> sourceSubCompoundGraph){
+	public void setSourceSubgraph(ISubCompoundGraph sourceSubCompoundGraph){
 		if(!(sourceSubCompoundGraph instanceof BaseSubCompoundGraph)){
 			throw new IllegalArgumentException("sourceSubCompoundGraph must be of type BaseSubCompondGraph");
 		}
@@ -56,7 +58,7 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 	 * @param sourceSubCompoundGraph target child graph to be moved to
 	 * @throws IllegalArgumentException if <code>childCompoundGraph</code> is not of type <code>BaseChildCompoundGraph</code>. 
 	 */
-	public void setDestinatChildCompoundGraph(IChildCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> childCompoundGraph){
+	public void setDestinatChildCompoundGraph(IChildCompoundGraph childCompoundGraph){
 		if(!(childCompoundGraph instanceof BaseChildCompoundGraph)){
 			throw new IllegalArgumentException("childCompoundGraph must be of type BaseChildCompondGraph");
 		}
@@ -96,9 +98,9 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 	 * @see uk.ed.inf.graph.compound.base.ICompoundGraphCopyBuilder#copyNodes()
 	 */
 	private void moveNodes(){
-		Iterator<BaseCompoundNode> sourceNodeIter = this.sourceSubCigraph.topNodeIterator();
+		Iterator<ICompoundNode> sourceNodeIter = this.sourceSubCigraph.topNodeIterator();
 		while(sourceNodeIter.hasNext()){
-			BaseCompoundNode srcNode = sourceNodeIter.next();
+			BaseCompoundNode srcNode = (BaseCompoundNode)sourceNodeIter.next();
 			if(!visited.contains(srcNode.getIndex())){
 				if(srcNode.getParent().equals(this.destSubCigraph.getRootNode())){
 					//the source and destination are the same so don't move the top node
@@ -122,9 +124,9 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 	private void markUnmovedNode(BaseCompoundNode srcNode, BaseCompoundNode destParentNode){
 		this.visited.add(srcNode.getIndex()) ;
 		this.oldNewEquivList.put(srcNode, srcNode);
-		Iterator<? extends BaseCompoundNode> childIter = srcNode.childIterator();
+		Iterator<ICompoundNode> childIter = srcNode.childIterator();
 		while(childIter.hasNext()){
-			BaseCompoundNode childNode = childIter.next();
+			BaseCompoundNode childNode = (BaseCompoundNode)childIter.next();
 			markUnmovedNode(childNode, srcNode);
 		}
 	}
@@ -135,9 +137,9 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 		this.oldNewEquivList.put(srcNode, newNode);
 		this.subGraphFactory.addNode(newNode);
 		this.removalSubGraphFactory.addNode(srcNode);
-		Iterator<? extends BaseCompoundNode> childIter = srcNode.childIterator();
+		Iterator<ICompoundNode> childIter = srcNode.childIterator();
 		while(childIter.hasNext()){
-			BaseCompoundNode childNode = childIter.next();
+			BaseCompoundNode childNode = (BaseCompoundNode)childIter.next();
 			moveNode(childNode, newNode);
 		}
 	}
@@ -163,10 +165,10 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 	 * @see uk.ed.inf.graph.compound.base.ICompoundGraphCopyBuilder#copyEquivalentEdges()
 	 */
 	private void moveEquivalentEdges(){
-		Iterator<BaseCompoundEdge> edgeIter = this.sourceSubCigraph.edgeIterator();
+		Iterator<ICompoundEdge> edgeIter = this.sourceSubCigraph.edgeIterator();
 		while(edgeIter.hasNext()){
-			BaseCompoundEdge srcEdge = edgeIter.next();
-			IDirectedPair<BaseCompoundNode, BaseCompoundEdge> ends = srcEdge.getConnectedNodes();
+			BaseCompoundEdge srcEdge = (BaseCompoundEdge)edgeIter.next();
+			ICompoundNodePair ends = srcEdge.getConnectedNodes();
 			BaseCompoundNode newInNode = this.oldNewEquivList.get(ends.getInNode());
 			BaseCompoundNode newOutNode = this.oldNewEquivList.get(ends.getOutNode());
 			BaseCompoundNode oldOwner = srcEdge.getOwningChildGraph().getRootNode();
@@ -176,11 +178,11 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 				// the submap does not contain the lca of this edge so it must be calculated from
 				// scratch
 				BaseCompoundGraph ciGraph = this.destSubCigraph.getSuperGraph();
-				BaseCompoundNode lca = ciGraph.getLcaNode(newInNode, newOutNode);
+				ICompoundNode lca = ciGraph.getLcaNode(newInNode, newOutNode);
 				if(lca == null){
 					throw new IllegalStateException("The graph and subgraph are inconsistent: an lca for a copied edge could not be found");
 				}
-				newOwner = lca;
+				newOwner = (BaseCompoundNode)lca;
 			}
 			BaseCompoundEdge newEdge = srcEdge;
 			// now we move the edge only if it's connecting nodes and parent have changed
@@ -196,37 +198,36 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder<
 	 * @see uk.ed.inf.graph.compound.base.ICompoundGraphCopyBuilder#copyEquivalentEdges()
 	 */
 	private void moveLinkedEdges(){
-		Iterator<BaseCompoundNode> nodeIter = this.sourceSubCigraph
-				.nodeIterator();
+		Iterator<ICompoundNode> nodeIter = this.sourceSubCigraph.nodeIterator();
 		Set<Integer> visited = new HashSet<Integer>();
 		while (nodeIter.hasNext()) {
-			BaseCompoundNode srcNode = nodeIter.next();
-			Iterator<BaseCompoundEdge> edgeIter = srcNode.edgeIterator();
+			BaseCompoundNode srcNode = (BaseCompoundNode)nodeIter.next();
+			Iterator<ICompoundEdge> edgeIter = srcNode.edgeIterator();
 			while (edgeIter.hasNext()) {
 				boolean foundLinkedNode = true;
-				BaseCompoundEdge srcEdge = edgeIter.next();
+				BaseCompoundEdge srcEdge = (BaseCompoundEdge)edgeIter.next();
 				if (!visited.contains(srcEdge.getIndex())) {
 					visited.add(srcEdge.getIndex());
-					IDirectedPair<BaseCompoundNode, BaseCompoundEdge> ends = srcEdge.getConnectedNodes();
+					ICompoundNodePair ends = srcEdge.getConnectedNodes();
 					BaseCompoundNode newInNode = this.oldNewEquivList.get(ends.getInNode());
 					BaseCompoundNode newOutNode = this.oldNewEquivList.get(ends.getOutNode());
 					if(newInNode == null){
-						newInNode = ends.getInNode();
+						newInNode = (BaseCompoundNode)ends.getInNode();
 					}
 					else if(newOutNode == null){
-						newOutNode = ends.getOutNode();
+						newOutNode = (BaseCompoundNode)ends.getOutNode();
 					}
 					else{
 						foundLinkedNode = false;
 					}
 					if(foundLinkedNode){
 						BaseCompoundGraph ciGraph = this.destSubCigraph.getSuperGraph();
-						BaseCompoundNode lca = ciGraph.getLcaNode(newInNode, newOutNode);
+						ICompoundNode lca = ciGraph.getLcaNode(newInNode, newOutNode);
 						if (lca == null) {
 							throw new IllegalStateException(
 							"The graph and subgraph are inconsistent: an lca for a copied edge could not be found");
 						}
-						BaseCompoundEdge newEdge = createMoveOfEdge(srcEdge, lca.getChildCompoundGraph(), newOutNode, newInNode);
+						BaseCompoundEdge newEdge = createMoveOfEdge(srcEdge, (BaseChildCompoundGraph)lca.getChildCompoundGraph(), newOutNode, newInNode);
 						this.removalSubGraphFactory.addEdge(srcEdge);
 						this.subGraphFactory.addEdge(newEdge);
 					}

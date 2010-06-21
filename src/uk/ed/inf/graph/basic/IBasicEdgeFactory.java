@@ -15,16 +15,13 @@ limitations under the License.
 */
 package uk.ed.inf.graph.basic;
 
-public interface IBasicEdgeFactory<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-> {
+public interface IBasicEdgeFactory {
 
 	/**
 	 * Get the graph to which this factory acts upon.
 	 * @return The owning graph, cannot be null.
 	 */
-	IBasicGraph<N, E> getGraph();
+	IBasicGraph getGraph();
 	
 	/**
 	 * Sets a pair of nodes with which to create a new edge.
@@ -32,7 +29,7 @@ public interface IBasicEdgeFactory<
 	 * @param thatNode another node in the edge pair, cannot be null.
 	 * @throws IllegalArgumentException if <code>isValidNodePair(thisNode, thatNode) == false</code>.
 	 */
-	void setPair(N thisNode, N thatNode);
+	void setPair(IBasicNode thisNode, IBasicNode thatNode);
 	
 	
 	/**
@@ -43,14 +40,14 @@ public interface IBasicEdgeFactory<
 	 * @param thatNode another node that may be the end of an edge.
 	 * @return true if the above conditions are met, false otherwise.
 	 */
-	boolean isValidNodePair(N thisNode, N thatNode);
+	boolean isValidNodePair(IBasicNode thisNode, IBasicNode thatNode);
 	
 	/**
 	 * Returns the current node pair, or false if no nodes have been set. 
 	 * @return the current node pair or false if <code>setPair(thisNode, thatNode)</code> has not
 	 * been called.
 	 */
-	IBasicPair<N, E> getCurrentNodePair();
+	IBasicPair getCurrentNodePair();
 
 	/**
 	 * Tests is all the conditions have been met in the factory so that
@@ -64,6 +61,6 @@ public interface IBasicEdgeFactory<
 	 * Create a new edge and add it to the graph.
 	 * @return the newly created edge that is added to the graph 
 	 */
-	E createEdge();
+	IBasicEdge createEdge();
 	
 }

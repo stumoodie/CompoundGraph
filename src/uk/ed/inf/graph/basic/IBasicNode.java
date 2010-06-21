@@ -26,16 +26,13 @@ import java.util.SortedSet;
  * @param <N> The node type that must implement this interface.
  * @param <E> The edge type that must implement the <code>IEdge</code> class. 
  */
-public interface IBasicNode<
-	N extends INode,
-	E extends IEdge
-> extends INode, Comparable<N> {
+public interface IBasicNode extends INode, Comparable<IBasicNode> {
 
 	/**
 	 * Get the graph that owns this node.  
 	 * @return The graph instance which cannot be null.
 	 */
-	IBasicGraph<N, E> getGraph();
+	IBasicGraph getGraph();
 	
 	/**
 	 * Get the index of this node. 
@@ -49,7 +46,7 @@ public interface IBasicNode<
 	 * @param other The other node to test. Can be null.
 	 * @return True if and edge is shared, false otherwise.
 	 */
-	boolean hasEdgeWith(N other);
+	boolean hasEdgeWith(IBasicNode other);
 	
 	/**
 	 * Gets the edges shared with the other node. 
@@ -57,7 +54,7 @@ public interface IBasicNode<
 	 * @return A set of edges sorted by edge index, which 
 	 * 
 	 */
-	SortedSet<E> getEdgesWith(N other);
+	SortedSet<IBasicEdge> getEdgesWith(IBasicNode other);
 	
 	/**
 	 * Get the degree of the this node. That is the number of edges associated with it. Note that in graph theory
@@ -71,7 +68,7 @@ public interface IBasicNode<
 	 * this iterator ignores the direction of the edge.
 	 * @return the edge iterator.
 	 */
-	Iterator<E> edgeIterator();
+	Iterator<IBasicEdge> edgeIterator();
 
 	/**
 	 * Provides an iterator that lists all nodes connected to this node via another edge. When self-edges
@@ -79,7 +76,7 @@ public interface IBasicNode<
 	 * if this node has multiple edges to it.
 	 * @return the node iterator.
 	 */
-	Iterator<N> connectedNodeIterator();
+	Iterator<IBasicNode> connectedNodeIterator();
 	
 	/**
 	 * Has the node been removed from the graph? Nodes are not removed from the graph's data structures,
@@ -108,5 +105,5 @@ public interface IBasicNode<
 	 * nodes belonging to the same graph are compared.   
 	 * @param other the other node to compare to.
 	 */
-	int compareTo(N other);
+	int compareTo(IBasicNode other);
 }

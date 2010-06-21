@@ -35,8 +35,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import uk.ed.inf.graph.basic.IBasicEdge;
-import uk.ed.inf.graph.basic.IBasicNode;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.util.IFilterCriteria;
 import uk.ed.inf.graph.util.INodeSet;
 
@@ -56,7 +56,7 @@ public class FilteredIteratorTest {
 	private static final boolean EXPECTED_NODE_5_REMOVED = true;
 	
 	private Mockery mockery = new JUnit4Mockery();
-	private FilteredIterator<TestNode> testInstance;
+	private FilteredIterator<ICompoundNode> testInstance;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -71,13 +71,13 @@ public class FilteredIteratorTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testFullList(){
-		final INodeSet<TestNode, TestEdge> mockNodeCollection = this.mockery.mock(INodeSet.class, "mockNodeCollection");
-		final TestNode mockNode0 = this.mockery.mock(TestNode.class, "mockNode0");
-		final TestNode mockNode1 = this.mockery.mock(TestNode.class, "mockNode1");
-		final TestNode mockNode2 = this.mockery.mock(TestNode.class, "mockNode2");
-		final TestNode mockNode3 = this.mockery.mock(TestNode.class, "mockNode3");
-		final TestNode mockNode4 = this.mockery.mock(TestNode.class, "mockNode4");
-		final TestNode mockNode5 = this.mockery.mock(TestNode.class, "mockNode5");
+		final INodeSet<ICompoundNode, ICompoundEdge> mockNodeCollection = this.mockery.mock(INodeSet.class, "mockNodeCollection");
+		final ICompoundNode mockNode0 = this.mockery.mock(ICompoundNode.class, "mockNode0");
+		final ICompoundNode mockNode1 = this.mockery.mock(ICompoundNode.class, "mockNode1");
+		final ICompoundNode mockNode2 = this.mockery.mock(ICompoundNode.class, "mockNode2");
+		final ICompoundNode mockNode3 = this.mockery.mock(ICompoundNode.class, "mockNode3");
+		final ICompoundNode mockNode4 = this.mockery.mock(ICompoundNode.class, "mockNode4");
+		final ICompoundNode mockNode5 = this.mockery.mock(ICompoundNode.class, "mockNode5");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockNodeCollection).iterator(); will(returnIterator(mockNode0, mockNode1, mockNode2, mockNode3, mockNode4, mockNode5));
 			
@@ -99,16 +99,16 @@ public class FilteredIteratorTest {
 			allowing(mockNode5).getIndex(); will(returnValue(5));
 			allowing(mockNode5).isRemoved(); will(returnValue(EXPECTED_NODE_5_PRESENT));
 		}});
-		this.testInstance = new FilteredIterator(mockNodeCollection.iterator(), new IFilterCriteria<TestNode>(){
+		this.testInstance = new FilteredIterator(mockNodeCollection.iterator(), new IFilterCriteria<ICompoundNode>(){
 
-			public boolean matched(TestNode testObj) {
+			public boolean matched(ICompoundNode testObj) {
 				return !testObj.isRemoved();
 			}	
 		});
-		TestNode expectedIterationOrder[] = { mockNode0, mockNode1, mockNode2, mockNode3,
+		ICompoundNode expectedIterationOrder[] = { mockNode0, mockNode1, mockNode2, mockNode3,
 				mockNode4, mockNode5 };
-		List<TestNode> expectedNodeList = Arrays.asList(expectedIterationOrder);
-		for(TestNode expectedNode : expectedNodeList){
+		List<ICompoundNode> expectedNodeList = Arrays.asList(expectedIterationOrder);
+		for(ICompoundNode expectedNode : expectedNodeList){
 			assertTrue("node available", this.testInstance.hasNext());
 			assertEquals("expected next node", expectedNode, this.testInstance.next());
 		}
@@ -126,13 +126,13 @@ public class FilteredIteratorTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testGapsList(){
-		final Collection<TestNode> mockNodeCollection = this.mockery.mock(Collection.class, "mockNodeCollection");
-		final TestNode mockNode0 = this.mockery.mock(TestNode.class, "mockNode0");
-		final TestNode mockNode1 = this.mockery.mock(TestNode.class, "mockNode1");
-		final TestNode mockNode2 = this.mockery.mock(TestNode.class, "mockNode2");
-		final TestNode mockNode3 = this.mockery.mock(TestNode.class, "mockNode3");
-		final TestNode mockNode4 = this.mockery.mock(TestNode.class, "mockNode4");
-		final TestNode mockNode5 = this.mockery.mock(TestNode.class, "mockNode5");
+		final Collection<ICompoundNode> mockNodeCollection = this.mockery.mock(Collection.class, "mockNodeCollection");
+		final ICompoundNode mockNode0 = this.mockery.mock(ICompoundNode.class, "mockNode0");
+		final ICompoundNode mockNode1 = this.mockery.mock(ICompoundNode.class, "mockNode1");
+		final ICompoundNode mockNode2 = this.mockery.mock(ICompoundNode.class, "mockNode2");
+		final ICompoundNode mockNode3 = this.mockery.mock(ICompoundNode.class, "mockNode3");
+		final ICompoundNode mockNode4 = this.mockery.mock(ICompoundNode.class, "mockNode4");
+		final ICompoundNode mockNode5 = this.mockery.mock(ICompoundNode.class, "mockNode5");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockNodeCollection).iterator(); will(returnIterator(mockNode0, mockNode1, mockNode2, mockNode3, mockNode4, mockNode5));
 			
@@ -154,15 +154,15 @@ public class FilteredIteratorTest {
 			allowing(mockNode5).getIndex(); will(returnValue(5));
 			allowing(mockNode5).isRemoved(); will(returnValue(EXPECTED_NODE_5_PRESENT));
 		}});
-		this.testInstance = new FilteredIterator(mockNodeCollection.iterator(), new IFilterCriteria<TestNode>(){
+		this.testInstance = new FilteredIterator(mockNodeCollection.iterator(), new IFilterCriteria<ICompoundNode>(){
 
-			public boolean matched(TestNode testObj) {
+			public boolean matched(ICompoundNode testObj) {
 				return !testObj.isRemoved();
 			}	
 		});
-		TestNode expectedIterationOrder[] = { mockNode0, mockNode1, mockNode3, mockNode5 };
-		List<TestNode> expectedNodeList = Arrays.asList(expectedIterationOrder);
-		for(TestNode expectedNode : expectedNodeList){
+		ICompoundNode expectedIterationOrder[] = { mockNode0, mockNode1, mockNode3, mockNode5 };
+		List<ICompoundNode> expectedNodeList = Arrays.asList(expectedIterationOrder);
+		for(ICompoundNode expectedNode : expectedNodeList){
 			assertTrue("node available", this.testInstance.hasNext());
 			assertEquals("expected next node", expectedNode, this.testInstance.next());
 		}
@@ -180,13 +180,13 @@ public class FilteredIteratorTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testAllNullList(){
-		final TestNode mockNode0 = this.mockery.mock(TestNode.class, "mockNode0");
-		final TestNode mockNode1 = this.mockery.mock(TestNode.class, "mockNode1");
-		final TestNode mockNode2 = this.mockery.mock(TestNode.class, "mockNode2");
-		final TestNode mockNode3 = this.mockery.mock(TestNode.class, "mockNode3");
-		final TestNode mockNode4 = this.mockery.mock(TestNode.class, "mockNode4");
-		final TestNode mockNode5 = this.mockery.mock(TestNode.class, "mockNode5");
-		final Collection<TestNode> mockNodeCollection = this.mockery.mock(Collection.class, "mockNodeCollection");
+		final ICompoundNode mockNode0 = this.mockery.mock(ICompoundNode.class, "mockNode0");
+		final ICompoundNode mockNode1 = this.mockery.mock(ICompoundNode.class, "mockNode1");
+		final ICompoundNode mockNode2 = this.mockery.mock(ICompoundNode.class, "mockNode2");
+		final ICompoundNode mockNode3 = this.mockery.mock(ICompoundNode.class, "mockNode3");
+		final ICompoundNode mockNode4 = this.mockery.mock(ICompoundNode.class, "mockNode4");
+		final ICompoundNode mockNode5 = this.mockery.mock(ICompoundNode.class, "mockNode5");
+		final Collection<ICompoundNode> mockNodeCollection = this.mockery.mock(Collection.class, "mockNodeCollection");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockNodeCollection).iterator(); will(returnIterator(mockNode0, mockNode1, mockNode2, mockNode3, mockNode4, mockNode5));
 
@@ -208,15 +208,15 @@ public class FilteredIteratorTest {
 			allowing(mockNode5).getIndex(); will(returnValue(5));
 			allowing(mockNode5).isRemoved(); will(returnValue(EXPECTED_NODE_5_REMOVED));
 		}});
-		this.testInstance = new FilteredIterator(mockNodeCollection.iterator(), new IFilterCriteria<TestNode>(){
+		this.testInstance = new FilteredIterator(mockNodeCollection.iterator(), new IFilterCriteria<ICompoundNode>(){
 
-			public boolean matched(TestNode testObj) {
+			public boolean matched(ICompoundNode testObj) {
 				return !testObj.isRemoved();
 			}	
 		});
-		TestNode expectedIterationOrder[] = { };
-		List<TestNode> expectedNodeList = Arrays.asList(expectedIterationOrder);
-		for(TestNode expectedNode : expectedNodeList){
+		ICompoundNode expectedIterationOrder[] = { };
+		List<ICompoundNode> expectedNodeList = Arrays.asList(expectedIterationOrder);
+		for(ICompoundNode expectedNode : expectedNodeList){
 			assertTrue("node available", this.testInstance.hasNext());
 			assertEquals("expected next node", expectedNode, this.testInstance.next());
 		}
@@ -233,14 +233,7 @@ public class FilteredIteratorTest {
 
 	@Test(expected=IllegalArgumentException.class)
 	public void testNullIterator(){
-		this.testInstance = new FilteredIterator<TestNode>(null, null);
+		this.testInstance = new FilteredIterator<ICompoundNode>(null, null);
 	}
 	
-	private interface TestEdge extends IBasicEdge<TestNode, TestEdge> {
-		
-	}
-	
-	private interface TestNode extends IBasicNode<TestNode, TestEdge> {
-		
-	}
 }

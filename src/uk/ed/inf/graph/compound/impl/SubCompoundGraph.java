@@ -15,8 +15,8 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.impl;
 
-import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
-import uk.ed.inf.graph.compound.base.BaseCompoundNode;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.base.BaseSubCompoundGraph;
 import uk.ed.inf.graph.util.impl.DirectedEdgeSet;
 import uk.ed.inf.graph.util.impl.NodeSet;
@@ -28,9 +28,9 @@ public class SubCompoundGraph extends BaseSubCompoundGraph {
 	SubCompoundGraph(CompoundGraph superGraph){
 		super();
 		this.superGraph = superGraph;
-		createEdgeSet(new DirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge>());
-		createNodeSet(new NodeSet<BaseCompoundNode, BaseCompoundEdge>());
-		createTopNodeSet(new NodeSet<BaseCompoundNode, BaseCompoundEdge>());
+		createEdgeSet(new DirectedEdgeSet<ICompoundNode, ICompoundEdge>());
+		createNodeSet(new NodeSet<ICompoundNode, ICompoundEdge>());
+		createTopNodeSet(new NodeSet<ICompoundNode, ICompoundEdge>());
 	}
 
 	@Override

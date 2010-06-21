@@ -17,17 +17,14 @@ package uk.ed.inf.graph.compound;
 
 
 
-public interface IChildCompoundGraph<
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
-		E extends ICompoundEdge<N, E>
-> extends ICompoundGraph<N, E> {
+public interface IChildCompoundGraph extends IImmutableCompoundGraph, IModifiableChildCompoundGraph {
 	
 	/**
 	 * Gets the compound graph that owns this child graph. 
 	 * @return the owning compound graph, which cannot be null.
 	 */
-	ICompoundGraph<N, E> getSuperGraph();
-	
+	ICompoundGraph getSuperGraph();
+
 //	/**
 //	 * Tests if the subgraph contains nodes or edges that are contained by this
 //	 * child graph or its children.

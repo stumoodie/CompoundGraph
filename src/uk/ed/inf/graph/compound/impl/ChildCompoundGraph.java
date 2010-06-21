@@ -15,10 +15,10 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.impl;
 
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.archetypal.ArchetypalChildCompoundGraph;
-import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
-import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 
 
 public class ChildCompoundGraph extends ArchetypalChildCompoundGraph {
@@ -47,21 +47,19 @@ public class ChildCompoundGraph extends ArchetypalChildCompoundGraph {
     }
 
 	@Override
-	protected void notifyCopyOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> originalSubgraph,
-			ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> copiedSubgraph) {
+	protected void notifyCopyOperationComplete(ISubCompoundGraph originalSubgraph, ISubCompoundGraph copiedSubgraph) {
 	}
 
 	@Override
-	protected void notifyMoveOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> originalSubgraph,
-			ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> movedSubgraph) {
+	protected void notifyMoveOperationComplete(ISubCompoundGraph originalSubgraph, ISubCompoundGraph movedSubgraph) {
 	}
 
 	@Override
-	public void notifyNewEdge(BaseCompoundEdge newEdge) {
+	public void notifyNewEdge(ICompoundEdge newEdge) {
 	}
 
 	@Override
-	public void notifyNewNode(BaseCompoundNode newNode) {
+	public void notifyNewNode(ICompoundNode newNode) {
 	}
 	
 }

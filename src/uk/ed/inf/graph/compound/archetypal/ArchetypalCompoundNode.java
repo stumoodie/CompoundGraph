@@ -15,7 +15,8 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.archetypal;
 
-import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 import uk.ed.inf.graph.util.impl.DirectedEdgeSet;
 
@@ -44,8 +45,8 @@ public abstract class ArchetypalCompoundNode extends BaseCompoundNode {
 			this.parent = parent;
 			this.parent.getChildCompoundGraph().addNewNode(this);
 		}
-		createInEdgeSet(new DirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge>());
-		createOutEdgeSet(new DirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge>());
+		createInEdgeSet(new DirectedEdgeSet<ICompoundNode, ICompoundEdge>());
+		createOutEdgeSet(new DirectedEdgeSet<ICompoundNode, ICompoundEdge>());
 		createChildCompoundGraph(this);
 		this.treeLevel = calcTreeLevel();
 	}

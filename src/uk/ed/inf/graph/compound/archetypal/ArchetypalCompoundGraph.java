@@ -15,6 +15,7 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.archetypal;
 
+import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.base.BaseCompoundGraph;
 import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 import uk.ed.inf.graph.compound.base.BaseGraphCopyBuilder;
@@ -27,14 +28,14 @@ public abstract class ArchetypalCompoundGraph extends BaseCompoundGraph {
 	private final static int INIT_EDGE_IDX = -1;
 	private final IndexCounter nodeCounter;
 	private final IndexCounter edgeCounter;
-	private final GeneralTree<BaseCompoundNode> nodeTree;
+	private final GeneralTree<ICompoundNode> nodeTree;
 	
 	protected ArchetypalCompoundGraph(BaseGraphCopyBuilder copyBuilder){
 		super(copyBuilder);
 		this.nodeCounter = new IndexCounter(ROOT_NODE_IDX);
 		this.edgeCounter = new IndexCounter(INIT_EDGE_IDX);
 		createNewRootNode(nodeCounter.getLastIndex());
-		this.nodeTree = new GeneralTree<BaseCompoundNode>(getRootNode());
+		this.nodeTree = new GeneralTree<ICompoundNode>(getRootNode());
 	}
 
 	protected abstract void createNewRootNode(int indexValue);
@@ -43,7 +44,7 @@ public abstract class ArchetypalCompoundGraph extends BaseCompoundGraph {
 	protected abstract void createCopyOfRootNode(int newIndexValue, BaseCompoundNode otherRootNode);
 
 	@Override
-	protected final ITree<BaseCompoundNode> getNodeTree(){
+	protected final ITree<ICompoundNode> getNodeTree(){
 		return this.nodeTree;
 	}
 	
@@ -56,7 +57,7 @@ public abstract class ArchetypalCompoundGraph extends BaseCompoundGraph {
 		this.nodeCounter = new IndexCounter(ROOT_NODE_IDX);
 		this.edgeCounter = new IndexCounter(INIT_EDGE_IDX);
 		createCopyOfRootNode(nodeCounter.getLastIndex(), otherGraph.getRootNode());
-		this.nodeTree = new GeneralTree<BaseCompoundNode>(getRootNode());
+		this.nodeTree = new GeneralTree<ICompoundNode>(getRootNode());
 		this.performCopy(otherGraph);
 	}
 	

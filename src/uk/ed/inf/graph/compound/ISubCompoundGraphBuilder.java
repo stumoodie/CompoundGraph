@@ -18,15 +18,12 @@ package uk.ed.inf.graph.compound;
 import java.util.Set;
 
 
-public interface ISubCompoundGraphBuilder<
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
-		E extends ICompoundEdge<N, E>
-> {
-	ICompoundGraph<N, E> getGraph();
+public interface ISubCompoundGraphBuilder {
+	ICompoundGraph getGraph();
 	
-	void setNodeList(Set<? extends N> nodeList);
+	void setNodeList(Set<? extends ICompoundNode> nodeList);
 	
-	void setEdgeList(Set<? extends E> edgeList);
+	void setEdgeList(Set<? extends ICompoundEdge> edgeList);
 	
 	void expandChildNodes();
 
@@ -39,5 +36,5 @@ public interface ISubCompoundGraphBuilder<
 	 * @return The created subgraph, cannot be null.
 	 * @throws IllegalStateException if the subgraph has not been created by a call to <code>buildSubgraph</code>.
 	 */
-	ISubCompoundGraph<N, E> getSubgraph();
+	ISubCompoundGraph getSubgraph();
 }

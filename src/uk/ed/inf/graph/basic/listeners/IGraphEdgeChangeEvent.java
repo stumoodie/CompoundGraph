@@ -31,10 +31,7 @@ import uk.ed.inf.graph.basic.IBasicNode;
  * @author smoodie
  *
  */
-public interface IGraphEdgeChangeEvent<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-> {
+public interface IGraphEdgeChangeEvent {
 	/**
 	 * Determines what the change to the model's content was. 
 	 * @return the change type.
@@ -45,7 +42,7 @@ public interface IGraphEdgeChangeEvent<
 	 * Returns the edges that were changed.
 	 * @return the edges that were changed.
 	 */
-	Set<E> getChangedEdges();
+	Set<IBasicEdge> getChangedEdges();
 	
 	/**
 	 * Gets the number of edges that have changed.
@@ -58,5 +55,5 @@ public interface IGraphEdgeChangeEvent<
 	 * way of accessing the edges. 
 	 * @return an iterator of the collection of changed edges.
 	 */
-	Iterator<E> changedEdgeIterator();
+	Iterator<IBasicEdge> changedEdgeIterator();
 }

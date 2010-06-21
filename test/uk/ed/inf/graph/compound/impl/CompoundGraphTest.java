@@ -31,12 +31,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import uk.ed.inf.graph.basic.IBasicPair;
-import uk.ed.inf.graph.basic.IBasicSubgraph;
-import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
-import uk.ed.inf.graph.compound.base.BaseCompoundNode;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodePair;
+import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.base.BaseSubCompoundGraph;
-import uk.ed.inf.graph.directed.IDirectedPair;
 import uk.ed.inf.graph.state.IGraphState;
 
 @RunWith(JMock.class)
@@ -52,8 +51,8 @@ public class CompoundGraphTest {
 	private CompoundNode anotherNode ;
 	private CompoundNode rootNode ;
 	
-	private IGraphState<BaseCompoundNode, BaseCompoundEdge> originalState ; 
-	private IGraphState<BaseCompoundNode, BaseCompoundEdge> currentState ;
+	private IGraphState originalState ; 
+	private IGraphState currentState ;
 	
 	private CompoundEdge anEdge ;
 	
@@ -187,7 +186,7 @@ public class CompoundGraphTest {
 	public final void testEdgeIterator() {
 		CompoundEdge edgeArray [] = { anEdge } ;
 		
-		Iterator<BaseCompoundEdge> edgeIterator = testCompoundGraph.edgeIterator() ;
+		Iterator<ICompoundEdge> edgeIterator = testCompoundGraph.edgeIterator() ;
 		
 		int counter = 0 ;
 		
@@ -209,7 +208,7 @@ public class CompoundGraphTest {
 	public final void testNodeIterator() {
 		CompoundNode [] nodeArray = { rootNode , aNode , anotherNode } ;
 		
-		Iterator<BaseCompoundNode> nodeIterator = testCompoundGraph.nodeIterator() ;
+		Iterator<ICompoundNode> nodeIterator = testCompoundGraph.nodeIterator() ;
 		
 		int counter = 0 ;
 		
@@ -254,7 +253,7 @@ public class CompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Ignore @Test
 	public final void testContainsDirectedEdgeIDirectedPairOfCompoundNodeCompoundEdge() {
-		final IDirectedPair<BaseCompoundNode, BaseCompoundEdge> mockDirectedPair = mockery.mock(IDirectedPair.class , "mockDirectedPair") ;
+		final ICompoundNodePair mockDirectedPair = mockery.mock(ICompoundNodePair.class , "mockDirectedPair") ;
 		
 		this.mockery.checking(new Expectations(){{
 			atLeast(1).of(mockDirectedPair).getOutNode() ; returnValue(aNode) ;
@@ -267,7 +266,7 @@ public class CompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Ignore @Test
 	public final void testContainsConnectionIBasicPairOfCompoundNodeCompoundEdge() {
-		final IBasicPair<BaseCompoundNode, BaseCompoundEdge> mockBasicPair = mockery.mock(IBasicPair.class , "mockBasicPair") ;
+		final ICompoundNodePair mockBasicPair = mockery.mock(ICompoundNodePair.class , "mockBasicPair") ;
 		
 		assertTrue ( "has directed Pair" , testCompoundGraph.containsConnection(mockBasicPair)) ;
 	}
@@ -325,7 +324,7 @@ public class CompoundGraphTest {
 		
 		testCompoundGraph.copyHere( subGraph)  ;
 		
-		IBasicSubgraph<BaseCompoundNode, BaseCompoundEdge> copyOfGraph = testCompoundGraph.getCopiedComponents() ;
+		ISubCompoundGraph copyOfGraph = testCompoundGraph.getCopiedComponents() ;
 		
 		assertEquals ( "one edge" , NUMERIC[1] , copyOfGraph.getNumEdges() );
 		assertEquals ( "one node" , NUMERIC[1] , copyOfGraph.getNumNodes() );

@@ -16,17 +16,14 @@ limitations under the License.
 package uk.ed.inf.graph.basic;
 
 
-public interface IBasicPair<
-	N extends INode,
-	E extends IEdge
-> {
+public interface IBasicPair {
 	
 	/**
 	 * Is this node contained in this end pair.
 	 * @param node The node to test, can be null.
 	 * @return true is node is contained, else false.
 	 */
-	boolean containsNode(N node);
+	boolean containsNode(IBasicNode node);
 
 	/**
 	 * Tests if this end pair is made up of these two nodes. This is ignores the direction of
@@ -37,7 +34,7 @@ public interface IBasicPair<
 	 * @param endTwo The second node end.
 	 * @return true if both nodes make up the end pair, false otherwise.
 	 */
-	boolean hasEnds(N endOne, N endTwo);
+	boolean hasEnds(IBasicNode endOne, IBasicNode endTwo);
 	
 	/**
 	 * Get the other node to this one in the pair.
@@ -45,7 +42,7 @@ public interface IBasicPair<
 	 * @return The other node of the pair. If the nodes in the pair are identical then
 	 *  will return the same instance as <code>node</code>.
 	 */
-	N getOtherNode(N node);
+	IBasicNode getOtherNode(IBasicNode node);
 	
 	/**
 	 * Test whether a pair is equal, that is do they include the same pair of nodes.

@@ -26,13 +26,10 @@ import uk.ed.inf.graph.basic.IBasicNode;
  * @author smoodie
  *
  */
-public interface IGraphChangeListener<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-> {
+public interface IGraphChangeListener {
 
-	void nodeStructureChange(IGraphNodeChangeEvent<N, E> event);
+	void nodeStructureChange(IGraphNodeChangeEvent event);
 	
-	void edgeStructureChange(IGraphEdgeChangeEvent<N, E> event);
+	void edgeStructureChange(IGraphEdgeChangeEvent event);
 	
 }

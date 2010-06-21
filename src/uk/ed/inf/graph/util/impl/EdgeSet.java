@@ -21,14 +21,14 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import uk.ed.inf.graph.basic.IBasicEdge;
-import uk.ed.inf.graph.basic.IBasicNode;
-import uk.ed.inf.graph.basic.IBasicPair;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.util.IEdgeSet;
 
 public class EdgeSet <
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
+		N extends ICompoundNode,
+		E extends ICompoundEdge
 > implements IEdgeSet<N, E> {
 	
 	private final SortedSet<E> edgeSet;
@@ -75,7 +75,7 @@ public class EdgeSet <
 	private SortedSet<E> findEdges(N thisNode, N thatNode){
 		final SortedSet<E> retVal = new TreeSet<E>();
 		for(E edge : this.edgeSet){
-			IBasicPair<N, E> ends = edge.getConnectedNodes();
+			ICompoundNodePair ends = edge.getConnectedNodes();
 			if(ends.hasEnds(thisNode, thatNode)){
 				retVal.add(edge);
 			}
@@ -118,7 +118,7 @@ public class EdgeSet <
 	private SortedSet<E> findConnectingEdge(N thisNode, N otherNode){
 		final SortedSet<E> retVal = new TreeSet<E>();
 		for(E edge : this.edgeSet){
-			IBasicPair<N, E> pair = edge.getConnectedNodes();
+			ICompoundNodePair pair = edge.getConnectedNodes();
 			if(pair.containsNode(otherNode) && pair.getOtherNode(thisNode).equals(otherNode)){
 				retVal.add(edge);
 			}

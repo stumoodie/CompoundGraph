@@ -15,19 +15,58 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound;
 
-import uk.ed.inf.graph.basic.IBasicSubgraphFactory;
+import java.util.Iterator;
 
-public interface ISubCompoundGraphFactory<
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
-		E extends ICompoundEdge<N, E>
-> extends IBasicSubgraphFactory<N, E> {
+public interface ISubCompoundGraphFactory {
 
-	ICompoundGraph<N, E> getGraph();
+	ICompoundGraph getGraph();
 
-	ISubCompoundGraph<N, E> createSubgraph();
+	ISubCompoundGraph createSubgraph();
 	
-	ISubCompoundGraph<N, E> createInducedSubgraph();
+	ISubCompoundGraph createInducedSubgraph();
 
-	ISubCompoundGraph<N, E> createPermissiveInducedSubgraph();
+	ISubCompoundGraph createPermissiveInducedSubgraph();
 
+	/**
+	 * Add a node to the factory that will be used to compose the subgraph.
+	 * @param node The node to be added. Cannot be null.
+	 * @throws NullPointerException if <code>node</code> is null.
+	 * @throws IllegalArgumentException if <code>node</code> does not belong
+	 * the the same graph as the factory.
+	 */
+	void addNode(ICompoundNode node);
+	
+	/**
+	 * Get the number of nodes added to the factory;
+	 * @return the number of nodes.
+	 */
+	int numNodes();
+	
+	/**
+	 * Add an edge to the factory to be used to compose the subgraph. 
+	 * @param edge
+	 * @throws NullPointerException if <code>edge</code> is null.
+	 * @throws IllegalArgumentException if <code>edge</code> does not belong
+	 * the the same graph as the factory.
+	 */
+	void addEdge(ICompoundEdge edge);
+	
+	/**
+	 * The number of edges added to the factory.
+	 * @return the number of edges.
+	 */
+	int numEdges();
+	
+	/**
+	 * Iterate over the nodes that have been added to this factory.
+	 * @return the node iterator, which cannot be null.
+	 */
+	Iterator<ICompoundNode> nodeIterator();
+	
+	/**
+	 * Iterate over the edges that have been added to the factory. 
+	 * @return the edge iterator that cannot be null.
+	 */
+	Iterator<ICompoundEdge> edgeIterator();
+	
 }

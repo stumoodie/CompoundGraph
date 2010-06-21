@@ -15,6 +15,7 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.impl;
 
+import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundEdge;
 import uk.ed.inf.graph.compound.base.BaseChildCompoundGraph;
 import uk.ed.inf.graph.compound.base.BaseCompoundEdgeFactory;
@@ -52,24 +53,24 @@ public class CompoundEdgeFactory extends BaseCompoundEdgeFactory {
 	}
 
 	@Override
-	protected BaseCompoundNode getInNode() {
+	public BaseCompoundNode getInNode() {
 		return this.inNode;
 	}
 
 	@Override
-	protected BaseCompoundNode getOutNode() {
+	public BaseCompoundNode getOutNode() {
 		return this.outNode;
 	}
 
 	@Override
-	public void setPair(BaseCompoundNode outNode, BaseCompoundNode inNode) {
+	public void setPair(ICompoundNode outNode, ICompoundNode inNode) {
 		this.outNode = (CompoundNode)outNode;
 		this.inNode = (CompoundNode)inNode;		
 	}
 
 	@Override
 	public boolean canCreateEdge() {
-		return this.inNode != null && this.outNode != null;
+		return this.inNode != null && this.outNode != null && isValidNodePair(this.outNode, this.inNode);
 	}
 
 	@Override
@@ -77,7 +78,8 @@ public class CompoundEdgeFactory extends BaseCompoundEdgeFactory {
 		return (ChildCompoundGraph)super.getOwningChildGraph();
 	}
 
-	public boolean isValidNodePair(BaseCompoundNode outNode, BaseCompoundNode inNode) {
+	@Override
+	public boolean isValidNodePair(ICompoundNode outNode, ICompoundNode inNode) {
 		return this.outNode != null && this.inNode != null && this.outNode.getGraph().equals(this.graph)
 			&& this.outNode.equals(this.inNode) && this.outNode instanceof CompoundNode
 			&& this.inNode instanceof CompoundNode;

@@ -21,13 +21,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
-import uk.ed.inf.graph.basic.IBasicEdge;
-import uk.ed.inf.graph.basic.IBasicNode;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.util.INodeEdgeFilterCriteria;
 
 public class EdgeFromNodeIterator <
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
+		N extends ICompoundNode,
+		E extends ICompoundEdge
 > implements Iterator<E> {
 	private final Iterator<? extends N> nodeIter;
 	private final Set<Integer> visited;
@@ -70,7 +70,7 @@ public class EdgeFromNodeIterator <
 		while(this.nodeIter.hasNext() && !nodesAdded){
 			final N nextNode = this.nodeIter.next();
 			if(criteria.matchedNode(nextNode)){
-				Iterator<? extends IBasicEdge<N, ?>> edgeIter = nextNode.edgeIterator();
+				Iterator<? extends ICompoundEdge> edgeIter = nextNode.edgeIterator();
 				while (edgeIter.hasNext()) {
 					E edge = (E) edgeIter.next();
 					if (criteria.matchedEdge(edge) && !isVisited(edge)) {
@@ -87,11 +87,11 @@ public class EdgeFromNodeIterator <
 		throw new UnsupportedOperationException("This Iterator does not support removal");
 	}
 
-	private void markEdgeVisited(IBasicEdge<? extends N, ? extends E> edge){
+	private void markEdgeVisited(ICompoundEdge edge){
 		this.visited.add(edge.getIndex());
 	}
 	
-	private boolean isVisited(IBasicEdge<? extends N, ? extends E> edge){
+	private boolean isVisited(ICompoundEdge edge){
 		return this.visited.contains(edge.getIndex());
 	}
 	

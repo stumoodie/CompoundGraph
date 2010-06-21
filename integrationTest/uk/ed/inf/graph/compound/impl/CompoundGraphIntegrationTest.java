@@ -29,8 +29,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
-import uk.ed.inf.graph.compound.base.BaseCompoundNode;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.state.IGraphState;
 
 public class CompoundGraphIntegrationTest {
@@ -176,7 +176,7 @@ public class CompoundGraphIntegrationTest {
 		assertTrue("obtain edge factory", testEmptyInstance.edgeFactory() != null);
 		assertTrue("obtain subgraph factory", testEmptyInstance.subgraphFactory() != null);
 		assertTrue("obtain node factory", testEmptyInstance.nodeFactory() != null);
-		Iterator<BaseCompoundNode> iter = testEmptyInstance.nodeIterator();
+		Iterator<ICompoundNode> iter = testEmptyInstance.nodeIterator();
 		assertTrue("expected root node iterator", iter.hasNext());
 		iter.next();
 		assertTrue("expected root node iterator", iter.hasNext() == false);
@@ -251,14 +251,14 @@ public class CompoundGraphIntegrationTest {
 	@Test
 	public final void testNodesAndEdgesBelongToGraph () throws Exception
 	{
-		Iterator<BaseCompoundNode> nodesIterator = testInstance.nodeIterator() ;
+		Iterator<ICompoundNode> nodesIterator = testInstance.nodeIterator() ;
 		
 		while ( nodesIterator.hasNext())
 		{
 			assertEquals ( "graph is parent" , testInstance , nodesIterator.next().getGraph()) ;
 		}
 		
-		Iterator <BaseCompoundEdge> edgeIterator = testInstance.edgeIterator() ;
+		Iterator <ICompoundEdge> edgeIterator = testInstance.edgeIterator() ;
 		while ( edgeIterator.hasNext())
 		{
 			assertEquals ( "graph is parent" , testInstance , edgeIterator.next().getGraph()) ;
@@ -376,12 +376,12 @@ public class CompoundGraphIntegrationTest {
 	
 	@Test
 	public final void testGetEdgeIterator() {
-		Iterator<BaseCompoundEdge> iter = this.testInstance.edgeIterator();
+		Iterator<ICompoundEdge> iter = this.testInstance.edgeIterator();
 		CompoundEdge expectedIterationOrder[] = { edge2, edge8, edge9, edge1, edge3, edge4, edge7, edge5, edge6 };
 		List<CompoundEdge> expectedEdgeList = Arrays.asList(expectedIterationOrder);
 		for(CompoundEdge expectedEdge : expectedEdgeList){
 			assertTrue("edge available", iter.hasNext());
-			BaseCompoundEdge actualEdge = iter.next();
+			ICompoundEdge actualEdge = iter.next();
 			assertEquals("next edge idx", expectedEdge.getIndex(), actualEdge.getIndex());
 			assertEquals("next edge", expectedEdge, actualEdge);
 //			System.out.print("Edge ID = "); System.out.println(actualEdge.getIndex());
@@ -459,7 +459,7 @@ public class CompoundGraphIntegrationTest {
 	
 	@Test
 	public final void testGetNodeIterator() {
-		Iterator<BaseCompoundNode> iter = this.testInstance.nodeIterator();
+		Iterator<ICompoundNode> iter = this.testInstance.nodeIterator();
 		CompoundNode expectedIterationOrder[] = { rootNode, node1, node2, node3,
 				node4, node5, node6, node7, node8 };
 		List<CompoundNode> expectedNodeList = Arrays.asList(expectedIterationOrder);
@@ -650,7 +650,7 @@ public class CompoundGraphIntegrationTest {
 	
 	@Test
 	public final void testSaveAndRestoreState(){
-		IGraphState<BaseCompoundNode, BaseCompoundEdge> originalState = testInstance.getCurrentState() ;
+		IGraphState originalState = testInstance.getCurrentState() ;
 		assertTrue ( "state saved" , originalState != null) ;
 		assertEquals ( "state belongs to Graph" , testInstance , originalState.getGraph() ) ;
 		assertEquals ("check saved nodes" , SAVED_NODES , originalState.getNodeStates().toString()) ;
@@ -661,7 +661,7 @@ public class CompoundGraphIntegrationTest {
 		edgeFactory.setPair(node8, node5) ; 
 		edgeFactory.createEdge() ;
 		assertEquals ( "one more edge" , EXPECTED_NUM_EDGES + 1 , testInstance.getNumEdges() ) ;
-		IGraphState<BaseCompoundNode, BaseCompoundEdge> newState = testInstance.getCurrentState() ;
+		IGraphState newState = testInstance.getCurrentState() ;
 		assertEquals ("check saved nodes" , NEW_STATE_SAVED_NODES , newState.getNodeStates().toString()) ;
 		assertEquals ("check saved edges" , NEW_STATE_SAVED_EDGES , newState.getEdgeStates().toString()) ;
 		testInstance.restoreState(originalState) ;

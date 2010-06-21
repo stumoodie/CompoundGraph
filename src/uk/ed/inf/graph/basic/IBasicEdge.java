@@ -23,16 +23,13 @@ package uk.ed.inf.graph.basic;
  * @param <N> The node class that must implement the INode class.
  * @param <E> The edge class that must implement this interface.
  */
-public interface IBasicEdge<
-	N extends INode,
-	E extends IEdge
-> extends IEdge, Comparable<E> {
+public interface IBasicEdge extends IEdge, Comparable<IBasicEdge> {
 
 	/**
 	 * Get the owning graph of this edge.
 	 * @return the owning graph.
 	 */
-	IBasicGraph<N, E> getGraph();
+	IBasicGraph getGraph();
 	
 	/**
 	 * Get the index that uniquely identifies the edge within its owning graph.  
@@ -44,7 +41,7 @@ public interface IBasicEdge<
 	 * Get the ends of  
 	 * @return
 	 */
-	IBasicPair<N, E> getConnectedNodes();
+	IBasicPair getConnectedNodes();
 	
 	/**
 	 * Is this a self edge, i.e. both ends are the same node. 
@@ -57,7 +54,7 @@ public interface IBasicEdge<
 	 * @param ends The ends to be tested.
 	 * @return true if the edge contains the ends, false otherwise. 
 	 */
-	boolean hasEnds(IBasicPair<? super N, ? super E> ends);
+	boolean hasEnds(IBasicPair ends);
 	
 	/**
 	 * Test if the edge has been removed from the graph.

@@ -24,8 +24,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
-import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 import uk.ed.inf.graph.state.IGraphState;
 
 public class AdditionalTest {
@@ -138,7 +136,7 @@ public class AdditionalTest {
 	@Test
 	public final void testSaveStateOfEmptyDiagram () throws Exception
 	{
-		IGraphState<BaseCompoundNode, BaseCompoundEdge> emptyGraphState = emptyTestInstance.getCurrentState() ;
+		IGraphState emptyGraphState = emptyTestInstance.getCurrentState() ;
 		
 		assertEquals ( "only one node" , EMPTY_NODE_BITSTRING , emptyGraphState.getNodeStates().toString()) ;
 		assertEquals ( "no egdes" , EMPTY_EDGE_BITSTRING , emptyGraphState.getEdgeStates().toString() );
@@ -147,7 +145,7 @@ public class AdditionalTest {
 	@Test
 	public final void testSaveStateOfPopulatedDiagram () throws Exception
 	{
-		IGraphState<BaseCompoundNode, BaseCompoundEdge> nonEmptyGraphState = testInstance.getCurrentState() ;
+		IGraphState nonEmptyGraphState = testInstance.getCurrentState() ;
 		
 		assertEquals ( "two nodes" , NOT_EMPTY_NODE_BITSTRING , nonEmptyGraphState.getNodeStates().toString()) ;
 		assertEquals ( "one node" , NOT_EMPTY_EDGE_BITSTRING , nonEmptyGraphState.getEdgeStates().toString() );
@@ -156,7 +154,7 @@ public class AdditionalTest {
 	@Test(expected=IllegalArgumentException.class)
 	public final void testRestoreStateFromAnotherGraph () throws Exception
 	{
-		IGraphState<BaseCompoundNode, BaseCompoundEdge> nonEmptyGraphState = testInstance.getCurrentState() ;
+		IGraphState nonEmptyGraphState = testInstance.getCurrentState() ;
 		emptyTestInstance.restoreState(nonEmptyGraphState) ;
 		assertEquals ( "only root" , ONLY_ROOT_NODE , emptyTestInstance.getNumNodes()) ;
 		assertEquals ( "no edges" , NO_EDGES , emptyTestInstance.getNumEdges()) ;
@@ -167,7 +165,7 @@ public class AdditionalTest {
 	{
 		assertEquals ( "three Nodes" , NUMERIC_VALUES[3] , testInstance.getNumNodes() ) ;
 		assertEquals ( "one Edge" , NUMERIC_VALUES[1] , testInstance.getNumEdges() ) ;
-		IGraphState<BaseCompoundNode, BaseCompoundEdge> nonEmptyGraphState = testInstance.getCurrentState() ;
+		IGraphState nonEmptyGraphState = testInstance.getCurrentState() ;
 		assertNotNull ( "state exists" , nonEmptyGraphState) ;
 		assertEquals ( "has Nodes" , NOT_EMPTY_NODE_BITSTRING , nonEmptyGraphState.getNodeStates().toString() ) ;
 		assertEquals ( "has Edge" , NOT_EMPTY_EDGE_BITSTRING , nonEmptyGraphState.getEdgeStates().toString() ) ;
@@ -175,7 +173,7 @@ public class AdditionalTest {
 		subGraphFactory.addNode(node1) ;
 		SubCompoundGraph subGraph = subGraphFactory.createSubgraph() ;
 		testInstance.removeSubgraph(subGraph) ;
-		IGraphState<BaseCompoundNode, BaseCompoundEdge> removedNodeGraphState = testInstance.getCurrentState() ;
+		IGraphState removedNodeGraphState = testInstance.getCurrentState() ;
 		assertEquals ( "removed one node" , REMOVED_NODE_BITSTRING , removedNodeGraphState.getNodeStates().toString()) ;
 		assertEquals ( "removed one node" , REMOVED_NODE_EDGES_BITSTRING , removedNodeGraphState.getEdgeStates().toString()) ;
 		assertEquals ( "only two nodes" , NUMERIC_VALUES[2] , testInstance.getNumNodes() ) ;
@@ -193,7 +191,7 @@ public class AdditionalTest {
 	{
 		assertEquals ( "three Nodes" , NUMERIC_VALUES[3] , testInstance.getNumNodes() ) ;
 		assertEquals ( "one Edge" , NUMERIC_VALUES[1] , testInstance.getNumEdges() ) ;
-		IGraphState<BaseCompoundNode, BaseCompoundEdge> nonEmptyGraphState = testInstance.getCurrentState() ;
+		IGraphState nonEmptyGraphState = testInstance.getCurrentState() ;
 		assertNotNull ( "state exists" , nonEmptyGraphState) ;
 		assertEquals ( "has Nodes" , NOT_EMPTY_NODE_BITSTRING , nonEmptyGraphState.getNodeStates().toString() ) ;
 		assertEquals ( "has Edge" , NOT_EMPTY_EDGE_BITSTRING , nonEmptyGraphState.getEdgeStates().toString() ) ;

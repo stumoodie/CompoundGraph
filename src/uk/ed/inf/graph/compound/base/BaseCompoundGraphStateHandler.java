@@ -19,36 +19,36 @@ import java.util.Iterator;
 
 import uk.ed.inf.bitstring.BitStringBuffer;
 import uk.ed.inf.bitstring.IBitString;
-import uk.ed.inf.graph.compound.ICompoundGraph;
+import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.state.GeneralGraphState;
 import uk.ed.inf.graph.state.IGraphState;
 import uk.ed.inf.graph.state.IGraphStateHandler;
 import uk.ed.inf.graph.util.impl.EdgeFromNodeIterator;
 
-public class BaseCompoundGraphStateHandler implements IGraphStateHandler<BaseCompoundNode, BaseCompoundEdge> {
+public class BaseCompoundGraphStateHandler implements IGraphStateHandler {
 	
-	private final ICompoundGraph<BaseCompoundNode, BaseCompoundEdge> graph;
+	private final BaseCompoundGraph graph;
 	private IBitString nodeStatus;
 	private IBitString edgeStatus;
 	
-	public BaseCompoundGraphStateHandler(ICompoundGraph<BaseCompoundNode, BaseCompoundEdge> graph){
+	public BaseCompoundGraphStateHandler(BaseCompoundGraph graph){
 		this.graph = graph;
 	}
 
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.state.IGraphStateHandler#getGraph()
 	 */
-	public ICompoundGraph<BaseCompoundNode, BaseCompoundEdge> getGraph(){
+	public BaseCompoundGraph getGraph(){
 		return this.graph;
 	}
 	
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.state.IGraphStateHandler#createGraphState()
 	 */
-	public IGraphState<BaseCompoundNode, BaseCompoundEdge> createGraphState(){
+	public IGraphState createGraphState(){
 		recordNodes();
 		recordEdges();
-		IGraphState<BaseCompoundNode, BaseCompoundEdge> state = new GeneralGraphState<BaseCompoundNode, BaseCompoundEdge>( this.graph, nodeStatus, edgeStatus);
+		IGraphState state = new GeneralGraphState( this.graph, nodeStatus, edgeStatus);
 		return state;
 	}
 	
@@ -93,7 +93,7 @@ public class BaseCompoundGraphStateHandler implements IGraphStateHandler<BaseCom
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.state.IGraphStateHandler#restoreState(uk.ed.inf.graph.state.IGraphState)
 	 */
-	public void restoreState(IGraphState<BaseCompoundNode, BaseCompoundEdge> previousState) throws IllegalArgumentException{
+	public void restoreState(IGraphState previousState) throws IllegalArgumentException{
 		if ( previousState.getGraph() != this.getGraph())
 			throw new IllegalArgumentException ( "The state must belong to the same Graph.") ;
 		// mark all nodes and edges as removed
@@ -138,9 +138,9 @@ public class BaseCompoundGraphStateHandler implements IGraphStateHandler<BaseCom
 	private void restoreEdges(){
 		Iterator<? extends BaseCompoundNode> iter = this.unfilteredNodeIterator();
 		while(iter.hasNext()){
-			Iterator<BaseCompoundEdge> edgeIter = iter.next().getChildCompoundGraph().unfilteredEdgeIterator();
+			Iterator<ICompoundEdge> edgeIter = iter.next().getChildCompoundGraph().unfilteredEdgeIterator();
 			while(edgeIter.hasNext()){
-				BaseCompoundEdge edge = edgeIter.next();
+				BaseCompoundEdge edge = (BaseCompoundEdge)edgeIter.next();
 				int edgeIdx = edge.getIndex();
 				if(edgeIdx < edgeStatus.length()){
 					boolean edgeState = this.edgeStatus.get(edgeIdx);

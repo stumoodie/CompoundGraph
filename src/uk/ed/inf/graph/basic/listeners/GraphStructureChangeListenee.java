@@ -32,52 +32,49 @@ import uk.ed.inf.graph.basic.IBasicNode;
  * @author smoodie
  *
  */
-public final class GraphStructureChangeListenee<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-> implements IGraphChangeListenee<N, E>, ISuppressableChangeListenee {
-	private final List<IGraphChangeListener<N, E>> listeners;
+public final class GraphStructureChangeListenee implements IGraphChangeListenee, ISuppressableChangeListenee {
+	private final List<IGraphChangeListener> listeners;
 	private boolean enabled = true;
 	
 	public GraphStructureChangeListenee(){
-		this.listeners = new CopyOnWriteArrayList<IGraphChangeListener<N, E>>();
+		this.listeners = new CopyOnWriteArrayList<IGraphChangeListener>();
 	}
 
-	public final void fireNodeChange(IGraphNodeChangeEvent<N, E> evt){
+	public final void fireNodeChange(IGraphNodeChangeEvent evt){
 		if(this.enabled){
-			for(IGraphChangeListener<N, E> listener : this.listeners){
+			for(IGraphChangeListener listener : this.listeners){
 				listener.nodeStructureChange(evt);
 			}
 		}
 	}
 	
-	public final void fireEdgeChange(IGraphEdgeChangeEvent<N, E> evt){
+	public final void fireEdgeChange(IGraphEdgeChangeEvent evt){
 		if(this.enabled){
-			for(IGraphChangeListener<N, E> listener : this.listeners){
+			for(IGraphChangeListener listener : this.listeners){
 				listener.edgeStructureChange(evt);
 			}
 		}
 	}
 	
-	public final void notifyNodeStructureChange(final GraphStructureChangeType type, N changedNode){
-		Set<N> items = new TreeSet<N>();
+	public final void notifyNodeStructureChange(final GraphStructureChangeType type, IBasicNode changedNode){
+		Set<IBasicNode> items = new TreeSet<IBasicNode>();
 		items.add(changedNode);
 		notifyNodeStructureChange(type, items);
 	}
 		
-	public final void notifyNodeStructureChange(final GraphStructureChangeType type, final Set<N> changedNodes){
-		IGraphNodeChangeEvent<N, E> event = new IGraphNodeChangeEvent<N, E>(){
+	public final void notifyNodeStructureChange(final GraphStructureChangeType type, final Set<IBasicNode> changedNodes){
+		IGraphNodeChangeEvent event = new IGraphNodeChangeEvent(){
 
 			public GraphStructureChangeType getChangeType() {
 				return type;
 			}
 
-			public Iterator<N> changedNodesIterator() {
+			public Iterator<IBasicNode> changedNodesIterator() {
 				return changedNodes.iterator();
 			}
 
-			public Set<N> getChangedNodes() {
-				return new HashSet<N>(changedNodes);
+			public Set<IBasicNode> getChangedNodes() {
+				return new HashSet<IBasicNode>(changedNodes);
 			}
 
 			public int numChangedNodes() {
@@ -87,25 +84,25 @@ public final class GraphStructureChangeListenee<
 		fireNodeChange(event);
 	}
 
-	public final void notifyEdgeStructureChange(final GraphStructureChangeType type, E changedEdge){
-		Set<E> items = new TreeSet<E>();
+	public final void notifyEdgeStructureChange(final GraphStructureChangeType type, IBasicEdge changedEdge){
+		Set<IBasicEdge> items = new TreeSet<IBasicEdge>();
 		items.add(changedEdge);
 		notifyEdgeStructureChange(type, items);
 	}
 		
-	public final void notifyEdgeStructureChange(final GraphStructureChangeType type, final Set<E> changedEdge){
-		IGraphEdgeChangeEvent<N, E> event = new IGraphEdgeChangeEvent<N, E>(){
+	public final void notifyEdgeStructureChange(final GraphStructureChangeType type, final Set<IBasicEdge> changedEdge){
+		IGraphEdgeChangeEvent event = new IGraphEdgeChangeEvent(){
 
 			public GraphStructureChangeType getChangeType() {
 				return type;
 			}
 
-			public Iterator<E> changedEdgeIterator() {
+			public Iterator<IBasicEdge> changedEdgeIterator() {
 				return changedEdge.iterator();
 			}
 
-			public Set<E> getChangedEdges() {
-				return new HashSet<E>(changedEdge);
+			public Set<IBasicEdge> getChangedEdges() {
+				return new HashSet<IBasicEdge>(changedEdge);
 			}
 
 			public int numChangedEdges() {
@@ -118,21 +115,21 @@ public final class GraphStructureChangeListenee<
 	/* (non-Javadoc)
 	 * @see org.pathwayeditor.businessobjects.drawingprimitives.listeners.IModelChangeListenee#addModelNodeChangeListener(org.pathwayeditor.businessobjects.drawingprimitives.listeners.IModelNodeChangeListener)
 	 */
-	public void addGraphChangeListener(IGraphChangeListener<N, E> listener) {
+	public void addGraphChangeListener(IGraphChangeListener listener) {
 		this.listeners.add(listener);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.pathwayeditor.businessobjects.drawingprimitives.listeners.IModelChangeListenee#modelNodeChangeListenerIterator()
 	 */
-	public Iterator<IGraphChangeListener<N, E>> modelChangeListenerIterator() {
+	public Iterator<IGraphChangeListener> modelChangeListenerIterator() {
 		return this.listeners.iterator();
 	}
 
 	/* (non-Javadoc)
 	 * @see org.pathwayeditor.businessobjects.drawingprimitives.listeners.IModelChangeListenee#removeModelNodeChangeListener(org.pathwayeditor.businessobjects.drawingprimitives.listeners.IModelNodeChangeListener)
 	 */
-	public void removeGraphChangeListener(IGraphChangeListener<N, E> listener) {
+	public void removeGraphChangeListener(IGraphChangeListener listener) {
 		this.listeners.remove(listener);
 	}
 

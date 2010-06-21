@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.state.IRestorableGraphElement;
 import uk.ed.inf.graph.util.IDirectedEdgeSet;
@@ -30,10 +31,10 @@ import uk.ed.inf.tree.AncestorTreeIterator;
 import uk.ed.inf.tree.LevelOrderTreeIterator;
 import uk.ed.inf.tree.PreOrderTreeIterator;
 
-public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode, BaseCompoundEdge>, IRestorableGraphElement {
+public abstract class BaseCompoundNode implements ICompoundNode, IRestorableGraphElement {
 	public static final int ROOT_LEVEL = 0;
-	private IFilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeInList;
-	private IFilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeOutList;
+	private IFilteredEdgeSet<ICompoundNode, ICompoundEdge> edgeInList;
+	private IFilteredEdgeSet<ICompoundNode, ICompoundEdge> edgeOutList;
 	
 	protected BaseCompoundNode(){
 		this.edgeInList = null;
@@ -51,7 +52,7 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		return level;
 	}
 	
-	public final Iterator<BaseCompoundNode> childIterator() {
+	public final Iterator<ICompoundNode> childIterator() {
 		return this.getChildCompoundGraph().nodeIterator();
 	}
 
@@ -59,21 +60,22 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 	 * The parent node cannot be null and should be the root node if the current node is the root
 	 * node. This follows the standard conversion for tree data structures.
 	 */
+	@Override
 	public abstract BaseCompoundNode getParent();
 	
-	protected final void createInEdgeSet(IDirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet){
-		this.edgeInList = new FilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge>(edgeSet, new CiEdgeExistanceCriteria());
+	protected final void createInEdgeSet(IDirectedEdgeSet<ICompoundNode, ICompoundEdge> edgeSet){
+		this.edgeInList = new FilteredEdgeSet<ICompoundNode, ICompoundEdge>(edgeSet, new CiEdgeExistanceCriteria());
 	}
 
-	protected final void createOutEdgeSet(IDirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet){
-		this.edgeOutList = new FilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge>(edgeSet, new CiEdgeExistanceCriteria());
+	protected final void createOutEdgeSet(IDirectedEdgeSet<ICompoundNode, ICompoundEdge> edgeSet){
+		this.edgeOutList = new FilteredEdgeSet<ICompoundNode, ICompoundEdge>(edgeSet, new CiEdgeExistanceCriteria());
 	}
 
-	protected final IFilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> getEdgeInList(){
+	protected final IFilteredEdgeSet<ICompoundNode, ICompoundEdge> getEdgeInList(){
 		return this.edgeInList;
 	}
 
-	protected final IFilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> getEdgeOutList(){
+	protected final IFilteredEdgeSet<ICompoundNode, ICompoundEdge> getEdgeOutList(){
 		return this.edgeOutList;
 	}
 
@@ -84,64 +86,79 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 	 */
 	protected abstract void setRemoved(boolean removed);
 	
+	@Override
 	public abstract BaseChildCompoundGraph getChildCompoundGraph();
 
+	@Override
 	public final int getInDegree() {
 		return this.getEdgeInList().size();
 	}
 
-	public final SortedSet<BaseCompoundEdge> getInEdgesFrom(BaseCompoundNode outNode) {
+	@Override
+	public final SortedSet<ICompoundEdge> getInEdgesFrom(ICompoundNode outNode) {
 		return this.edgeInList.getEdgesWith(this, outNode);
 	}
 
-	public final Iterator<BaseCompoundEdge> getInEdgeIterator() {
+	@Override
+	public final Iterator<ICompoundEdge> getInEdgeIterator() {
 		return this.edgeInList.iterator();
 	}
 
-	public final Iterator<BaseCompoundNode> getInNodeIterator() {
-		return new ConnectedNodeIterator<BaseCompoundNode, BaseCompoundEdge>(this, this.edgeInList.iterator());
+	@Override
+	public final Iterator<ICompoundNode> getInNodeIterator() {
+		return new ConnectedNodeIterator(this, this.edgeInList.iterator());
 	}
 
+	@Override
 	public final int getOutDegree() {
 		return this.edgeOutList.size();
 	}
 
-	public final Iterator<BaseCompoundEdge> getOutEdgeIterator() {
+	@Override
+	public final Iterator<ICompoundEdge> getOutEdgeIterator() {
 		return this.edgeOutList.iterator();
 	}
 
-	public final SortedSet<BaseCompoundEdge> getOutEdgesTo(BaseCompoundNode inNode) {
+	@Override
+	public final SortedSet<ICompoundEdge> getOutEdgesTo(ICompoundNode inNode) {
 		return this.edgeOutList.getEdgesWith(this, inNode);
 	}
 
-	public final Iterator<BaseCompoundNode> getOutNodeIterator() {
-		return new ConnectedNodeIterator<BaseCompoundNode, BaseCompoundEdge>(this, this.edgeOutList.iterator());
+	@Override
+	public final Iterator<ICompoundNode> getOutNodeIterator() {
+		return new ConnectedNodeIterator(this, this.edgeOutList.iterator());
 	}
 
-	public final boolean hasInEdgeFrom(BaseCompoundNode outNode) {
+	@Override
+	public final boolean hasInEdgeFrom(ICompoundNode outNode) {
 		return this.edgeInList.hasEdgesWith(this, outNode);
 	}
 
-	public final boolean hasOutEdgeTo(BaseCompoundNode inNode) {
+	@Override
+	public final boolean hasOutEdgeTo(ICompoundNode inNode) {
 		return this.edgeOutList.hasEdgesWith(this, inNode);
 	}
 
-	public final Iterator<BaseCompoundNode> connectedNodeIterator() {
+	@Override
+	public final Iterator<ICompoundNode> connectedNodeIterator() {
 		return new CombinedConnectedNodeIterator(this);
 	}
 
+	@Override
 	public final int getDegree() {
 		return this.edgeInList.size() + this.edgeOutList.size();
 	}
 
-	public final Iterator<BaseCompoundEdge> edgeIterator() {
+	@Override
+	public final Iterator<ICompoundEdge> edgeIterator() {
 		return new CombinedEdgeIterator();
 	}
 
-	public final SortedSet<BaseCompoundEdge> getEdgesWith(BaseCompoundNode other) {
+	@Override
+	public final SortedSet<ICompoundEdge> getEdgesWith(ICompoundNode other) {
 		if(other == null) throw new IllegalArgumentException("IOther cannot be null");
 //		BaseCompoundNode other = (BaseCompoundNode)iOther;
-		final SortedSet<BaseCompoundEdge> retVal = new TreeSet<BaseCompoundEdge>();
+		final SortedSet<ICompoundEdge> retVal = new TreeSet<ICompoundEdge>();
 		if(this.edgeInList.hasEdgesWith(this, other)){
 			retVal.addAll(this.edgeInList.getEdgesWith(this, other));
 		}
@@ -154,16 +171,19 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		return retVal;
 	}
 
+	@Override
 	public abstract BaseCompoundGraph getGraph();
 
+	@Override
 	public abstract int getIndex();
 
-	public final boolean isChild(BaseCompoundNode childNode) {
+	@Override
+	public final boolean isChild(ICompoundNode childNode) {
 		boolean retVal = false;
 		if(childNode != null){
-			Iterator<BaseCompoundNode> childIter = this.childIterator();
+			Iterator<ICompoundNode> childIter = this.getChildCompoundGraph().nodeIterator();
 			while(childIter.hasNext() && retVal == false){
-				BaseCompoundNode possChild = childIter.next();
+				ICompoundNode possChild = childIter.next();
 				if(possChild.equals(childNode)){
 					retVal = true;
 				}
@@ -172,7 +192,8 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		return retVal;
 	}
 	
-	public final boolean hasEdgeWith(BaseCompoundNode other) {
+	@Override
+	public final boolean hasEdgeWith(ICompoundNode other) {
 		boolean retVal = false;
 		if(other != null){ 
 			retVal = this.edgeInList.hasEdgesWith(this, other);
@@ -191,12 +212,15 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		this.edgeOutList.add(edge);
 	}
 	
-	public final int compareTo(BaseCompoundNode o) {
+	@Override
+	public int compareTo(ICompoundNode o) {
 		return this.getIndex() < o.getIndex() ? -1 : (this.getIndex() == o.getIndex() ? 0 : 1);
 	}
 
+	@Override
 	public abstract boolean isRemoved();
 
+	@Override
 	public final void markRemoved(boolean removed){
 		this.setRemoved(removed);
 		this.removalAction(removed);
@@ -208,13 +232,13 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 	 */
 	protected abstract void removalAction(boolean removed);
 	
-	private class CombinedConnectedNodeIterator implements Iterator<BaseCompoundNode> {
-		private final ConnectedNodeIterator<BaseCompoundNode, BaseCompoundEdge> inNodeIterator;
-		private final ConnectedNodeIterator<BaseCompoundNode, BaseCompoundEdge> outNodeIterator;
+	private class CombinedConnectedNodeIterator implements Iterator<ICompoundNode> {
+		private final ConnectedNodeIterator inNodeIterator;
+		private final ConnectedNodeIterator outNodeIterator;
 		
 		public CombinedConnectedNodeIterator(BaseCompoundNode initialNode){
-			this.inNodeIterator = new ConnectedNodeIterator<BaseCompoundNode, BaseCompoundEdge>(initialNode, edgeInList.iterator());
-			this.outNodeIterator = new ConnectedNodeIterator<BaseCompoundNode, BaseCompoundEdge>(initialNode, edgeOutList.iterator());
+			this.inNodeIterator = new ConnectedNodeIterator(initialNode, edgeInList.iterator());
+			this.outNodeIterator = new ConnectedNodeIterator(initialNode, edgeOutList.iterator());
 		}
 		
 		
@@ -226,8 +250,8 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 			return retVal;
 		}
 
-		public BaseCompoundNode next() {
-			BaseCompoundNode retVal = null;
+		public ICompoundNode next() {
+			ICompoundNode retVal = null;
 			if(this.inNodeIterator.hasNext()){
 				retVal = this.inNodeIterator.next();
 			}
@@ -243,7 +267,8 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		
 	}
 
-	public final boolean isParent(BaseCompoundNode parentNode) {
+	@Override
+	public final boolean isParent(ICompoundNode parentNode) {
 		boolean retVal = false;
 		if(parentNode != null){
 			retVal = this.getParent().equals(parentNode);
@@ -251,23 +276,28 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		return retVal;
 	}
 
+	@Override
 	public BaseCompoundNode getRoot() {
 		return this.getGraph().getRootNode();
 	}
 
-	public final Iterator<BaseCompoundNode> ancestorIterator() {
-		return new AncestorTreeIterator<BaseCompoundNode>(this);
+	@Override
+	public final Iterator<ICompoundNode> ancestorIterator() {
+		return new AncestorTreeIterator<ICompoundNode>(this);
 	}
 
-	public final Iterator<BaseCompoundNode> levelOrderIterator() {
-		return new LevelOrderTreeIterator<BaseCompoundNode>(this);
+	@Override
+	public final Iterator<ICompoundNode> levelOrderIterator() {
+		return new LevelOrderTreeIterator<ICompoundNode>(this);
 	}
 
-	public final Iterator<BaseCompoundNode> preOrderIterator() {
-		return new PreOrderTreeIterator<BaseCompoundNode>(this);
+	@Override
+	public final Iterator<ICompoundNode> preOrderIterator() {
+		return new PreOrderTreeIterator<ICompoundNode>(this);
 	}
 
-	public boolean isAncestor(BaseCompoundNode testNode) {
+	@Override
+	public boolean isAncestor(ICompoundNode testNode) {
 	    boolean retVal = false;
 	    if(testNode != null) {
 	        retVal = this.getGraph().getNodeTree().isAncestor(this, testNode);
@@ -275,7 +305,8 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 	    return retVal;
 	}
 	
-	public boolean isDescendent(BaseCompoundNode testNode) {
+	@Override
+	public boolean isDescendent(ICompoundNode testNode) {
         boolean retVal = false;
         if(testNode != null) {
             retVal = this.getGraph().getNodeTree().isDescendant(this, testNode);
@@ -283,13 +314,13 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
         return retVal;
 	}
 	
-	private class CombinedEdgeIterator implements Iterator<BaseCompoundEdge> {
-		private final Iterator<BaseCompoundEdge> inEdgeIterator;
-		private final Iterator<BaseCompoundEdge> outEdgeIterator;
+	private class CombinedEdgeIterator implements Iterator<ICompoundEdge> {
+		private final Iterator<ICompoundEdge> inEdgeIterator;
+		private final Iterator<ICompoundEdge> outEdgeIterator;
 		
 		public CombinedEdgeIterator(){
-			final SortedSet<BaseCompoundEdge> inEdgesCopy = new TreeSet<BaseCompoundEdge>(edgeInList);
-			final SortedSet<BaseCompoundEdge> outEdgesCopy = new TreeSet<BaseCompoundEdge>(edgeOutList);
+			final SortedSet<ICompoundEdge> inEdgesCopy = new TreeSet<ICompoundEdge>(edgeInList);
+			final SortedSet<ICompoundEdge> outEdgesCopy = new TreeSet<ICompoundEdge>(edgeOutList);
 			this.inEdgeIterator = inEdgesCopy.iterator();
 			this.outEdgeIterator = outEdgesCopy.iterator();
 		}
@@ -303,8 +334,8 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 			return retVal;
 		}
 
-		public BaseCompoundEdge next() {
-			BaseCompoundEdge retVal = null;
+		public ICompoundEdge next() {
+			ICompoundEdge retVal = null;
 			if(this.inEdgeIterator.hasNext()){
 				retVal = this.inEdgeIterator.next();
 			}
@@ -320,9 +351,9 @@ public abstract class BaseCompoundNode implements ICompoundNode<BaseCompoundNode
 		
 	}
 	
-	private class CiEdgeExistanceCriteria implements IFilterCriteria<BaseCompoundEdge> {
+	private class CiEdgeExistanceCriteria implements IFilterCriteria<ICompoundEdge> {
 
-		public boolean matched(BaseCompoundEdge testObj) {
+		public boolean matched(ICompoundEdge testObj) {
 			return !testObj.isRemoved();
 		}
 		

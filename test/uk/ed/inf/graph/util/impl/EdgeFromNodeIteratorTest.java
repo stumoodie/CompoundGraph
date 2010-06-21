@@ -34,13 +34,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import uk.ed.inf.graph.basic.IBasicEdge;
-import uk.ed.inf.graph.basic.IBasicNode;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
 
 @RunWith(JMock.class)
 public class EdgeFromNodeIteratorTest {
 	private Mockery mockery = new JUnit4Mockery();
-	private EdgeFromNodeIterator<TestNode, TestEdge> testInstance;
+	private EdgeFromNodeIterator<ICompoundNode, ICompoundEdge> testInstance;
 	
 
 	@Before
@@ -53,26 +53,26 @@ public class EdgeFromNodeIteratorTest {
 
 	@Test(expected=IllegalArgumentException.class)
 	public final void testEdgeIteratorCollectionOfQextendsINodeNullCollection() {
-		this.testInstance = new EdgeFromNodeIterator<TestNode, TestEdge>(null);
+		this.testInstance = new EdgeFromNodeIterator<ICompoundNode, ICompoundEdge>(null);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testEdgeIteratorCollectionOfQextendsINode() {
-		final Collection<TestNode> mockNodeCollection = this.mockery.mock(Collection.class, "mockNodeCollection");
-		final TestNode mockNode0 = this.mockery.mock(TestNode.class, "mockNode0");
-		final TestNode mockNode1 = this.mockery.mock(TestNode.class, "mockNode1");
-		final TestNode mockNode2 = this.mockery.mock(TestNode.class, "mockNode2");
-		final TestNode mockNode3 = this.mockery.mock(TestNode.class, "mockNode3");
-		final TestNode mockNode4 = this.mockery.mock(TestNode.class, "mockNode4");
-		final TestNode mockNode5 = this.mockery.mock(TestNode.class, "mockNode5");
-		final TestEdge mockEdge0 = this.mockery.mock(TestEdge.class, "mockEdge0");
-		final TestEdge mockEdge1 = this.mockery.mock(TestEdge.class, "mockEdge1");
-		final TestEdge mockEdge2 = this.mockery.mock(TestEdge.class, "mockEdge2");
-		final TestEdge mockEdge3 = this.mockery.mock(TestEdge.class, "mockEdge3");
-		final TestEdge mockEdge4 = this.mockery.mock(TestEdge.class, "mockEdge4");
-		final TestEdge mockEdge5 = this.mockery.mock(TestEdge.class, "mockEdge5");
-		final TestEdge mockEdge6 = this.mockery.mock(TestEdge.class, "mockEdge6");
+		final Collection<ICompoundNode> mockNodeCollection = this.mockery.mock(Collection.class, "mockNodeCollection");
+		final ICompoundNode mockNode0 = this.mockery.mock(ICompoundNode.class, "mockNode0");
+		final ICompoundNode mockNode1 = this.mockery.mock(ICompoundNode.class, "mockNode1");
+		final ICompoundNode mockNode2 = this.mockery.mock(ICompoundNode.class, "mockNode2");
+		final ICompoundNode mockNode3 = this.mockery.mock(ICompoundNode.class, "mockNode3");
+		final ICompoundNode mockNode4 = this.mockery.mock(ICompoundNode.class, "mockNode4");
+		final ICompoundNode mockNode5 = this.mockery.mock(ICompoundNode.class, "mockNode5");
+		final ICompoundEdge mockEdge0 = this.mockery.mock(ICompoundEdge.class, "mockEdge0");
+		final ICompoundEdge mockEdge1 = this.mockery.mock(ICompoundEdge.class, "mockEdge1");
+		final ICompoundEdge mockEdge2 = this.mockery.mock(ICompoundEdge.class, "mockEdge2");
+		final ICompoundEdge mockEdge3 = this.mockery.mock(ICompoundEdge.class, "mockEdge3");
+		final ICompoundEdge mockEdge4 = this.mockery.mock(ICompoundEdge.class, "mockEdge4");
+		final ICompoundEdge mockEdge5 = this.mockery.mock(ICompoundEdge.class, "mockEdge5");
+		final ICompoundEdge mockEdge6 = this.mockery.mock(ICompoundEdge.class, "mockEdge6");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockNodeCollection).iterator(); will(returnIterator(mockNode0, mockNode1, mockNode2, mockNode3, mockNode4, mockNode5));
 			
@@ -103,10 +103,10 @@ public class EdgeFromNodeIteratorTest {
 			allowing(mockEdge6).getIndex(); will(returnValue(6));
 		}});
 		this.testInstance = new EdgeFromNodeIterator(mockNodeCollection.iterator());
-		TestEdge expectedIterationOrder[] = { mockEdge0, mockEdge1, mockEdge2, mockEdge4,
+		ICompoundEdge expectedIterationOrder[] = { mockEdge0, mockEdge1, mockEdge2, mockEdge4,
 				mockEdge3, mockEdge5, mockEdge6 };
-		List<TestEdge> expectedEdgeList = Arrays.asList(expectedIterationOrder);
-		for(TestEdge expectedEdge : expectedEdgeList){
+		List<ICompoundEdge> expectedEdgeList = Arrays.asList(expectedIterationOrder);
+		for(ICompoundEdge expectedEdge : expectedEdgeList){
 			assertTrue("edge available", this.testInstance.hasNext());
 			assertEquals("expected next edge", expectedEdge, this.testInstance.next());
 		}
@@ -124,20 +124,20 @@ public class EdgeFromNodeIteratorTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testEdgeIteratorCollectionOfQextendsINodeNextOnly() {
-		final Collection<TestNode> mockNodeCollection = this.mockery.mock(Collection.class, "mockNodeCollection");
-		final TestNode mockNode0 = this.mockery.mock(TestNode.class, "mockNode0");
-		final TestNode mockNode1 = this.mockery.mock(TestNode.class, "mockNode1");
-		final TestNode mockNode2 = this.mockery.mock(TestNode.class, "mockNode2");
-		final TestNode mockNode3 = this.mockery.mock(TestNode.class, "mockNode3");
-		final TestNode mockNode4 = this.mockery.mock(TestNode.class, "mockNode4");
-		final TestNode mockNode5 = this.mockery.mock(TestNode.class, "mockNode5");
-		final TestEdge mockEdge0 = this.mockery.mock(TestEdge.class, "mockEdge0");
-		final TestEdge mockEdge1 = this.mockery.mock(TestEdge.class, "mockEdge1");
-		final TestEdge mockEdge2 = this.mockery.mock(TestEdge.class, "mockEdge2");
-		final TestEdge mockEdge3 = this.mockery.mock(TestEdge.class, "mockEdge3");
-		final TestEdge mockEdge4 = this.mockery.mock(TestEdge.class, "mockEdge4");
-		final TestEdge mockEdge5 = this.mockery.mock(TestEdge.class, "mockEdge5");
-		final TestEdge mockEdge6 = this.mockery.mock(TestEdge.class, "mockEdge6");
+		final Collection<ICompoundNode> mockNodeCollection = this.mockery.mock(Collection.class, "mockNodeCollection");
+		final ICompoundNode mockNode0 = this.mockery.mock(ICompoundNode.class, "mockNode0");
+		final ICompoundNode mockNode1 = this.mockery.mock(ICompoundNode.class, "mockNode1");
+		final ICompoundNode mockNode2 = this.mockery.mock(ICompoundNode.class, "mockNode2");
+		final ICompoundNode mockNode3 = this.mockery.mock(ICompoundNode.class, "mockNode3");
+		final ICompoundNode mockNode4 = this.mockery.mock(ICompoundNode.class, "mockNode4");
+		final ICompoundNode mockNode5 = this.mockery.mock(ICompoundNode.class, "mockNode5");
+		final ICompoundEdge mockEdge0 = this.mockery.mock(ICompoundEdge.class, "mockEdge0");
+		final ICompoundEdge mockEdge1 = this.mockery.mock(ICompoundEdge.class, "mockEdge1");
+		final ICompoundEdge mockEdge2 = this.mockery.mock(ICompoundEdge.class, "mockEdge2");
+		final ICompoundEdge mockEdge3 = this.mockery.mock(ICompoundEdge.class, "mockEdge3");
+		final ICompoundEdge mockEdge4 = this.mockery.mock(ICompoundEdge.class, "mockEdge4");
+		final ICompoundEdge mockEdge5 = this.mockery.mock(ICompoundEdge.class, "mockEdge5");
+		final ICompoundEdge mockEdge6 = this.mockery.mock(ICompoundEdge.class, "mockEdge6");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockNodeCollection).iterator(); will(returnIterator(mockNode0, mockNode1, mockNode2, mockNode3, mockNode4, mockNode5));
 			
@@ -168,10 +168,10 @@ public class EdgeFromNodeIteratorTest {
 			allowing(mockEdge6).getIndex(); will(returnValue(6));
 		}});
 		this.testInstance = new EdgeFromNodeIterator(mockNodeCollection.iterator());
-		TestEdge expectedIterationOrder[] = { mockEdge0, mockEdge1, mockEdge2, mockEdge4,
+		ICompoundEdge expectedIterationOrder[] = { mockEdge0, mockEdge1, mockEdge2, mockEdge4,
 				mockEdge3, mockEdge5, mockEdge6 };
-		List<TestEdge> expectedEdgeList = Arrays.asList(expectedIterationOrder);
-		for(TestEdge expectedEdge : expectedEdgeList){
+		List<ICompoundEdge> expectedEdgeList = Arrays.asList(expectedIterationOrder);
+		for(ICompoundEdge expectedEdge : expectedEdgeList){
 			assertEquals("expected next edge", expectedEdge, this.testInstance.next());
 		}
 		try{
@@ -187,13 +187,13 @@ public class EdgeFromNodeIteratorTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testEdgeIteratorCollectionOfQextendsINodeNoEdges() {
-		final Collection<TestNode> mockNodeCollection = this.mockery.mock(Collection.class, "mockNodeCollection");
-		final TestNode mockNode0 = this.mockery.mock(TestNode.class, "mockNode0");
-		final TestNode mockNode1 = this.mockery.mock(TestNode.class, "mockNode1");
-		final TestNode mockNode2 = this.mockery.mock(TestNode.class, "mockNode2");
-		final TestNode mockNode3 = this.mockery.mock(TestNode.class, "mockNode3");
-		final TestNode mockNode4 = this.mockery.mock(TestNode.class, "mockNode4");
-		final TestNode mockNode5 = this.mockery.mock(TestNode.class, "mockNode5");
+		final Collection<ICompoundNode> mockNodeCollection = this.mockery.mock(Collection.class, "mockNodeCollection");
+		final ICompoundNode mockNode0 = this.mockery.mock(ICompoundNode.class, "mockNode0");
+		final ICompoundNode mockNode1 = this.mockery.mock(ICompoundNode.class, "mockNode1");
+		final ICompoundNode mockNode2 = this.mockery.mock(ICompoundNode.class, "mockNode2");
+		final ICompoundNode mockNode3 = this.mockery.mock(ICompoundNode.class, "mockNode3");
+		final ICompoundNode mockNode4 = this.mockery.mock(ICompoundNode.class, "mockNode4");
+		final ICompoundNode mockNode5 = this.mockery.mock(ICompoundNode.class, "mockNode5");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockNodeCollection).iterator(); will(returnIterator(mockNode0, mockNode1, mockNode2, mockNode3, mockNode4, mockNode5));
 			
@@ -210,9 +210,9 @@ public class EdgeFromNodeIteratorTest {
 			allowing(mockNode5).edgeIterator(); will(returnIterator());
 		}});
 		this.testInstance = new EdgeFromNodeIterator(mockNodeCollection.iterator());
-		TestEdge expectedIterationOrder[] = { };
-		List<TestEdge> expectedEdgeList = Arrays.asList(expectedIterationOrder);
-		for(TestEdge expectedEdge : expectedEdgeList){
+		ICompoundEdge expectedIterationOrder[] = { };
+		List<ICompoundEdge> expectedEdgeList = Arrays.asList(expectedIterationOrder);
+		for(ICompoundEdge expectedEdge : expectedEdgeList){
 			assertTrue("edge available", this.testInstance.hasNext());
 			assertEquals("expected next edge", expectedEdge, this.testInstance.next());
 		}
@@ -230,15 +230,15 @@ public class EdgeFromNodeIteratorTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public final void testEdgeIteratorCollectionOfQextendsINodeNoNodes() {
-		final Collection<TestNode> mockNodeCollection = this.mockery.mock(Collection.class, "mockNodeCollection");
+		final Collection<ICompoundNode> mockNodeCollection = this.mockery.mock(Collection.class, "mockNodeCollection");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockNodeCollection).iterator(); will(returnIterator());
 			
 		}});
 		this.testInstance = new EdgeFromNodeIterator(mockNodeCollection.iterator());
-		TestEdge expectedIterationOrder[] = { };
-		List<TestEdge> expectedEdgeList = Arrays.asList(expectedIterationOrder);
-		for(TestEdge expectedEdge : expectedEdgeList){
+		ICompoundEdge expectedIterationOrder[] = { };
+		List<ICompoundEdge> expectedEdgeList = Arrays.asList(expectedIterationOrder);
+		for(ICompoundEdge expectedEdge : expectedEdgeList){
 			assertTrue("edge available", this.testInstance.hasNext());
 			assertEquals("expected next edge", expectedEdge, this.testInstance.next());
 		}
@@ -256,20 +256,20 @@ public class EdgeFromNodeIteratorTest {
 
 	@Test
 	public final void testEdgeIteratorCollectionOfQextendsINodeMoreDeg0Nodes() {
-		final Collection<TestNode> mockNodeCollection = this.mockery.mock(Collection.class, "mockNodeCollection");
-		final TestNode mockNode0 = this.mockery.mock(TestNode.class, "mockNode0");
-		final TestNode mockNode1 = this.mockery.mock(TestNode.class, "mockNode1");
-		final TestNode mockNode2 = this.mockery.mock(TestNode.class, "mockNode2");
-		final TestNode mockNode3 = this.mockery.mock(TestNode.class, "mockNode3");
-		final TestNode mockNode4 = this.mockery.mock(TestNode.class, "mockNode4");
-		final TestNode mockNode5 = this.mockery.mock(TestNode.class, "mockNode5");
-		final TestEdge mockEdge0 = this.mockery.mock(TestEdge.class, "mockEdge0");
-		final TestEdge mockEdge1 = this.mockery.mock(TestEdge.class, "mockEdge1");
-		final TestEdge mockEdge2 = this.mockery.mock(TestEdge.class, "mockEdge2");
-		final TestEdge mockEdge3 = this.mockery.mock(TestEdge.class, "mockEdge3");
-		final TestEdge mockEdge4 = this.mockery.mock(TestEdge.class, "mockEdge4");
-		final TestEdge mockEdge5 = this.mockery.mock(TestEdge.class, "mockEdge5");
-		final TestEdge mockEdge6 = this.mockery.mock(TestEdge.class, "mockEdge6");
+		final Collection<ICompoundNode> mockNodeCollection = this.mockery.mock(Collection.class, "mockNodeCollection");
+		final ICompoundNode mockNode0 = this.mockery.mock(ICompoundNode.class, "mockNode0");
+		final ICompoundNode mockNode1 = this.mockery.mock(ICompoundNode.class, "mockNode1");
+		final ICompoundNode mockNode2 = this.mockery.mock(ICompoundNode.class, "mockNode2");
+		final ICompoundNode mockNode3 = this.mockery.mock(ICompoundNode.class, "mockNode3");
+		final ICompoundNode mockNode4 = this.mockery.mock(ICompoundNode.class, "mockNode4");
+		final ICompoundNode mockNode5 = this.mockery.mock(ICompoundNode.class, "mockNode5");
+		final ICompoundEdge mockEdge0 = this.mockery.mock(ICompoundEdge.class, "mockEdge0");
+		final ICompoundEdge mockEdge1 = this.mockery.mock(ICompoundEdge.class, "mockEdge1");
+		final ICompoundEdge mockEdge2 = this.mockery.mock(ICompoundEdge.class, "mockEdge2");
+		final ICompoundEdge mockEdge3 = this.mockery.mock(ICompoundEdge.class, "mockEdge3");
+		final ICompoundEdge mockEdge4 = this.mockery.mock(ICompoundEdge.class, "mockEdge4");
+		final ICompoundEdge mockEdge5 = this.mockery.mock(ICompoundEdge.class, "mockEdge5");
+		final ICompoundEdge mockEdge6 = this.mockery.mock(ICompoundEdge.class, "mockEdge6");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockNodeCollection).iterator(); will(returnIterator(mockNode0, mockNode1, mockNode2, mockNode3, mockNode4, mockNode5));
 			
@@ -300,10 +300,10 @@ public class EdgeFromNodeIteratorTest {
 			allowing(mockEdge6).getIndex(); will(returnValue(6));
 		}});
 		this.testInstance = new EdgeFromNodeIterator(mockNodeCollection.iterator());
-		TestEdge expectedIterationOrder[] = { mockEdge0, mockEdge3, mockEdge1, mockEdge2, mockEdge4,
+		ICompoundEdge expectedIterationOrder[] = { mockEdge0, mockEdge3, mockEdge1, mockEdge2, mockEdge4,
 				mockEdge5, mockEdge6 };
-		List<TestEdge> expectedEdgeList = Arrays.asList(expectedIterationOrder);
-		for(TestEdge expectedEdge : expectedEdgeList){
+		List<ICompoundEdge> expectedEdgeList = Arrays.asList(expectedIterationOrder);
+		for(ICompoundEdge expectedEdge : expectedEdgeList){
 			assertTrue("edge available", this.testInstance.hasNext());
 			assertEquals("expected next edge", expectedEdge, this.testInstance.next());
 		}
@@ -318,11 +318,4 @@ public class EdgeFromNodeIteratorTest {
 		this.mockery.assertIsSatisfied();
 	}
 	
-	private interface TestEdge extends IBasicEdge<TestNode, TestEdge> {
-		
-	}
-	
-	private interface TestNode extends IBasicNode<TestNode, TestEdge> {
-		
-	}
 }

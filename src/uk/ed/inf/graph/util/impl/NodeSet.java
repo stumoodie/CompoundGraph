@@ -21,13 +21,13 @@ import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import uk.ed.inf.graph.basic.IBasicEdge;
-import uk.ed.inf.graph.basic.IBasicNode;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.util.INodeSet;
 
 public final class NodeSet<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
+		N extends ICompoundNode,
+		E extends ICompoundEdge
 > implements INodeSet<N, E> {
 	
 	private final SortedSet<N> nodeList;

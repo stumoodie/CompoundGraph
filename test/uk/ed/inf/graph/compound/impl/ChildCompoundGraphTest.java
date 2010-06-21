@@ -16,7 +16,6 @@ limitations under the License.
 package uk.ed.inf.graph.compound.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -33,10 +32,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
-import uk.ed.inf.graph.compound.base.BaseCompoundNode;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.base.BaseSubCompoundGraph;
-import uk.ed.inf.graph.directed.IDirectedPair;
 
 @RunWith(JMock.class)
 public class ChildCompoundGraphTest {
@@ -92,7 +91,7 @@ public class ChildCompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Ignore @Test
 	public final void testContainsDirectedEdgeCiNodeCiNode() {
-		IDirectedPair<BaseCompoundNode, BaseCompoundEdge> mockDirectedPair = mockery.mock(IDirectedPair.class , "mockDirectedPair") ;
+		ICompoundNodePair mockDirectedPair = mockery.mock(ICompoundNodePair.class , "mockDirectedPair") ;
 		
 		mockery.checking( new Expectations () {{
 			
@@ -152,7 +151,7 @@ public class ChildCompoundGraphTest {
 	public final void testEdgeIterator() {
 		CompoundEdge [] edgeArray = { anEdge } ;
 		
-		Iterator<BaseCompoundEdge> edgeIterator = testChildCompoundGraph.edgeIterator() ;
+		Iterator<ICompoundEdge> edgeIterator = testChildCompoundGraph.edgeIterator() ;
 		
 		int counter = 0; 
 		
@@ -175,7 +174,7 @@ public class ChildCompoundGraphTest {
 	public final void testNodeIterator() {
 		CompoundNode [] nodeArray = { inNode , outNode } ;
 		
-		Iterator<BaseCompoundNode> nodeIterator = testChildCompoundGraph.nodeIterator() ;
+		Iterator<ICompoundNode> nodeIterator = testChildCompoundGraph.nodeIterator() ;
 		
 		int counter = 0; 
 		
@@ -221,11 +220,6 @@ public class ChildCompoundGraphTest {
 	}
 
 	@Test
-	public final void testIsInducedSubgraph() {
-		assertFalse ( "not Indused" , testChildCompoundGraph.isInducedSubgraph() );
-	}
-
-	@Test
 	public final void testAddNewNode() {
 		CompoundNode newNode = testChildCompoundGraph.nodeFactory().createNode() ;
 		assertEquals ( "one more node" , NUMERIC[3] , testChildCompoundGraph.getNumNodes()) ;
@@ -242,7 +236,7 @@ public class ChildCompoundGraphTest {
 	@SuppressWarnings("unchecked")
 	@Ignore @Test
 	public final void testContainsDirectedEdgeIDirectedPairOfCiNodeCiEdge() {
-		final IDirectedPair<BaseCompoundNode, BaseCompoundEdge> aDirectedPair = mockery.mock(IDirectedPair.class , "aDirectedPair") ;
+		final ICompoundNodePair aDirectedPair = mockery.mock(ICompoundNodePair.class , "aDirectedPair") ;
 			
 		assertTrue ( "contains directed pair" , testChildCompoundGraph.containsDirectedEdge(aDirectedPair) );
 	}

@@ -16,9 +16,11 @@ limitations under the License.
 package uk.ed.inf.graph.compound.base;
 
 import uk.ed.inf.graph.compound.ICompoundChildEdgeFactory;
+import uk.ed.inf.graph.compound.ICompoundNode;
 
-public abstract class BaseChildCompoundEdgeFactory implements ICompoundChildEdgeFactory<BaseCompoundNode, BaseCompoundEdge> {
+public abstract class BaseChildCompoundEdgeFactory implements ICompoundChildEdgeFactory {
 	
+	@Override
 	public abstract BaseChildCompoundGraph getOwningChildGraph();
 
 	/**
@@ -28,7 +30,7 @@ public abstract class BaseChildCompoundEdgeFactory implements ICompoundChildEdge
 	 * @param inNode
 	 * @return
 	 */
-	protected final boolean isValidBaseNodePair(BaseCompoundNode outNode, BaseCompoundNode inNode) {
+	protected final boolean isValidBaseNodePair(ICompoundNode outNode, ICompoundNode inNode) {
 		boolean retVal = false;
 		if(outNode != null  && inNode != null){
 			BaseCompoundNode parentNode = this.getOwningChildGraph().getRootNode();
@@ -37,14 +39,17 @@ public abstract class BaseChildCompoundEdgeFactory implements ICompoundChildEdge
 		return retVal;
 	}
 
-	public abstract void setPair(BaseCompoundNode outNode, BaseCompoundNode inNode);
+	@Override
+	public abstract void setPair(ICompoundNode outNode, ICompoundNode inNode);
 
 	protected abstract BaseCompoundNode getOutNode();
 	
 	protected abstract BaseCompoundNode getInNode();
-	
+		
+	@Override
 	public abstract BaseCompoundNodePair getCurrentNodePair();
 	
+	@Override
 	public BaseCompoundEdge createEdge() {
 		int idx = this.getGraph().getEdgeCounter().nextIndex();
 		BaseCompoundEdge newCompoundEdge = newEdge(this.getOwningChildGraph(), idx, this.getOutNode(), this.getInNode());
@@ -57,8 +62,10 @@ public abstract class BaseChildCompoundEdgeFactory implements ICompoundChildEdge
 	protected abstract BaseCompoundEdge newEdge(BaseChildCompoundGraph owningChildGraph,
 					int edgeIndex, BaseCompoundNode outNode, BaseCompoundNode inNode);
 	
+	@Override
 	public abstract BaseCompoundGraph getGraph();
 	
+	@Override
 	public abstract boolean canCreateEdge();
 
 }

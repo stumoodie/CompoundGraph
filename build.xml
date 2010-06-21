@@ -4,8 +4,8 @@
 	<property environment="env" />
 	<property name="junit.output.dir" value="junit" />
 	<property name="debuglevel" value="source,lines,vars" />
-	<property name="target" value="1.5" />
-	<property name="source" value="1.5" />
+	<property name="target" value="1.6" />
+	<property name="source" value="1.6" />
 	<property name="build.dir" value="./ant-build" />
 	<property name="docs.build.dir" value="./doc"/>
 	<property name="src.dir" value="./src" />
@@ -65,6 +65,12 @@
 			<src path="src" />
 			<classpath refid="CompoundGraph.classpath" />
 			<compilerarg value="-Xlint" />
+			<exclude name="uk/ed/inf/graph/basic/**"/>
+			<exclude name="uk/ed/inf/graph/impl/**"/>
+			<exclude name="uk/ed/inf/graph/undirected/**"/>
+			<exclude name="uk/ed/inf/graph/colour/**"/>
+			<exclude name="uk/ed/inf/graph/directed/**"/>
+			<exclude name="uk/ed/inf/graph/state/GraphStateHandler.java"/>
 		</javac>
 		<copy todir="${build.dir}">
 			<fileset dir="${build.dir}" />
@@ -77,6 +83,10 @@
 			<src path="test" />
 			<classpath refid="test.classpath" />
 			<compilerarg value="-Xlint" />
+			<exclude name="uk/ed/inf/graph/impl/**"/>
+			<exclude name="uk/ed/inf/graph/state/**"/>
+			<exclude name="uk/ed/inf/graph/util/impl/EdgeSetTest.java"/>
+			<exclude name="uk/ed/inf/graph/util/impl/NodeSetTest.java"/>
 		</javac>
 	</target>
 	

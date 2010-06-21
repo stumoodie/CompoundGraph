@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import uk.ed.inf.graph.compound.ICompoundNode;
+
 public class UnfilteredTreeIterator implements Iterator<BaseCompoundNode>{
 	private final Queue<BaseCompoundNode> queue;
 	
@@ -25,9 +27,9 @@ public class UnfilteredTreeIterator implements Iterator<BaseCompoundNode>{
 	}
 	
 	private void readChildren(BaseCompoundNode parent){
-		Iterator<BaseCompoundNode> iter = parent.getChildCompoundGraph().unfilteredNodeIterator();
+		Iterator<ICompoundNode> iter = parent.getChildCompoundGraph().unfilteredNodeIterator();
 		while(iter.hasNext()){
-			this.queue.offer(iter.next());
+			this.queue.offer((BaseCompoundNode)iter.next());
 		}
 	}
 

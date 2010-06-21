@@ -66,13 +66,12 @@ public class CompoundGraph extends ArchetypalCompoundGraph {
         return true;
     }
 	@Override
-	protected void notifyCopyOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> originalSubgraph,
-			ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> copiedNodes) {
+	protected void notifyCopyOperationComplete(ISubCompoundGraph originalSubgraph, ISubCompoundGraph copiedNodes) {
 		
 	}
 
 	@Override
-	protected void notifyRemovalOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
+	protected void notifyRemovalOperationComplete(ISubCompoundGraph subgraph) {
 		
 	}
 

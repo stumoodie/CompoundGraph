@@ -19,26 +19,28 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
-public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFactory<BaseCompoundNode, BaseCompoundEdge> {
+public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFactory {
 	private static final String DEBUG_PROP_NAME = "uk.ed.inf.graph.compound.base.debugging";
 	// added debug checks to graph
 	private final boolean debuggingEnabled;
 	private final BaseSubCompoundGraphBuilder builder;
-	private final Set<BaseCompoundNode> nodeList = new HashSet<BaseCompoundNode>();
-	private final Set<BaseCompoundEdge> edgeList = new HashSet<BaseCompoundEdge>();
+	private final Set<ICompoundNode> nodeList = new HashSet<ICompoundNode>();
+	private final Set<ICompoundEdge> edgeList = new HashSet<ICompoundEdge>();
 
 	protected BaseSubCompoundGraphFactory(BaseSubCompoundGraphBuilder builder){
 		this.builder = builder;
 		this.debuggingEnabled = Boolean.getBoolean(DEBUG_PROP_NAME);
 	}
 	
-	public final void addNode(BaseCompoundNode node){
+	public final void addNode(ICompoundNode node){
 		this.nodeList.add(node);
 	}
 	
-	public final void addEdge(BaseCompoundEdge edge){
+	public final void addEdge(ICompoundEdge edge){
 		this.edgeList.add(edge);
 	}
 
@@ -48,7 +50,7 @@ public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFa
 	 * subgraph to get this.
 	 * @return iterator of <code>CiNode</code>s.
 	 */
-	public Iterator<BaseCompoundNode> nodeIterator(){
+	public Iterator<ICompoundNode> nodeIterator(){
 		return this.nodeList.iterator();
 	}
 	
@@ -61,7 +63,7 @@ public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFa
 	 * edges derived from the nodes selected here or between nodes in any child compound graphs of
 	 * the selected nodes. You should create the subgraph to get this. 
 	 */
-	public Iterator<BaseCompoundEdge> edgeIterator(){
+	public Iterator<ICompoundEdge> edgeIterator(){
 		return this.edgeList.iterator();
 	}
 	

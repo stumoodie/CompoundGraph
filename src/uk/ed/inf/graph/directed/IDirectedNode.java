@@ -21,10 +21,7 @@ import java.util.SortedSet;
 import uk.ed.inf.graph.basic.IBasicNode;
 
 
-public interface IDirectedNode<
-		N extends IDirectedNode<N, ? extends IDirectedEdge<N, ?>>,
-		E extends IDirectedEdge<N, E>
-> extends IBasicNode<N, E> {
+public interface IDirectedNode extends IBasicNode {
 	int getInDegree();
 	
 	int getOutDegree();
@@ -34,32 +31,32 @@ public interface IDirectedNode<
 	 * @param outNode
 	 * @return
 	 */
-	boolean hasInEdgeFrom(N outNode);
+	boolean hasInEdgeFrom(IDirectedNode outNode);
 	
-	SortedSet<E> getInEdgesFrom(N outNode);  
+	SortedSet<IDirectedEdge> getInEdgesFrom(IDirectedNode outNode);  
 	
 	/**
 	 * Has at least one edge going out from this node to inNode.
 	 * @param inNode
 	 * @return
 	 */
-	boolean hasOutEdgeTo(N inNode);
+	boolean hasOutEdgeTo(IDirectedNode inNode);
 	
-	SortedSet<E> getOutEdgesTo(N inNode);  
+	SortedSet<IDirectedEdge> getOutEdgesTo(IDirectedNode inNode);  
 
 	/**
 	 * Gets all edges connecting this node
 	 * @return
 	 */
-	Iterator<E> getInEdgeIterator();
+	Iterator<IDirectedEdge> getInEdgeIterator();
 	
 	/**
 	 * Gets all edges going out from this node. 
 	 * @return
 	 */
-	Iterator<E> getOutEdgeIterator();
+	Iterator<IDirectedEdge> getOutEdgeIterator();
 
-	Iterator<N> getInNodeIterator();
+	Iterator<IDirectedNode> getInNodeIterator();
 	
-	Iterator<N> getOutNodeIterator();
+	Iterator<IDirectedNode> getOutNodeIterator();
 }

@@ -18,8 +18,9 @@ package uk.ed.inf.graph.util;
 import java.util.Set;
 import java.util.SortedSet;
 
-import uk.ed.inf.graph.basic.IEdge;
-import uk.ed.inf.graph.basic.INode;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
+
 
 /**
  * A set designed to provide convenient access to edges. This interface will typically be implemented and used
@@ -33,8 +34,8 @@ import uk.ed.inf.graph.basic.INode;
  * @param <E> The edge class to be used. It must implement <code>IEdge</code>.
  */
 public interface IEdgeSet<
-		N extends INode,
-		E extends IEdge
+		N extends ICompoundNode,
+		E extends ICompoundEdge
 > extends Set<E> {
 
 	/**

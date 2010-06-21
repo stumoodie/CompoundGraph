@@ -36,12 +36,12 @@ public abstract class ArchetypalCompoundEdge extends BaseCompoundEdge {
 	}
 	
 	@Override
-	protected final ArchetypalCompoundNode getInNode(){
+	public final ArchetypalCompoundNode getInNode(){
 		return this.inNode;
 	}
 	
 	@Override
-	protected final ArchetypalCompoundNode getOutNode(){
+	public final ArchetypalCompoundNode getOutNode(){
 		return this.outNode;
 	}
 	

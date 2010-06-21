@@ -17,7 +17,6 @@ package uk.ed.inf.graph.compound.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,8 +33,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
-import uk.ed.inf.graph.compound.base.BaseCompoundNode;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
 
 @RunWith(JMock.class)
 public class SubCompoundGraphFactoryTest {
@@ -77,11 +76,6 @@ public class SubCompoundGraphFactoryTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Ignore @Test
-	public final void testSubCigraphFactory() {
-		fail("Not yet implemented"); // TODO
-	}
-
 	@Test
 	public final void testAddNode() {
 
@@ -94,7 +88,7 @@ public class SubCompoundGraphFactoryTest {
 		
 		testSubCompoundGraphFactory.addNode(mockCompoundNode2) ;
 		
-		Iterator<BaseCompoundNode> nodeIterator = testSubCompoundGraphFactory.nodeIterator() ;
+		Iterator<ICompoundNode> nodeIterator = testSubCompoundGraphFactory.nodeIterator() ;
 		
 		int counter = 0 ;
 		while ( nodeIterator.hasNext())
@@ -115,7 +109,7 @@ public class SubCompoundGraphFactoryTest {
 		
 		testSubCompoundGraphFactory.addEdge(mockCompoundEdge2) ; 
 		
-		Iterator<BaseCompoundEdge> edgeIterator = testSubCompoundGraphFactory.edgeIterator() ;
+		Iterator<ICompoundEdge> edgeIterator = testSubCompoundGraphFactory.edgeIterator() ;
 		
 		int counter = 0 ;
 		while ( edgeIterator.hasNext())
@@ -131,7 +125,7 @@ public class SubCompoundGraphFactoryTest {
 	public final void testNodeIterator() {
 		CompoundNode nodeArray [] = { mockCompoundNode } ;
 		
-		Iterator<BaseCompoundNode> nodeIterator = testSubCompoundGraphFactory.nodeIterator() ;
+		Iterator<ICompoundNode> nodeIterator = testSubCompoundGraphFactory.nodeIterator() ;
 		
 		int counter = 0 ;
 		while ( nodeIterator.hasNext())
@@ -145,7 +139,7 @@ public class SubCompoundGraphFactoryTest {
 	public final void testEdgeIterator() {
 		CompoundEdge edgeArray [] = { mockCompoundEdge } ;
 		
-		Iterator<BaseCompoundEdge> edgeIterator = testSubCompoundGraphFactory.edgeIterator() ;
+		Iterator<ICompoundEdge> edgeIterator = testSubCompoundGraphFactory.edgeIterator() ;
 		
 		int counter = 0 ;
 		while ( edgeIterator.hasNext())
@@ -162,11 +156,6 @@ public class SubCompoundGraphFactoryTest {
 		generatedSubGraph.containsEdge(mockCompoundEdge) ;
 		generatedSubGraph.containsNode(mockCompoundNode) ;
 		
-	}
-
-	@Ignore @Test
-	public final void testCreateInducedSubgraph() {
-		fail("Not yet implemented"); // TODO
 	}
 
 }

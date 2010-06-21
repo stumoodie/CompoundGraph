@@ -29,46 +29,43 @@ import uk.ed.inf.graph.basic.IBasicNode;
  * @author smoodie
  *
  */
-public final class NodeStructureChangeListenee<
-N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-	> implements INodeChangeListenee<N, E>, ISuppressableChangeListenee {
-	private final List<INodeChangeListener<N, E>> listeners;
-	private final N node;
+public final class NodeStructureChangeListenee implements INodeChangeListenee, ISuppressableChangeListenee {
+	private final List<INodeChangeListener> listeners;
+	private final IBasicNode node;
 	private boolean enabled = true;
 	
-	public NodeStructureChangeListenee(N model){
-		this.listeners = new CopyOnWriteArrayList<INodeChangeListener<N, E>>();
+	public NodeStructureChangeListenee(IBasicNode model){
+		this.listeners = new CopyOnWriteArrayList<INodeChangeListener>();
 		this.node = model;
 	}
 
 	/**
 	 * 
 	 */
-	public final List<INodeChangeListener<N, E>> getListeners() {
+	public final List<INodeChangeListener> getListeners() {
 		return this.listeners;
 	}
 
-	public final void fireNodeChange(INodeChangeEvent<N, E> evt){
+	public final void fireNodeChange(INodeChangeEvent evt){
 		if(enabled){
-			for(INodeChangeListener<N, E> listener : this.getListeners()){
+			for(INodeChangeListener listener : this.getListeners()){
 				listener.nodeStructureChange(evt);
 			}
 		}
 	}
 	
-	public final void notifyNodeStructureChange(final GraphStructureChangeType type, final E changedNode){
-		INodeChangeEvent<N, E> event = new INodeChangeEvent<N, E>(){
+	public final void notifyNodeStructureChange(final GraphStructureChangeType type, final IBasicEdge changedNode){
+		INodeChangeEvent event = new INodeChangeEvent(){
 
 			public GraphStructureChangeType getChangeType() {
 				return type;
 			}
 
-			public E getChangedEdge() {
+			public IBasicEdge getChangedEdge() {
 				return changedNode;
 			}
 
-			public N getChangedNode() {
+			public IBasicNode getChangedNode() {
 				return node;
 			}
 			
@@ -84,21 +81,21 @@ N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
 	/* (non-Javadoc)
 	 * @see org.pathwayeditor.businessobjects.drawingprimitives.listeners.INodeChangeListenee#addNodeNodeChangeListener(org.pathwayeditor.businessobjects.drawingprimitives.listeners.INodeNodeChangeListener)
 	 */
-	public void addNodeChangeListener(INodeChangeListener<N, E> listener) {
+	public void addNodeChangeListener(INodeChangeListener listener) {
 		this.listeners.add(listener);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.pathwayeditor.businessobjects.drawingprimitives.listeners.INodeChangeListenee#modelNodeChangeListenerIterator()
 	 */
-	public Iterator<INodeChangeListener<N, E>> nodeChangeListenerIterator() {
+	public Iterator<INodeChangeListener> nodeChangeListenerIterator() {
 		return this.listeners.iterator();
 	}
 
 	/* (non-Javadoc)
 	 * @see org.pathwayeditor.businessobjects.drawingprimitives.listeners.INodeChangeListenee#removeNodeNodeChangeListener(org.pathwayeditor.businessobjects.drawingprimitives.listeners.INodeNodeChangeListener)
 	 */
-	public void removeNodeChangeListener(INodeChangeListener<N, E> listener) {
+	public void removeNodeChangeListener(INodeChangeListener listener) {
 		this.listeners.remove(listener);
 	}
 

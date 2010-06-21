@@ -17,15 +17,12 @@ package uk.ed.inf.graph.basic;
 
 import java.util.Iterator;
 
-public interface IBasicSubgraphFactory<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-> {
+public interface IBasicSubgraphFactory {
 
 	/** The graph that this factory will create a subgraph for.
 	 * @return the owning graph, which cannot be null.
 	 */
-	IBasicGraph<N, E> getGraph();
+	IBasicGraph getGraph();
 
 	/**
 	 * Add a node to the factory that will be used to compose the subgraph.
@@ -34,7 +31,7 @@ public interface IBasicSubgraphFactory<
 	 * @throws IllegalArgumentException if <code>node</code> does not belong
 	 * the the same graph as the factory.
 	 */
-	void addNode(N node);
+	void addNode(IBasicNode node);
 	
 	/**
 	 * Get the number of nodes added to the factory;
@@ -49,7 +46,7 @@ public interface IBasicSubgraphFactory<
 	 * @throws IllegalArgumentException if <code>edge</code> does not belong
 	 * the the same graph as the factory.
 	 */
-	void addEdge(E edge);
+	void addEdge(IBasicEdge edge);
 	
 	/**
 	 * The number of edges added to the factory.
@@ -61,19 +58,19 @@ public interface IBasicSubgraphFactory<
 	 * Iterate over the nodes that have been added to this factory.
 	 * @return the node iterator, which cannot be null.
 	 */
-	Iterator<N> nodeIterator();
+	Iterator<IBasicNode> nodeIterator();
 	
 	/**
 	 * Iterate over the edges that have been added to the factory. 
 	 * @return the edge iterator that cannot be null.
 	 */
-	Iterator<E> edgeIterator();
+	Iterator<IBasicEdge> edgeIterator();
 	
 	/**
 	 * Create a subgraph composed of the nodes and edges added to this factory.
 	 * @return the new subgraph, which cannot be null, but can be empty if no nodes and edges were added.
 	 */
-	IBasicSubgraph<N, E> createSubgraph();
+	IBasicSubgraph createSubgraph();
 	
 	/**
 	 * Create an induced subgraph of the nodes and edges added to this factory. This subgraph also
@@ -82,5 +79,5 @@ public interface IBasicSubgraphFactory<
 	 * @return the new subgraph, which cannot be null, but can be empty if no nodes and edges held
 	 *  by the factory.
 	 */
-	IBasicSubgraph<N, E> createInducedSubgraph();
+	IBasicSubgraph createInducedSubgraph();
 }

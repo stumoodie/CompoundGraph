@@ -29,9 +29,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import uk.ed.inf.graph.basic.IBasicEdge;
-import uk.ed.inf.graph.basic.IBasicNode;
-import uk.ed.inf.graph.basic.IBasicPair;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodePair;
 
 
 @RunWith(JMock.class)
@@ -39,26 +39,26 @@ public class ConnectedNodeIteratorTest {
 	
 	private Mockery mockery = new JUnit4Mockery();
 	
-	private ConnectedNodeIterator<TestNode, TestEdge> testBasicNodeIterator ;
-	private TestNode mockNode ;
-	private TestEdge mockEdge ;
-	private TestNode mockNode2 ;
-	private Iterator<TestEdge> mockEdgeIterator ;
-	private IBasicPair<TestNode,TestEdge> mockPair ;
+	private ConnectedNodeIterator testBasicNodeIterator ;
+	private ICompoundNode mockNode ;
+	private ICompoundEdge mockEdge ;
+	private ICompoundNode mockNode2 ;
+	private Iterator<ICompoundEdge> mockEdgeIterator ;
+	private ICompoundNodePair mockPair ;
 
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws Exception {
-		mockNode = mockery.mock(TestNode.class , "mockNode") ;
-		mockEdge = mockery.mock(TestEdge.class, "mocEdge");
+		mockNode = mockery.mock(ICompoundNode.class , "mockNode") ;
+		mockEdge = mockery.mock(ICompoundEdge.class, "mocEdge");
 		mockEdgeIterator = this.mockery.mock(Iterator.class, "mockEdgeIterator");
-		mockNode2 = mockery.mock(TestNode.class, "mockNode2");
-		mockPair = mockery.mock(IBasicPair.class , "mockPair") ;
+		mockNode2 = mockery.mock(ICompoundNode.class, "mockNode2");
+		mockPair = mockery.mock(ICompoundNodePair.class , "mockPair") ;
 		
 		this.mockery.checking(new Expectations(){{
 		}});
 		
-		testBasicNodeIterator = new ConnectedNodeIterator<TestNode, TestEdge> (mockNode, mockEdgeIterator) ;
+		testBasicNodeIterator = new ConnectedNodeIterator (mockNode, mockEdgeIterator) ;
 		this.mockery.assertIsSatisfied();
 	}
 
@@ -90,7 +90,7 @@ public class ConnectedNodeIteratorTest {
 			
 		}});
 		
-		TestNode nextNode = testBasicNodeIterator.next() ;
+		ICompoundNode nextNode = testBasicNodeIterator.next() ;
 		assertEquals ( "node" , mockNode2 , nextNode ) ;
 		this.mockery.assertIsSatisfied();
 	}
@@ -100,8 +100,4 @@ public class ConnectedNodeIteratorTest {
 		testBasicNodeIterator.remove() ;
 	}
 	
-	private static interface TestNode extends IBasicNode<TestNode, TestEdge> { }
-	
-	private static interface TestEdge extends IBasicEdge<TestNode, TestEdge> {}
-
 }

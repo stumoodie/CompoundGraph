@@ -17,10 +17,7 @@ package uk.ed.inf.graph.basic;
 
 import uk.ed.inf.graph.basic.listeners.IGraphChangeListenee;
 
-public interface IModifiableGraph<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-> extends IGraphChangeListenee<N, E> {
+public interface IModifiableGraph extends IGraphChangeListenee {
 
 	/**
 	 * Gets the nodeFactory for this class. This factory is a singleton so this method must always
@@ -30,7 +27,7 @@ public interface IModifiableGraph<
 	 * @throws UnsupportedOperationException if this graph implementation does support new node creation and so a factory
 	 *  is not provided, i.e. <code>canCreateNodes() == false</code>.
 	 */
-	IBasicNodeFactory<N, E> nodeFactory();
+	IBasicNodeFactory nodeFactory();
 	
 	/**
 	 * Gets the edgeFactory for this class. The factory is the only way that new edges can be added to
@@ -39,7 +36,7 @@ public interface IModifiableGraph<
 	 * @throws UnsupportedOperationException if this graph implementation does support new edge creation and so a factory
 	 *  is not provided, i.e. <code>canCreateEdges() == false</code>.
 	 */
-	IBasicEdgeFactory<N, E> edgeFactory();
+	IBasicEdgeFactory edgeFactory();
 	
 	/**
 	 * Gets the subgraphFactory for this class. 
@@ -47,7 +44,7 @@ public interface IModifiableGraph<
 	 * @throws UnsupportedOperationException if this graph implementation does support new subgraph creation and so a factory
 	 *  is not provided, i.e. <code>canCreateSubgraphs() == false</code>.
 	 */
-	IBasicSubgraphFactory<N,E> subgraphFactory();
+	IBasicSubgraphFactory subgraphFactory();
 	
 	/**
 	 * Removes the nodes and edges defined in the subgraph from this graph. The subgraph must be consistent with
@@ -58,7 +55,7 @@ public interface IModifiableGraph<
 	 * @throws IllegalArgumentException if the subgraph does not belong to this graph: <code>subgraph.getOwningGraph() != this</code>.
 	 * @throws IllegalArgumentException if the subgraph is not consistent with this graph: <code>subgraph.isConsistentSnapshot() == false</code>. 
 	 */
-	void removeSubgraph(IBasicSubgraph<? extends N, ? extends E> subgraph);
+	void removeSubgraph(IBasicSubgraph subgraph);
 
 	/**
 	 * Tests whether the subGraph can be copied to this graph. To be true the subgraph must be an induced subgraph
@@ -66,7 +63,7 @@ public interface IModifiableGraph<
 	 * @param subGraph the subgraph to test, can be null. 
 	 * @return true if the subgraph is valid to copy from, false otherwise.
 	 */
-	boolean canCopyHere(IBasicSubgraph<? extends N, ? extends E> subGraph);
+	boolean canCopyHere(IBasicSubgraph subGraph);
 
 	/**
 	 * Copies a subgraph into this graph. Note that the subgraph can be from a different graph or subgraph
@@ -74,7 +71,7 @@ public interface IModifiableGraph<
 	 * themselves. Note that the subgraph must be valid to be copied.
 	 * @param subGraph the subgraph to copy
 	 */
-	void copyHere(IBasicSubgraph<? extends N, ? extends E> subGraph);
+	void copyHere(IBasicSubgraph subGraph);
 	
 	/**
 	 * Retrieves the nodes and edges created in this graph by the last copy operation. The subgraph
@@ -82,6 +79,6 @@ public interface IModifiableGraph<
 	 * been performed then an empty subset will be returned.
 	 * @return the subgraph of copied components, or an empty subset of not copy operation has been perfromed. 
 	 */
-	IBasicSubgraph<N, E> getCopiedComponents();
+	IBasicSubgraph getCopiedComponents();
 	
 }

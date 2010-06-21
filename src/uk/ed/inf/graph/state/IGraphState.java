@@ -16,21 +16,15 @@ limitations under the License.
 package uk.ed.inf.graph.state;
 
 import uk.ed.inf.bitstring.IBitString;
-import uk.ed.inf.graph.basic.IBasicEdge;
-import uk.ed.inf.graph.basic.IBasicGraph;
-import uk.ed.inf.graph.basic.IBasicNode;
 
 
-public interface IGraphState<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-> {
+public interface IGraphState {
 
 	/**
 	 * Get the graph that this momento belong to.
 	 * @return The graph, cannot be null.
 	 */
-	IBasicGraph<N, E> getGraph();
+	IRestorableGraph getGraph();
 
 	/**
 	 * Get the states of the nodes as a bit string: [true => exists, false => removed]. Not that the

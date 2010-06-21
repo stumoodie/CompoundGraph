@@ -17,19 +17,16 @@ package uk.ed.inf.graph.util.impl;
 
 import java.util.Iterator;
 
-import uk.ed.inf.graph.basic.IBasicEdge;
-import uk.ed.inf.graph.basic.IBasicNode;
-import uk.ed.inf.graph.basic.IBasicPair;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodePair;
 
-public class ConnectedNodeIterator<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-	> implements Iterator<N> {
+public class ConnectedNodeIterator implements Iterator<ICompoundNode> {
 	
-	private final Iterator<? extends E> edgeIterator;
-	private final N currNode;
+	private final Iterator<? extends ICompoundEdge> edgeIterator;
+	private final ICompoundNode currNode;
 
-	public ConnectedNodeIterator(N currNode, Iterator<? extends E> edgeIterator) {
+	public ConnectedNodeIterator(ICompoundNode currNode, Iterator<? extends ICompoundEdge> edgeIterator) {
 		this.edgeIterator = edgeIterator;
 		this.currNode = currNode;
 	}
@@ -38,10 +35,10 @@ public class ConnectedNodeIterator<
 		return edgeIterator.hasNext();
 	}
 
-	public N next() {
-		E edge = this.edgeIterator.next();
-		IBasicPair<N, E> nodePair = edge.getConnectedNodes();
-		N retVal = nodePair.getOtherNode(this.currNode);
+	public ICompoundNode next() {
+		ICompoundEdge edge = this.edgeIterator.next();
+		ICompoundNodePair nodePair = edge.getConnectedNodes();
+		ICompoundNode retVal = nodePair.getOtherNode(this.currNode);
 		return retVal;
 	}
 

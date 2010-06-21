@@ -15,9 +15,9 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.archetypal;
 
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.base.BaseChildCompoundGraph;
-import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
-import uk.ed.inf.graph.compound.base.BaseCompoundNode;
 import uk.ed.inf.graph.compound.base.BaseGraphCopyBuilder;
 import uk.ed.inf.graph.compound.base.BaseGraphMoveBuilder;
 import uk.ed.inf.graph.util.impl.DirectedEdgeSet;
@@ -31,8 +31,8 @@ public abstract class ArchetypalChildCompoundGraph extends BaseChildCompoundGrap
 		if(root == null) throw new IllegalArgumentException("root cannot be null");
 		
 		this.root = root;
-		createEdgeSet(new DirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge>());
-		createNodeSet(new NodeSet<BaseCompoundNode, BaseCompoundEdge>());
+		createEdgeSet(new DirectedEdgeSet<ICompoundNode, ICompoundEdge>());
+		createNodeSet(new NodeSet<ICompoundNode, ICompoundEdge>());
 	}
 	
 	@Override
@@ -41,12 +41,12 @@ public abstract class ArchetypalChildCompoundGraph extends BaseChildCompoundGrap
 	}
 	
 	@Override
-	protected void addNewNode(BaseCompoundNode node) {
+	protected void addNewNode(ICompoundNode node) {
 	    super.addNewNode(node);
 	}
 
 	@Override
-	protected void addNewEdge(BaseCompoundEdge edge) {
+	protected void addNewEdge(ICompoundEdge edge) {
 	    super.addNewEdge(edge);
 	}
 }

@@ -19,46 +19,40 @@ import java.util.Iterator;
 
 import uk.ed.inf.bitstring.BitStringBuffer;
 import uk.ed.inf.bitstring.IBitString;
-import uk.ed.inf.graph.basic.IBasicEdge;
-import uk.ed.inf.graph.basic.IBasicGraph;
-import uk.ed.inf.graph.basic.IBasicNode;
 import uk.ed.inf.graph.util.impl.EdgeFromNodeIterator;
 
-public class GraphStateHandler<
-		N extends IRestorableGraphElement & IBasicNode<N, ? extends IBasicEdge<N, ?>> ,
-		E extends IRestorableGraphElement & IBasicEdge<N, E> 
-> implements IGraphStateHandler<N, E> {
+public class GraphStateHandler implements IGraphStateHandler {
 	
-	private final IBasicGraph<N, E> graph;
+	private final IRestorableGraph graph;
 	private IBitString nodeStatus;
 	private IBitString edgeStatus;
 	
-	public GraphStateHandler(IBasicGraph<N, E> graph){
+	public GraphStateHandler(IRestorableGraph graph){
 		this.graph = graph;
 	}
 
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.state.IGraphStateHandler#getGraph()
 	 */
-	public IBasicGraph<N, E> getGraph(){
+	public IRestorableGraph getGraph(){
 		return this.graph;
 	}
 	
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.state.IGraphStateHandler#createGraphState()
 	 */
-	public IGraphState<N, E> createGraphState(){
+	public IGraphState createGraphState(){
 		recordNodes();
 		recordEdges();
-		IGraphState<N, E> state = new GeneralGraphState<N, E>(this.graph, nodeStatus, edgeStatus);
+		IGraphState state = new GeneralGraphState(this.graph, nodeStatus, edgeStatus);
 		return state;
 	}
 	
 	private void recordNodes(){
 		BitStringBuffer nodeStatus = new BitStringBuffer();
-		Iterator<? extends N> iter = this.graph.nodeIterator();
+		Iterator<IRestorableNode> iter = this.graph.nodeIterator();
 		while(iter.hasNext()){
-			N node = iter.next();
+			IRestorableNode node = iter.next();
 			if(!node.isRemoved()){
 				nodeStatus.set(node.getIndex(), true);
 			}
@@ -71,9 +65,9 @@ public class GraphStateHandler<
 
 	private void recordEdges(){
 		BitStringBuffer edgeStatus = new BitStringBuffer();
-		Iterator<? extends E> edgeIter = this.graph.edgeIterator();
+		Iterator<IRestorableEdge> edgeIter = this.graph.edgeIterator();
 		while(edgeIter.hasNext()){
-			E edge = edgeIter.next();
+			IRestorableEdge edge = edgeIter.next();
 			if(edge.isRemoved()){
 				edgeStatus.set(edge.getIndex(), false);
 			}
@@ -87,7 +81,7 @@ public class GraphStateHandler<
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.state.IGraphStateHandler#restoreState(uk.ed.inf.graph.state.IGraphState)
 	 */
-	public void restoreState(IGraphState<N, E> previousState) throws IllegalArgumentException{
+	public void restoreState(IGraphState previousState) throws IllegalArgumentException{
 		// mark all nodes and edges as removed
 		// then mark those in bit list as restored.
 		if ( previousState.getGraph() != this.getGraph())
@@ -100,9 +94,9 @@ public class GraphStateHandler<
 	
 	
 	private void restoreNodes(){
-		Iterator<? extends N> iter = this.graph.nodeIterator();
+		Iterator<IRestorableNode> iter = this.graph.nodeIterator();
 		while(iter.hasNext()){
-			N node = iter.next();
+			IRestorableNode node = iter.next();
 			int nodeIdx = node.getIndex();
 			if(nodeIdx < this.nodeStatus.length()){
 				boolean nodeState = this.nodeStatus.get(nodeIdx);
@@ -115,9 +109,9 @@ public class GraphStateHandler<
 	}
 	
 	private void restoreEdges(){
-		Iterator<? extends E> edgeIter = new EdgeFromNodeIterator<N, E>(this.graph.nodeIterator());
+		Iterator<IRestorableEdge> edgeIter = new EdgeFromNodeIterator<IRestorableNode, IRestorableEdge>(this.graph.nodeIterator());
 		while(edgeIter.hasNext()){
-			E edge = edgeIter.next();
+			IRestorableEdge edge = edgeIter.next();
 			int edgeIdx = edge.getIndex();
 			if(edgeIdx < edgeStatus.length()){
 				boolean edgeState = this.edgeStatus.get(edgeIdx);

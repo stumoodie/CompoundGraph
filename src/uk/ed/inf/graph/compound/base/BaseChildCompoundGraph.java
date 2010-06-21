@@ -19,11 +19,11 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
-import uk.ed.inf.graph.compound.IModifiableChildCompoundGraph;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
-import uk.ed.inf.graph.directed.IDirectedPair;
 import uk.ed.inf.graph.util.IDirectedEdgeSet;
 import uk.ed.inf.graph.util.IEdgeSet;
 import uk.ed.inf.graph.util.IFilterCriteria;
@@ -31,7 +31,7 @@ import uk.ed.inf.graph.util.INodeSet;
 import uk.ed.inf.graph.util.impl.FilteredEdgeSet;
 import uk.ed.inf.graph.util.impl.FilteredNodeSet;
 
-public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<BaseCompoundNode, BaseCompoundEdge>,	IModifiableChildCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
+public abstract class BaseChildCompoundGraph implements IChildCompoundGraph {
 	private static final String DEBUG_PROP_NAME = "uk.ed.inf.graph.compound.base.debugging";
 	// added debug checks to graph
 	private final boolean debuggingEnabled;
@@ -39,8 +39,8 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
     private final Logger logger = Logger.getLogger(this.getClass());
 	private final BaseGraphCopyBuilder copyBuilder;
 	private final BaseGraphMoveBuilder moveBuilder;
-	private FilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet;
-	private FilteredNodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet;
+	private FilteredEdgeSet<ICompoundNode, ICompoundEdge> edgeSet;
+	private FilteredNodeSet<ICompoundNode, ICompoundEdge> nodeSet;
 	
 	protected BaseChildCompoundGraph(BaseGraphCopyBuilder copyBuilder , BaseGraphMoveBuilder moveBuilder ){
 		if(copyBuilder == null || moveBuilder == null ) throw new IllegalArgumentException("builder cannot be null");
@@ -50,38 +50,40 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		this.moveBuilder = moveBuilder ;
 	}
 
-	protected final void createNodeSet(INodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet){
-		this.nodeSet = new FilteredNodeSet<BaseCompoundNode, BaseCompoundEdge>(nodeSet, new IFilterCriteria<BaseCompoundNode>(){
+	protected final void createNodeSet(INodeSet<ICompoundNode, ICompoundEdge> nodeSet){
+		this.nodeSet = new FilteredNodeSet<ICompoundNode, ICompoundEdge>(nodeSet, new IFilterCriteria<ICompoundNode>(){
 
-			public boolean matched(BaseCompoundNode testObj) {
+			public boolean matched(ICompoundNode testObj) {
 				return !testObj.isRemoved();
 			}
 	
 		});
 	}
 	
-	protected final void createEdgeSet(IDirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet){
-		this.edgeSet = new FilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge>(edgeSet,
-				new IFilterCriteria<BaseCompoundEdge>(){
+	protected final void createEdgeSet(IDirectedEdgeSet<ICompoundNode, ICompoundEdge> edgeSet){
+		this.edgeSet = new FilteredEdgeSet<ICompoundNode, ICompoundEdge>(edgeSet,
+				new IFilterCriteria<ICompoundEdge>(){
 
-					public boolean matched(BaseCompoundEdge testObj) {
+					public boolean matched(ICompoundEdge testObj) {
 						return !testObj.isRemoved();
 					}
 			
 		});
 	}
 	
-	protected final IEdgeSet<BaseCompoundNode, BaseCompoundEdge> getEdgeSet(){
+	protected final IEdgeSet<ICompoundNode, ICompoundEdge> getEdgeSet(){
 		return this.edgeSet;
 	}
 	
-	protected final INodeSet<BaseCompoundNode, BaseCompoundEdge> getNodeSet() {
+	protected final INodeSet<ICompoundNode, ICompoundEdge> getNodeSet() {
 		return this.nodeSet;
 	}
 	
+	@Override
 	public abstract BaseCompoundNode getRootNode();
 
-	public boolean containsDirectedEdge(BaseCompoundNode outNode, BaseCompoundNode inNode) {
+	@Override
+	public boolean containsDirectedEdge(ICompoundNode outNode, ICompoundNode inNode) {
 		boolean retVal = false;
 		if(inNode != null && outNode != null){
 			retVal = this.edgeSet.contains(outNode, inNode);
@@ -89,7 +91,8 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		return retVal;
 	}
 
-	public final boolean containsConnection(BaseCompoundNode thisNode, BaseCompoundNode thatNode) {
+	@Override
+	public final boolean containsConnection(ICompoundNode thisNode, ICompoundNode thatNode) {
 		boolean retVal = false;
 		if(thisNode != null && thatNode != null){
 			retVal = this.edgeSet.contains(thisNode, thatNode) || this.edgeSet.contains(thatNode, thisNode);
@@ -97,7 +100,23 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		return retVal;
 	}
 
-	public final boolean containsEdge(BaseCompoundEdge edge) {
+	@Override
+	public final boolean containsEdge(ICompoundNodePair ends) {
+		boolean retVal = false;
+		if(ends != null){
+			ICompoundNode outNode = ends.getOutNode();
+			ICompoundNode inNode = ends.getInNode();
+			// check that at least one node belongs to this graph, if so then we
+			// can be sure that the other node and edge will.
+			if(outNode.getGraph().equals(this)){
+				retVal = outNode.hasOutEdgeTo(inNode) || inNode.hasOutEdgeTo(outNode);
+			}
+		}
+		return retVal;
+	}
+
+	@Override
+	public final boolean containsEdge(ICompoundEdge edge) {
 		boolean retVal = false;
 		if(edge != null){
 			retVal = this.edgeSet.contains(edge.getIndex());
@@ -105,15 +124,18 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		return retVal;
 	}
 
+	@Override
 	public final boolean containsEdge(int edgeIdx) {
 		return this.edgeSet.contains(edgeIdx);
 	}
 
+	@Override
 	public final boolean containsNode(int nodeIdx) {
 		return this.nodeSet.contains(nodeIdx);
 	}
 
-	public boolean containsNode(BaseCompoundNode node) {
+	@Override
+	public boolean containsNode(ICompoundNode node) {
 		boolean retVal = false;
 		if(node != null){
 			retVal = containsNode(node.getIndex());
@@ -121,46 +143,53 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		return retVal;
 	}
 
-	public BaseCompoundEdge getEdge(int edgeIdx) {
+	@Override
+	public ICompoundEdge getEdge(int edgeIdx) {
 		return this.edgeSet.get(edgeIdx);
 	}
 
-	public final Iterator<BaseCompoundEdge> edgeIterator() {
+	@Override
+	public final Iterator<ICompoundEdge> edgeIterator() {
 		return this.edgeSet.iterator();
 	}
 
-	protected final Iterator<BaseCompoundEdge> unfilteredEdgeIterator() {
+	protected final Iterator<ICompoundEdge> unfilteredEdgeIterator() {
 		return this.edgeSet.getUnfilteredEdgeSet().iterator();
 	}
 	
-	protected final Iterator<BaseCompoundNode> unfilteredNodeIterator() {
+	protected final Iterator<ICompoundNode> unfilteredNodeIterator() {
 		return this.nodeSet.getUnfilteredNodeSet().iterator();
 	}
 
-	public BaseCompoundNode getNode(int nodeIdx) {
+	@Override
+	public ICompoundNode getNode(int nodeIdx) {
 		return this.nodeSet.get(nodeIdx);
 	}
 
-	public final Iterator<BaseCompoundNode> nodeIterator() {
+	@Override
+	public final Iterator<ICompoundNode> nodeIterator() {
 		return this.nodeSet.iterator();
 	}
 
+	@Override
 	public final int getNumEdges() {
 		return this.edgeSet.size();
 	}
 
+	@Override
 	public final int getNumNodes() {
 		return this.nodeSet.size();
 	}
 
 	@SuppressWarnings("unchecked")
-	public final boolean canCopyHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph) {
+	public final boolean canCopyHere(ISubCompoundGraph subGraph) {
 		return subGraph != null && subGraph instanceof ISubCompoundGraph && subGraph.isInducedSubgraph()
 			&& subGraph.isConsistentSnapShot() && !subGraph.containsRoot();
 	}
 
 	
-	public final void copyHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph) {
+	@Override
+	public final void copyHere(ISubCompoundGraph subGraph) {
 		if(this.debuggingEnabled && !canCopyHere(subGraph)) throw new IllegalArgumentException("Cannot copy graph here");
 		
 		copyBuilder.setDestinatChildCompoundGraph(this);
@@ -169,26 +198,29 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		notifyCopyOperationComplete(copyBuilder.getSourceSubgraph(), copyBuilder.getCopiedComponents());
 	}
 
+	@Override
 	public BaseCompoundGraph getSuperGraph() {
 		return this.getRootNode().getGraph();
 	}
 
-	public final boolean isInducedSubgraph() {
-		return false;
-	}
+//	@Override
+//	public final boolean isInducedSubgraph() {
+//		return false;
+//	}
 
-	protected void addNewNode(BaseCompoundNode newNode){
+	protected void addNewNode(ICompoundNode newNode){
 		this.nodeSet.add(newNode);
 	}
 	
-	protected void addNewEdge(BaseCompoundEdge newEdge){
+	protected void addNewEdge(ICompoundEdge newEdge){
 		this.edgeSet.add(newEdge);
 	}
 
-	public final boolean containsDirectedEdge(IDirectedPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ends) {
+	@Override
+	public final boolean containsDirectedEdge(ICompoundNodePair ends) {
 		boolean retVal = false;
 		if(ends != null){
-			for(BaseCompoundEdge edge : this.edgeSet){
+			for(ICompoundEdge edge : this.edgeSet){
 				if(edge.equals(ends)){
 					retVal = true;
 					break;
@@ -198,10 +230,11 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		return retVal;
 	}
 
-	public final boolean containsConnection(IBasicPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ends) {
+	@Override
+	public final boolean containsConnection(ICompoundNodePair ends) {
 		boolean retVal = false;
 		if(ends != null){
-			for(BaseCompoundEdge edge : this.edgeSet){
+			for(ICompoundEdge edge : this.edgeSet){
 				if(edge.equals(ends)){
 					retVal = true;
 					break;
@@ -211,8 +244,10 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		return retVal;
 	}
 
+	@Override
 	public abstract BaseCompoundNodeFactory nodeFactory();
 	
+	@Override
 	public abstract BaseChildCompoundEdgeFactory edgeFactory();
 
 	/**
@@ -225,16 +260,17 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 	 * @param subGraph the subgraph to test, can be null. 
 	 * @return true if the subgraph is valid to copy from, false otherwise.
 	 */
-	public boolean canMoveHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> iSubGraph){
+	@Override
+	public boolean canMoveHere(ISubCompoundGraph iSubGraph){
 		BaseSubCompoundGraph subGraph = (BaseSubCompoundGraph)iSubGraph;
 		boolean retVal = subGraph != null && subGraph.getSuperGraph().equals(this.getSuperGraph())
 			&& subGraph.isInducedSubgraph() && subGraph.isConsistentSnapShot()
 			&& !subGraph.containsNode(this.getRootNode());
 		if(retVal){
 			retVal = false;
-			Iterator<? extends BaseCompoundNode> topNodeIter = subGraph.topNodeIterator();
+			Iterator<? extends ICompoundNode> topNodeIter = subGraph.topNodeIterator();
 			while(topNodeIter.hasNext()){
-				BaseCompoundNode topNode = topNodeIter.next();
+				ICompoundNode topNode = topNodeIter.next();
 				if(!topNode.getParent().equals(this.getRootNode())){
 					retVal = true;
 				}
@@ -253,7 +289,8 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 	 * @param subGraph the subgraph to move.
 	 * @throws IllegalArgumentException if <code>canMoveHere(subGraph) == false</code>.
 	 */
-	public void moveHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph){
+	@Override
+	public void moveHere(ISubCompoundGraph subGraph){
 		if(this.debuggingEnabled && !canMoveHere(subGraph)) throw new IllegalArgumentException("Cannot move graph here");
 		
 		moveBuilder.setDestinatChildCompoundGraph(this);
@@ -262,11 +299,11 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 		notifyMoveOperationComplete(moveBuilder.getSourceSubgraph(), moveBuilder.getMovedComponents());
 	}
 	
-	protected abstract void notifyCopyOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> originalSubgraph,
-			ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> copiedSubgraph);
+	protected abstract void notifyCopyOperationComplete(ISubCompoundGraph originalSubgraph,
+			ISubCompoundGraph copiedSubgraph);
 
-	protected abstract void notifyMoveOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> originalSubgraph,
-			ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> movedSubgraph);
+	protected abstract void notifyMoveOperationComplete(ISubCompoundGraph originalSubgraph,
+			ISubCompoundGraph movedSubgraph);
 
 	/**
 	 * Retrieves the nodes and edges created in this graph by the last copy operation. The subgraph
@@ -274,6 +311,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 	 * been performed then an empty subset will be returned.
 	 * @return the subgraph of copied components, or an empty subset of not copy operation has been perfromed. 
 	 */
+	@Override
 	public BaseSubCompoundGraph getMovedComponents(){
 		return this.moveBuilder.getMovedComponents();
 	}
@@ -284,8 +322,8 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 //	 * @param subgraph the subgraph to test, which cannot be null.
 //	 * @return true if the subgraph intersects with this child graph, false otherwise.
 //	 */
-//	private boolean intersects(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph){
-//		Iterator<? extends BaseCompoundNode>  nodesIterator = this.nodeIterator() ;
+//	private boolean intersects(ISubCompoundGraph subgraph){
+//		Iterator<? extends ICompoundNode>  nodesIterator = this.nodeIterator() ;
 //		
 //		boolean retVal = false ;
 //		
@@ -301,6 +339,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 //		return retVal ;
 //	}
 
+	@Override
 	public BaseSubCompoundGraph getCopiedComponents(){
 		return this.copyBuilder.getCopiedComponents();
 	}
@@ -312,13 +351,14 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
 	 */
 	protected abstract boolean hasPassedAdditionalValidation();
 
+	@Override
 	public boolean isValid() {
         boolean retVal = true;
         BaseCompoundGraph graph = this.getSuperGraph();
         BaseCompoundNode rootNode = this.getRootNode();
         retVal = rootNode.getChildCompoundGraph().equals(this);
         if (retVal) {
-            for (BaseCompoundNode node : this.nodeSet.getUnfilteredNodeSet()) {
+            for (ICompoundNode node : this.nodeSet.getUnfilteredNodeSet()) {
                 if(!(retVal = node.getParent().getChildCompoundGraph().equals(this)
                         && node.getGraph().equals(graph)
                         && node.getParent().equals(rootNode))){
@@ -335,9 +375,9 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
             }
         }
         if (retVal) {
-            for (BaseCompoundEdge edge : this.edgeSet.getUnfilteredEdgeSet()) {
-                BaseCompoundNode inNode = edge.getInNode();
-                BaseCompoundNode outNode = edge.getOutNode();
+            for (ICompoundEdge edge : this.edgeSet.getUnfilteredEdgeSet()) {
+                BaseCompoundNode inNode = (BaseCompoundNode)edge.getInNode();
+                BaseCompoundNode outNode = (BaseCompoundNode)edge.getOutNode();
                 if (edge.getOwningChildGraph().equals(this)) {
                     if (inNode != null && outNode != null) {
                         if(!(inNode.getEdgeInList().getUnfilteredEdgeSet().contains(edge)
@@ -375,8 +415,8 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph<Base
         return retVal;
     }
 
-	public abstract void notifyNewNode(BaseCompoundNode newNode);
+	protected abstract void notifyNewNode(ICompoundNode newNode);
 
-	public abstract void notifyNewEdge(BaseCompoundEdge newEdge);
+	protected abstract void notifyNewEdge(ICompoundEdge newEdge);
 
 }

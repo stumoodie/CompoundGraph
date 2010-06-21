@@ -1,24 +1,34 @@
-/*
-Copyright 2009, Court of the University of Edinburgh
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License. 
-*/
-package uk.ed.inf.graph.basic;
+package uk.ed.inf.graph.compound;
 
 import java.util.Iterator;
 
+public interface IImmutableCompoundGraph {
 
-public interface IBasicGraph {
+
+	/**
+	 * Get the root node of this graph.
+	 * @return The root node, which cannot be null.
+	 */
+	ICompoundNode getRootNode();
+
+	/**
+	 * Tests if there is one or more directed edges from the <code>outNode</code> to the <code>inNode</code>.
+	 * @param outNode the node the edge comes out from, can be null.
+	 * @param inNode the node the edge goes into, can be null.
+	 * @return true if there is such and edge, false otherwise. 
+	 */
+	boolean containsDirectedEdge(ICompoundNode outNode, ICompoundNode inNode);
+
+	/**
+	 * Test if there is one or more directed edge defined by the end pair <code>ends</code>.
+	 * @param ends the pair of nodes to be tested, can be null.
+	 * @return true if there is at least one edge between then, false otherwise.
+	 */
+	boolean containsEdge(ICompoundNodePair ends);
+	
+	boolean containsConnection(ICompoundNode thisNode, ICompoundNode thatNode);
+
+	boolean containsConnection(ICompoundNodePair nodePair);
 
 	/**
 	 * Get the number of nodes in the graph.
@@ -45,37 +55,21 @@ public interface IBasicGraph {
 	 * @return the node matching the index. Cannot be null.
 	 * @throws IllegalArgumentException if node does not exists, i.e. <code>containsNode(nodeIdx) == false</code>
 	 */
-	IBasicNode getNode(int nodeIdx);
+	ICompoundNode getNode(int nodeIdx);
 
 	/**
 	 * Tests if this node exists in the graph. 
 	 * @param node to be tested.
 	 * @return True if the graph contains the node, false otherwise.
 	 */
-	boolean containsNode(IBasicNode node);
+	boolean containsNode(ICompoundNode node);
 
-	/**
-	 * Tests if the graph contains an edge connecting these nodes. Ignores
-	 * the direction of the edge.
-	 * @param thisNode a node to test.
-	 * @param thatNode the other node to test.
-	 * @return true if the edge exists, false otherwise.
-	 */
-	boolean containsConnection(IBasicNode thisNode, IBasicNode thatNode);
-	
 	/**
 	 * Tests if the graph contains the edge. 
 	 * @param edge the edge to test.
 	 * @return true if the edge exists in the graph, false otherwise.
 	 */
-	boolean containsEdge(IBasicEdge edge);
-
-	/**
-	 * Tests if the graph has an edge between the defined ends. 
-	 * @param ends the ends of the edge to test.
-	 * @return true if the edge exists in the graph, false otherwise.
-	 */
-	boolean containsConnection(IBasicPair ends);
+	boolean containsEdge(ICompoundEdge edge);
 
 	/**
 	 * Tests if the graph contains the edge of the given index. 
@@ -90,19 +84,22 @@ public interface IBasicGraph {
 	 * @return The edge matching the index.
 	 * @throws IllegalArgumentException if an edge matching this index does not exist, i.IBasicEdge. <code>containsEdge(edgeIdx) == false</code>.  
 	 */
-	IBasicEdge getEdge(int edgeIdx);
+	ICompoundEdge getEdge(int edgeIdx);
 
 	/**
 	 * Get an iterator that traverses all the nodes in this graph. The traversal order
 	 * is not guaranteed, but all nodes will be traversed. 
 	 * @return The node iterator, guaranteed to be non-null.
 	 */
-	Iterator<IBasicNode> nodeIterator();
+	Iterator<ICompoundNode> nodeIterator();
 	
 	/**
 	 * Get an iterator that traverses all the edges in this graph. No traversal order
 	 * is guaranteed.
 	 * @return The edge iterator, guaranteed to be non-null.
 	 */
-	Iterator<IBasicEdge> edgeIterator();
+	Iterator<ICompoundEdge> edgeIterator();
+
+	boolean containsDirectedEdge(ICompoundNodePair ends);
+
 }

@@ -15,12 +15,12 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.base;
 
-import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.compound.ICompoundEdge;
-import uk.ed.inf.graph.directed.IDirectedPair;
+import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.state.IRestorableGraphElement;
 
-public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode, BaseCompoundEdge>, IRestorableGraphElement {
+public abstract class BaseCompoundEdge implements ICompoundEdge, IRestorableGraphElement {
 	
 	protected BaseCompoundEdge(){
 		this.setRemoved(false);
@@ -28,7 +28,8 @@ public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode
 	
 //	protected abstract void setInNode(BaseCompoundNode outNode);
 	
-	protected abstract BaseCompoundNode getInNode();
+	@Override
+	public abstract BaseCompoundNode getInNode();
 	
 	/**
 	 * Ensures that edge is added to In Node 
@@ -42,7 +43,8 @@ public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode
 	
 //	protected abstract void setOutNode(BaseCompoundNode outNode);
 	
-	protected abstract BaseCompoundNode getOutNode();
+	@Override
+	public abstract BaseCompoundNode getOutNode();
 	
     /**
      * This should be used to set the removal status variable only. No other actions#
@@ -61,22 +63,29 @@ public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode
 		getOutNode().addOutEdge(this);
 	}
 	
-	public final IDirectedPair<BaseCompoundNode, BaseCompoundEdge> getConnectedNodes() {
+	@Override
+	public final ICompoundNodePair getConnectedNodes() {
 		return new CiNodePair(this.getOutNode(), this.getInNode());
 	}
 
+	@Override
 	public abstract BaseChildCompoundGraph getOwningChildGraph();
 
+	@Override
 	public abstract BaseCompoundGraph getGraph();
 
+	@Override
 	public abstract int getIndex();
 
-	public final int compareTo(BaseCompoundEdge o) {
+	@Override
+	public final int compareTo(ICompoundEdge o) {
 		return this.getIndex() < o.getIndex() ? -1 : (this.getIndex() == o.getIndex() ? 0 : 1);
 	}
 
+	@Override
 	public abstract boolean isRemoved();
 	
+	@Override
 	public final void markRemoved(boolean removed){
 		this.setRemoved(removed);
 		removalAction(removed);
@@ -88,21 +97,41 @@ public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode
 	 */
 	protected abstract void removalAction(boolean removed);
 	
-	public final boolean hasEnds(IBasicPair<? super BaseCompoundNode, ? super BaseCompoundEdge> ends) {
+	@Override
+	public final boolean hasEnds(ICompoundNodePair ends) {
 		return ends.hasEnds(getInNode(), getOutNode());
 	}
 
 
-	public final boolean hasDirectedEnds(IDirectedPair<? super BaseCompoundNode, ? super BaseCompoundEdge> ends) {
+	@Override
+	public final boolean hasDirectedEnds(ICompoundNodePair ends) {
 		return ends.hasEnds(getInNode(), getOutNode());
 	}
 
+	@Override
+	public boolean hasEnds(ICompoundNode endOne, ICompoundNode endTwo) {
+		boolean retVal = false;
+		if(endOne != null && endTwo != null){
+			retVal = hasDirectedEnds(endOne, endTwo) || hasDirectedEnds(endTwo, endOne);
+		}
+		return retVal;
+	}
+	
+	@Override
+	public boolean hasDirectedEnds(ICompoundNode outNode, ICompoundNode inNode){
+		boolean retVal = false;
+		if(outNode != null && inNode != null){
+			retVal = this.getInNode().equals(inNode) && this.getOutNode().equals(outNode);
+		}
+		return retVal;
+	}
 
+	@Override
 	public final boolean isSelfEdge() {
 		return this.getInNode().equals(this.getOutNode());
 	}
 	
-	private static class CiNodePair implements IDirectedPair<BaseCompoundNode, BaseCompoundEdge> {
+	private static class CiNodePair implements ICompoundNodePair {
 		private final BaseCompoundNode outNode;
 		private final BaseCompoundNode inNode;
 		
@@ -111,11 +140,13 @@ public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode
 			this.inNode = inNode;
 		}
 		
-		public boolean containsNode(BaseCompoundNode node) {
+		@Override
+		public boolean containsNode(ICompoundNode node) {
 			return node.equals(inNode) || node.equals(outNode);
 		}
 
-		public BaseCompoundNode getOtherNode(BaseCompoundNode node) {
+		@Override
+		public BaseCompoundNode getOtherNode(ICompoundNode node) {
 			BaseCompoundNode retVal = inNode;
 			if(node.equals(inNode)){
 				retVal = outNode;
@@ -123,15 +154,18 @@ public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode
 			return retVal;
 		}
 
+		@Override
 		public BaseCompoundNode getInNode() {
 			return inNode;
 		}
 
+		@Override
 		public BaseCompoundNode getOutNode() {
 			return outNode;
 		}
 
-		public boolean hasEnds(BaseCompoundNode endOne, BaseCompoundNode endTwo) {
+		@Override
+		public boolean hasEnds(ICompoundNode endOne, ICompoundNode endTwo) {
 			boolean retVal = false;
 			if(endOne != null && endTwo != null){
 				retVal = hasDirectedEnds(endOne, endTwo) || hasDirectedEnds(endTwo, endOne);
@@ -139,7 +173,8 @@ public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode
 			return retVal;
 		}
 		
-		public boolean hasDirectedEnds(BaseCompoundNode outNode, BaseCompoundNode inNode){
+		@Override
+		public boolean hasDirectedEnds(ICompoundNode outNode, ICompoundNode inNode){
 			boolean retVal = false;
 			if(outNode != null && inNode != null){
 				retVal = this.inNode.equals(inNode) && this.outNode.equals(outNode);
@@ -147,7 +182,8 @@ public abstract class BaseCompoundEdge implements ICompoundEdge<BaseCompoundNode
 			return retVal;
 		}
 
-		public IDirectedPair<BaseCompoundNode, BaseCompoundEdge> reversedNodes() {
+		@Override
+		public ICompoundNodePair reversedNodes() {
 			return new CiNodePair(this.inNode, this.outNode);
 		}
 		

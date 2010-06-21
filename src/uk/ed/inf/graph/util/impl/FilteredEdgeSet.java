@@ -22,15 +22,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
-import uk.ed.inf.graph.basic.IBasicEdge;
-import uk.ed.inf.graph.basic.IBasicNode;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.util.IEdgeSet;
 import uk.ed.inf.graph.util.IFilterCriteria;
 import uk.ed.inf.graph.util.IFilteredEdgeSet;
 
 public class FilteredEdgeSet <
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
+		N extends ICompoundNode,
+		E extends ICompoundEdge
 > implements IFilteredEdgeSet<N, E> {
 
 	private final IEdgeSet<N, E> edgeSet;
@@ -76,7 +76,7 @@ public class FilteredEdgeSet <
 	public boolean contains(Object o) {
 		boolean retVal = false;
 		if(this.edgeSet.contains(o)){
-			if(o instanceof IBasicEdge){
+			if(o instanceof ICompoundEdge){
 				E edge = (E)o;
 //				retVal = !node.isRemoved();
 				retVal = this.criteria.matched(edge);
@@ -90,7 +90,7 @@ public class FilteredEdgeSet <
 		boolean retVal = true;
 		if(this.edgeSet.containsAll(c)){
 			for(Object o : c){
-				if(o instanceof IBasicEdge){
+				if(o instanceof ICompoundEdge){
 					E node = (E)o;
 					if(!this.criteria.matched(node)){
 						retVal = false;

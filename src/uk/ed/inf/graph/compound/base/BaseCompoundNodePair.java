@@ -15,19 +15,18 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.base;
 
-import uk.ed.inf.graph.directed.IDirectedPair;
+import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodePair;
 
-public abstract class BaseCompoundNodePair implements IDirectedPair<BaseCompoundNode, BaseCompoundEdge> {
+public abstract class BaseCompoundNodePair implements ICompoundNodePair {
 
-	public boolean containsNode(BaseCompoundNode node) {
+	@Override
+	public boolean containsNode(ICompoundNode node) {
 		return node.equals(getInNode()) || node.equals(getOutNode());
 	}
 
-	public BaseCompoundNode getOneNode() {
-		return getInNode();
-	}
-
-	public BaseCompoundNode getOtherNode(BaseCompoundNode node) {
+	@Override
+	public BaseCompoundNode getOtherNode(ICompoundNode node) {
 		BaseCompoundNode retVal = getInNode();
 		if (node.equals(getInNode())) {
 			retVal = getOutNode();
@@ -35,15 +34,14 @@ public abstract class BaseCompoundNodePair implements IDirectedPair<BaseCompound
 		return retVal;
 	}
 
-	public BaseCompoundNode getTwoNode() {
-		return getOutNode();
-	}
-
+	@Override
 	public abstract BaseCompoundNode getInNode();
 
+	@Override
 	public abstract BaseCompoundNode getOutNode();
 
-	public boolean hasEnds(BaseCompoundNode endOne, BaseCompoundNode endTwo) {
+	@Override
+	public boolean hasEnds(ICompoundNode endOne, ICompoundNode endTwo) {
 		boolean retVal = false;
 		if (endOne != null && endTwo != null) {
 			retVal = hasDirectedEnds(endOne, endTwo)
@@ -52,7 +50,8 @@ public abstract class BaseCompoundNodePair implements IDirectedPair<BaseCompound
 		return retVal;
 	}
 
-	public boolean hasDirectedEnds(BaseCompoundNode outNode, BaseCompoundNode inNode) {
+	@Override
+	public boolean hasDirectedEnds(ICompoundNode outNode, ICompoundNode inNode) {
 		boolean retVal = false;
 		if (outNode != null && inNode != null) {
 			retVal = this.getInNode().equals(inNode) && this.getOutNode().equals(outNode);

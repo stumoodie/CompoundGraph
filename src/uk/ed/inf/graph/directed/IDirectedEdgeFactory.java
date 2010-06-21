@@ -17,10 +17,7 @@ package uk.ed.inf.graph.directed;
 
 import uk.ed.inf.graph.basic.IBasicEdgeFactory;
 
-public interface IDirectedEdgeFactory<
-		N extends IDirectedNode<N, ? extends IDirectedEdge<N, ?>>,
-		E extends IDirectedEdge<N, E>
-> extends IBasicEdgeFactory<N, E> {
+public interface IDirectedEdgeFactory extends IBasicEdgeFactory {
 
 	/**
 	 * Sets the nodes to be used to create the edge.
@@ -28,11 +25,11 @@ public interface IDirectedEdgeFactory<
 	 * @param inNode inNode, cannot be null.
 	 * @throws IllegalArgumentException if <code>isValidNodePair(outNode, inNode) == false</code>.
 	 */
-	void setPair(N outNode, N inNode);
+	void setPair(IDirectedNode outNode, IDirectedNode inNode);
 
 	/**
 	 * Gets the current node pair.
 	 * @return the current node pair, or null if no node pair has been set yet.
 	 */
-	IDirectedPair<N, E> getCurrentNodePair();
+	IDirectedPair getCurrentNodePair();
 }

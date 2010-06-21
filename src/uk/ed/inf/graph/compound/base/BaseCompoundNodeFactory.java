@@ -17,7 +17,7 @@ package uk.ed.inf.graph.compound.base;
 
 import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 
-public abstract class BaseCompoundNodeFactory implements ICompoundNodeFactory<BaseCompoundNode, BaseCompoundEdge> {
+public abstract class BaseCompoundNodeFactory implements ICompoundNodeFactory {
 	
 	public BaseCompoundNodeFactory(){
 	}

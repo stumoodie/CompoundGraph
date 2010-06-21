@@ -16,13 +16,10 @@ limitations under the License.
 package uk.ed.inf.graph.compound;
 
 
-public interface IModifiableChildCompoundGraph <
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
-		E extends ICompoundEdge<N, E>
-> {
+public interface IModifiableChildCompoundGraph {
 
 
-	ICompoundNodeFactory<N, E> nodeFactory();
+	ICompoundNodeFactory nodeFactory();
 
 	/**
 	 * Tests whether the subGraph can be copied to this graph. To be true the subgraph must be an induced subgraph
@@ -30,7 +27,7 @@ public interface IModifiableChildCompoundGraph <
 	 * @param subGraph the subgraph to test, can be null. 
 	 * @return true if the subgraph is valid to copy from, false otherwise.
 	 */
-	boolean canCopyHere(ISubCompoundGraph<? extends N, ? extends E> subgraph);
+	boolean canCopyHere(ISubCompoundGraph subgraph);
 
 	/**
 	 * Copies a subgraph into this graph. Note that the subgraph can be from a different graph or subgraph
@@ -38,7 +35,7 @@ public interface IModifiableChildCompoundGraph <
 	 * themselves. Note that the subgraph must be valid to be copied.
 	 * @param subGraph the subgraph to copy
 	 */
-	void copyHere(ISubCompoundGraph<? extends N, ? extends E> subgraph);
+	void copyHere(ISubCompoundGraph subgraph);
 	
 	/**
 	 * Retrieves the nodes and edges created in this graph by the last copy operation. The subgraph
@@ -46,14 +43,14 @@ public interface IModifiableChildCompoundGraph <
 	 * been performed then an empty subset will be returned.
 	 * @return the subgraph of copied components, or an empty subset of not copy operation has been perfromed. 
 	 */
-	ISubCompoundGraph<N, E> getCopiedComponents();
+	ISubCompoundGraph getCopiedComponents();
 	/**
 	 * Gets the edgeFactory for this class. This factory is a singleton so this method must always
 	 *  return the same instance of the factory. The factory is the only way that new edges can be added to
 	 *  this graph.
 	 * @return The edge factory.
 	 */
-	ICompoundChildEdgeFactory<N, E> edgeFactory();
+	ICompoundChildEdgeFactory edgeFactory();
 	
 	/**
 	 * Tests whether the subGraph can be moved to this graph. To be true the subgraph must be an induced subgraph
@@ -64,7 +61,7 @@ public interface IModifiableChildCompoundGraph <
 	 * @param subGraph the subgraph to test, can be null. 
 	 * @return true if the subgraph is valid to copy from, false otherwise.
 	 */
-	boolean canMoveHere(ISubCompoundGraph<? extends N, ? extends E> subGraph);
+	boolean canMoveHere(ISubCompoundGraph subGraph);
 
 	/**
 	 * Moves a subgraph into this graph. It does this by creating a new set of
@@ -74,7 +71,7 @@ public interface IModifiableChildCompoundGraph <
 	 * @param subGraph the subgraph to move.
 	 * @throws IllegalArgumentException if <code>canMoveHere(subGraph) == false</code>.
 	 */
-	void moveHere(ISubCompoundGraph<? extends N, ? extends E> subGraph);
+	void moveHere(ISubCompoundGraph subGraph);
 	
 	/**
 	 * Retrieves the nodes and edges created in this graph by the last copy operation. The subgraph
@@ -82,5 +79,7 @@ public interface IModifiableChildCompoundGraph <
 	 * been performed then an empty subset will be returned.
 	 * @return the subgraph of copied components, or an empty subset of not copy operation has been perfromed. 
 	 */
-	ISubCompoundGraph<N, E> getMovedComponents();
+	ISubCompoundGraph getMovedComponents();
+	
+	boolean isValid();
 }
