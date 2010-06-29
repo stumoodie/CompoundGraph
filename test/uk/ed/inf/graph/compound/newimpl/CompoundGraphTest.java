@@ -16,6 +16,8 @@ limitations under the License.
 package uk.ed.inf.graph.compound.newimpl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
@@ -30,14 +32,15 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
+import uk.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
-import uk.ed.inf.graph.compound.newimpl.CompoundGraph;
 import uk.ed.inf.graph.state.IGraphState;
 
 @RunWith(JMock.class)
@@ -66,16 +69,34 @@ public class CompoundGraphTest {
 	private ICompoundEdgeFactory anotherEdgeFactory ;
 	private ICompoundNodeFactory anotherNodeFactory ;
 	private ISubCompoundGraphFactory anotherSubGraphFactory ;
+
+	private ICompoundGraphCopyBuilder mockCopyBuilder;
+
+	private ISubCompoundGraph mockSrcSubgraph;
+
+	private ISubCompoundGraph mockCopiedSubgraph;
 	
 	private static final int [] NUMERIC = {0,1,2,3,4,5} ;
 	
 	private static final String ORIGINAL_NODE_STATE = "{0}" ;
-	private static final String ORIGINAL_EDGE_STATE = "{}" ;
 	
 	
 	@Before
 	public void setUp() throws Exception {
-		testCompoundGraph = new CompoundGraph () ;
+		this.mockCopyBuilder = this.mockery.mock(ICompoundGraphCopyBuilder.class, "mockCopyBuilder");
+		this.mockSrcSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSrcSubgraph");
+		this.mockCopiedSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockCopiedSubgraph");
+		
+		this.mockery.checking(new Expectations(){{
+			
+			allowing(mockCopyBuilder).makeCopy();
+			allowing(mockCopyBuilder).setDestinatChildCompoundGraph(with(any(IChildCompoundGraph.class)));
+			allowing(mockCopyBuilder).setSourceSubgraph(with(mockSrcSubgraph));
+			allowing(mockCopyBuilder).getSourceSubgraph(); will(returnValue(mockSrcSubgraph));
+			allowing(mockCopyBuilder).getCopiedComponents(); will(returnValue(mockCopiedSubgraph));
+		}});
+		
+		testCompoundGraph = new CompoundGraph (this.mockCopyBuilder) ;
 		anotherCompoundGraph = new CompoundGraph () ;
 		
 		edgeFactory = testCompoundGraph.edgeFactory() ;
@@ -130,13 +151,15 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testContainsEdgeInt() {
-		assertTrue ( "contains edge there " , testCompoundGraph.containsEdge(0)) ;
+		assertTrue ( "contains edge there " , testCompoundGraph.containsEdge(this.anEdge.getIndex())) ;
+		assertFalse("Not contains edge", testCompoundGraph.containsEdge(this.subEdge.getIndex()));
 	}
 
 	@Test
 	public final void testContainsNodeInt() {
-		assertTrue ( "contains node there" , testCompoundGraph.containsNode(NUMERIC[0])) ;
-		assertTrue ( "contains node there" , testCompoundGraph.containsNode(NUMERIC[1])) ;
+		assertTrue ( "contains node there" , testCompoundGraph.containsNode(this.aNode)) ;
+		assertTrue ( "contains node there" , testCompoundGraph.containsNode(this.rootNode)) ;
+		assertFalse ( "not contains node there" , testCompoundGraph.containsNode(this.subNode)) ;
 	}
 
 	@Test
@@ -172,7 +195,12 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testGetEdge() {
-		assertEquals ( "get Edge" , anEdge , testCompoundGraph.getEdge(0)) ;
+		assertEquals ( "get Edge" , anEdge , testCompoundGraph.getEdge(this.anEdge.getIndex())) ;
+	}
+
+	@Test(expected=IllegalArgumentException.class)
+	public final void testGetEdgeFails() {
+		assertEquals ( "get Edge" , anEdge , testCompoundGraph.getEdge(this.subEdge.getIndex())) ;
 	}
 
 	@Test
@@ -288,37 +316,17 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testCopyHere() {
-		
-		anotherSubGraphFactory.addElement(subEdge) ;
-		anotherSubGraphFactory.addElement(subNode) ;
-		
-		ISubCompoundGraph subGraph = anotherSubGraphFactory.createSubgraph();
-	
-		assertEquals ( "3 Nodes " , NUMERIC[3] , testCompoundGraph.getNumNodes()) ;
-		assertEquals ( "1 Edges " , NUMERIC[1] , testCompoundGraph.getNumEdges()) ;
-		
-		testCompoundGraph.copyHere( subGraph)  ;
-		
-		assertEquals ( "4 Nodes " , NUMERIC[4] , testCompoundGraph.getNumNodes()) ;
-		assertEquals ( "2 Edges " , NUMERIC[2] , testCompoundGraph.getNumEdges()) ;
+		testCompoundGraph.copyHere(this.mockSrcSubgraph);
+		this.mockery.assertIsSatisfied();
 	}
 
 	@Test
 	public final void testGetCopiedComponents() {
-		anotherSubGraphFactory.addElement(subEdge) ;
-		anotherSubGraphFactory.addElement(subNode) ;
-		
-		ISubCompoundGraph subGraph = anotherSubGraphFactory.createSubgraph();
-	
-		assertEquals ( "3 Nodes " , NUMERIC[3] , testCompoundGraph.getNumNodes()) ;
-		assertEquals ( "1 Edges " , NUMERIC[1] , testCompoundGraph.getNumEdges()) ;
-		
-		testCompoundGraph.copyHere( subGraph)  ;
+		testCompoundGraph.copyHere(this.mockSrcSubgraph);
 		
 		ISubCompoundGraph copyOfGraph = testCompoundGraph.getCopiedComponents() ;
 		
-		assertEquals ( "one edge" , NUMERIC[1] , copyOfGraph.getNumEdges() );
-		assertEquals ( "one node" , NUMERIC[1] , copyOfGraph.getNumNodes() );
+		assertNotNull("copiedComponentsOK", copyOfGraph);
 	}
 
 }

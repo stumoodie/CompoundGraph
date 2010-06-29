@@ -32,8 +32,6 @@ import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.newimpl.CompoundEdgeFactory;
-import uk.ed.inf.graph.compound.newimpl.ICompoundGraphServices;
 
 @RunWith(JMock.class)
 public class CompoundEdgeFactoryTest {
@@ -41,11 +39,7 @@ public class CompoundEdgeFactoryTest {
 	
 	private ICompoundEdgeFactory testEdgeFactory ;
 
-	private ICompoundGraphServices mockServices;
-	
 	private static ICompoundGraph mockCompoundGraph ;
-//	private static ChildCompoundGraph mockChildCompoundGraph ;
-//	private static CompoundNode mockCompoundNode ;
 	private static ICompoundNode mockOneNode ;
 	private static ICompoundNode mockTwoNode ;
 	private static ICompoundNode otherOneNode ;
@@ -64,7 +58,6 @@ public class CompoundEdgeFactoryTest {
 		mockTwoNode = this.mockery.mock(ICompoundNode.class, "mockTwoNode");
 		otherOneNode = this.mockery.mock(ICompoundNode.class, "otherOneNode");
 		otherTwoNode = this.mockery.mock(ICompoundNode.class, "otherTwoNode");
-		mockServices = this.mockery.mock(ICompoundGraphServices.class, "mockServices");
 
 		this.mockery.checking(new Expectations(){{
 			allowing(mockOneNode).getIndex(); will(returnValue(COMPOUND_NODE_INDEX_TWO));
@@ -75,7 +68,7 @@ public class CompoundEdgeFactoryTest {
 		}});
 		
 		
-		testEdgeFactory = new CompoundEdgeFactory (mockCompoundGraph, this.mockServices) ;
+		testEdgeFactory = new CompoundEdgeFactory (mockCompoundGraph) ;
 	}
 
 	@After

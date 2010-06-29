@@ -16,6 +16,7 @@ limitations under the License.
 package uk.ed.inf.graph.compound.newimpl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
@@ -39,7 +40,6 @@ import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.IRootCompoundNode;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
-import uk.ed.inf.graph.compound.newimpl.CompoundGraph;
 
 @RunWith(JMock.class)
 public class ChildCompoundGraphTest {
@@ -132,12 +132,13 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testContainsEdgeInt() {
-		assertTrue ( "contains edge" , testChildCompoundGraph.containsEdge(0)) ;
+		assertTrue ( "contains edge" , testChildCompoundGraph.containsEdge(this.anEdge.getIndex())) ;
+		assertFalse ( "not contains edge" , testChildCompoundGraph.containsEdge(this.inNode.getIndex())) ;
 	}
 
 	@Test
 	public final void testContainsNodeInt() {
-		assertTrue ( "contains node" , testChildCompoundGraph.containsNode(1)) ;
+		assertTrue ( "contains node" , testChildCompoundGraph.containsNode(this.outNode.getIndex())) ;
 	}
 
 	@Test
@@ -148,7 +149,7 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testGetEdge() {
-		assertEquals ( "get edge" , anEdge , testChildCompoundGraph.getEdge(0)) ;
+		assertEquals ( "get edge" , anEdge , testChildCompoundGraph.getEdge(this.anEdge.getIndex())) ;
 	}
 
 	@Test

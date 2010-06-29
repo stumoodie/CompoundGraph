@@ -15,7 +15,9 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.newimpl;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -25,7 +27,6 @@ import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
-import uk.ed.inf.graph.compound.ICompoundGraphMoveBuilder;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.ICompoundNodePair;
@@ -46,37 +47,49 @@ public class CompoundGraph implements ICompoundGraph {
 	// added debug checks to graph
 	private final boolean debuggingEnabled;
     private final Logger logger = Logger.getLogger(this.getClass());
-	private final IndexCounter elementCounter;
-	private final RootCompoundNode rootNode;
+//	private final IndexCounter elementCounter;
+	private final IRootCompoundNode rootNode;
 	private ICompoundGraphCopyBuilder copyBuilder;
 	private final IGraphStateHandler stateHandler;
+	private static Map<ICompoundGraph, IndexCounter> counterLookup = new HashMap<ICompoundGraph, IndexCounter>();
 
-	private ICompoundGraphServices services;
+//	private ICompoundGraphServices services;
 
 	public CompoundGraph(){
+		this(new CompoundGraphCopyBuilder());
+	}
+		
+	public CompoundGraph(ICompoundGraphCopyBuilder copyBuilder){
 		this.debuggingEnabled = Boolean.getBoolean(DEBUG_PROP_NAME);
 		this.stateHandler = new CompoundGraphStateHandler(this);
-		this.elementCounter = new IndexCounter(ROOT_NODE_IDX);
-		this.services =  new ICompoundGraphServices() {
-			
-			@Override
-			public ICompoundGraphMoveBuilder newMoveBuilder() {
-				return new CompoundGraphMoveBuilder();
-			}
-			
-			@Override
-			public ICompoundGraphCopyBuilder newCopyBuilder() {
-				return new CompoundGraphCopyBuilder();
-			}
-			
-			@Override
-			public IndexCounter getIndexCounter() {
-				return elementCounter;
-			}
-		};
-		this.rootNode = new RootCompoundNode(this, ROOT_NODE_IDX, this.services);
-		this.copyBuilder = this.services.newCopyBuilder();
+//		this.elementCounter = new IndexCounter(ROOT_NODE_IDX);
+//		this.services =  new ICompoundGraphServices() {
+//			
+//			@Override
+//			public ICompoundGraphMoveBuilder newMoveBuilder() {
+//				return new CompoundGraphMoveBuilder();
+//			}
+//			
+//			@Override
+//			public ICompoundGraphCopyBuilder newCopyBuilder() {
+//				return new CompoundGraphCopyBuilder();
+//			}
+//			
+//			@Override
+//			public IndexCounter getIndexCounter() {
+//				return elementCounter;
+//			}
+//		};
+		this.rootNode = new RootCompoundNode(this, ROOT_NODE_IDX);
+//		this.copyBuilder = this.services.newCopyBuilder();
+		this.copyBuilder = copyBuilder;
+		counterLookup.put(this, new IndexCounter(ROOT_NODE_IDX));
 	}
+	
+	public static IndexCounter getIndexCounter(ICompoundGraph graph){
+		return counterLookup.get(graph);
+	}
+	
 	
 	@Override
 	public IRootCompoundNode getRoot() {
@@ -168,7 +181,7 @@ public class CompoundGraph implements ICompoundGraph {
 	@Override
 	public ICompoundEdge getEdge(int edgeIdx) {
 		ICompoundGraphElement retVal = this.getElementTree().get(edgeIdx);
-		if(retVal == null || !(retVal instanceof ICompoundEdge)) throw new IllegalArgumentException("nodeIdx does not refer toa  node contained in this graph");
+		if(retVal == null || !(retVal instanceof ICompoundEdge)) throw new IllegalArgumentException("edgeIdx does not refer toa  node contained in this graph");
 		return (ICompoundEdge)retVal;
 	}
 
@@ -222,7 +235,7 @@ public class CompoundGraph implements ICompoundGraph {
 
 	@Override
 	public boolean canRemoveSubgraph(ISubCompoundGraph subgraph) {
-		return subgraph != null && subgraph.getSuperGraph().equals(this) && subgraph.isConsistentSnapShot();
+		return subgraph != null && subgraph.getSuperGraph().equals(this) && !subgraph.containsRoot() && subgraph.isConsistentSnapShot();
 	}
 
 	@Override
@@ -238,7 +251,7 @@ public class CompoundGraph implements ICompoundGraph {
 
 	@Override
 	public ICompoundEdgeFactory edgeFactory() {
-		return new CompoundEdgeFactory(this, this.services);
+		return new CompoundEdgeFactory(this);
 	}
 
 	@Override
@@ -315,9 +328,4 @@ public class CompoundGraph implements ICompoundGraph {
 	public void restoreState(IGraphState previousState) {
 		this.stateHandler.restoreState(previousState);
 	}
-
-	public IndexCounter getIndexCounter() {
-		return this.elementCounter;
-	}
-	
 }

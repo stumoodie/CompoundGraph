@@ -64,15 +64,17 @@ public abstract class CommonChildCompoundGraph implements IChildCompoundGraph {
     private final Logger logger = Logger.getLogger(this.getClass());
 	private final ICompoundGraphCopyBuilder copyBuilder;
 	private final ICompoundGraphMoveBuilder moveBuilder;
-	private final ICompoundGraphServices services;
 	private final FilteredEdgeSet<ICompoundNode, ICompoundEdge> edgeSet;
 	private final FilteredNodeSet<ICompoundNode, ICompoundEdge> nodeSet;
 	
-	protected CommonChildCompoundGraph(ICompoundGraphServices services){
+	protected CommonChildCompoundGraph(){
+		this(new CompoundGraphCopyBuilder(), new CompoundGraphMoveBuilder());
+	}
+		
+	protected CommonChildCompoundGraph(ICompoundGraphCopyBuilder copyBuilder, ICompoundGraphMoveBuilder moveBuilder){
 		this.debuggingEnabled = Boolean.getBoolean(DEBUG_PROP_NAME);
-		this.services = services;
-		this.copyBuilder = services.newCopyBuilder();
-		this.moveBuilder = services.newMoveBuilder();
+		this.copyBuilder = copyBuilder;
+		this.moveBuilder = moveBuilder;
 		this.nodeSet = new FilteredNodeSet<ICompoundNode, ICompoundEdge>(new NodeSet<ICompoundNode, ICompoundEdge>(), new IFilterCriteria<ICompoundNode>(){
 
 			public boolean matched(ICompoundNode testObj) {
@@ -239,7 +241,17 @@ public abstract class CommonChildCompoundGraph implements IChildCompoundGraph {
 
 	@Override
 	public ICompoundChildEdgeFactory edgeFactory() {
-		return new CompoundChildEdgeFactory(this.getRoot(), this.services);
+		return new CompoundChildEdgeFactory(this.getRoot(), new ICompoundElementRegistration() {
+			
+			@Override
+			public void registerNode(ICompoundNode node) {
+			}
+			
+			@Override
+			public void registerEdge(ICompoundEdge edge) {
+				edgeSet.add(edge);
+			}
+		});
 	}
 
 	@Override
@@ -331,13 +343,25 @@ public abstract class CommonChildCompoundGraph implements IChildCompoundGraph {
 
 	@Override
 	public ICompoundNodeFactory nodeFactory() {
-		ICompoundNodeFactory fact = new CompoundNodeFactory(this.getRoot(), this.services);
+		ICompoundNodeFactory fact = new CompoundNodeFactory(this.getRoot(), new ICompoundElementRegistration() {
+			
+			@Override
+			public void registerNode(ICompoundNode node) {
+				nodeSet.add(node);
+			}
+			
+			@Override
+			public void registerEdge(ICompoundEdge edge) {
+			}
+		});
 		return fact;
 	}
+
 
 	protected abstract void notifyCopyOperationComplete(ISubCompoundGraph originalSubgraph,
 			ISubCompoundGraph copiedSubgraph);
 
 	protected abstract void notifyMoveOperationComplete(ISubCompoundGraph originalSubgraph,
 			ISubCompoundGraph movedSubgraph);
+
 }

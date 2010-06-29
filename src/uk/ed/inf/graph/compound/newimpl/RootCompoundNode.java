@@ -1,20 +1,20 @@
 package uk.ed.inf.graph.compound.newimpl;
 
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
-import uk.ed.inf.graph.compound.IRootChildCompoundGraph;
 import uk.ed.inf.graph.compound.IRootCompoundNode;
 
 public class RootCompoundNode extends CommonCompoundNode implements IRootCompoundNode {
 	private final RootChildCompoundGraph childGraph;
-	private CompoundGraph graph;
+	private final CompoundGraph graph;
 	
-	public RootCompoundNode(CompoundGraph graph, int index, ICompoundGraphServices services){
+	public RootCompoundNode(CompoundGraph graph, int index){
 		super(index);
-		this.childGraph = new RootChildCompoundGraph(this, services);
+		this.childGraph = new RootChildCompoundGraph(this);
+		this.graph = graph;
 	}
 	
 	@Override
-	public IRootChildCompoundGraph getChildCompoundGraph() {
+	public RootChildCompoundGraph getChildCompoundGraph() {
 		return this.childGraph;
 	}
 

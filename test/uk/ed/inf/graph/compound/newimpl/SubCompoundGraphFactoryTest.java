@@ -30,7 +30,6 @@ import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -39,7 +38,6 @@ import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
-import uk.ed.inf.graph.compound.newimpl.SubCompoundGraphFactory;
 
 @RunWith(JMock.class)
 public class SubCompoundGraphFactoryTest {
@@ -63,14 +61,11 @@ public class SubCompoundGraphFactoryTest {
 	private static final int EXPECTED_COMPOUND_EDGE_LEVEL = 1;
 	private static final int EXPECTED_COMPOUND_EDGE2_IDX = 4;
 	private static final int EXPECTED_COMPOUND_EDGE2_LEVEL = 1;
-
 	private static final int EXPECTED_TOP_SUBGRAPH_ELEMENTS = 2;
-	private static final int EXPECTED_SUBGRAPH_ELEMENTS = 2;
 	
 	
 	@Before
 	public void setUp() throws Exception {
-		
 		mockCompoundGraph = mockery.mock(ICompoundGraph.class , "mockCompoundGraph");
 		mockCompoundNode = mockery.mock(ICompoundNode.class , "mockCompoundNode") ;
 		mockCompoundEdge = mockery.mock(ICompoundEdge.class , "mockCompoundEdge") ;
@@ -82,12 +77,20 @@ public class SubCompoundGraphFactoryTest {
 		this.mockery.checking(new Expectations(){{
 			allowing(mockCompoundNode).getIndex(); will(returnValue(EXPECTED_COMPOUND_NODE_IDX));
 			allowing(mockCompoundNode).getLevel(); will(returnValue(EXPECTED_COMPOUND_NODE_LEVEL));
+			allowing(mockCompoundNode).isLink(); will(returnValue(false));
+			allowing(mockCompoundNode).isNode(); will(returnValue(true));
+			allowing(mockCompoundNode).levelOrderIterator(); will(returnIterator(mockCompoundNode));
+			allowing(mockCompoundNode).childIterator(); will(returnIterator());
 			
 			allowing(mockCompoundNode2).getIndex(); will(returnValue(EXPECTED_COMPOUND_NODE2_IDX));
 			allowing(mockCompoundNode2).getLevel(); will(returnValue(EXPECTED_COMPOUND_NODE2_LEVEL));
 
 			allowing(mockCompoundEdge).getIndex(); will(returnValue(EXPECTED_COMPOUND_EDGE_IDX));
 			allowing(mockCompoundEdge).getLevel(); will(returnValue(EXPECTED_COMPOUND_EDGE_LEVEL));
+			allowing(mockCompoundEdge).isLink(); will(returnValue(true));
+			allowing(mockCompoundEdge).isNode(); will(returnValue(false));
+			allowing(mockCompoundEdge).levelOrderIterator(); will(returnIterator(mockCompoundEdge));
+			allowing(mockCompoundEdge).childIterator(); will(returnIterator());
 
 			allowing(mockCompoundEdge2).getIndex(); will(returnValue(EXPECTED_COMPOUND_EDGE2_IDX));
 			allowing(mockCompoundEdge2).getLevel(); will(returnValue(EXPECTED_COMPOUND_EDGE2_LEVEL));

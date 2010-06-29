@@ -6,11 +6,11 @@ import uk.ed.inf.tree.GeneralTree;
 import uk.ed.inf.tree.ITree;
 
 public class ChildCompoundGraph extends CommonChildCompoundGraph {
-	private ITree<ICompoundGraphElement> childTree;
-	
-	public ChildCompoundGraph(ICompoundGraphElement rootElement, ICompoundGraphServices services) {
-		super(services);
-		childTree = new GeneralTree<ICompoundGraphElement>(rootElement); 
+	private ITree<ICompoundGraphElement> elementTree;
+
+	public ChildCompoundGraph(ICompoundGraphElement rootElement) {
+		super();
+		this.elementTree = new GeneralTree<ICompoundGraphElement>(rootElement);
 	}
 
 	@Override
@@ -29,13 +29,13 @@ public class ChildCompoundGraph extends CommonChildCompoundGraph {
 	}
 
 	@Override
-	public ITree<ICompoundGraphElement> getElementTree() {
-		return this.childTree;
+	public ICompoundGraphElement getRoot() {
+		return this.getElementTree().getRootNode();
 	}
 
 	@Override
-	public ICompoundGraphElement getRoot() {
-		return this.childTree.getRootNode();
+	public ITree<ICompoundGraphElement> getElementTree() {
+		return this.elementTree;
 	}
 
 }

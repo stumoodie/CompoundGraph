@@ -9,13 +9,15 @@ import uk.ed.inf.graph.compound.ICompoundNodePair;
 
 public class CompoundChildEdgeFactory implements ICompoundChildEdgeFactory {
 	private final ICompoundGraphElement parent;
-	private final ICompoundGraphServices services;
+//	private final ICompoundGraphServices services;
 	private ICompoundNode outNode;
 	private ICompoundNode inNode;
+	private final ICompoundElementRegistration registration;
 	
-	public CompoundChildEdgeFactory(ICompoundGraphElement parent, ICompoundGraphServices services){
+	public CompoundChildEdgeFactory(ICompoundGraphElement parent, ICompoundElementRegistration registration){
 		this.parent = parent;
-		this.services = services;
+//		this.services = services;
+		this.registration = registration;
 	}
 	
 	@Override
@@ -25,7 +27,9 @@ public class CompoundChildEdgeFactory implements ICompoundChildEdgeFactory {
 
 	@Override
 	public ICompoundEdge createEdge() {
-		return new CompoundEdge(this.parent, this.services.getIndexCounter().nextIndex(), this.outNode, this.inNode, this.services);
+		ICompoundEdge retVal = new CompoundEdge(this.parent, CompoundGraph.getIndexCounter(this.getGraph()).nextIndex(), this.outNode, this.inNode);
+		registration.registerEdge(retVal);
+		return retVal;
 	}
 
 	@Override

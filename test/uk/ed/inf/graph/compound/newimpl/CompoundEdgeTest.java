@@ -31,8 +31,6 @@ import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.newimpl.CompoundEdge;
-import uk.ed.inf.graph.compound.newimpl.ICompoundGraphServices;
 
 @RunWith(JMock.class)
 public class CompoundEdgeTest {
@@ -54,8 +52,6 @@ public class CompoundEdgeTest {
 	private ICompoundNode mockInNode;
 
 	private ICompoundNode mockOutNode;
-
-	private ICompoundGraphServices mockServices;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -64,7 +60,6 @@ public class CompoundEdgeTest {
 		mockGraph = this.mockery.mock(ICompoundGraph.class, "mockGraph");
 		mockInNode = this.mockery.mock(ICompoundNode.class, "mockInNode");
 		mockOutNode = this.mockery.mock(ICompoundNode.class, "mockOutNode");
-		mockServices = this.mockery.mock(ICompoundGraphServices.class, "mockService");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockInNode).getIndex(); will(returnValue(EXPECTED_IN_NODE_IDX));
 //			atLeast(1).of(mockInNode).addInEdge(with(any(CompoundEdge.class)));
@@ -74,7 +69,7 @@ public class CompoundEdgeTest {
 			
 			atLeast(1).of(mockSubgraph).getSuperGraph(); will(returnValue(mockGraph));
 		}});
-		this.testInstance = new CompoundEdge(mockParent, EXPECTED_EDGE_IDX, mockOutNode, mockInNode, mockServices);
+		this.testInstance = new CompoundEdge(mockParent, EXPECTED_EDGE_IDX, mockOutNode, mockInNode);
 	}
 
 	@After

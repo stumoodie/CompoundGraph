@@ -7,17 +7,18 @@ import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 
 public class CompoundNodeFactory implements ICompoundNodeFactory {
 	private final ICompoundGraphElement parent;
-	private final ICompoundGraphServices services;
+	private final ICompoundElementRegistration registration;
 
-	public CompoundNodeFactory(ICompoundGraphElement parent, ICompoundGraphServices services){
+	public CompoundNodeFactory(ICompoundGraphElement parent, ICompoundElementRegistration registration){
 		this.parent = parent;
-		this.services = services;
+		this.registration = registration;
 	}
 	
 	@Override
 	public ICompoundNode createNode() {
-		int nodeIndex = this.services.getIndexCounter().nextIndex();
-		CompoundNode retVal = new CompoundNode(parent, nodeIndex, this.services);
+		int nodeIndex = CompoundGraph.getIndexCounter(this.getGraph()).nextIndex();
+		CompoundNode retVal = new CompoundNode(parent, nodeIndex);
+		this.registration.registerNode(retVal);
 		return retVal;
 	}
 

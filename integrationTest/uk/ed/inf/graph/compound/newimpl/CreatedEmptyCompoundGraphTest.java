@@ -113,7 +113,7 @@ public class CreatedEmptyCompoundGraphTest {
 		
 	}
 	
-	@Test(expected=IllegalStateException.class)
+	@Test(expected=IllegalArgumentException.class)
 	public void createSubGraphContainingTheRootNodeAndDeleteWithoutAffectingTheRootNode () throws Exception
 	{
 		ISubCompoundGraphFactory testSubGraphFactory = testGraph.subgraphFactory() ;

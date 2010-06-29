@@ -17,12 +17,10 @@ package uk.ed.inf.graph.compound.base;
 
 import java.util.Iterator;
 
-import uk.ed.inf.graph.compound.ICompoundEdge;
-import uk.ed.inf.graph.compound.ICompoundGraphElement;
-import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
+import uk.ed.inf.graph.basic.IBasicPair;
+import uk.ed.inf.graph.basic.ISubgraphAlgorithms;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
-import uk.ed.inf.graph.compound.ISubgraphAlgorithms;
+import uk.ed.inf.graph.directed.IDirectedPair;
 import uk.ed.inf.graph.util.IDirectedEdgeSet;
 import uk.ed.inf.graph.util.IEdgeSet;
 import uk.ed.inf.graph.util.IFilterCriteria;
@@ -31,19 +29,19 @@ import uk.ed.inf.graph.util.SubgraphAlgorithms;
 import uk.ed.inf.graph.util.impl.FilteredEdgeSet;
 import uk.ed.inf.graph.util.impl.FilteredNodeSet;
 
-public abstract class BaseSubCompoundGraph implements ISubCompoundGraph {
-	private INodeSet<ICompoundNode, ICompoundEdge> topNodeSet;
-	private INodeSet<ICompoundNode, ICompoundEdge> nodeSet;
-	private IEdgeSet<ICompoundNode, ICompoundEdge> edgeSet;
+public abstract class BaseSubCompoundGraph implements ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
+	private INodeSet<BaseCompoundNode, BaseCompoundEdge> topNodeSet;
+	private INodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet;
+	private IEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet;
 	private Boolean isInducedSubgraphFlag = null;
 	
 	protected BaseSubCompoundGraph(){
 	}
 	
-	protected final void createTopNodeSet(INodeSet<ICompoundNode, ICompoundEdge> topNodeSet){
-		this.topNodeSet = new FilteredNodeSet<ICompoundNode, ICompoundEdge>(topNodeSet, new IFilterCriteria<ICompoundNode>(){
+	protected final void createTopNodeSet(INodeSet<BaseCompoundNode, BaseCompoundEdge> topNodeSet){
+		this.topNodeSet = new FilteredNodeSet<BaseCompoundNode, BaseCompoundEdge>(topNodeSet, new IFilterCriteria<BaseCompoundNode>(){
 
-			public boolean matched(ICompoundNode testObj) {
+			public boolean matched(BaseCompoundNode testObj) {
 //				return !testObj.isRemoved();
 				return true;
 			}
@@ -51,20 +49,20 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph {
 		});
 	}
 	
-	protected final void createNodeSet(INodeSet<ICompoundNode, ICompoundEdge> nodeSet){
-		this.nodeSet = new FilteredNodeSet<ICompoundNode, ICompoundEdge>(nodeSet, new IFilterCriteria<ICompoundNode>(){
-			public boolean matched(ICompoundNode testObj) {
+	protected final void createNodeSet(INodeSet<BaseCompoundNode, BaseCompoundEdge> nodeSet){
+		this.nodeSet = new FilteredNodeSet<BaseCompoundNode, BaseCompoundEdge>(nodeSet, new IFilterCriteria<BaseCompoundNode>(){
+			public boolean matched(BaseCompoundNode testObj) {
 				return true;
 			}
 	
 		});
 	}
 	
-	protected final void createEdgeSet(IDirectedEdgeSet<ICompoundNode, ICompoundEdge> edgeSet){
-		this.edgeSet = new FilteredEdgeSet<ICompoundNode, ICompoundEdge>(edgeSet,
-				new IFilterCriteria<ICompoundEdge>(){
+	protected final void createEdgeSet(IDirectedEdgeSet<BaseCompoundNode, BaseCompoundEdge> edgeSet){
+		this.edgeSet = new FilteredEdgeSet<BaseCompoundNode, BaseCompoundEdge>(edgeSet,
+				new IFilterCriteria<BaseCompoundEdge>(){
 
-					public boolean matched(ICompoundEdge testObj) {
+					public boolean matched(BaseCompoundEdge testObj) {
 //						return !testObj.isRemoved();
 						return true;
 					}
@@ -72,20 +70,17 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph {
 		});
 	}
 	
-	@Override
 	public abstract BaseCompoundGraph getSuperGraph();
 
-	@Override
 	public boolean isInducedSubgraph() {
 		if(isInducedSubgraphFlag  == null){
-			ISubgraphAlgorithms alg = new SubgraphAlgorithms(this);
+			ISubgraphAlgorithms<BaseCompoundNode, BaseCompoundEdge> alg = new SubgraphAlgorithms<BaseCompoundNode, BaseCompoundEdge>(this);
 			this.isInducedSubgraphFlag = new Boolean(alg.isInducedSubgraph());
 		}
 		return this.isInducedSubgraphFlag;
 	}
 
-	@Override
-	public boolean containsConnection(ICompoundNode thisNode, ICompoundNode thatNode) {
+	public boolean containsConnection(BaseCompoundNode thisNode, BaseCompoundNode thatNode) {
 		boolean retVal = false;
 		if(thisNode != null && thatNode != null){
 			if(this.containsNode(thisNode) && this.containsNode(thatNode)){
@@ -95,69 +90,58 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph {
 		return retVal;
 	}
 
-	@Override
-	public boolean containsEdge(ICompoundEdge edge) {
+	public boolean containsEdge(BaseCompoundEdge edge) {
 		return this.edgeSet.contains(edge);
 	}
 
-	@Override
 	public boolean containsEdge(int edgeIdx) {
 		return this.edgeSet.contains(edgeIdx);
 	}
 
-	@Override
 	public boolean containsNode(int nodeIdx) {
 		return this.nodeSet.contains(nodeIdx);
 	}
 
-	@Override
-	public boolean containsNode(ICompoundNode node) {
+	public boolean containsNode(BaseCompoundNode node) {
 		return this.nodeSet.contains(node);
 	}
 
-	@Override
-	public ICompoundEdge getEdge(int edgeIdx) {
+	public BaseCompoundEdge getEdge(int edgeIdx) {
 		return this.edgeSet.get(edgeIdx);
 	}
 
-	@Override
-	public Iterator<ICompoundEdge> edgeIterator() {
+	public Iterator<BaseCompoundEdge> edgeIterator() {
 		return this.edgeSet.iterator();
 	}
 
-	@Override
-	public ICompoundNode getNode(int nodeIdx) {
+	public BaseCompoundNode getNode(int nodeIdx) {
 		return this.nodeSet.get(nodeIdx);
 	}
 
-	@Override
-	public Iterator<ICompoundNode> nodeIterator() {
+	public Iterator<BaseCompoundNode> nodeIterator() {
 		return this.nodeSet.iterator();
 	}
 
-	@Override
 	public int getNumEdges() {
 		return this.edgeSet.size();
 	}
 
-	@Override
 	public int getNumNodes() {
 		return this.nodeSet.size();
 	}
 
-	protected final void addTopNode(ICompoundNode newNode){
+	void addTopNode(BaseCompoundNode newNode){
 		this.topNodeSet.add(newNode);
 	}
 	
-	protected final void addEdge(ICompoundEdge newEdge){
+	void addEdge(BaseCompoundEdge newEdge){
 		this.edgeSet.add(newEdge);
 	}
 	
 	void buildComplete(){
 	}
 
-	@Override
-	public boolean containsDirectedEdge(ICompoundNode outNode, ICompoundNode inNode) {
+	public boolean containsDirectedEdge(BaseCompoundNode outNode, BaseCompoundNode inNode) {
 		boolean retVal = false;
 		if(outNode != null && inNode != null){
 			retVal = this.edgeSet.contains(outNode, inNode);
@@ -165,14 +149,13 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph {
 		return retVal;
 	}
 
-	@Override
 	public boolean isConsistentSnapShot() {
 		boolean retVal = true;
-		Iterator <ICompoundNode> nodeIter = this.nodeIterator() ;
+		Iterator <BaseCompoundNode> nodeIter = this.nodeIterator() ;
 		while ( nodeIter.hasNext() && retVal){
 			retVal = !nodeIter.next().isRemoved();
 		}
-		Iterator<ICompoundEdge> edgeIter = this.edgeIterator();
+		Iterator<BaseCompoundEdge> edgeIter = this.edgeIterator();
 		while ( edgeIter.hasNext() && retVal){
 			retVal = !edgeIter.next().isRemoved();
 		}		
@@ -183,12 +166,11 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph {
 	/**
 	 * Tests if the ends define one or more directed edges.
 	 */
-	@Override
-	public boolean containsDirectedEdge(ICompoundNodePair ends) {
+	public boolean containsDirectedEdge(IDirectedPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ends) {
 		boolean retVal = false;
 		if(ends != null){
-			ICompoundNode outNode = ends.getOutNode();
-			ICompoundNode inNode = ends.getInNode();
+			BaseCompoundNode outNode = (BaseCompoundNode)ends.getOutNode();
+			BaseCompoundNode inNode = (BaseCompoundNode)ends.getInNode();
 			// check that both nodes exist in this subgraph
 			retVal = outNode.hasOutEdgeTo(inNode);
 		}
@@ -202,24 +184,24 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph {
 	 * @param ends the pair of nodes that may define the edges of an edge.
 	 * @return true if it does, false otherwise.  
 	 */
-	@Override
-	public boolean containsConnection(ICompoundNodePair ends) {
+	@SuppressWarnings("unchecked")
+	public boolean containsConnection(IBasicPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ends) {
 		boolean retVal = false;
-		if(ends != null){
-			ICompoundNode oneNode = ends.getOutNode();
-			ICompoundNode twoNode = ends.getInNode();
+		if(ends != null && ends instanceof IDirectedPair){
+			// since this is a directed graph a valid edge pair must be an IDirectedPair
+			IDirectedPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ciEnds = (IDirectedPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge>)ends;
+			BaseCompoundNode oneNode = (BaseCompoundNode)ciEnds.getOutNode();
+			BaseCompoundNode twoNode = (BaseCompoundNode)ciEnds.getInNode();
 			// check that the nodes belong to this subgraph.
 			retVal = this.containsConnection(oneNode, twoNode);
 		}
 		return retVal;
 	}
 
-	@Override
-	public Iterator<ICompoundNode> topNodeIterator(){
+	public Iterator<BaseCompoundNode> topNodeIterator(){
 		return this.topNodeSet.iterator();
 	}
 	
-	@Override
 	public int getNumTopNodes(){
 		return this.topNodeSet.size();
 	}
@@ -228,18 +210,13 @@ public abstract class BaseSubCompoundGraph implements ISubCompoundGraph {
 	 * Checks if this SubGraph contains the RootNode of the CompoundGraph.
 	 * @return true if the rootNode is contained in this SubGraph.
 	 */
-	@Override
-	public boolean containsRoot (){
-		 return this.containsNode(this.getSuperGraph().getRoot()) ;
+	public boolean containsRoot () 
+	{
+		 return this.containsNode(this.getSuperGraph().getRootNode()) ;
 	}
 
-	protected final void addNode(ICompoundNode node) {
+	public final void addNode(BaseCompoundNode node) {
 		this.nodeSet.add(node);
-	}
-
-	@Override
-	public boolean containsElement(ICompoundGraphElement element) {
-		return this.nodeSet.contains(element) || this.edgeSet.contains(element);
 	}
 	
 }

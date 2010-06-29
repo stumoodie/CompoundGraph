@@ -19,83 +19,46 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import uk.ed.inf.graph.compound.IChildCompoundGraph;
-import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.basic.IBasicPair;
 import uk.ed.inf.graph.compound.ICompoundGraph;
-import uk.ed.inf.graph.compound.ICompoundGraphElement;
-import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
+import uk.ed.inf.graph.compound.IModifiableCompoundGraph;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
-import uk.ed.inf.graph.compound.impl.CompoundEdgeFactory;
-import uk.ed.inf.graph.compound.impl.CompoundNode;
-import uk.ed.inf.graph.compound.impl.CompoundNodeFactory;
-import uk.ed.inf.graph.compound.impl.SubCompoundGraphFactory;
+import uk.ed.inf.graph.directed.IDirectedPair;
 import uk.ed.inf.graph.state.IGraphState;
+import uk.ed.inf.graph.state.IRestorableGraph;
 import uk.ed.inf.graph.util.IndexCounter;
-import uk.ed.inf.graph.util.impl.EdgeTreeIterator;
-import uk.ed.inf.graph.util.impl.NodeTreeIterator;
-import uk.ed.inf.tree.GeneralTree;
+import uk.ed.inf.graph.util.impl.EdgeFromNodeIterator;
 import uk.ed.inf.tree.ITree;
 
-public class BaseCompoundGraph implements ICompoundGraph {
+public abstract class BaseCompoundGraph implements ICompoundGraph<BaseCompoundNode, BaseCompoundEdge>,
+		IRestorableGraph<BaseCompoundNode, BaseCompoundEdge>,
+		IModifiableCompoundGraph<BaseCompoundNode, BaseCompoundEdge> {
 	private static final String DEBUG_PROP_NAME = "uk.ed.inf.graph.compound.base.debugging";
 	// added debug checks to graph
 	private final boolean debuggingEnabled;
     private final Logger logger = Logger.getLogger(this.getClass());
 	private final BaseCompoundGraphStateHandler stateHandler;
 	private BaseGraphCopyBuilder copyBuilder;
-	private final static int ROOT_NODE_IDX = 0;
-	private final IndexCounter nodeCounter;
-	private final GeneralTree<ICompoundGraphElement> nodeTree;
-	private BaseRootCompoundNode rootNode;
 	
-	public BaseCompoundGraph(){
+	protected BaseCompoundGraph(BaseGraphCopyBuilder copyBuilder){
 		this.debuggingEnabled = Boolean.getBoolean(DEBUG_PROP_NAME);
 		this.stateHandler = new BaseCompoundGraphStateHandler(this);
-		this.copyBuilder = new BaseGraphCopyBuilder();
-		this.nodeCounter = new IndexCounter(ROOT_NODE_IDX);
-		createNewRootNode(nodeCounter.getLastIndex());
-		this.nodeTree = new GeneralTree<ICompoundGraphElement>(getRoot());
+		this.copyBuilder = copyBuilder;
 	}
 
-	public BaseCompoundGraph(BaseCompoundGraph otherGraph){
-		this.debuggingEnabled = Boolean.getBoolean(DEBUG_PROP_NAME);
-		this.copyBuilder = new BaseGraphCopyBuilder();
-		this.nodeCounter = new IndexCounter(ROOT_NODE_IDX);
-		createCopyOfRootNode(nodeCounter.getLastIndex(), otherGraph.getRoot());
-		this.nodeTree = new GeneralTree<ICompoundGraphElement>(getRoot());
+	protected BaseCompoundGraph(BaseGraphCopyBuilder copyBuilder, BaseCompoundGraph otherGraph){
+		this(copyBuilder);
+		createCopyOfRootNode(getNodeCounter().getLastIndex(), otherGraph.getRootNode());
 		this.performCopy(otherGraph);
-		this.stateHandler = new BaseCompoundGraphStateHandler(this);
 	}
 	
-	protected final IndexCounter getNodeCounter(){
-		return this.nodeCounter;
-	}
+	protected abstract IndexCounter getNodeCounter();
 	
-	
-	protected final IndexCounter getEdgeCounter(){
-		return this.nodeCounter;
-	}
+	protected abstract IndexCounter getEdgeCounter();
 
-	protected void createNewRootNode(int newIndex){
-		this.rootNode = new BaseRootCompoundNode(this, newIndex);
-	}
+	protected abstract void createCopyOfRootNode(int newIndexValue, BaseCompoundNode otherRootNode);
 
-	protected void createCopyOfRootNode(int newIndexValue, BaseCompoundNode otherRootNode) {
-		this.rootNode = new BaseRootCompoundNode(this, newIndexValue);
-	}
-
-	protected final ITree<ICompoundGraphElement> getNodeTree(){
-		return this.nodeTree;
-	}
-
-	protected void notifyCopyOperationComplete(ISubCompoundGraph originalSubgraph, ISubCompoundGraph copiedNodes) {
-		
-	}
-
-	protected void notifyRemovalOperationComplete(ISubCompoundGraph subgraph) {
-		
-	}
+	protected abstract ITree<BaseCompoundNode> getNodeTree();
 
 	/**
 	 * To be used by copy constructor. After this constructor has been called extending classes should ensure that 
@@ -106,25 +69,26 @@ public class BaseCompoundGraph implements ICompoundGraph {
 	 */
 	protected void performCopy(BaseCompoundGraph otherGraph){
 		BaseSubCompoundGraphFactory fact = otherGraph.subgraphFactory();
-		Iterator<ICompoundNode> iter = otherGraph.getNodeTree().getRootNode().getChildCompoundGraph().nodeIterator();
+		Iterator<BaseCompoundNode> iter = otherGraph.getNodeTree().getRootNode().getChildCompoundGraph().nodeIterator();
 		while(iter.hasNext()){
-			ICompoundNode level1Node = iter.next();
+			BaseCompoundNode level1Node = iter.next();
 			fact.addNode(level1Node);
 		}
 		BaseSubCompoundGraph subgraph = fact.createInducedSubgraph();
 		this.copyHere(subgraph);
 	}
 	
-	@Override
-	public BaseRootCompoundNode getRoot(){
-		return this.rootNode;
-	}
+	protected abstract void notifyCopyOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> originalSubgraph,
+			ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> copiedNodes);
+	
+	protected abstract void notifyRemovalOperationComplete(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph);
 
-	@Override
-	public final boolean containsDirectedEdge(ICompoundNode outNode, ICompoundNode inNode) {
+	public abstract BaseCompoundNode getRootNode();
+
+	public final boolean containsDirectedEdge(BaseCompoundNode outNode, BaseCompoundNode inNode) {
 		boolean retVal = false;
 		if(inNode != null && outNode != null){
-			ICompoundGraphElement node = this.getNodeTree().getLowestCommonAncestor(inNode, outNode);
+			BaseCompoundNode node = this.getNodeTree().getLowestCommonAncestor(inNode, outNode);
 			if(node != null){
 				retVal = node.getChildCompoundGraph().containsDirectedEdge(outNode, inNode);
 			}
@@ -132,11 +96,10 @@ public class BaseCompoundGraph implements ICompoundGraph {
 		return retVal;
 	}
 
-	@Override
-	public final boolean containsConnection(ICompoundNode thisNode, ICompoundNode thatNode) {
+	public final boolean containsConnection(BaseCompoundNode thisNode, BaseCompoundNode thatNode) {
 		boolean retVal = false;
 		if(thisNode != null && thatNode != null){
-			ICompoundGraphElement node = this.getNodeTree().getLowestCommonAncestor(thisNode, thatNode);
+			BaseCompoundNode node = this.getNodeTree().getLowestCommonAncestor(thisNode, thatNode);
 			if(node != null){
 				retVal = node.getChildCompoundGraph().containsConnection(thisNode, thatNode);
 			}
@@ -144,22 +107,19 @@ public class BaseCompoundGraph implements ICompoundGraph {
 		return retVal;
 	}
 
-	@Override
-	public final boolean containsEdge(ICompoundEdge edge) {
-//		boolean retVal = false;
-//		if(edge != null && edge.getGraph().equals(this)){
-//			retVal = edge.getOwningChildGraph().containsEdge(edge);
-//		}
-//		return retVal;
-		return edge != null && !edge.isRemoved() && edge.getGraph().equals(this);
+	public final boolean containsEdge(BaseCompoundEdge edge) {
+		boolean retVal = false;
+		if(edge != null && edge.getGraph().equals(this)){
+			retVal = edge.getOwningChildGraph().containsEdge(edge);
+		}
+		return retVal;
 	}
 
-	@Override
 	public final boolean containsEdge(int edgeIdx) {
 		boolean retVal = false;
-		Iterator<ICompoundGraphElement> iter = this.getNodeTree().levelOrderIterator();
+		Iterator<BaseCompoundNode> iter = this.getNodeTree().levelOrderIterator();
 		while(iter.hasNext()){
-			ICompoundGraphElement node = iter.next();
+			BaseCompoundNode node = iter.next();
 			retVal = node.getChildCompoundGraph().containsEdge(edgeIdx);
 			if(retVal == true){
 				break;
@@ -168,13 +128,11 @@ public class BaseCompoundGraph implements ICompoundGraph {
 		return retVal;
 	}
 
-	@Override
 	public final boolean containsNode(int nodeIdx) {
 		return this.getNodeTree().containsNode(nodeIdx);
 	}
 
-	@Override
-	public final boolean containsNode(ICompoundNode node) {
+	public final boolean containsNode(BaseCompoundNode node) {
 		boolean retVal = false;
 		if(node != null){
 			retVal = this.containsNode(node.getIndex());
@@ -182,12 +140,11 @@ public class BaseCompoundGraph implements ICompoundGraph {
 		return retVal;
 	}
 
-	@Override
-	public ICompoundEdge getEdge(int edgeIdx) {
-		Iterator<ICompoundEdge> iter = this.edgeIterator();
-		ICompoundEdge retVal = null;
+	public BaseCompoundEdge getEdge(int edgeIdx) {
+		Iterator<BaseCompoundEdge> iter = this.edgeIterator();
+		BaseCompoundEdge retVal = null;
 		while(iter.hasNext() && retVal == null){
-			ICompoundEdge edge = iter.next();
+			BaseCompoundEdge edge = iter.next();
 			if(edge.getIndex() == edgeIdx){
 				retVal = edge;
 			}
@@ -199,26 +156,22 @@ public class BaseCompoundGraph implements ICompoundGraph {
 	 * Returns all edges in tree level-node iteration order. For each node the edges are returned in the same
 	 * order as the CiNode edge iterator. Returns both undirected and directed nodes.
 	 */
-	@Override
-	public Iterator<ICompoundEdge> edgeIterator() {
-		return new EdgeTreeIterator(this.getRoot());
+	public Iterator<BaseCompoundEdge> edgeIterator() {
+		return new EdgeFromNodeIterator<BaseCompoundNode, BaseCompoundEdge>(this.getNodeTree().levelOrderIterator());
 	}
 
-	@Override
-	public ICompoundNode getNode(int nodeIdx) {
-		ICompoundGraphElement retVal = this.getNodeTree().get(nodeIdx);
-		if(retVal == null || !(retVal instanceof ICompoundNode)) throw new IllegalArgumentException("nodeIdx does not refer toa  node contained in this graph");
-		return (ICompoundNode)retVal;
+	public BaseCompoundNode getNode(int nodeIdx) {
+		BaseCompoundNode retVal = this.getNodeTree().get(nodeIdx);
+		if(retVal == null) throw new IllegalArgumentException("nodeIdx does not refer toa  node contained in this graph");
+		return retVal;
 	}
 
-	@Override
-	public Iterator<ICompoundNode> nodeIterator() {
-		return new NodeTreeIterator(this.getRoot());
+	public Iterator<BaseCompoundNode> nodeIterator() {
+		return this.getNodeTree().levelOrderIterator();
 	}
 
-	@Override
 	public final int getNumEdges() {
-		Iterator<ICompoundEdge> iter = this.edgeIterator();
+		Iterator<BaseCompoundEdge> iter = this.edgeIterator();
 		int cntr = 0;
 		while(iter.hasNext()){
 			iter.next();
@@ -227,25 +180,22 @@ public class BaseCompoundGraph implements ICompoundGraph {
 		return cntr;
 	}
 
-	@Override
 	public final int getNumNodes() {
 		return this.getNodeTree().size();
 	}
 
 	
-	@Override
-	public boolean canRemoveSubgraph(ISubCompoundGraph subgraph){
+	public boolean canRemoveSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph){
 		return subgraph != null && subgraph.getSuperGraph().equals(this) && subgraph.isConsistentSnapShot();
 	}
 	
-	@Override
-	public final void removeSubgraph(ISubCompoundGraph subgraph) {
+	public final void removeSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
 		if(this.debuggingEnabled && !this.canRemoveSubgraph(subgraph)) throw new IllegalArgumentException("subgraph does not satify canRemoveSubgraph()");
 		BaseSubCompoundGraph removedGraph = internalRemoveSubgraph(subgraph);
 		notifyRemovalOperationComplete(removedGraph);
 	}
 
-	private void removeEdges(BaseSubCompoundGraphFactory selnFactory, Iterator<? extends ICompoundEdge> edgeIterator){
+	private void removeEdges(BaseSubCompoundGraphFactory selnFactory, Iterator<? extends BaseCompoundEdge> edgeIterator){
 		while(edgeIterator.hasNext()){
 			BaseCompoundEdge edge = (BaseCompoundEdge)edgeIterator.next();
 			edge.markRemoved(true);
@@ -253,25 +203,25 @@ public class BaseCompoundGraph implements ICompoundGraph {
 		}
 	}
 	
-	private void removeNodes(BaseSubCompoundGraphFactory selnFactory, Iterator<? extends ICompoundNode> nodeIterator){
+	private void removeNodes(BaseSubCompoundGraphFactory selnFactory, Iterator<? extends BaseCompoundNode> nodeIterator){
 		while(nodeIterator.hasNext()){
 			BaseCompoundNode node = (BaseCompoundNode)nodeIterator.next();
-			if(node.equals(this.getRoot())){
+			if(node.equals(this.getRootNode())){
 				throw new IllegalStateException("Cannot remove the root node from a compound graph");
 			}
 			node.markRemoved(true);
 			selnFactory.addNode(node);
 			// remove edges associated with node
-			Iterator<ICompoundEdge> edgeIter = node.edgeIterator();
+			Iterator<BaseCompoundEdge> edgeIter = node.edgeIterator();
 			while(edgeIter.hasNext()){
-				ICompoundEdge edge = edgeIter.next();
+				BaseCompoundEdge edge = edgeIter.next();
 				edge.markRemoved(true);
 				selnFactory.addEdge(edge);
 			}
 		}
 	}
 	
-	final ICompoundGraphElement getLcaNode(ICompoundNode inNode, ICompoundNode outNode){
+	final BaseCompoundNode getLcaNode(BaseCompoundNode inNode, BaseCompoundNode outNode){
 		if(inNode == null || outNode == null) throw new IllegalArgumentException("parameters cannot be null");
 		
 		return this.getNodeTree().getLowestCommonAncestor(inNode, outNode);
@@ -280,31 +230,15 @@ public class BaseCompoundGraph implements ICompoundGraph {
 	/**
 	 * Tests if the ends define one or more directed edges.
 	 */
-	@Override
-	public final boolean containsDirectedEdge(ICompoundNodePair ends) {
+	public final boolean containsDirectedEdge(IDirectedPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ends) {
 		boolean retVal = false;
 		if(ends != null){
-			ICompoundNode outNode = ends.getOutNode();
-			ICompoundNode inNode = ends.getInNode();
+			BaseCompoundNode outNode = (BaseCompoundNode)ends.getOutNode();
+			BaseCompoundNode inNode = (BaseCompoundNode)ends.getInNode();
 			// check that at least one node belongs to this graph, if so then we
 			// can be sure that the other node and edge will.
 			if(outNode.getGraph().equals(this)){
 				retVal = outNode.hasOutEdgeTo(inNode);
-			}
-		}
-		return retVal;
-	}
-
-	@Override
-	public final boolean containsEdge(ICompoundNodePair ends) {
-		boolean retVal = false;
-		if(ends != null){
-			ICompoundNode outNode = ends.getOutNode();
-			ICompoundNode inNode = ends.getInNode();
-			// check that at least one node belongs to this graph, if so then we
-			// can be sure that the other node and edge will.
-			if(outNode.getGraph().equals(this)){
-				retVal = outNode.hasOutEdgeTo(inNode) || inNode.hasOutEdgeTo(outNode);
 			}
 		}
 		return retVal;
@@ -317,12 +251,14 @@ public class BaseCompoundGraph implements ICompoundGraph {
 	 * @param ends the pair of nodes that may define the edges of an edge.
 	 * @return true if it does, false otherwise.  
 	 */
-	@Override
-	public final boolean containsConnection(ICompoundNodePair ends) {
+	@SuppressWarnings("unchecked")
+	public final boolean containsConnection(IBasicPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ends) {
 		boolean retVal = false;
-		if(ends != null){
-			ICompoundNode oneNode = ends.getOutNode();
-			ICompoundNode twoNode = ends.getInNode();
+		if(ends != null && ends instanceof IDirectedPair){
+			// since this is a directed graph a valid edge pair must be an IDirectedPair
+			IDirectedPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge> ciEnds = (IDirectedPair<? extends BaseCompoundNode, ? extends BaseCompoundEdge>)ends;
+			BaseCompoundNode oneNode = (BaseCompoundNode)ciEnds.getOutNode();
+			BaseCompoundNode twoNode = (BaseCompoundNode)ciEnds.getInNode();
 			// check that at least one node belongs to this graph, if so then we
 			// can be sure that the other node and edge will.
 			if(oneNode.getGraph().equals(this)){
@@ -332,70 +268,57 @@ public class BaseCompoundGraph implements ICompoundGraph {
 		return retVal;
 	}
 
-	public IGraphState getCurrentState() {
+	public IGraphState<BaseCompoundNode, BaseCompoundEdge> getCurrentState() {
 		return stateHandler.createGraphState();
 	}
 
-	public final void restoreState(IGraphState previousState) {
+	public final void restoreState(IGraphState<BaseCompoundNode, BaseCompoundEdge> previousState) {
 		this.stateHandler.restoreState(previousState);
 	}
 
-	public final boolean canCopyHere(ISubCompoundGraph subGraph) {
+	public final boolean canCopyHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph) {
 		return subGraph != null && subGraph.isInducedSubgraph()
 			&& subGraph.isConsistentSnapShot();
 	}
 	
-	public final void copyHere(ISubCompoundGraph subGraph) {
+	public final void copyHere(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subGraph) {
 		if(this.debuggingEnabled && !canCopyHere(subGraph)) throw new IllegalArgumentException("Cannot copy graph here");
 		
-		IChildCompoundGraph rootCiGraph = this.getNodeTree().getRootNode().getChildCompoundGraph();
+		BaseChildCompoundGraph rootCiGraph = this.getNodeTree().getRootNode().getChildCompoundGraph();
 		copyBuilder.setDestinatChildCompoundGraph(rootCiGraph);
 		copyBuilder.setSourceSubgraph(subGraph);
 		copyBuilder.makeCopy();
 		notifyCopyOperationComplete(copyBuilder.getSourceSubgraph(), copyBuilder.getCopiedComponents());
 	}
 	
-	public final ISubCompoundGraph getCopiedComponents() {
+	public final ISubCompoundGraph<BaseCompoundNode, BaseCompoundEdge> getCopiedComponents() {
 		return copyBuilder.getCopiedComponents();
 	}
 
-	@Override
-	public BaseCompoundEdgeFactory edgeFactory() {
-		return new BaseCompoundEdgeFactory(this);
-	}
+	public abstract BaseCompoundNodeFactory nodeFactory();
 
-	@Override
-	public BaseCompoundNodeFactory nodeFactory() {
-		return new BaseCompoundNodeFactory(rootNode);
-	}
+	public abstract BaseCompoundEdgeFactory edgeFactory();
 
-	@Override
-	public BaseSubCompoundGraphFactory subgraphFactory() {
-		return new BaseSubCompoundGraphFactory(this);
-	}
-
+	public abstract BaseSubCompoundGraphFactory subgraphFactory();
 	
 	   /**
      * A hook method that should be used to provide addition validation for the class inheriting from 
      * this one.
      * @return
      */
-    protected boolean hasPassedAdditionalValidation(){
-    	return true;
-    }
+    protected abstract boolean hasPassedAdditionalValidation();
 	
-    @Override
 	public boolean isValid() {
 	    boolean retVal = true;
-	    retVal = this.getRoot().getEdgeInList().getUnfilteredEdgeSet().isEmpty()
-	        && this.getRoot().getEdgeOutList().getUnfilteredEdgeSet().isEmpty()
-	        && this.getRoot().getParent() == this.getRoot()
-	        && this.getRoot().isRemoved() == false;
+	    retVal = this.getRootNode().getEdgeInList().getUnfilteredEdgeSet().isEmpty()
+	        && this.getRootNode().getEdgeOutList().getUnfilteredEdgeSet().isEmpty()
+	        && this.getRootNode().getParent() == this.getRootNode()
+	        && this.getRootNode().isRemoved() == false;
 	    if(retVal) {
-	        retVal = this.getRoot().getChildCompoundGraph().isValid();
+	        retVal = this.getRootNode().getChildCompoundGraph().isValid();
 	    }
 	    else {
-	        logger.error("Graph Invalid: root node is inconsistent: " + this.getRoot());
+	        logger.error("Graph Invalid: root node is inconsistent: " + this.getRootNode());
 	    }
 	    if(retVal) {
 	        retVal = this.hasPassedAdditionalValidation();
@@ -406,15 +329,11 @@ public class BaseCompoundGraph implements ICompoundGraph {
 	    return retVal;
 	}
 
-	protected void notifyNewNode(BaseCompoundNode newNode){
-		
-	}
+	public abstract void notifyNewNode(BaseCompoundNode newNode);
 
-	protected void notifyNewEdge(BaseCompoundEdge newEdge){
-		
-	}
+	public abstract void notifyNewEdge(BaseCompoundEdge newEdge);
 
-	BaseSubCompoundGraph internalRemoveSubgraph(ISubCompoundGraph subgraph) {
+	BaseSubCompoundGraph internalRemoveSubgraph(ISubCompoundGraph<? extends BaseCompoundNode, ? extends BaseCompoundEdge> subgraph) {
 		BaseSubCompoundGraphFactory selnFactory = this.subgraphFactory();
 		removeEdges(selnFactory, subgraph.edgeIterator());
 		removeNodes(selnFactory, subgraph.nodeIterator());

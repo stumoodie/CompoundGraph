@@ -36,15 +36,12 @@ import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodePair;
-import uk.ed.inf.graph.compound.newimpl.CompoundNode;
-import uk.ed.inf.graph.compound.newimpl.ICompoundGraphServices;
 
 
 @RunWith(JMock.class)
 public class CompoundNodeTest {
 	private Mockery mockery = new JUnit4Mockery();
 	private CompoundNode testInstance;
-	private ICompoundGraphServices mockServices;
 
 	private static final int EXPECTED_NODE1_IDX = 2;
 	private static final int EXPECTED_INITIAL_DEGREE = 0;
@@ -80,7 +77,6 @@ public class CompoundNodeTest {
 	public void setUp() throws Exception {
 		mockGraph = this.mockery.mock(ICompoundGraph.class, "mockGraph");
 		this.mockParentElement = this.mockery.mock(ICompoundGraphElement.class, "mockParentElement");
-		this.mockServices = this.mockery.mock(ICompoundGraphServices.class, "mockServices");
 		mockNode2 = this.mockery.mock(ICompoundNode.class, "mockNode2");
 		mockNode3 = this.mockery.mock(ICompoundNode.class, "mockNode3");
 		mockChildNode1 = this.mockery.mock(ICompoundNode.class, "mockChildNode1");
@@ -138,7 +134,7 @@ public class CompoundNodeTest {
 			allowing(mockOutPair3).containsNode(mockInNode2); will(returnValue(false));
 	
 		}});
-		this.testInstance = new CompoundNode(mockParentElement, EXPECTED_NODE1_IDX, this.mockServices);
+		this.testInstance = new CompoundNode(mockParentElement, EXPECTED_NODE1_IDX);
 	}
 
 	@After

@@ -42,8 +42,6 @@ import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
-import uk.ed.inf.graph.compound.newimpl.ChildCompoundGraph;
-import uk.ed.inf.graph.compound.newimpl.ICompoundGraphServices;
 
 @RunWith(JMock.class)
 public class SubCompoundGraphTest {
@@ -90,7 +88,6 @@ public class SubCompoundGraphTest {
 	private ICompoundNodePair mockEdge4Pair;
 	private ICompoundNodePair mockEdge7Pair;
 	private ICompoundGraph mockCigraph;
-	private ICompoundGraphServices mockServices;
 	private ICompoundEdge mockEdge8;
 	private ISubCompoundGraph mockSubgraph;
 	
@@ -112,7 +109,6 @@ public class SubCompoundGraphTest {
 		mockEdge4Pair = this.mockery.mock(ICompoundNodePair.class, "mockEdge4Pair");
 		mockEdge7Pair = this.mockery.mock(ICompoundNodePair.class, "mockEdge7Pair");
 		mockCigraph = this.mockery.mock(ICompoundGraph.class, "mockCigraph");
-		mockServices = this.mockery.mock(ICompoundGraphServices.class, "mockServices");
 		mockSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSubgraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
@@ -198,7 +194,7 @@ public class SubCompoundGraphTest {
 
 			allowing(mockSubgraph).isInducedSubgraph(); will(returnValue(false));
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode, mockServices);
+		this.testInstance = new ChildCompoundGraph(mockRootNode);
 	}
 
 	@After
@@ -208,7 +204,7 @@ public class SubCompoundGraphTest {
 
 	@Ignore @Test(expected=IllegalArgumentException.class)
 	public final void testSubCigraphNull() {
-		new ChildCompoundGraph(null, null);
+		new ChildCompoundGraph(null);
 	}
 
 	@Ignore @Test
@@ -219,7 +215,7 @@ public class SubCompoundGraphTest {
 			allowing(mockRootNode).getGraph(); will(returnValue(mockCigraph));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
 		}});
-		this.testInstance = new ChildCompoundGraph(mockRootNode, this.mockServices);
+		this.testInstance = new ChildCompoundGraph(mockRootNode);
 		assertEquals("root node", mockRootNode, this.testInstance.getRoot());
 		assertEquals("empty nodes", EXPECTED_EMPTY_NODES, this.testInstance.getNumNodes());
 		assertEquals("empty edges", EXPECTED_EMPTY_EDGES, this.testInstance.getNumEdges());

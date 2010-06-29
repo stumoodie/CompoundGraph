@@ -20,10 +20,10 @@ public class CompoundEdge implements ICompoundEdge {
 	private final int index;
 	private boolean removed;
 
-	public CompoundEdge(ICompoundGraphElement parent, int index, ICompoundNode outNode, ICompoundNode inNode, ICompoundGraphServices services){
+	public CompoundEdge(ICompoundGraphElement parent, int index, ICompoundNode outNode, ICompoundNode inNode){
 		this.index = index;
 		this.parentElement = parent;
-		this.childGraph = new ChildCompoundGraph(this, services);
+		this.childGraph = new ChildCompoundGraph(this);
 		this.nodePair = new CompoundNodePair(outNode, inNode);
 		this.level = calcTreeLevel();
 		this.removed = false;

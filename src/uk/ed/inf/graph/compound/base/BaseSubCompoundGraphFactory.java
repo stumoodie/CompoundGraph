@@ -19,39 +19,25 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import uk.ed.inf.graph.compound.ICompoundEdge;
-import uk.ed.inf.graph.compound.ICompoundGraphElement;
-import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
-public class BaseSubCompoundGraphFactory implements ISubCompoundGraphFactory {
-	private static final String DEBUG_PROP_NAME = "uk.ed.inf.graph.compound.base.debugging";
+public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFactory<BaseCompoundNode, BaseCompoundEdge> {
 	// added debug checks to graph
-	private final boolean debuggingEnabled;
+	private static final boolean DEBUG = true;
 	private final BaseSubCompoundGraphBuilder builder;
-	private final Set<ICompoundNode> nodeList = new HashSet<ICompoundNode>();
-	private final Set<ICompoundEdge> edgeList = new HashSet<ICompoundEdge>();
+	private final Set<BaseCompoundNode> nodeList = new HashSet<BaseCompoundNode>();
+	private final Set<BaseCompoundEdge> edgeList = new HashSet<BaseCompoundEdge>();
 
 	protected BaseSubCompoundGraphFactory(BaseSubCompoundGraphBuilder builder){
 		this.builder = builder;
-		this.debuggingEnabled = Boolean.getBoolean(DEBUG_PROP_NAME);
 	}
 	
-	public final void addNode(ICompoundNode node){
+	public final void addNode(BaseCompoundNode node){
 		this.nodeList.add(node);
 	}
 	
-	public final void addEdge(ICompoundEdge edge){
+	public final void addEdge(BaseCompoundEdge edge){
 		this.edgeList.add(edge);
-	}
-	
-	public final void addElement(ICompoundGraphElement element){
-		if(element.isNode()){
-			this.nodeList.add((ICompoundNode)element);
-		}
-		else{
-			this.edgeList.add((ICompoundEdge)element);
-		}
 	}
 
 	/**
@@ -60,7 +46,7 @@ public class BaseSubCompoundGraphFactory implements ISubCompoundGraphFactory {
 	 * subgraph to get this.
 	 * @return iterator of <code>CiNode</code>s.
 	 */
-	public Iterator<ICompoundNode> nodeIterator(){
+	public Iterator<BaseCompoundNode> nodeIterator(){
 		return this.nodeList.iterator();
 	}
 	
@@ -73,7 +59,7 @@ public class BaseSubCompoundGraphFactory implements ISubCompoundGraphFactory {
 	 * edges derived from the nodes selected here or between nodes in any child compound graphs of
 	 * the selected nodes. You should create the subgraph to get this. 
 	 */
-	public Iterator<ICompoundEdge> edgeIterator(){
+	public Iterator<BaseCompoundEdge> edgeIterator(){
 		return this.edgeList.iterator();
 	}
 	
@@ -125,7 +111,7 @@ public class BaseSubCompoundGraphFactory implements ISubCompoundGraphFactory {
 		}
 		builder.buildSubgraph();
 		BaseSubCompoundGraph retVal = builder.getSubgraph();
-		if(debuggingEnabled && !retVal.isInducedSubgraph()){
+		if(DEBUG && !retVal.isInducedSubgraph()){
 			throw new IllegalStateException("The nodes and edges chosen in the factory would not permit the creation of an induced subgraph");
 		}
 		return retVal;

@@ -1,5 +1,6 @@
 package uk.ed.inf.graph.compound.newimpl;
 
+import uk.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundGraph;
@@ -9,13 +10,11 @@ import uk.ed.inf.graph.compound.ICompoundNodePair;
 
 public class CompoundEdgeFactory implements ICompoundEdgeFactory {
 	private final ICompoundGraph graph;
-	private final ICompoundGraphServices services;
 	private ICompoundNode outNode;
 	private ICompoundNode inNode;
 	
-	public CompoundEdgeFactory(ICompoundGraph graph, ICompoundGraphServices services){
+	public CompoundEdgeFactory(ICompoundGraph graph){
 		this.graph = graph;
-		this.services = services;
 	}
 	
 	@Override
@@ -27,11 +26,9 @@ public class CompoundEdgeFactory implements ICompoundEdgeFactory {
 	public ICompoundEdge createEdge() {
 		
 		ICompoundGraphElement lcmNode = this.getParent();
-		int cntr = this.services.getIndexCounter().nextIndex();
-		ICompoundEdge newEdge = new CompoundEdge(lcmNode, cntr, this.outNode, this.inNode, this.services); 
-//		this.getGraph().notifyNewEdge(newEdge);	//TODO:
-//		this.getParent().getChildCompoundGraph().notifyNewEdge(newEdge);
-		return newEdge;
+		ICompoundChildEdgeFactory childEdgeFact = lcmNode.getChildCompoundGraph().edgeFactory();
+		childEdgeFact.setPair(outNode, inNode);
+		return childEdgeFact.createEdge();
 	}
 
 	@Override

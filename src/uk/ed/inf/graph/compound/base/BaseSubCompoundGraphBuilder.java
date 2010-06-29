@@ -21,13 +21,10 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import uk.ed.inf.graph.compound.ICompoundEdge;
-import uk.ed.inf.graph.compound.ICompoundGraphElement;
-import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraphBuilder;
+import uk.ed.inf.graph.directed.IDirectedPair;
 
-public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
+public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBuilder<BaseCompoundNode, BaseCompoundEdge> {
 	private final Logger logger = Logger.getLogger(this.getClass());
 	
 	private final Set<BaseCompoundNode> topNodeList;
@@ -48,19 +45,13 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 		this.edgeList = new HashSet<BaseCompoundEdge>();
 	}
 	
-	public void setNodeList(Set<? extends ICompoundNode> nodeList){
-		this.topNodeList.clear();
-		this.allNodeList.clear();
-		for(ICompoundNode node : nodeList){
-			this.topNodeList.add((BaseCompoundNode)node);
-			this.allNodeList.add((BaseCompoundNode)node);
-		}
+	public void setNodeList(Set<? extends BaseCompoundNode> nodeList){
+		this.topNodeList.addAll(nodeList);
+		this.allNodeList.addAll(nodeList);
 	}
 	
-	public void setEdgeList(Set<? extends ICompoundEdge> edgeList){
-		for(ICompoundEdge edge : edgeList){
-			this.edgeList.add((BaseCompoundEdge)edge);
-		}
+	public void setEdgeList(Set<? extends BaseCompoundEdge> edgeList){
+		this.edgeList.addAll(edgeList);
 	}
 	
 	protected Set<BaseCompoundNode> getTopNodeList(){
@@ -84,10 +75,10 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 	public void expandChildNodes(){
 		Set<BaseCompoundNode> initialNodes = new HashSet<BaseCompoundNode>(this.topNodeList);
 		for(BaseCompoundNode compoundNode : initialNodes){
-			Iterator<ICompoundGraphElement> iter = compoundNode.levelOrderIterator();
-			addEdges((BaseCompoundNode)iter.next()); // get edges of the the current node's child graph
+			Iterator<? extends BaseCompoundNode> iter = compoundNode.levelOrderIterator();
+			addEdges(iter.next()); // get edges of the the current node's child graph
 			while(iter.hasNext()){
-				BaseCompoundNode childNode = (BaseCompoundNode)iter.next();
+				BaseCompoundNode childNode = iter.next();
 				// prune children from top node list
 				this.topNodeList.remove(childNode);
 				// add node to allNode list
@@ -99,9 +90,9 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 	}
 
 	private void addEdges(BaseCompoundNode node){
-		Iterator<ICompoundEdge> edgeIter = node.getChildCompoundGraph().edgeIterator();
+		Iterator<? extends BaseCompoundEdge> edgeIter = node.getChildCompoundGraph().edgeIterator();
 		while(edgeIter.hasNext()){
-			BaseCompoundEdge childEdge = (BaseCompoundEdge)edgeIter.next();
+			BaseCompoundEdge childEdge = edgeIter.next();
 			this.edgeList.add(childEdge);
 		}
 	}
@@ -123,16 +114,16 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 			// to consider twice. If an edge is directed and incident to the nodes in the
 			// subgraph then we are guaranteed to traverse it once.
 			// 
-			Iterator<ICompoundEdge> edgeIter = node.getOutEdgeIterator();
+			Iterator<BaseCompoundEdge> edgeIter = node.getOutEdgeIterator();
 			while(edgeIter.hasNext()){
-				BaseCompoundEdge edge = (BaseCompoundEdge)edgeIter.next();
+				BaseCompoundEdge edge = edgeIter.next();
 				if(logger.isDebugEnabled()){
 					logger.debug("Testing edge: " + edge);
 				}
 				if(!this.edgeList.contains(edge)){
 					logger.debug("Edge not observed before");
 					// only do this if the edge is not already in the set of edges
-					ICompoundNodePair ends = edge.getConnectedNodes();
+					IDirectedPair<BaseCompoundNode, BaseCompoundEdge> ends = edge.getConnectedNodes();
 					if(logger.isDebugEnabled()){
 						logger.debug("Testing other node: " + ends.getInNode());
 					}

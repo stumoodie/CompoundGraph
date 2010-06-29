@@ -6,13 +6,13 @@ import uk.ed.inf.graph.compound.ICompoundGraphElement;
 public class CompoundNode extends CommonCompoundNode {
 	private final ICompoundGraphElement parentElement;
 	private final int level;
-	private final ChildCompoundGraph childGraph;
+	private final IChildCompoundGraph childGraph;
 	
-	public CompoundNode(ICompoundGraphElement parentElement, int index, ICompoundGraphServices services){
+	public CompoundNode(ICompoundGraphElement parentElement, int index){
 		super(index);
 		this.parentElement = parentElement;
 		this.level = calcTreeLevel();
-		this.childGraph = new ChildCompoundGraph(this, services);
+		this.childGraph = new ChildCompoundGraph(this);
 	}
 	
 	@Override

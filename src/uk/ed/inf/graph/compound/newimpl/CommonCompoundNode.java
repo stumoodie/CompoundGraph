@@ -109,6 +109,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 		this.removed = false;
 	}
 	
+	@Override
 	public abstract CompoundGraph getGraph();
 	
 	@Override

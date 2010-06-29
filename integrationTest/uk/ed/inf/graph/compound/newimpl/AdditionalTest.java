@@ -31,7 +31,6 @@ import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.IRootCompoundNode;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
-import uk.ed.inf.graph.compound.newimpl.CompoundGraph;
 import uk.ed.inf.graph.state.IGraphState;
 
 public class AdditionalTest {
