@@ -36,7 +36,7 @@ public abstract class ArchetypalChildCompoundGraph extends BaseChildCompoundGrap
 	}
 	
 	@Override
-	public ArchetypalCompoundNode getRootNode() {
+	public ArchetypalCompoundNode getRoot() {
 		return this.root;
 	}
 	

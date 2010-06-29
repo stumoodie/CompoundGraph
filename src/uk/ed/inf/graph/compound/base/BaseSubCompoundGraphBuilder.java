@@ -22,6 +22,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraphBuilder;
@@ -83,7 +84,7 @@ public abstract class BaseSubCompoundGraphBuilder implements ISubCompoundGraphBu
 	public void expandChildNodes(){
 		Set<BaseCompoundNode> initialNodes = new HashSet<BaseCompoundNode>(this.topNodeList);
 		for(BaseCompoundNode compoundNode : initialNodes){
-			Iterator<ICompoundNode> iter = compoundNode.levelOrderIterator();
+			Iterator<ICompoundGraphElement> iter = compoundNode.levelOrderIterator();
 			addEdges((BaseCompoundNode)iter.next()); // get edges of the the current node's child graph
 			while(iter.hasNext()){
 				BaseCompoundNode childNode = (BaseCompoundNode)iter.next();

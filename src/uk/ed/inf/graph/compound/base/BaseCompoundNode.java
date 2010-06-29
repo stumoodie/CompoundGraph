@@ -21,47 +21,45 @@ import java.util.TreeSet;
 
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.state.IRestorableGraphElement;
 import uk.ed.inf.graph.util.IDirectedEdgeSet;
 import uk.ed.inf.graph.util.IFilterCriteria;
 import uk.ed.inf.graph.util.IFilteredEdgeSet;
 import uk.ed.inf.graph.util.impl.ConnectedNodeIterator;
+import uk.ed.inf.graph.util.impl.DirectedEdgeSet;
 import uk.ed.inf.graph.util.impl.FilteredEdgeSet;
-import uk.ed.inf.tree.AncestorTreeIterator;
-import uk.ed.inf.tree.LevelOrderTreeIterator;
-import uk.ed.inf.tree.PreOrderTreeIterator;
 
-public abstract class BaseCompoundNode implements ICompoundNode, IRestorableGraphElement {
-	public static final int ROOT_LEVEL = 0;
+public abstract class BaseCompoundNode extends BaseCompoundGraphElement implements ICompoundNode {
+	private final BaseCompoundGraphElement parent;
+	private final BaseCompoundGraph superGraph; 
+	private final int index;
+	private boolean removed;
 	private IFilteredEdgeSet<ICompoundNode, ICompoundEdge> edgeInList;
 	private IFilteredEdgeSet<ICompoundNode, ICompoundEdge> edgeOutList;
 	
-	protected BaseCompoundNode(){
-		this.edgeInList = null;
-		this.edgeOutList = null;
-		this.setRemoved(false);
+	protected BaseCompoundNode(BaseCompoundGraph superGraph, int index){
+		this(superGraph, null, index);
 	}
 	
-	protected int calcTreeLevel(){
-		BaseCompoundNode p = this;
-		int level = ROOT_LEVEL;
-		while(p != p.getParent()){
-			p = p.getParent();
-			level++;
+	protected BaseCompoundNode(BaseCompoundGraphElement parent, int index){
+		this(parent.getGraph(), parent, index);
+	}
+	
+	private BaseCompoundNode(BaseCompoundGraph superGraph, BaseCompoundGraphElement parent, int index){
+		super(parent);
+		this.superGraph = superGraph;
+		this.index = index;
+		if(parent == null){
+			this.parent = this;
 		}
-		return level;
+		else{
+			this.parent = parent;
+			this.parent.getChildCompoundGraph().addNewNode(this);
+		}
+		createInEdgeSet(new DirectedEdgeSet<ICompoundNode, ICompoundEdge>());
+		createOutEdgeSet(new DirectedEdgeSet<ICompoundNode, ICompoundEdge>());
+		;
+		this.treeLevel = calcTreeLevel();
 	}
-	
-	public final Iterator<ICompoundNode> childIterator() {
-		return this.getChildCompoundGraph().nodeIterator();
-	}
-
-	/**
-	 * The parent node cannot be null and should be the root node if the current node is the root
-	 * node. This follows the standard conversion for tree data structures.
-	 */
-	@Override
-	public abstract BaseCompoundNode getParent();
 	
 	protected final void createInEdgeSet(IDirectedEdgeSet<ICompoundNode, ICompoundEdge> edgeSet){
 		this.edgeInList = new FilteredEdgeSet<ICompoundNode, ICompoundEdge>(edgeSet, new CiEdgeExistanceCriteria());
@@ -79,16 +77,18 @@ public abstract class BaseCompoundNode implements ICompoundNode, IRestorableGrap
 		return this.edgeOutList;
 	}
 
-	/**
-	 * This should be used to set the removal status variable only. No other actions#
-	 * should be performed here. To perform an action on removal then use {@link #removalAction(boolean)}. 
-	 * @param removed the removal status: true means the nodes is removed.
-	 */
-	protected abstract void setRemoved(boolean removed);
+	public int getIndex(){
+		return this.index;
+	}
+
+	@Override
+	public BaseCompoundGraph getGraph(){
+		return this.superGraph;
+	}
 	
 	@Override
 	public abstract BaseChildCompoundGraph getChildCompoundGraph();
-
+	
 	@Override
 	public final int getInDegree() {
 		return this.getEdgeInList().size();
@@ -172,27 +172,6 @@ public abstract class BaseCompoundNode implements ICompoundNode, IRestorableGrap
 	}
 
 	@Override
-	public abstract BaseCompoundGraph getGraph();
-
-	@Override
-	public abstract int getIndex();
-
-	@Override
-	public final boolean isChild(ICompoundNode childNode) {
-		boolean retVal = false;
-		if(childNode != null){
-			Iterator<ICompoundNode> childIter = this.getChildCompoundGraph().nodeIterator();
-			while(childIter.hasNext() && retVal == false){
-				ICompoundNode possChild = childIter.next();
-				if(possChild.equals(childNode)){
-					retVal = true;
-				}
-			}
-		}
-		return retVal;
-	}
-	
-	@Override
 	public final boolean hasEdgeWith(ICompoundNode other) {
 		boolean retVal = false;
 		if(other != null){ 
@@ -212,25 +191,19 @@ public abstract class BaseCompoundNode implements ICompoundNode, IRestorableGrap
 		this.edgeOutList.add(edge);
 	}
 	
-	@Override
-	public int compareTo(ICompoundNode o) {
-		return this.getIndex() < o.getIndex() ? -1 : (this.getIndex() == o.getIndex() ? 0 : 1);
+	protected void removalAction(boolean removed) {
 	}
 
-	@Override
-	public abstract boolean isRemoved();
+    @Override
+    public boolean isRemoved() {
+        return this.removed;
+    }
 
 	@Override
 	public final void markRemoved(boolean removed){
-		this.setRemoved(removed);
+		this.removed = removed;
 		this.removalAction(removed);
 	}
-	
-	/**
-	 * additional actions to be executed upon this node being
-	 * marked as removed.
-	 */
-	protected abstract void removalAction(boolean removed);
 	
 	private class CombinedConnectedNodeIterator implements Iterator<ICompoundNode> {
 		private final ConnectedNodeIterator inNodeIterator;
@@ -267,53 +240,6 @@ public abstract class BaseCompoundNode implements ICompoundNode, IRestorableGrap
 		
 	}
 
-	@Override
-	public final boolean isParent(ICompoundNode parentNode) {
-		boolean retVal = false;
-		if(parentNode != null){
-			retVal = this.getParent().equals(parentNode);
-		}
-		return retVal;
-	}
-
-	@Override
-	public BaseCompoundNode getRoot() {
-		return this.getGraph().getRootNode();
-	}
-
-	@Override
-	public final Iterator<ICompoundNode> ancestorIterator() {
-		return new AncestorTreeIterator<ICompoundNode>(this);
-	}
-
-	@Override
-	public final Iterator<ICompoundNode> levelOrderIterator() {
-		return new LevelOrderTreeIterator<ICompoundNode>(this);
-	}
-
-	@Override
-	public final Iterator<ICompoundNode> preOrderIterator() {
-		return new PreOrderTreeIterator<ICompoundNode>(this);
-	}
-
-	@Override
-	public boolean isAncestor(ICompoundNode testNode) {
-	    boolean retVal = false;
-	    if(testNode != null) {
-	        retVal = this.getGraph().getNodeTree().isAncestor(this, testNode);
-	    }
-	    return retVal;
-	}
-	
-	@Override
-	public boolean isDescendent(ICompoundNode testNode) {
-        boolean retVal = false;
-        if(testNode != null) {
-            retVal = this.getGraph().getNodeTree().isDescendant(this, testNode);
-        }
-        return retVal;
-	}
-	
 	private class CombinedEdgeIterator implements Iterator<ICompoundEdge> {
 		private final Iterator<ICompoundEdge> inEdgeIterator;
 		private final Iterator<ICompoundEdge> outEdgeIterator;

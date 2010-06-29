@@ -42,7 +42,7 @@ public interface ICompoundEdgeFactory {
 	 * @return The child graph, cannot be null.
 	 * @throws IllegalStateException if <code>getPair() == null</code>. 
 	 */
-	IChildCompoundGraph getOwningChildGraph();
+	ICompoundGraphElement getParent();
 	
 	/**
 	 * Creates a new directed edge from <code>outNode</code> to <code>inNode</code> which is

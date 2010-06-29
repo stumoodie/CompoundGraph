@@ -13,11 +13,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. 
 */
-package uk.ed.inf.graph.compound.impl;
+package uk.ed.inf.graph.compound.newimpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.Iterator;
 
@@ -32,10 +31,15 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import uk.ed.inf.graph.compound.IChildCompoundGraph;
+import uk.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.ICompoundNodePair;
-import uk.ed.inf.graph.compound.base.BaseSubCompoundGraph;
+import uk.ed.inf.graph.compound.IRootCompoundNode;
+import uk.ed.inf.graph.compound.ISubCompoundGraph;
+import uk.ed.inf.graph.compound.newimpl.CompoundGraph;
 
 @RunWith(JMock.class)
 public class ChildCompoundGraphTest {
@@ -49,25 +53,25 @@ public class ChildCompoundGraphTest {
 		setImposteriser(ClassImposteriser.INSTANCE);
 	}};
 	
-	private ChildCompoundGraph testChildCompoundGraph ;
+	private IChildCompoundGraph testChildCompoundGraph ;
 	
-	private ChildCompoundEdgeFactory edgeFactory ;
-	private CompoundNodeFactory nodeFactory ;
+	private ICompoundChildEdgeFactory edgeFactory ;
+	private ICompoundNodeFactory nodeFactory ;
 	
-	private CompoundNode mockRootNode ;
+	private IRootCompoundNode mockRootNode ;
 	private CompoundGraph mockGraph ;
 	
-	private CompoundNode inNode ;
-	private CompoundNode outNode ;
+	private ICompoundNode inNode ;
+	private ICompoundNode outNode ;
 	
-	private CompoundEdge anEdge ;
+	private ICompoundEdge anEdge ;
 
 	@Before
 	public void setUp() throws Exception {
 		mockGraph = new CompoundGraph () ;
-		mockRootNode = mockGraph.getRootNode() ;
+		mockRootNode = mockGraph.getRoot() ;
 		
-		testChildCompoundGraph = mockGraph.getRootNode().getChildCompoundGraph() ;
+		testChildCompoundGraph = mockGraph.getRoot().getChildCompoundGraph() ;
 		
 		nodeFactory = testChildCompoundGraph.nodeFactory() ;
 		edgeFactory = testChildCompoundGraph.edgeFactory() ;
@@ -85,7 +89,7 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testGetRoot() {
-		assertEquals ( "root" , mockRootNode , testChildCompoundGraph.getRootNode()) ;
+		assertEquals ( "root" , mockRootNode , testChildCompoundGraph.getRoot()) ;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -97,7 +101,7 @@ public class ChildCompoundGraphTest {
 			
 		}} );
 		
-		assertTrue ( "contains directed edge" , testChildCompoundGraph.containsDirectedEdge(mockDirectedPair)) ;
+		assertTrue ( "contains directed edge" , testChildCompoundGraph.containsConnection(mockDirectedPair)) ;
 	}
 
 	@Test
@@ -149,7 +153,7 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testEdgeIterator() {
-		CompoundEdge [] edgeArray = { anEdge } ;
+		ICompoundEdge [] edgeArray = { anEdge } ;
 		
 		Iterator<ICompoundEdge> edgeIterator = testChildCompoundGraph.edgeIterator() ;
 		
@@ -172,7 +176,7 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testNodeIterator() {
-		CompoundNode [] nodeArray = { inNode , outNode } ;
+		ICompoundNode [] nodeArray = { inNode , outNode } ;
 		
 		Iterator<ICompoundNode> nodeIterator = testChildCompoundGraph.nodeIterator() ;
 		
@@ -199,14 +203,14 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testCanCopyHere() {
-		BaseSubCompoundGraph aBasicSubgraph =  mockGraph.subgraphFactory().createSubgraph() ;
+		ISubCompoundGraph aBasicSubgraph =  mockGraph.subgraphFactory().createSubgraph() ;
 		
 		assertTrue ( "canCopy" , testChildCompoundGraph.canCopyHere(aBasicSubgraph) );
 	}
 
 	@Test
 	public final void testCopyHere() {
-		BaseSubCompoundGraph aBasicSubgraph = mockGraph.subgraphFactory().createSubgraph() ;
+		ISubCompoundGraph aBasicSubgraph = mockGraph.subgraphFactory().createSubgraph() ;
 		
 		testChildCompoundGraph.copyHere(aBasicSubgraph) ;
 		assertEquals ( "same BaseGraph" , testChildCompoundGraph.getSuperGraph() , aBasicSubgraph.getSuperGraph()) ;
@@ -221,14 +225,14 @@ public class ChildCompoundGraphTest {
 
 	@Test
 	public final void testAddNewNode() {
-		CompoundNode newNode = testChildCompoundGraph.nodeFactory().createNode() ;
+		ICompoundNode newNode = testChildCompoundGraph.nodeFactory().createNode() ;
 		assertEquals ( "one more node" , NUMERIC[3] , testChildCompoundGraph.getNumNodes()) ;
 		assertTrue ( "contains new Node" , testChildCompoundGraph.containsNode(newNode)) ;
 	}
 
 	@Test
 	public final void testAddNewEdge() {
-		CompoundEdge newEdge = edgeFactory.createEdge() ;
+		ICompoundEdge newEdge = edgeFactory.createEdge() ;
 		assertEquals ( "one more edge" , NUMERIC[2] , testChildCompoundGraph.getNumEdges()) ;
 		assertTrue ( "contains new Node" , testChildCompoundGraph.containsEdge(newEdge)) ;
 	}
@@ -238,12 +242,7 @@ public class ChildCompoundGraphTest {
 	public final void testContainsDirectedEdgeIDirectedPairOfCiNodeCiEdge() {
 		final ICompoundNodePair aDirectedPair = mockery.mock(ICompoundNodePair.class , "aDirectedPair") ;
 			
-		assertTrue ( "contains directed pair" , testChildCompoundGraph.containsDirectedEdge(aDirectedPair) );
-	}
-
-	@Ignore @Test
-	public final void testContainsConnectionIBasicPairOfCiNodeCiEdge() {
-		fail("Not yet implemented"); // TODO
+		assertTrue ( "contains directed pair" , testChildCompoundGraph.containsConnection(aDirectedPair) );
 	}
 
 }

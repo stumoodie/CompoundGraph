@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="uk/ed/inf/graph/compound/archetypal/|uk/ed/inf/graph/compound/base/|uk/ed/inf/graph/compound/impl/" kind="src" path="src"/>
 	<classpathentry kind="src" path="integrationTest"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="lib" path="lib/junit4.4/junit-4.4.jar" sourcepath="lib/junit4.4/junit-4.4-src.jar"/>
@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/jmock-2.5.1/objenesis-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/jdave-parent-1.1-rc1/lib/asm-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/jmock-2.5.1/cglib-nodep-2.1_3.jar" sourcepath="lib/jmock-2.5.1/cglib-2.1_3-src.jar"/>
+	<classpathentry kind="con" path="org.eclipse.ajdt.core.ASPECTJRT_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

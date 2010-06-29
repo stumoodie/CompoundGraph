@@ -27,18 +27,10 @@ public interface IGraphState {
 	IRestorableGraph getGraph();
 
 	/**
-	 * Get the states of the nodes as a bit string: [true => exists, false => removed]. Not that the
+	 * Get the states of the elements as a bit string: [true => exists, false => removed]. Not that the
 	 * bit string may be shorter than the number of nodes in the graph as the graph may have expanded
 	 * since it was created. 
-	 * @return The bit string representing the state of the nodes in graph.
+	 * @return The bit string representing the state of the elements in graph.
 	 */
-	IBitString getNodeStates();
-	
-	/**
-	 * Get the states of the edges as a bit string: [true => exists, false => removed]. Not that the
-	 * bit string may be shorter than the number of edges in the graph as the graph may have expanded
-	 * since it was created. 
-	 * @return The bit string representing the state of the edges in the graph.
-	 */
-	IBitString getEdgeStates();
+	IBitString getElementStates();
 }

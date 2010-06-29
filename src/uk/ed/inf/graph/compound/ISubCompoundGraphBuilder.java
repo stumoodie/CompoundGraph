@@ -21,15 +21,15 @@ import java.util.Set;
 public interface ISubCompoundGraphBuilder {
 	ICompoundGraph getGraph();
 	
-	void setNodeList(Set<? extends ICompoundNode> nodeList);
-	
-	void setEdgeList(Set<? extends ICompoundEdge> edgeList);
+	void setElementList(Set<? extends ICompoundGraphElement> elementList);
 	
 	void expandChildNodes();
 
 	void addIncidentEdges();
 	
 	void buildSubgraph();
+	
+	void removeNonIncidentEdges();
 	
 	/**
 	 * Retrieve the created subgraph. If the subgraph has not been build then this method will fail.

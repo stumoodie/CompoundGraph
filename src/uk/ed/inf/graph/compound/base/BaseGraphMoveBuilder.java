@@ -28,7 +28,7 @@ import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 
-public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder {
+public class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	private BaseSubCompoundGraph sourceSubCigraph;
 	private BaseChildCompoundGraph destSubCigraph;
 	private BaseSubCompoundGraphFactory subGraphFactory;
@@ -102,12 +102,12 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder 
 		while(sourceNodeIter.hasNext()){
 			BaseCompoundNode srcNode = (BaseCompoundNode)sourceNodeIter.next();
 			if(!visited.contains(srcNode.getIndex())){
-				if(srcNode.getParent().equals(this.destSubCigraph.getRootNode())){
+				if(srcNode.getParent().equals(this.destSubCigraph.getRoot())){
 					//the source and destination are the same so don't move the top node
-					markUnmovedNode(srcNode, this.destSubCigraph.getRootNode());
+					markUnmovedNode(srcNode, this.destSubCigraph.getRoot());
 				}
 				else{
-					moveNode(srcNode, this.destSubCigraph.getRootNode());
+					moveNode(srcNode, this.destSubCigraph.getRoot());
 				}
 			}
 		}
@@ -171,7 +171,7 @@ public abstract class BaseGraphMoveBuilder implements ICompoundGraphMoveBuilder 
 			ICompoundNodePair ends = srcEdge.getConnectedNodes();
 			BaseCompoundNode newInNode = this.oldNewEquivList.get(ends.getInNode());
 			BaseCompoundNode newOutNode = this.oldNewEquivList.get(ends.getOutNode());
-			BaseCompoundNode oldOwner = srcEdge.getOwningChildGraph().getRootNode();
+			BaseCompoundNode oldOwner = srcEdge.getOwningChildGraph().getRoot();
 			// find the owning node if it is part of the subgraph.
 			BaseCompoundNode newOwner = this.oldNewEquivList.get(oldOwner);
 			if(newOwner == null){

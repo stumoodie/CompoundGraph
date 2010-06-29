@@ -19,4 +19,8 @@ import uk.ed.inf.graph.state.IRestorableGraph;
 
 
 public interface ICompoundGraph extends IImmutableCompoundGraph, IModifiableCompoundGraph, IRestorableGraph {
+	
+	@Override
+	IRootCompoundNode getRoot();
+	
 }

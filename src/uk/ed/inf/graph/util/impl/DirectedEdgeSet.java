@@ -23,6 +23,7 @@ import java.util.TreeSet;
 
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.util.IDirectedEdgeSet;
 
 public class DirectedEdgeSet <
@@ -74,7 +75,8 @@ public class DirectedEdgeSet <
 	private SortedSet<E> findEdges(N outNode, N inNode){
 		final SortedSet<E> retVal = new TreeSet<E>();
 		for(E edge : this.edgeSet){
-			if(edge.getInNode().equals(inNode) && edge.getOutNode().equals(outNode)){
+			ICompoundNodePair ends = edge.getConnectedNodes();
+			if(ends.hasDirectedEnds(outNode, inNode)){
 				retVal.add(edge);
 			}
 		}
@@ -116,14 +118,10 @@ public class DirectedEdgeSet <
 	private SortedSet<E> findConnectingEdge(N thisNode, N otherNode){
 		final SortedSet<E> retVal = new TreeSet<E>();
 		for(E edge : this.edgeSet){
-			if(edge.getInNode().equals(thisNode) && edge.getOutNode().equals(otherNode)
-					|| (edge.getOutNode().equals(thisNode) && edge.getInNode().equals(otherNode))){
+			ICompoundNodePair pair = edge.getConnectedNodes();
+			if(pair.containsNode(otherNode) && pair.getOtherNode(thisNode).equals(otherNode)){
 				retVal.add(edge);
 			}
-//			IDirectedPair pair = edge.getConnectedNodes();
-//			if(pair.containsNode(otherNode) && pair.getOtherNode(thisNode).equals(otherNode)){
-//				retVal.add(edge);
-//			}
 		}
 		return retVal;
 	}

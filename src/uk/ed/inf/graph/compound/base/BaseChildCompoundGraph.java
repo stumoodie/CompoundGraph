@@ -24,6 +24,8 @@ import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
+import uk.ed.inf.graph.compound.impl.ChildCompoundEdgeFactory;
+import uk.ed.inf.graph.compound.impl.CompoundNodeFactory;
 import uk.ed.inf.graph.util.IDirectedEdgeSet;
 import uk.ed.inf.graph.util.IEdgeSet;
 import uk.ed.inf.graph.util.IFilterCriteria;
@@ -46,8 +48,8 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph {
 		if(copyBuilder == null || moveBuilder == null ) throw new IllegalArgumentException("builder cannot be null");
 		
 		this.debuggingEnabled = Boolean.getBoolean(DEBUG_PROP_NAME);
-		this.copyBuilder = copyBuilder;
-		this.moveBuilder = moveBuilder ;
+		this.copyBuilder = new BaseGraphCopyBuilder();
+		this.moveBuilder = new BaseGraphMoveBuilder();
 	}
 
 	protected final void createNodeSet(INodeSet<ICompoundNode, ICompoundEdge> nodeSet){
@@ -80,7 +82,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph {
 	}
 	
 	@Override
-	public abstract BaseCompoundNode getRootNode();
+	public abstract BaseCompoundGraphElement getRoot();
 
 	@Override
 	public boolean containsDirectedEdge(ICompoundNode outNode, ICompoundNode inNode) {
@@ -200,7 +202,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph {
 
 	@Override
 	public BaseCompoundGraph getSuperGraph() {
-		return this.getRootNode().getGraph();
+		return this.getRoot().getGraph();
 	}
 
 //	@Override
@@ -245,10 +247,14 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph {
 	}
 
 	@Override
-	public abstract BaseCompoundNodeFactory nodeFactory();
-	
+	public BaseChildCompoundEdgeFactory edgeFactory() {
+		return new BaseChildCompoundEdgeFactory(this.getRoot());
+	}
+
 	@Override
-	public abstract BaseChildCompoundEdgeFactory edgeFactory();
+	public BaseCompoundNodeFactory nodeFactory() {
+		return new BaseCompoundNodeFactory(this.getRoot());
+	}
 
 	/**
 	 * Tests whether the subGraph can be moved to this graph. To be true the subgraph must be an induced subgraph
@@ -265,13 +271,13 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph {
 		BaseSubCompoundGraph subGraph = (BaseSubCompoundGraph)iSubGraph;
 		boolean retVal = subGraph != null && subGraph.getSuperGraph().equals(this.getSuperGraph())
 			&& subGraph.isInducedSubgraph() && subGraph.isConsistentSnapShot()
-			&& !subGraph.containsNode(this.getRootNode());
+			&& !subGraph.containsElement(this.getRoot());
 		if(retVal){
 			retVal = false;
 			Iterator<? extends ICompoundNode> topNodeIter = subGraph.topNodeIterator();
 			while(topNodeIter.hasNext()){
 				ICompoundNode topNode = topNodeIter.next();
-				if(!topNode.getParent().equals(this.getRootNode())){
+				if(!topNode.getParent().equals(this.getRoot())){
 					retVal = true;
 				}
 			}
@@ -355,7 +361,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph {
 	public boolean isValid() {
         boolean retVal = true;
         BaseCompoundGraph graph = this.getSuperGraph();
-        BaseCompoundNode rootNode = this.getRootNode();
+        BaseCompoundGraphElement rootNode = this.getRoot();
         retVal = rootNode.getChildCompoundGraph().equals(this);
         if (retVal) {
             for (ICompoundNode node : this.nodeSet.getUnfilteredNodeSet()) {
@@ -376,9 +382,10 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph {
         }
         if (retVal) {
             for (ICompoundEdge edge : this.edgeSet.getUnfilteredEdgeSet()) {
-                BaseCompoundNode inNode = (BaseCompoundNode)edge.getInNode();
-                BaseCompoundNode outNode = (BaseCompoundNode)edge.getOutNode();
-                if (edge.getOwningChildGraph().equals(this)) {
+            	ICompoundNodePair pair = edge.getConnectedNodes();
+                BaseCompoundNode inNode = (BaseCompoundNode)pair.getInNode();
+                BaseCompoundNode outNode = (BaseCompoundNode)pair.getOutNode();
+                if (edge.getChildCompoundGraph().equals(this)) {
                     if (inNode != null && outNode != null) {
                         if(!(inNode.getEdgeInList().getUnfilteredEdgeSet().contains(edge)
                                 && outNode.getEdgeOutList().getUnfilteredEdgeSet().contains(edge)

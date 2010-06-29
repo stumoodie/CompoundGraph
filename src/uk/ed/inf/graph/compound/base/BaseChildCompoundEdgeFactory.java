@@ -16,9 +16,16 @@ limitations under the License.
 package uk.ed.inf.graph.compound.base;
 
 import uk.ed.inf.graph.compound.ICompoundChildEdgeFactory;
+import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundEdge;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
+import uk.ed.inf.graph.compound.impl.ChildCompoundGraph;
+import uk.ed.inf.graph.compound.impl.CompoundEdge;
+import uk.ed.inf.graph.compound.impl.CompoundNode;
+import uk.ed.inf.graph.compound.impl.CompoundNodePair;
 
-public abstract class BaseChildCompoundEdgeFactory implements ICompoundChildEdgeFactory {
+public class BaseChildCompoundEdgeFactory implements ICompoundChildEdgeFactory {
 	
 	@Override
 	public abstract BaseChildCompoundGraph getOwningChildGraph();
@@ -33,21 +40,80 @@ public abstract class BaseChildCompoundEdgeFactory implements ICompoundChildEdge
 	protected final boolean isValidBaseNodePair(ICompoundNode outNode, ICompoundNode inNode) {
 		boolean retVal = false;
 		if(outNode != null  && inNode != null){
-			BaseCompoundNode parentNode = this.getOwningChildGraph().getRootNode();
+			BaseCompoundGraphElement parentNode = this.getOwningChildGraph().getRoot();
 			retVal = this.getOwningChildGraph().getSuperGraph().getLcaNode(outNode, inNode).equals(parentNode);
 		}
 		return retVal;
 	}
 
-	@Override
-	public abstract void setPair(ICompoundNode outNode, ICompoundNode inNode);
-
-	protected abstract BaseCompoundNode getOutNode();
+	protected BaseCompoundEdge newEdge(BaseChildCompoundGraph owningChildGraph, int edgeIndex, BaseCompoundNode outNode, BaseCompoundNode inNode) {
+		return new BaseCompoundEdge((ChildCompoundGraph)owningChildGraph, edgeIndex, outNode, inNode);
+	}
 	
-	protected abstract BaseCompoundNode getInNode();
+	@Override
+	public CompoundEdge createEdge(){
+		return (CompoundEdge)super.createEdge();
+	}
+
+	@Override
+	public CompoundNodePair getCurrentNodePair() {
+		return new CompoundNodePair(this.getOutNode(), this.getInNode());
+	}
+
+	@Override
+	public BaseCompoundGraph getGraph() {
+		return this.parentNode.getGraph();
+	}
+
+	@Override
+	protected BaseCompoundNode getInNode() {
+		return this.inNode;
+	}
+
+	@Override
+	protected BaseCompoundNode getOutNode() {
+		return this.outNode;
+	}
+
+	@Override
+	public void setPair(ICompoundNode outNode, ICompoundNode inNode) {
+		if(outNode instanceof CompoundNode && inNode instanceof CompoundNode){
+			this.outNode = (CompoundNode)outNode;
+			this.inNode = (CompoundNode)inNode;
+		}
+		else{
+			throw new ClassCastException("outNode and inNode must be of type CompoundNode");
+		}
+	}
+
+	@Override
+	public boolean canCreateEdge() {
+		return this.isValidNodePair(this.outNode, this.inNode);
+	}
+
+	@Override
+	public boolean isValidNodePair(ICompoundNode outNode, ICompoundNode inNode) {
+		boolean retVal = false;
+		if(super.isValidBaseNodePair(outNode, inNode)){
+			retVal = outNode instanceof CompoundNode && inNode instanceof CompoundNode;
+		}
+		return retVal;
+	}
 		
 	@Override
-	public abstract BaseCompoundNodePair getCurrentNodePair();
+	public ArchetypalCompoundNode getRoot() {
+		return this.root;
+	}
+	
+	@Override
+	protected void addNewNode(ICompoundNode node) {
+	    super.addNewNode(node);
+	}
+
+	@Override
+	protected void addNewEdge(ICompoundEdge edge) {
+	    super.addNewEdge(edge);
+	}
 	
 	@Override
 	public BaseCompoundEdge createEdge() {
@@ -58,14 +124,5 @@ public abstract class BaseChildCompoundEdgeFactory implements ICompoundChildEdge
 		this.getOwningChildGraph().notifyNewEdge(newCompoundEdge);
 		return newCompoundEdge ;
 	}
-
-	protected abstract BaseCompoundEdge newEdge(BaseChildCompoundGraph owningChildGraph,
-					int edgeIndex, BaseCompoundNode outNode, BaseCompoundNode inNode);
-	
-	@Override
-	public abstract BaseCompoundGraph getGraph();
-	
-	@Override
-	public abstract boolean canCreateEdge();
 
 }

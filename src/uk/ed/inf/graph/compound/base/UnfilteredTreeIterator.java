@@ -9,7 +9,7 @@ import uk.ed.inf.graph.compound.ICompoundNode;
 public class UnfilteredTreeIterator implements Iterator<BaseCompoundNode>{
 	private final Queue<BaseCompoundNode> queue;
 	
-	public UnfilteredTreeIterator(BaseCompoundNode rootNode) {
+	public UnfilteredTreeIterator(BaseRootCompoundNode rootNode) {
 		if(rootNode == null) throw new IllegalArgumentException("root node cannot be null");
 		
 		this.queue = new LinkedList<BaseCompoundNode>();

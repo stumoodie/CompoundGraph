@@ -20,10 +20,11 @@ import java.util.Iterator;
 import java.util.Set;
 
 import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
-public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFactory {
+public class BaseSubCompoundGraphFactory implements ISubCompoundGraphFactory {
 	private static final String DEBUG_PROP_NAME = "uk.ed.inf.graph.compound.base.debugging";
 	// added debug checks to graph
 	private final boolean debuggingEnabled;
@@ -42,6 +43,15 @@ public abstract class BaseSubCompoundGraphFactory implements ISubCompoundGraphFa
 	
 	public final void addEdge(ICompoundEdge edge){
 		this.edgeList.add(edge);
+	}
+	
+	public final void addElement(ICompoundGraphElement element){
+		if(element.isNode()){
+			this.nodeList.add((ICompoundNode)element);
+		}
+		else{
+			this.edgeList.add((ICompoundEdge)element);
+		}
 	}
 
 	/**

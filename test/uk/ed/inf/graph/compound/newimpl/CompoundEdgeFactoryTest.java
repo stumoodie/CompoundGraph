@@ -13,27 +13,43 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. 
 */
-package uk.ed.inf.graph.compound.impl;
+package uk.ed.inf.graph.compound.newimpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JMock;
+import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
+import uk.ed.inf.graph.compound.ICompoundGraph;
+import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.newimpl.CompoundEdgeFactory;
+import uk.ed.inf.graph.compound.newimpl.ICompoundGraphServices;
+
+@RunWith(JMock.class)
 public class CompoundEdgeFactoryTest {
+	private Mockery mockery = new JUnit4Mockery();
 	
-	private CompoundEdgeFactory testEdgeFactory ;
+	private ICompoundEdgeFactory testEdgeFactory ;
+
+	private ICompoundGraphServices mockServices;
 	
-	private static CompoundGraph mockCompoundGraph ;
+	private static ICompoundGraph mockCompoundGraph ;
 //	private static ChildCompoundGraph mockChildCompoundGraph ;
 //	private static CompoundNode mockCompoundNode ;
-	private static CompoundNode mockOneNode ;
-	private static CompoundNode mockTwoNode ;
-	private static CompoundNode otherOneNode ;
-	private static CompoundNode otherTwoNode ;
+	private static ICompoundNode mockOneNode ;
+	private static ICompoundNode mockTwoNode ;
+	private static ICompoundNode otherOneNode ;
+	private static ICompoundNode otherTwoNode ;
 	
 	private static final int COMPOUND_NODE_INDEX_ONE = 1 ;
 	private static final int COMPOUND_NODE_INDEX_TWO = 2 ;
@@ -43,16 +59,23 @@ public class CompoundEdgeFactoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		mockCompoundGraph = new CompoundGraph () ;
-		mockOneNode = new CompoundNode ( mockCompoundGraph , COMPOUND_NODE_INDEX_TWO ) ;
-		mockTwoNode = new CompoundNode ( mockCompoundGraph , COMPOUND_NODE_INDEX_THREE ) ;
-//		mockCompoundNode = new CompoundNode ( mockCompoundGraph , COMPOUND_NODE_INDEX_ONE) ;
-//		mockChildCompoundGraph = new ChildCompoundGraph (mockCompoundNode ) ;
+		mockCompoundGraph = this.mockery.mock(ICompoundGraph.class, "mockCompoundGraph");
+		mockOneNode = this.mockery.mock(ICompoundNode.class, "mockOneNode");
+		mockTwoNode = this.mockery.mock(ICompoundNode.class, "mockTwoNode");
+		otherOneNode = this.mockery.mock(ICompoundNode.class, "otherOneNode");
+		otherTwoNode = this.mockery.mock(ICompoundNode.class, "otherTwoNode");
+		mockServices = this.mockery.mock(ICompoundGraphServices.class, "mockServices");
+
+		this.mockery.checking(new Expectations(){{
+			allowing(mockOneNode).getIndex(); will(returnValue(COMPOUND_NODE_INDEX_TWO));
+			allowing(mockTwoNode).getIndex(); will(returnValue(COMPOUND_NODE_INDEX_THREE));
+
+			allowing(otherOneNode).getIndex(); will(returnValue(COMPOUND_NODE_INDEX_FOUR));
+			allowing(otherTwoNode).getIndex(); will(returnValue(COMPOUND_NODE_INDEX_FIVE));
+		}});
 		
-		otherOneNode = new CompoundNode ( mockCompoundGraph , COMPOUND_NODE_INDEX_FOUR ) ;
-		otherTwoNode = new CompoundNode ( mockCompoundGraph , COMPOUND_NODE_INDEX_FIVE ) ;
 		
-		testEdgeFactory = new CompoundEdgeFactory (mockCompoundGraph ) ;
+		testEdgeFactory = new CompoundEdgeFactory (mockCompoundGraph, this.mockServices) ;
 	}
 
 	@After
@@ -73,7 +96,7 @@ public class CompoundEdgeFactoryTest {
 	@Ignore @Test
 	public final void testCreateEdge() {
 		this.testEdgeFactory.setPair(mockOneNode, mockTwoNode);
-		CompoundEdge generatedEdge = testEdgeFactory.createEdge() ;//newEdge(mockChildCompoundGraph, COMPOUND_NODE_INDEX_ONE, mockOneNode, mockTwoNode) ;
+		ICompoundEdge generatedEdge = testEdgeFactory.createEdge() ;//newEdge(mockChildCompoundGraph, COMPOUND_NODE_INDEX_ONE, mockOneNode, mockTwoNode) ;
 		assertEquals ( "get graph" , mockCompoundGraph , generatedEdge.getGraph() ) ;
 		assertEquals ( "get index" , COMPOUND_NODE_INDEX_ONE , generatedEdge.getIndex() ) ;
 	}

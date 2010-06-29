@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. 
 */
-package uk.ed.inf.graph.compound.impl;
+package uk.ed.inf.graph.compound.newimpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -24,6 +24,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
+import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodeFactory;
+import uk.ed.inf.graph.compound.ISubCompoundGraph;
+import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ed.inf.graph.state.IGraphState;
 
 
@@ -50,7 +56,7 @@ public class CreatedEmptyCompoundGraphTest {
 	public void testNumberOfNodesIsOneAndThisNodeIsRootNode () throws Exception
 	{
 		assertEquals ( "one Node" , NUMERIC[1] , testGraph.getNumNodes() ) ;
-		assertEquals ( "node is RootNode" , NUMERIC[0] , testGraph.getRootNode().getIndex()) ;
+		assertEquals ( "node is RootNode" , NUMERIC[0] , testGraph.getRoot().getIndex()) ;
 	}
 	
 	@Test
@@ -62,9 +68,9 @@ public class CreatedEmptyCompoundGraphTest {
 	@Test
 	public void createNodeFactoryAndCheckIfItIsWorkingProperly () throws Exception
 	{
-		CompoundNodeFactory testNodeFactory = testGraph.nodeFactory() ;
+		ICompoundNodeFactory testNodeFactory = testGraph.nodeFactory() ;
 		assertNotNull ( "factory created" , testNodeFactory ) ;
-		CompoundNode producedNode = testNodeFactory.createNode() ;
+		ICompoundNode producedNode = testNodeFactory.createNode() ;
 		assertEquals ( "node belongs to Graph" , testGraph , producedNode.getGraph() ) ;
 		assertEquals ( "one more Node" , NUMERIC[2] , testGraph.getNumNodes()) ;
 		assertTrue ("produced node belongs to Graph" , testGraph.containsNode(producedNode)) ;	
@@ -75,11 +81,11 @@ public class CreatedEmptyCompoundGraphTest {
 	@Test
 	public void createEdgeFactoryAndCheckIfItIsWorkingProperly () throws Exception
 	{
-		CompoundNode producedNode = testGraph.nodeFactory().createNode() ;
+		ICompoundNode producedNode = testGraph.nodeFactory().createNode() ;
 		
-		CompoundEdgeFactory testEdgeFactory = testGraph.edgeFactory() ;
+		ICompoundEdgeFactory testEdgeFactory = testGraph.edgeFactory() ;
 		testEdgeFactory.setPair(producedNode, producedNode) ;
-		CompoundEdge producedEdge = testEdgeFactory.createEdge() ;
+		ICompoundEdge producedEdge = testEdgeFactory.createEdge() ;
 		
 		assertEquals ( "one Edge" , NUMERIC[1] , testGraph.getNumEdges()) ;
 		assertTrue ("produced edge belongs to Graph" , testGraph.containsEdge(producedEdge)) ;	
@@ -92,15 +98,15 @@ public class CreatedEmptyCompoundGraphTest {
 	@Test
 	public void createSubgraphFactoryAndCheckIfItIsWorkingProperly () throws Exception
 	{
-		SubCompoundGraphFactory testSubGraphFactory = testGraph.subgraphFactory() ;
+		ISubCompoundGraphFactory testSubGraphFactory = testGraph.subgraphFactory() ;
 		
-		SubCompoundGraph producedOrdinarySubGraph = testSubGraphFactory.createSubgraph() ;
+		ISubCompoundGraph producedOrdinarySubGraph = testSubGraphFactory.createSubgraph() ;
 		
 		assertEquals ( "no nodes" , NUMERIC[0] , producedOrdinarySubGraph.getNumNodes()) ;
 		assertEquals ( "no edges" , NUMERIC[0] , producedOrdinarySubGraph.getNumEdges()) ;
 		assertEquals ( "belongs to Graph" , testGraph , producedOrdinarySubGraph.getSuperGraph()) ;
 		
-		SubCompoundGraph producedInducedSubGraph = testSubGraphFactory.createInducedSubgraph() ;
+		ISubCompoundGraph producedInducedSubGraph = testSubGraphFactory.createInducedSubgraph() ;
 		assertEquals ( "no nodes" , NUMERIC[0] , producedInducedSubGraph.getNumNodes()) ;
 		assertEquals ( "no edges" , NUMERIC[0] , producedInducedSubGraph.getNumEdges()) ;
 		assertEquals ( "belongs to Graph" , testGraph , producedInducedSubGraph.getSuperGraph()) ;
@@ -110,11 +116,11 @@ public class CreatedEmptyCompoundGraphTest {
 	@Test(expected=IllegalStateException.class)
 	public void createSubGraphContainingTheRootNodeAndDeleteWithoutAffectingTheRootNode () throws Exception
 	{
-		SubCompoundGraphFactory testSubGraphFactory = testGraph.subgraphFactory() ;
+		ISubCompoundGraphFactory testSubGraphFactory = testGraph.subgraphFactory() ;
 		
-		testSubGraphFactory.addNode(testGraph.getRootNode()) ;
+		testSubGraphFactory.addElement(testGraph.getRoot()) ;
 		
-		SubCompoundGraph producedSubGraph = testSubGraphFactory.createSubgraph() ;
+		ISubCompoundGraph producedSubGraph = testSubGraphFactory.createSubgraph() ;
 		
 		testGraph.removeSubgraph(producedSubGraph) ;
 	}
@@ -122,11 +128,11 @@ public class CreatedEmptyCompoundGraphTest {
 	@Test
 	public void testRestoreEmptyState () throws Exception
 	{
-		CompoundNodeFactory nodeFactory = testGraph.nodeFactory() ;
-		CompoundNode node1 = nodeFactory.createNode() ;
-		CompoundNode node2 = nodeFactory.createNode() ;
+		ICompoundNodeFactory nodeFactory = testGraph.nodeFactory() ;
+		ICompoundNode node1 = nodeFactory.createNode() ;
+		ICompoundNode node2 = nodeFactory.createNode() ;
 		
-		CompoundEdgeFactory edgeFactory = testGraph.edgeFactory() ;
+		ICompoundEdgeFactory edgeFactory = testGraph.edgeFactory() ;
 		edgeFactory.setPair(node1, node2) ;
 		edgeFactory.createEdge() ;
 		

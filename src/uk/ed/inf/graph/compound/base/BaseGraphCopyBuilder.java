@@ -24,11 +24,11 @@ import java.util.Set;
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
-import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 
-public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder {
+public class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 	private BaseSubCompoundGraph sourceSubCigraph;
 	private BaseChildCompoundGraph destSubCigraph;
 	private BaseSubCompoundGraphFactory subGraphFactory;
@@ -103,24 +103,26 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder 
 	 * @see uk.ed.inf.graph.compound.base.ICompoundGraphCopyBuilder#copyNodes()
 	 */
 	private void copyNodes(){
-		Iterator<ICompoundNode> sourceNodeIter = this.sourceSubCigraph.topNodeIterator();
+		Iterator<ICompoundGraphElement> sourceNodeIter = this.sourceSubCigraph.topElementIterator();
 		while(sourceNodeIter.hasNext()){
-			ICompoundNode srcNode = sourceNodeIter.next();
-			if(!visited.contains(srcNode.getIndex())){
-				copyNode((BaseCompoundNode)srcNode, this.destSubCigraph.getRootNode());
+			ICompoundGraphElement srcNode = sourceNodeIter.next();
+			if(srcNode instanceof BaseCompoundNode && !visited.contains(srcNode.getIndex())){
+				copyNode((BaseCompoundNode)srcNode, this.destSubCigraph.getRoot());
 			}
 		}
 	}
 
-	private void copyNode(BaseCompoundNode srcNode, BaseCompoundNode destParentNode){
+	private void copyNode(BaseCompoundNode srcNode, BaseCompoundGraphElement destParentNode){
 		BaseCompoundNode newNode = createCopyOfNode(srcNode, destParentNode);
 		this.visited.add(srcNode.getIndex()) ;
 		this.oldNewEquivList.put(srcNode, newNode);
 		this.subGraphFactory.addNode(newNode);
-		Iterator<ICompoundNode> childIter = srcNode.childIterator();
+		Iterator<ICompoundGraphElement> childIter = srcNode.childIterator();
 		while(childIter.hasNext()){
-			ICompoundNode childNode = childIter.next();
-			copyNode((BaseCompoundNode)childNode, newNode);
+			ICompoundGraphElement childNode = childIter.next();
+			if(childNode instanceof BaseCompoundNode){
+				copyNode((BaseCompoundNode)childNode, newNode);
+			}
 		}
 	}
 	
@@ -139,7 +141,7 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder 
 	 * @param newNodeIndex
 	 * @return
 	 */
-	protected abstract BaseCompoundNode createCopyOfNode(BaseCompoundNode srcNode, BaseCompoundNode destParentNode);
+	protected abstract BaseCompoundNode createCopyOfNode(BaseCompoundNode srcNode, BaseCompoundGraphElement destParentNode);
 	
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.compound.base.ICompoundGraphCopyBuilder#copyEquivalentEdges()
@@ -151,20 +153,22 @@ public abstract class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder 
 			ICompoundNodePair ends = srcEdge.getConnectedNodes();
 			BaseCompoundNode newInNode = this.oldNewEquivList.get(ends.getInNode());
 			BaseCompoundNode newOutNode = this.oldNewEquivList.get(ends.getOutNode());
-			BaseCompoundNode oldOwner = srcEdge.getOwningChildGraph().getRootNode();
+			BaseCompoundGraphElement oldOwner = srcEdge.getParent();
 			// find the owning node if it is part of the subgraph.
-			BaseCompoundNode linkOwner = this.oldNewEquivList.get(oldOwner);
-			if(linkOwner == null){
+			BaseCompoundNode linkParent = this.oldNewEquivList.get(oldOwner);
+			
+			createLinkrecursively();
+			if(linkParent == null){
 				// the submap does not contain the lca of this edge so it must be calculated from
 				// scratch
 				BaseCompoundGraph ciGraph = this.destSubCigraph.getSuperGraph();
-				ICompoundNode lca = ciGraph.getLcaNode(newInNode, newOutNode);
+				ICompoundGraphElement lca = ciGraph.getLcaNode(newInNode, newOutNode);
 				if(lca == null){
 					throw new IllegalStateException("The graph and subgraph are inconsisten: an lca for a copied edge could not be found");
 				}
-				linkOwner = (BaseCompoundNode)lca;
+				linkParent = (BaseCompoundNode)lca;
 			}
-			BaseCompoundEdge newEdge = createCopyOfEdge(srcEdge, linkOwner.getChildCompoundGraph(),	newOutNode, newInNode);
+			BaseCompoundEdge newEdge = createCopyOfEdge(srcEdge, linkParent.getChildCompoundGraph(),	newOutNode, newInNode);
 			this.subGraphFactory.addEdge(newEdge);
 		}
 	}

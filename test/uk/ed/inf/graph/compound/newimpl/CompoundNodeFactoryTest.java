@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. 
 */
-package uk.ed.inf.graph.compound.impl;
+package uk.ed.inf.graph.compound.newimpl;
 
 import static org.junit.Assert.fail;
 
@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class SubCompoundGraphBuilderTest {
+public class CompoundNodeFactoryTest {
 
 	@Before
 	public void setUp() throws Exception {
@@ -33,32 +33,12 @@ public class SubCompoundGraphBuilderTest {
 	}
 
 	@Ignore @Test
-	public final void testSubCigraphBuilderCigraphSetOfCiNodeSetOfCiEdge() {
+	public final void testCiNodeFactory() {
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Ignore @Test
-	public final void testSubCigraphBuilderCigraphSetOfCiNode() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Ignore @Test
-	public final void testExpandChildCigraphs() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Ignore @Test
-	public final void testAddIncidentEdges() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Ignore @Test
-	public final void testBuildSubgraph() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Ignore @Test
-	public final void testGetSubgraph() {
+	public final void testCreateNode() {
 		fail("Not yet implemented"); // TODO
 	}
 

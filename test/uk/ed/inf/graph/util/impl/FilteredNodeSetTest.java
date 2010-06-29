@@ -31,9 +31,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import uk.ed.inf.graph.compound.base.BaseCompoundEdge;
-import uk.ed.inf.graph.compound.base.BaseCompoundNode;
-import uk.ed.inf.graph.compound.impl.CompoundGraph;
+import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundGraph;
+import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.util.IFilterCriteria;
 import uk.ed.inf.graph.util.INodeSet;
 
@@ -41,16 +41,14 @@ import uk.ed.inf.graph.util.INodeSet;
 public class FilteredNodeSetTest {
 	
 	
-	private Mockery mockery = new JUnit4Mockery() {{
-		setImposteriser(ClassImposteriser.INSTANCE);
-	}};
+	private Mockery mockery = new JUnit4Mockery();
 	
-	private FilteredNodeSet<BaseCompoundNode , BaseCompoundEdge> testFilteredNodeSet ;
-	private INodeSet<BaseCompoundNode , BaseCompoundEdge> mockNodeSet ;
-//	private List<BaseCompoundNode> nodeSetList = new ArrayList<BaseCompoundNode> () ;
-	private CompoundGraph graph ;
-	BaseCompoundNode mockBasicNode ;
-	IFilterCriteria<BaseCompoundNode> mockFilterCriteria ;
+	private FilteredNodeSet<ICompoundNode , ICompoundEdge> testFilteredNodeSet ;
+	private INodeSet<ICompoundNode , ICompoundEdge> mockNodeSet ;
+//	private List<ICompoundNode> nodeSetList = new ArrayList<ICompoundNode> () ;
+	private ICompoundGraph graph ;
+	ICompoundNode mockBasicNode ;
+	IFilterCriteria<ICompoundNode> mockFilterCriteria ;
 	
 	private static final int [] NUMERIC = {0,1,2,3,4,5} ;
 
@@ -58,13 +56,13 @@ public class FilteredNodeSetTest {
 	@Before
 	public void setUp() throws Exception {
 		
-		graph = new CompoundGraph () ;
+		graph = this.mockery.mock(ICompoundGraph.class, "graph");
 		
 		mockBasicNode = graph.nodeFactory().createNode() ;
-		mockNodeSet = new NodeSet<BaseCompoundNode , BaseCompoundEdge> () ;
+		mockNodeSet = new NodeSet<ICompoundNode , ICompoundEdge> () ;
 		mockFilterCriteria = mockery.mock(IFilterCriteria.class, "mockFilterCriteria") ;
 		
-		testFilteredNodeSet = new FilteredNodeSet<BaseCompoundNode , BaseCompoundEdge> (mockNodeSet, mockFilterCriteria) ;
+		testFilteredNodeSet = new FilteredNodeSet<ICompoundNode , ICompoundEdge> (mockNodeSet, mockFilterCriteria) ;
 		
 		testFilteredNodeSet.add(mockBasicNode) ;
 	}
@@ -81,7 +79,7 @@ public class FilteredNodeSetTest {
 
 	@Ignore @Test
 	public final void testAdd() {
-		final BaseCompoundNode mockBasicNode2 = graph.nodeFactory().createNode() ;
+		final ICompoundNode mockBasicNode2 = graph.nodeFactory().createNode() ;
 		testFilteredNodeSet.add(mockBasicNode2) ;
 		
 		mockery.checking(new Expectations () {{ 
@@ -151,8 +149,8 @@ public class FilteredNodeSetTest {
 
 	@Ignore @Test
 	public final void testIterator() {
-		BaseCompoundNode [] nodeArray = { mockBasicNode } ;
-		Iterator<BaseCompoundNode> nodeIterator = testFilteredNodeSet.iterator() ;
+		ICompoundNode [] nodeArray = { mockBasicNode } ;
+		Iterator<ICompoundNode> nodeIterator = testFilteredNodeSet.iterator() ;
 		
 		int counter = 0 ;
 		while ( nodeIterator.hasNext())

@@ -16,9 +16,10 @@ limitations under the License.
 package uk.ed.inf.graph.compound.base;
 
 import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
+import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
 
-public abstract class BaseCompoundEdgeFactory implements ICompoundEdgeFactory {
+public class BaseCompoundEdgeFactory implements ICompoundEdgeFactory {
 	
 	@Override
 	public abstract void setPair(ICompoundNode outNode, ICompoundNode inNode);
@@ -30,10 +31,11 @@ public abstract class BaseCompoundEdgeFactory implements ICompoundEdgeFactory {
 	public abstract BaseCompoundNodePair getCurrentNodePair();
 	
 	@Override
-	public BaseChildCompoundGraph getOwningChildGraph(){
+	public BaseCompoundGraphElement getParent(){
 		if(this.getCurrentNodePair() == null) throw new IllegalArgumentException("No node pair has been set");
-		BaseCompoundNode lcmNode = (BaseCompoundNode)this.getGraph().getLcaNode(this.getOutNode(), this.getInNode());
-		return lcmNode.getChildCompoundGraph();
+		
+		ICompoundGraphElement lcmNode = this.getGraph().getLcaNode(this.getOutNode(), this.getInNode());
+		return (BaseCompoundGraphElement)lcmNode;
 	}
 
 
@@ -45,7 +47,7 @@ public abstract class BaseCompoundEdgeFactory implements ICompoundEdgeFactory {
 		BaseCompoundEdge newEdge = newEdge(lcmNode.getChildCompoundGraph(), cntr, this.getOutNode(), this.getInNode()); 
 //		lcmNode.getChildCompoundGraph().addNewEdge(newEdge);
 		this.getGraph().notifyNewEdge(newEdge);
-		this.getOwningChildGraph().notifyNewEdge(newEdge);
+		this.getParent().getChildCompoundGraph().notifyNewEdge(newEdge);
 		return newEdge;
 	}
 

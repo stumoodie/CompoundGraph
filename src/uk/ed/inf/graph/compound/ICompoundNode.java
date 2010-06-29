@@ -19,10 +19,11 @@ import java.util.Iterator;
 import java.util.SortedSet;
 
 import uk.ed.inf.graph.state.IRestorableNode;
-import uk.ed.inf.tree.ITreeNode;
 
 
-public interface ICompoundNode extends IRestorableNode, ITreeNode<ICompoundNode>, Comparable<ICompoundNode> {
+public interface ICompoundNode extends ICompoundGraphElement, IRestorableNode {
+	
+	int getIndex();
 	
 	int getInDegree();
 	
@@ -62,28 +63,6 @@ public interface ICompoundNode extends IRestorableNode, ITreeNode<ICompoundNode>
 	
 	Iterator<ICompoundNode> getOutNodeIterator();
 
-	/**
-	 * Get subgraph of this compound node. Note that this node is the root-node of the
-	 * sub-Cigraph.
-	 * @return
-	 */
-	IChildCompoundGraph getChildCompoundGraph();
-	
-	boolean isDescendent(ICompoundNode testNode);
-
-    boolean isAncestor(ICompoundNode testNode);
-
-	/**
-	 * Get the graph that owns this node.  
-	 * @return The graph instance which cannot be null.
-	 */
-	ICompoundGraph getGraph();
-	
-	/**
-	 * Get the index of this node. 
-	 * @return Returns a whole number (>=0).
-	 */
-	int getIndex();
 	
 	/**
 	 * Tests whether this node shares one or more edges with another node, irrespective of the 
@@ -122,33 +101,10 @@ public interface ICompoundNode extends IRestorableNode, ITreeNode<ICompoundNode>
 	 * @return the node iterator.
 	 */
 	Iterator<ICompoundNode> connectedNodeIterator();
-	
-	/**
-	 * Has the node been removed from the graph? Nodes are not removed from the graph's data structures,
-	 * but flagged as deleted.
-	 * @return true if removed, false otherwise. 
-	 */
-	boolean isRemoved();
-	
-	/**
-	 * Is the other node equal to this one. Should obey the standard contract for <code>equals</code>, and in addition 
-	 * a node should be regarded as equal if its owning graph and index are identical. 
-	 * @param other the other object to be tested.
-	 * @return true if equals by the standard contract and if the owning graph and index are identical. false otherwise.
-	 */
-	boolean equals(Object other);
-	
-	/**
-	 * Get the hash code for this node. Should be consistent with <code>equals</code>. 
-	 * @return The hash code for this node.
-	 */
-	int hashCode();
 
-	/**
-	 * Compare this node to another node. Comparison should be based on the comparison order of the node's index
-	 * only. The owning graph should be ignored. It is the job of the graph library to ensure that only
-	 * nodes belonging to the same graph are compared.   
-	 * @param other the other node to compare to.
-	 */
-	int compareTo(ICompoundNode other);
+	boolean containsEdge(ICompoundEdge edge);
+
+	boolean containsInEdge(ICompoundEdge edge);
+
+	boolean containsOutEdge(ICompoundEdge edge);
 }

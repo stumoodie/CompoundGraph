@@ -23,17 +23,7 @@ package uk.ed.inf.graph.compound;
  *  
  * @author smoodie
  *
- * @param <N>
- * @param <E>
  */
 public interface ICompoundChildEdgeFactory extends ICompoundEdgeFactory {
 
-	/**
-	 * @see ICompoundEdgeFactory for definition.
-	 * Not that this implementation will always return the child graph regardless of whether
-	 * the node pair is set.
-	 * @return the owning child graph of the new edge.
-	 */
-	IChildCompoundGraph getOwningChildGraph();
-	
 }

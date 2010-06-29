@@ -68,7 +68,7 @@ public class BaseCompoundGraphStateHandler implements IGraphStateHandler {
 	}
 
 	private Iterator<BaseCompoundNode> unfilteredNodeIterator(){
-		return new UnfilteredTreeIterator(this.graph.getRootNode());
+		return new UnfilteredTreeIterator(this.graph.getRoot());
 	}
 	
 	private Iterator<BaseCompoundEdge> unfilteredEdgeIterator(){

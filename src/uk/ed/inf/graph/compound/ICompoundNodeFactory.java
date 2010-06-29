@@ -19,7 +19,7 @@ public interface ICompoundNodeFactory {
 
 	ICompoundGraph getGraph();
 
-	ICompoundNode getParentNode();
+	ICompoundGraphElement getParentNode();
 	
 	ICompoundNode createNode();
 	

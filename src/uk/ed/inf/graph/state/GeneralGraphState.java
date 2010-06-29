@@ -21,23 +21,17 @@ public class GeneralGraphState implements IGraphState {
 	
 	private final IRestorableGraph graph;
 	private final IBitString liveNodeStore;
-	private final IBitString liveEdgeStore;
 	
-	public GeneralGraphState(IRestorableGraph graphToSave, IBitString nodeStates, IBitString edgeStates){
+	public GeneralGraphState(IRestorableGraph graphToSave, IBitString nodeStates){
 		this.graph = graphToSave;
 		this.liveNodeStore = nodeStates;
-		this.liveEdgeStore = edgeStates;
 	}
 	
 	public IRestorableGraph getGraph() {
 		return this.graph;
 	}
 
-	public IBitString getNodeStates(){
+	public IBitString getElementStates(){
 		return this.liveNodeStore;
-	}
-	
-	public IBitString getEdgeStates(){
-		return this.liveEdgeStore;
 	}
 }

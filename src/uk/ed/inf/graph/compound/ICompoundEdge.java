@@ -18,16 +18,10 @@ package uk.ed.inf.graph.compound;
 import uk.ed.inf.graph.state.IRestorableEdge;
 
 
-public interface ICompoundEdge extends IRestorableEdge, Comparable<ICompoundEdge> {
+public interface ICompoundEdge extends ICompoundGraphElement, IRestorableEdge {
 
-	ICompoundGraph getGraph();
-
-	IChildCompoundGraph getOwningChildGraph();
+	int getIndex();
 	
-	ICompoundNode getInNode();
-	
-	ICompoundNode getOutNode();
-
 	ICompoundNodePair getConnectedNodes();
 
 	/**
@@ -37,11 +31,6 @@ public interface ICompoundEdge extends IRestorableEdge, Comparable<ICompoundEdge
 	 */
 	boolean hasDirectedEnds(ICompoundNode outNode, ICompoundNode inNode);
 	
-	/**
-	 * Get the index that uniquely identifies the edge within its owning graph.  
-	 * @return The index, which is a While number (>-0).
-	 */
-	int getIndex();
 	
 	/**
 	 * Is this a self edge, i.e. both ends are the same node. 
@@ -56,11 +45,11 @@ public interface ICompoundEdge extends IRestorableEdge, Comparable<ICompoundEdge
 	 */
 	boolean hasEnds(ICompoundNode thisNode, ICompoundNode thatNode);
 	
-	/**
-	 * Test if the edge has been removed from the graph.
-	 * @return <code>true</code> if removed, false otherwise.
-	 */
-	boolean isRemoved();
+//	/**
+//	 * Test if the edge has been removed from the graph.
+//	 * @return <code>true</code> if removed, false otherwise.
+//	 */
+//	boolean isRemoved();
 
 	boolean hasEnds(ICompoundNodePair ends);
 

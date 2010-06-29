@@ -44,4 +44,6 @@ public interface ICompoundGraphMoveBuilder {
 	 * @return The subgraph of moved nodes, which will be empty of no nodes are moved.
 	 */
 	ISubCompoundGraph getMovedComponents();
+	
+	ISubCompoundGraph getRemovedComponents();
 }

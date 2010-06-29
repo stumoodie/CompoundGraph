@@ -55,5 +55,7 @@ public interface ICompoundNodePair {
 	 * @return the new directed edge with the in and out nodes switched relative to this one. Cannot be null.
 	 */
 	ICompoundNodePair reversedNodes();
+
+	boolean isSelfEdge();
 	
 }

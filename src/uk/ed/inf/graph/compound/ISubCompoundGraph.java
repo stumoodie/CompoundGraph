@@ -25,9 +25,17 @@ public interface ISubCompoundGraph {
 
 	ICompoundEdge getEdge(int edgeIdx);
 
+	ICompoundGraphElement getElement(int idx);
+	
 	int getNumTopNodes();
 	
 	Iterator<ICompoundNode> topNodeIterator();
+	
+	Iterator<ICompoundEdge> topEdgeIterator();
+	
+	Iterator<ICompoundGraphElement> topElementIterator();
+	
+	int numTopElements();
 
 	boolean containsRoot() ;
 	
@@ -47,6 +55,17 @@ public interface ISubCompoundGraph {
 	 */
 	int getNumEdges();
 	
+	/**
+	 * Gets the total number of elements in the graph.
+	 * @return the number of elements.
+	 */
+	int numElements();
+	
+
+	boolean containsElement(ICompoundGraphElement element);
+
+	boolean containsElement(int idx);
+
 	/**
 	 * Tests if the graph contains the node with the given index number.
 	 * @param nodeIdx The index number of the node.
@@ -69,7 +88,15 @@ public interface ISubCompoundGraph {
 	 * @return true if the edge exists, false otherwise.
 	 */
 	boolean containsConnection(ICompoundNode thisNode, ICompoundNode thatNode);
-	
+
+	/**
+	 * Tests if the graph contains an edge connecting these nodes. Ignores
+	 * the direction of the edge.
+	 * @param pair the pair of nodes to test
+	 * @return true if a connection involving these nodes exists.
+	 */
+	boolean containsConnection(ICompoundNodePair pair);
+
 	/**
 	 * Tests if the graph contains the edge. 
 	 * @param edge the edge to test.
@@ -77,7 +104,11 @@ public interface ISubCompoundGraph {
 	 */
 	boolean containsEdge(ICompoundEdge edge);
 
-	/**
+	boolean containsDirectedEdge(ICompoundNode outNode, ICompoundNode inNode);
+
+	boolean containsDirectedEdge(ICompoundNodePair ends);
+
+		/**
 	 * Tests if the graph contains the edge of the given index. 
 	 * @param edgeIdx the index to test.
 	 * @return true if matching edge can be found, false otherwise.
@@ -98,5 +129,11 @@ public interface ISubCompoundGraph {
 	 */
 	Iterator<ICompoundEdge> edgeIterator();
 
-	boolean containsConnection(ICompoundNodePair pair);
+	/**
+	 * Provides an iterator for all the elements in the subgraph
+	 * @return the element iterator, which cannot be null.
+	 */
+	Iterator<ICompoundGraphElement> elementIterator();
+
+	Iterator<ICompoundGraphElement> edgeLastElementIterator();
 }

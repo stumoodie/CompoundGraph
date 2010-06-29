@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. 
 */
-package uk.ed.inf.graph.compound.impl;
+package uk.ed.inf.graph.compound.newimpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -24,7 +24,6 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -32,40 +31,41 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
-import uk.ed.inf.graph.compound.base.BaseSubCompoundGraph;
+import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
+import uk.ed.inf.graph.compound.newimpl.CompoundGraph;
 import uk.ed.inf.graph.state.IGraphState;
 
 @RunWith(JMock.class)
 public class CompoundGraphTest {
-	private Mockery mockery = new JUnit4Mockery() {{
-		setImposteriser(ClassImposteriser.INSTANCE);
-	}};
+	private Mockery mockery = new JUnit4Mockery();
 	
 	private CompoundGraph testCompoundGraph ;
 	private CompoundGraph anotherCompoundGraph ;
 	
-	private CompoundNode aNode ;
-	private CompoundNode anotherNode ;
-	private CompoundNode rootNode ;
+	private ICompoundNode aNode ;
+	private ICompoundNode anotherNode ;
+	private ICompoundNode rootNode ;
 	
 	private IGraphState originalState ; 
 	private IGraphState currentState ;
 	
-	private CompoundEdge anEdge ;
+	private ICompoundEdge anEdge ;
 	
-	private CompoundEdge subEdge ;
-	private CompoundNode subNode ;
+	private ICompoundEdge subEdge ;
+	private ICompoundNode subNode ;
 	
-	private CompoundEdgeFactory edgeFactory ;
-	private CompoundNodeFactory nodeFactory ;
-	private SubCompoundGraphFactory subGraphFactory ;
+	private ICompoundEdgeFactory edgeFactory ;
+	private ICompoundNodeFactory nodeFactory ;
+	private ISubCompoundGraphFactory subGraphFactory ;
 	
-	private CompoundEdgeFactory anotherEdgeFactory ;
-	private CompoundNodeFactory anotherNodeFactory ;
-	private SubCompoundGraphFactory anotherSubGraphFactory ;
+	private ICompoundEdgeFactory anotherEdgeFactory ;
+	private ICompoundNodeFactory anotherNodeFactory ;
+	private ISubCompoundGraphFactory anotherSubGraphFactory ;
 	
 	private static final int [] NUMERIC = {0,1,2,3,4,5} ;
 	
@@ -90,7 +90,7 @@ public class CompoundGraphTest {
 		
 		aNode = nodeFactory.createNode() ;
 		anotherNode = nodeFactory.createNode() ;
-		rootNode = testCompoundGraph.getRootNode() ;
+		rootNode = testCompoundGraph.getRoot() ;
 		
 		edgeFactory.setPair(aNode,anotherNode) ;
 		anEdge = edgeFactory.createEdge() ;
@@ -107,16 +107,9 @@ public class CompoundGraphTest {
 	}
 
 	@Test
-	public final void testCompoundGraphCompoundGraph() {
-		CompoundGraph anotherGraph = new CompoundGraph ( testCompoundGraph) ;
-		
-		assertTrue ( "created" , anotherGraph != null  ) ;
-	}
-
-	@Test
 	public final void testGetRoot() {
-		assertTrue ( "not null" , testCompoundGraph.getRootNode() != null ) ;
-		CompoundNode rootNode = testCompoundGraph.getRootNode() ;
+		assertTrue ( "not null" , testCompoundGraph.getRoot() != null ) ;
+		ICompoundNode rootNode = testCompoundGraph.getRoot() ;
 		assertEquals ( "same graph" , testCompoundGraph , rootNode.getGraph() );
 	}
 
@@ -184,7 +177,7 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testEdgeIterator() {
-		CompoundEdge edgeArray [] = { anEdge } ;
+		ICompoundEdge edgeArray [] = { anEdge } ;
 		
 		Iterator<ICompoundEdge> edgeIterator = testCompoundGraph.edgeIterator() ;
 		
@@ -206,7 +199,7 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testNodeIterator() {
-		CompoundNode [] nodeArray = { rootNode , aNode , anotherNode } ;
+		ICompoundNode [] nodeArray = { rootNode , aNode , anotherNode } ;
 		
 		Iterator<ICompoundNode> nodeIterator = testCompoundGraph.nodeIterator() ;
 		
@@ -233,7 +226,7 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testRemoveSubgraph() {
-		SubCompoundGraph aSubGraph = testCompoundGraph.subgraphFactory().createSubgraph() ;
+		ISubCompoundGraph aSubGraph = testCompoundGraph.subgraphFactory().createSubgraph() ;
 		assertEquals ( testCompoundGraph , aSubGraph.getSuperGraph()) ;
 		testCompoundGraph.removeSubgraph(aSubGraph) ;
 		assertEquals ( testCompoundGraph , aSubGraph.getSuperGraph()) ;
@@ -260,7 +253,7 @@ public class CompoundGraphTest {
 			atLeast(1).of(mockDirectedPair).getInNode() ; returnValue(anotherNode) ;
 		}});
 		
-		assertTrue ( "has directed Pair" , testCompoundGraph.containsDirectedEdge(mockDirectedPair) ) ;
+		assertTrue ( "has directed Pair" , testCompoundGraph.containsConnection(mockDirectedPair) ) ;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -274,14 +267,12 @@ public class CompoundGraphTest {
 	@Test
 	public final void testGetCurrentState() {
 		assertEquals("current state graph" , currentState.getGraph() , testCompoundGraph.getCurrentState().getGraph() );
-		assertEquals("current state edges" , currentState.getEdgeStates() , testCompoundGraph.getCurrentState().getEdgeStates());
-		assertEquals("current state nodes" , currentState.getNodeStates() , testCompoundGraph.getCurrentState().getNodeStates() );
+		assertEquals("current state edges" , currentState.getElementStates() , testCompoundGraph.getCurrentState().getElementStates());
 	}
 
 	@Test
 	public final void testRestoreState() {
-		assertEquals ("correct Original node State" , ORIGINAL_NODE_STATE , originalState.getNodeStates().toString() ) ;
-		assertEquals ("correct Original edge State" , ORIGINAL_EDGE_STATE , originalState.getEdgeStates().toString() ) ;
+		assertEquals ("correct Original node State" , ORIGINAL_NODE_STATE , originalState.getElementStates().toString() ) ;
 		testCompoundGraph.restoreState(originalState) ;
 		assertEquals("current state graph" , originalState.getGraph() , testCompoundGraph.getCurrentState().getGraph() );
 		assertEquals ( "Only one node" , NUMERIC[1] , testCompoundGraph.getNumNodes()) ;
@@ -290,7 +281,7 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testCanCopyHere() {
-		BaseSubCompoundGraph aBasicSubgraph =  testCompoundGraph.subgraphFactory().createSubgraph() ;
+		ISubCompoundGraph aBasicSubgraph =  testCompoundGraph.subgraphFactory().createSubgraph() ;
 		
 		assertTrue ( "canCopy" , testCompoundGraph.canCopyHere(aBasicSubgraph) );
 	}
@@ -298,10 +289,10 @@ public class CompoundGraphTest {
 	@Test
 	public final void testCopyHere() {
 		
-		anotherSubGraphFactory.addEdge(subEdge) ;
-		anotherSubGraphFactory.addNode(subNode) ;
+		anotherSubGraphFactory.addElement(subEdge) ;
+		anotherSubGraphFactory.addElement(subNode) ;
 		
-		BaseSubCompoundGraph subGraph = anotherSubGraphFactory.createSubgraph();
+		ISubCompoundGraph subGraph = anotherSubGraphFactory.createSubgraph();
 	
 		assertEquals ( "3 Nodes " , NUMERIC[3] , testCompoundGraph.getNumNodes()) ;
 		assertEquals ( "1 Edges " , NUMERIC[1] , testCompoundGraph.getNumEdges()) ;
@@ -314,10 +305,10 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testGetCopiedComponents() {
-		anotherSubGraphFactory.addEdge(subEdge) ;
-		anotherSubGraphFactory.addNode(subNode) ;
+		anotherSubGraphFactory.addElement(subEdge) ;
+		anotherSubGraphFactory.addElement(subNode) ;
 		
-		BaseSubCompoundGraph subGraph = anotherSubGraphFactory.createSubgraph();
+		ISubCompoundGraph subGraph = anotherSubGraphFactory.createSubgraph();
 	
 		assertEquals ( "3 Nodes " , NUMERIC[3] , testCompoundGraph.getNumNodes()) ;
 		assertEquals ( "1 Edges " , NUMERIC[1] , testCompoundGraph.getNumEdges()) ;

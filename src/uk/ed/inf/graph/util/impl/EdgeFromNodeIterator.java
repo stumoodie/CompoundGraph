@@ -25,10 +25,7 @@ import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.util.INodeEdgeFilterCriteria;
 
-public class EdgeFromNodeIterator <
-		N extends ICompoundNode,
-		E extends ICompoundEdge
-> implements Iterator<E> {
+public class EdgeFromNodeIterator <N extends ICompoundNode, E extends ICompoundEdge> implements Iterator<E> {
 	private final Iterator<? extends N> nodeIter;
 	private final Set<Integer> visited;
 	private final Queue<E> lookAhead;

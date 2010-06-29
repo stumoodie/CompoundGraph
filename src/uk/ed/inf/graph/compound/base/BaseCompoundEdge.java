@@ -18,18 +18,29 @@ package uk.ed.inf.graph.compound.base;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodePair;
-import uk.ed.inf.graph.state.IRestorableGraphElement;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalChildCompoundGraph;
+import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
 
-public abstract class BaseCompoundEdge implements ICompoundEdge, IRestorableGraphElement {
+public class BaseCompoundEdge extends BaseCompoundGraphElement implements ICompoundEdge {
+	private final int index;
+	private final ArchetypalChildCompoundGraph owningSubgraph;
+	private final ArchetypalCompoundNode inNode; 
+	private final ArchetypalCompoundNode outNode;
+	private boolean removed;
 	
-	protected BaseCompoundEdge(){
-		this.setRemoved(false);
+	protected BaseCompoundEdge(BaseCompoundGraphElement parent, int idx, BaseCompoundNode outNode, BaseCompoundNode inNode){
+		this.index = idx;
+		this.inNode = inNode;
+		this.changeInEdge();
+		this.outNode = outNode;
+		this.changeOutNode();
+		this.parent.getChildCompoundGraph().addNewNode(this);
+		removed = false;
 	}
 	
 //	protected abstract void setInNode(BaseCompoundNode outNode);
 	
-	@Override
-	public abstract BaseCompoundNode getInNode();
+	protected abstract BaseCompoundNode getInNode();
 	
 	/**
 	 * Ensures that edge is added to In Node 
@@ -43,8 +54,7 @@ public abstract class BaseCompoundEdge implements ICompoundEdge, IRestorableGrap
 	
 //	protected abstract void setOutNode(BaseCompoundNode outNode);
 	
-	@Override
-	public abstract BaseCompoundNode getOutNode();
+	protected abstract BaseCompoundNode getOutNode();
 	
     /**
      * This should be used to set the removal status variable only. No other actions#
@@ -69,18 +79,8 @@ public abstract class BaseCompoundEdge implements ICompoundEdge, IRestorableGrap
 	}
 
 	@Override
-	public abstract BaseChildCompoundGraph getOwningChildGraph();
-
-	@Override
 	public abstract BaseCompoundGraph getGraph();
 
-	@Override
-	public abstract int getIndex();
-
-	@Override
-	public final int compareTo(ICompoundEdge o) {
-		return this.getIndex() < o.getIndex() ? -1 : (this.getIndex() == o.getIndex() ? 0 : 1);
-	}
 
 	@Override
 	public abstract boolean isRemoved();

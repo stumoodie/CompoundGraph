@@ -2,15 +2,18 @@ package uk.ed.inf.graph.compound;
 
 import java.util.Iterator;
 
+import uk.ed.inf.tree.ITree;
+
 public interface IImmutableCompoundGraph {
 
-
 	/**
-	 * Get the root node of this graph.
+	 * Get the root element of this graph.
 	 * @return The root node, which cannot be null.
 	 */
-	ICompoundNode getRootNode();
+	ICompoundGraphElement getRoot();
 
+	ITree<ICompoundGraphElement> getElementTree();
+	
 	/**
 	 * Tests if there is one or more directed edges from the <code>outNode</code> to the <code>inNode</code>.
 	 * @param outNode the node the edge comes out from, can be null.
@@ -24,11 +27,9 @@ public interface IImmutableCompoundGraph {
 	 * @param ends the pair of nodes to be tested, can be null.
 	 * @return true if there is at least one edge between then, false otherwise.
 	 */
-	boolean containsEdge(ICompoundNodePair ends);
+	boolean containsConnection(ICompoundNodePair nodePair);
 	
 	boolean containsConnection(ICompoundNode thisNode, ICompoundNode thatNode);
-
-	boolean containsConnection(ICompoundNodePair nodePair);
 
 	/**
 	 * Get the number of nodes in the graph.
@@ -100,6 +101,8 @@ public interface IImmutableCompoundGraph {
 	 */
 	Iterator<ICompoundEdge> edgeIterator();
 
-	boolean containsDirectedEdge(ICompoundNodePair ends);
+	int numElements();
+	
+	Iterator<ICompoundGraphElement> elementIterator();
 
 }

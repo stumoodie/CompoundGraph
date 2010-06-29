@@ -15,19 +15,31 @@ limitations under the License.
 */
 package uk.ed.inf.graph.util.impl;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
+import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.IRootCompoundNode;
 
 public class NodeTreeIterator implements Iterator<ICompoundNode> {
-	private final Iterator<? extends ICompoundNode> topNodeIter;
+	private final Iterator<? extends ICompoundGraphElement> topNodeIter;
 	private final Queue<ICompoundNode> lookAhead;
 
-	public NodeTreeIterator(Iterator<? extends ICompoundNode> topNodeIterator){
+	public NodeTreeIterator(Iterator<? extends ICompoundGraphElement> topNodeIterator){
 		if(topNodeIterator == null) throw new IllegalArgumentException("iterator must exist");
 		this.topNodeIter = topNodeIterator;
+		this.lookAhead = new LinkedList<ICompoundNode>();
+		readBranchFromTopNode();
+	}
+	
+	public NodeTreeIterator(IRootCompoundNode rootNode){
+		if(rootNode == null) throw new IllegalArgumentException("node must exist");
+		List<ICompoundNode> tmpList = Arrays.asList(new ICompoundNode[]{ rootNode });
+		this.topNodeIter = tmpList.iterator();
 		this.lookAhead = new LinkedList<ICompoundNode>();
 		readBranchFromTopNode();
 	}
@@ -44,16 +56,18 @@ public class NodeTreeIterator implements Iterator<ICompoundNode> {
 		return retVal;
 	}
 	
-//	@SuppressWarnings("unchecked")
 	private void readBranchFromTopNode(){
 		boolean nodesAdded = false;
 		while(this.topNodeIter.hasNext() && !nodesAdded){
-			final ICompoundNode nextNode = this.topNodeIter.next();
-			Iterator<ICompoundNode> levelOrderIter = nextNode.levelOrderIterator();
+			final ICompoundGraphElement nextNode = this.topNodeIter.next();
+			Iterator<ICompoundGraphElement> levelOrderIter = nextNode.levelOrderIterator();
 			while (levelOrderIter.hasNext()) {
-				ICompoundNode node = levelOrderIter.next();
-				this.lookAhead.offer(node);
-				nodesAdded = true;
+				ICompoundGraphElement element = levelOrderIter.next(); 
+				if(element instanceof ICompoundNode){
+					ICompoundNode node = (ICompoundNode)element;
+					this.lookAhead.offer(node);
+					nodesAdded = true;
+				}
 			}
 		}
 	}
