@@ -15,6 +15,8 @@ limitations under the License.
 */
 package uk.ed.inf.graph.state;
 
+import java.util.Iterator;
+
 
 
 public interface IRestorableGraph {
@@ -31,4 +33,6 @@ public interface IRestorableGraph {
 	 * @param previousState The previous state to be restored.
 	 */
 	void restoreState(IGraphState previousState);
+
+	Iterator<IRestorableGraphElement> restorableElementIterator();
 }

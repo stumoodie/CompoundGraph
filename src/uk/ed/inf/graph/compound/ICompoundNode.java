@@ -36,15 +36,27 @@ public interface ICompoundNode extends ICompoundGraphElement, IRestorableNode {
 	 */
 	boolean hasInEdgeFrom(ICompoundNode outNode);
 	
+	/**
+	 * Gets the set of out edges to which this node is the in node and
+	 * <code>outNode</code> is the out node.
+	 * @param outNode the out node to the edge
+	 * @return a set of edges with this node as in node and <code>outNode</code> as out node.
+	 */
 	SortedSet<ICompoundEdge> getInEdgesFrom(ICompoundNode outNode);  
 	
 	/**
 	 * Has at least one edge going out from this node to inNode.
-	 * @param inNode
-	 * @return
+	 * @param inNode the in node to search for, which can be null.
+	 * @return true if this node is the out node and <code>inNode</code> is the in node to an directed edge incident to this node. 
 	 */
 	boolean hasOutEdgeTo(ICompoundNode inNode);
 	
+	/**
+	 * Gets the set of out edges to which this node is the out node and
+	 * <code>inNode</code> is the in node.
+	 * @param inNode the in node to the edge
+	 * @return a set of edges with this node as out node and <code>inNode</code> as in node.
+	 */
 	SortedSet<ICompoundEdge> getOutEdgesTo(ICompoundNode inNode);  
 
 	/**
@@ -59,8 +71,18 @@ public interface ICompoundNode extends ICompoundGraphElement, IRestorableNode {
 	 */
 	Iterator<ICompoundEdge> getOutEdgeIterator();
 
+	/**
+	 * Gets the incident nodes which are the in nodes to the incident edge.
+	 * This means that this node is the out node to the given edge.
+	 * @return an iterator over all the resulting in nodes.
+	 */
 	Iterator<ICompoundNode> getInNodeIterator();
 	
+	/**
+	 * Gets the incident nodes which are out nodes to the incident directed edge.
+	 * This means that this node is the in node to given edge.  
+	 * @return an iterator for the results.
+	 */
 	Iterator<ICompoundNode> getOutNodeIterator();
 
 	
@@ -107,4 +129,8 @@ public interface ICompoundNode extends ICompoundGraphElement, IRestorableNode {
 	boolean containsInEdge(ICompoundEdge edge);
 
 	boolean containsOutEdge(ICompoundEdge edge);
+
+	void addOutEdge(ICompoundEdge compoundEdge);
+
+	void addInEdge(ICompoundEdge compoundEdge);
 }

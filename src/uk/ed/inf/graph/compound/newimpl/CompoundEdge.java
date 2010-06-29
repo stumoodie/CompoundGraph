@@ -27,6 +27,8 @@ public class CompoundEdge implements ICompoundEdge {
 		this.nodePair = new CompoundNodePair(outNode, inNode);
 		this.level = calcTreeLevel();
 		this.removed = false;
+		outNode.addOutEdge(this);
+		inNode.addInEdge(this);
 	}
 	
 	

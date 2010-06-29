@@ -35,12 +35,14 @@ import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ed.inf.graph.state.IGraphState;
 import uk.ed.inf.graph.state.IGraphStateHandler;
+import uk.ed.inf.graph.state.IRestorableGraph;
+import uk.ed.inf.graph.state.IRestorableGraphElement;
 import uk.ed.inf.graph.util.IndexCounter;
 import uk.ed.inf.graph.util.impl.EdgeTreeIterator;
 import uk.ed.inf.graph.util.impl.NodeTreeIterator;
 import uk.ed.inf.tree.ITree;
 
-public class CompoundGraph implements ICompoundGraph {
+public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 	private final static int ROOT_NODE_IDX = 0;
 
 	private static final String DEBUG_PROP_NAME = "uk.ed.inf.graph.compound.base.debugging";
@@ -301,9 +303,6 @@ public class CompoundGraph implements ICompoundGraph {
 	private void removeElements(ISubCompoundGraphFactory selnFactory, Iterator<ICompoundGraphElement> elementIterator) {
 		while(elementIterator.hasNext()){
 			ICompoundGraphElement node = elementIterator.next();
-			if(node.equals(this.getRoot())){
-				throw new IllegalStateException("Cannot remove the root node from a compound graph");
-			}
 			node.markRemoved(true);
 			selnFactory.addElement(node);
 		}
@@ -327,5 +326,28 @@ public class CompoundGraph implements ICompoundGraph {
 	@Override
 	public void restoreState(IGraphState previousState) {
 		this.stateHandler.restoreState(previousState);
+	}
+
+	@Override
+	public Iterator<IRestorableGraphElement> restorableElementIterator() {
+		final Iterator<ICompoundGraphElement> iter = this.getRoot().levelOrderIterator();
+		return new Iterator<IRestorableGraphElement>(){
+
+			@Override
+			public boolean hasNext() {
+				return iter.hasNext();
+			}
+
+			@Override
+			public IRestorableGraphElement next() {
+				return (IRestorableGraphElement)iter.next();
+			}
+
+			@Override
+			public void remove() {
+				iter.remove();
+			}
+			
+		};
 	}
 }

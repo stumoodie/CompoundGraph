@@ -4,17 +4,17 @@ import java.util.Iterator;
 
 import uk.ed.inf.bitstring.BitStringBuffer;
 import uk.ed.inf.bitstring.IBitString;
-import uk.ed.inf.graph.compound.ICompoundGraph;
-import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.state.GeneralGraphState;
 import uk.ed.inf.graph.state.IGraphState;
 import uk.ed.inf.graph.state.IGraphStateHandler;
+import uk.ed.inf.graph.state.IRestorableGraph;
+import uk.ed.inf.graph.state.IRestorableGraphElement;
 
 public class CompoundGraphStateHandler implements IGraphStateHandler {
-	private final ICompoundGraph graph;
+	private final IRestorableGraph graph;
 	private IBitString elementStatus;
 	
-	public CompoundGraphStateHandler(ICompoundGraph graph){
+	public CompoundGraphStateHandler(IRestorableGraph graph){
 		this.graph = graph;
 	}
 	
@@ -27,9 +27,9 @@ public class CompoundGraphStateHandler implements IGraphStateHandler {
 
 	private void recordNodes(){
 		BitStringBuffer elementStatus = new BitStringBuffer();
-		Iterator<ICompoundGraphElement> iter = this.graph.getElementTree().levelOrderIterator();
+		Iterator<IRestorableGraphElement> iter = this.graph.restorableElementIterator();
 		while(iter.hasNext()){
-			ICompoundGraphElement node = iter.next();
+			IRestorableGraphElement node = iter.next();
 			if(!node.isRemoved()){
 				elementStatus.set(node.getIndex(), true);
 			}
@@ -41,7 +41,7 @@ public class CompoundGraphStateHandler implements IGraphStateHandler {
 	}
 
 	@Override
-	public ICompoundGraph getGraph() {
+	public IRestorableGraph getGraph() {
 		return this.graph;
 	}
 
@@ -51,7 +51,7 @@ public class CompoundGraphStateHandler implements IGraphStateHandler {
 			throw new IllegalArgumentException ( "The state must belong to the same Graph.") ;
 		}
 		// mark all nodes and edges as removed
-		Iterator<ICompoundGraphElement> elementIterator = this.graph.getElementTree().levelOrderIterator() ;
+		Iterator<IRestorableGraphElement> elementIterator = this.graph.restorableElementIterator();
 		while ( elementIterator.hasNext()){
 			elementIterator.next().markRemoved(true) ;
 		}
@@ -62,9 +62,9 @@ public class CompoundGraphStateHandler implements IGraphStateHandler {
 	}
 
 	private void restoreNodes(){
-		Iterator<ICompoundGraphElement> iter = this.graph.getElementTree().levelOrderIterator();
+		Iterator<IRestorableGraphElement> iter = this.graph.restorableElementIterator();
 		while(iter.hasNext()){
-			ICompoundGraphElement element = iter.next();
+			IRestorableGraphElement element = iter.next();
 			int nodeIdx = element.getIndex();
 			if(nodeIdx < this.elementStatus.length()){
 				boolean nodeState = this.elementStatus.get(nodeIdx);

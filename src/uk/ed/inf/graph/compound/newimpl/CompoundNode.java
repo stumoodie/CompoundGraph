@@ -1,6 +1,7 @@
 package uk.ed.inf.graph.compound.newimpl;
 
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
+import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 
 public class CompoundNode extends CommonCompoundNode {
@@ -50,8 +51,8 @@ public class CompoundNode extends CommonCompoundNode {
 	}
 
 	@Override
-	public CompoundGraph getGraph() {
-		return (CompoundGraph)this.parentElement.getGraph();
+	public ICompoundGraph getGraph() {
+		return this.parentElement.getGraph();
 	}
 
 	@Override

@@ -68,7 +68,7 @@ public class CompoundGraphTest {
 	
 	private ICompoundEdgeFactory anotherEdgeFactory ;
 	private ICompoundNodeFactory anotherNodeFactory ;
-	private ISubCompoundGraphFactory anotherSubGraphFactory ;
+//	private ISubCompoundGraphFactory anotherSubGraphFactory ;
 
 	private ICompoundGraphCopyBuilder mockCopyBuilder;
 
@@ -105,7 +105,7 @@ public class CompoundGraphTest {
 		
 		anotherEdgeFactory = anotherCompoundGraph.edgeFactory() ;
 		anotherNodeFactory = anotherCompoundGraph.nodeFactory() ;
-		anotherSubGraphFactory = anotherCompoundGraph.subgraphFactory() ;
+//		anotherSubGraphFactory = anotherCompoundGraph.subgraphFactory() ;
 		
 		originalState = testCompoundGraph.getCurrentState() ;
 		

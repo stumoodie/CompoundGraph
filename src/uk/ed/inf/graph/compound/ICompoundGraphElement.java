@@ -27,4 +27,6 @@ public interface ICompoundGraphElement extends IRestorableGraphElement, Comparab
 	boolean isLink();
 	
 	boolean isNode();
+	
+	boolean isRemoved();
 }

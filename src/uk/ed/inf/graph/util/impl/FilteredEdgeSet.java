@@ -75,7 +75,7 @@ public class FilteredEdgeSet <
 	@SuppressWarnings("unchecked")
 	public boolean contains(Object o) {
 		boolean retVal = false;
-		if(this.edgeSet.contains(o)){
+		if(o != null && this.edgeSet.contains(o)){
 			if(o instanceof ICompoundEdge){
 				E edge = (E)o;
 //				retVal = !node.isRemoved();

@@ -9,14 +9,12 @@ import uk.ed.inf.graph.compound.ICompoundNodePair;
 
 public class CompoundChildEdgeFactory implements ICompoundChildEdgeFactory {
 	private final ICompoundGraphElement parent;
-//	private final ICompoundGraphServices services;
 	private ICompoundNode outNode;
 	private ICompoundNode inNode;
 	private final ICompoundElementRegistration registration;
 	
 	public CompoundChildEdgeFactory(ICompoundGraphElement parent, ICompoundElementRegistration registration){
 		this.parent = parent;
-//		this.services = services;
 		this.registration = registration;
 	}
 	

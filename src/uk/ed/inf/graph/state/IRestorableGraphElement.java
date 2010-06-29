@@ -24,4 +24,6 @@ public interface IRestorableGraphElement {
 	void markRemoved(boolean setRemoved);
 	
 	boolean isRemoved();
+
+	int getIndex();
 }

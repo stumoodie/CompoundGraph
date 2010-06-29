@@ -110,9 +110,6 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 	}
 	
 	@Override
-	public abstract CompoundGraph getGraph();
-	
-	@Override
 	public Iterator<ICompoundNode> connectedNodeIterator() {
 		return new CombinedConnectedNodeIterator(this);
 	}
@@ -161,7 +158,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 
 	@Override
 	public Iterator<ICompoundNode> getInNodeIterator() {
-		return new ConnectedNodeIterator(this, this.edgeInList.iterator());
+		return new ConnectedNodeIterator(this, this.edgeOutList.iterator());
 	}
 
 	@Override
@@ -186,7 +183,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 
 	@Override
 	public Iterator<ICompoundNode> getOutNodeIterator() {
-		return new ConnectedNodeIterator(this, this.edgeOutList.iterator());
+		return new ConnectedNodeIterator(this, this.edgeInList.iterator());
 	}
 
 	@Override
@@ -284,24 +281,45 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 		return this.removed;
 	}
 
-	@Override
 	public void markRemoved(boolean setRemoved) {
 		this.removed = setRemoved;
 	}
 
 	@Override
 	public boolean containsEdge(ICompoundEdge edge) {
-		return this.edgeInList.contains(edge) || this.edgeOutList.contains(edge);
+		boolean retVal = false;
+		if(edge != null && edge.getGraph().equals(this.getGraph())){
+			retVal = this.edgeInList.contains(edge) || this.edgeOutList.contains(edge);
+		}
+		return retVal;
 	}
 
 	@Override
 	public boolean containsInEdge(ICompoundEdge edge) {
-		return this.edgeInList.contains(edge);
+		boolean retVal = false;
+		if(edge != null && edge.getGraph().equals(this.getGraph())){
+			retVal = this.edgeInList.contains(edge);
+		}
+		return retVal;
 	}
 
 	@Override
 	public boolean containsOutEdge(ICompoundEdge edge) {
-		return this.edgeOutList.contains(edge);
+		boolean retVal = false;
+		if(edge != null && edge.getGraph().equals(this.getGraph())){
+			retVal = this.edgeOutList.contains(edge);
+		}
+		return retVal;
+	}
+
+	@Override
+	public void addOutEdge(ICompoundEdge compoundEdge) {
+		this.edgeOutList.add(compoundEdge);
+	}
+
+	@Override
+	public void addInEdge(ICompoundEdge compoundEdge) {
+		this.edgeInList.add(compoundEdge);
 	}
 
 }
