@@ -27,7 +27,7 @@ import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.tree.ITree;
 
 @RunWith(JMock.class)
-public class NewCompoundNodeTest {
+public class CompoundNodeTest {
 	private static final int EXPECTED_IDX = 22;
 
 	private static final int EXPECTED_LEVEL = 1;
@@ -54,6 +54,8 @@ public class NewCompoundNodeTest {
 	private static final int EXPECTED_PARENT_LEVEL = 0;
 
 	private static final int EXPECTED_NUM_ANCESTOR_NODES = 2;
+
+	private static final int EXPECTED_NUM_PREORDER_NODES = 1;
 
 	private Mockery mockery = new JUnit4Mockery();
 	
@@ -499,14 +501,14 @@ public class NewCompoundNodeTest {
 
 	@Test
 	public void testPreOrderIterator() {
-		ICompoundGraphElement expectedresults[] = new ICompoundGraphElement[] { this.testInstance, this.mockParent };
+		ICompoundGraphElement expectedresults[] = new ICompoundGraphElement[] { this.testInstance };
 		List<ICompoundGraphElement> actualResults = new LinkedList<ICompoundGraphElement>();
-		Iterator<ICompoundGraphElement> iter = this.testInstance.ancestorIterator();
+		Iterator<ICompoundGraphElement> iter = this.testInstance.preOrderIterator();
 		while(iter.hasNext()){
 			ICompoundGraphElement node = iter.next();
 			actualResults.add(node);
 		}
-		assertEquals("expected num ancestor nodes", EXPECTED_NUM_ANCESTOR_NODES, actualResults.size());
+		assertEquals("expected num ancestor nodes", EXPECTED_NUM_PREORDER_NODES, actualResults.size());
 		int cntr = 0;
 		for(ICompoundGraphElement actualNode : actualResults){
 			assertEquals("expectedNodes", expectedresults[cntr++], actualNode);

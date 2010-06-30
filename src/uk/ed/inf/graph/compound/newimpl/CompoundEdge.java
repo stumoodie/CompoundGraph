@@ -69,7 +69,7 @@ public class CompoundEdge implements ICompoundEdge {
 
 	@Override
 	public boolean hasEnds(ICompoundNodePair ends) {
-		return this.nodePair.equals(ends);
+		return this.nodePair.equals(ends) || this.nodePair.reversedNodes().equals(ends);
 	}
 
 	@Override
@@ -127,7 +127,8 @@ public class CompoundEdge implements ICompoundEdge {
 
 	@Override
 	public int compareTo(ICompoundGraphElement o) {
-		return Integer.valueOf(this.index).compareTo(o.getIndex());
+		int otherIdx = o.getIndex();
+		return this.getIndex() < otherIdx ? -1 : (this.getIndex() > otherIdx ? 1 : 0);
 	}
 
 	@Override
