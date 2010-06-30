@@ -19,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import uk.ac.ed.inf.designbycontract.PreConditionException;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
@@ -306,12 +307,12 @@ public class CompoundNodeTest {
 		assertEquals("expected in edge", this.mockInEdge, this.testInstance.getInEdgesFrom(this.mockInEdgeOutNode).first());
 	}
 
-	@Test(expected=IllegalArgumentException.class)
+	@Test(expected=PreConditionException.class)
 	public void testGetInEdgesFromWithNonOutNode() {
 		this.testInstance.getInEdgesFrom(this.mockOutEdgeInNode);
 	}
 
-	@Test(expected=IllegalArgumentException.class)
+	@Test(expected=PreConditionException.class)
 	public void testGetInEdgesFromWithNull() {
 		this.testInstance.getInEdgesFrom(null);
 	}
@@ -377,12 +378,12 @@ public class CompoundNodeTest {
 		assertEquals("expected out edge", this.mockOutEdge, this.testInstance.getOutEdgesTo(this.mockOutEdgeInNode).first());
 	}
 
-	@Test(expected=IllegalArgumentException.class)
+	@Test(expected=PreConditionException.class)
 	public void testGetOutEdgesToWithNonOutNode() {
 		this.testInstance.getOutEdgesTo(this.mockInEdgeOutNode);
 	}
 
-	@Test(expected=IllegalArgumentException.class)
+	@Test(expected=PreConditionException.class)
 	public void testGetOutEdgesToWithNull() {
 		this.testInstance.getOutEdgesTo(null);
 	}

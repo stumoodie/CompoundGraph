@@ -24,7 +24,7 @@ import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.tree.ITree;
 
 @RunWith(JMock.class)
-public class NewCompoundEdgeTest {
+public class CompoundEdgeTest {
 	private static final int EXPECTED_EDGE_IDX = 22;
 
 	private static final int PARENT_IDX = 0;
