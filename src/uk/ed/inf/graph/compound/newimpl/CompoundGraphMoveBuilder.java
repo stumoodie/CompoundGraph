@@ -16,13 +16,14 @@ import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
 public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	private ISubCompoundGraph sourceSubCigraph;
-	private IChildCompoundGraph destSubCigraph;
+	private final IChildCompoundGraph destSubCigraph;
 	private ISubCompoundGraphFactory subGraphFactory;
 	private final Map<ICompoundGraphElement, ICompoundGraphElement> oldNewEquivList;
 	private ISubCompoundGraphFactory removalSubGraphFactory;
 
-	public CompoundGraphMoveBuilder(){
+	public CompoundGraphMoveBuilder(IChildCompoundGraph destn){
 		this.oldNewEquivList = new HashMap<ICompoundGraphElement, ICompoundGraphElement>();
+		this.destSubCigraph = destn;
 	}
 	
 	@Override
@@ -38,6 +39,37 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	@Override
 	public ISubCompoundGraph getSourceSubgraph() {
 		return this.sourceSubCigraph;
+	}
+
+	@Override
+	public boolean canMoveHere(ISubCompoundGraph subgraph) {
+		this.setSourceSubgraph(subgraph);
+		return this.canMoveHere();
+	}
+	
+	@Override
+	public boolean canMoveHere() {
+		ISubCompoundGraph subGraph = this.sourceSubCigraph;
+		boolean retVal = subGraph != null && subGraph.getSuperGraph().equals(this.destSubCigraph.getSuperGraph())
+			&& subGraph.isInducedSubgraph() && subGraph.isConsistentSnapShot()
+			&& !subGraph.containsElement(this.destSubCigraph.getRoot());
+		if(retVal){
+			retVal = false;
+			Iterator<? extends ICompoundNode> topNodeIter = subGraph.topNodeIterator();
+			while(topNodeIter.hasNext()){
+				ICompoundNode topNode = topNodeIter.next();
+				if(!topNode.getParent().equals(this.destSubCigraph.getRoot())){
+					retVal = true;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	@Override
+	public void moveHere(ISubCompoundGraph subGraph) {
+		this.setSourceSubgraph(subGraph);
+		this.makeMove();
 	}
 
 	@Override
@@ -104,11 +136,6 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 			this.removalSubGraphFactory.addElement(srcNode);
 		}
 		return newNode;
-	}
-
-	@Override
-	public void setDestinatChildCompoundGraph(IChildCompoundGraph childCompoundGraph) {
-		this.destSubCigraph = childCompoundGraph;
 	}
 
 	@Override

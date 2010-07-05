@@ -79,7 +79,7 @@ public class AdditionalTest {
 		ISubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addElement(edge1) ;
 		ISubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
-		assertFalse ( "cannot copy" , rootNode.getChildCompoundGraph().canCopyHere(ordinarySubGraph) );
+		assertFalse ( "cannot copy" , rootNode.getChildCompoundGraph().newCopyBuilder().canCopyHere(ordinarySubGraph) );
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -88,7 +88,7 @@ public class AdditionalTest {
 		ISubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addElement(edge1) ;
 		ISubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
-		rootNode.getChildCompoundGraph().copyHere(ordinarySubGraph) ;
+		rootNode.getChildCompoundGraph().newCopyBuilder().copyHere(ordinarySubGraph) ;
 	}
 	
 	@Test
@@ -97,7 +97,7 @@ public class AdditionalTest {
 		ISubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addElement(rootNode) ;
 		ISubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
-		assertFalse("cannot move rootNode" , node1.getChildCompoundGraph().canMoveHere(ordinarySubGraph) );
+		assertFalse("cannot move rootNode" , node1.getChildCompoundGraph().newMoveBuilder().canMoveHere(ordinarySubGraph) );
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -106,8 +106,8 @@ public class AdditionalTest {
 		ISubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addElement(rootNode) ;
 		ISubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
-		rootNode.getChildCompoundGraph().moveHere(ordinarySubGraph) ;
-		assertFalse("cannot move rootNode" , node1.getChildCompoundGraph().canMoveHere(ordinarySubGraph) );
+		rootNode.getChildCompoundGraph().newMoveBuilder().moveHere(ordinarySubGraph) ;
+		assertFalse("cannot move rootNode" , node1.getChildCompoundGraph().newMoveBuilder().canMoveHere(ordinarySubGraph) );
 	}	
 	
 	@Test
@@ -116,7 +116,7 @@ public class AdditionalTest {
 		ISubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addElement(rootNode) ;
 		ISubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
-		assertFalse("cannot move rootNode" , node1.getChildCompoundGraph().canCopyHere(ordinarySubGraph) );
+		assertFalse("cannot move rootNode" , node1.getChildCompoundGraph().newCopyBuilder().canCopyHere(ordinarySubGraph) );
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -125,7 +125,7 @@ public class AdditionalTest {
 		ISubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addElement(rootNode) ;
 		ISubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
-		rootNode.getChildCompoundGraph().copyHere(ordinarySubGraph) ;
+		rootNode.getChildCompoundGraph().newCopyBuilder().copyHere(ordinarySubGraph) ;
 	}
 	
 	@Test(expected=IllegalStateException.class)
@@ -134,7 +134,7 @@ public class AdditionalTest {
 		ISubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addElement(rootNode) ;
 		ISubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
-		testInstance.removeSubgraph(ordinarySubGraph) ;
+		testInstance.newSubgraphRemovalBuilder().removeSubgraph(ordinarySubGraph) ;
 	}
 	
 	@Test
@@ -173,7 +173,7 @@ public class AdditionalTest {
 		ISubCompoundGraphFactory subGraphFactory = testInstance.subgraphFactory() ;
 		subGraphFactory.addElement(node1) ;
 		ISubCompoundGraph subGraph = subGraphFactory.createSubgraph() ;
-		testInstance.removeSubgraph(subGraph) ;
+		testInstance.newSubgraphRemovalBuilder().removeSubgraph(subGraph) ;
 		IGraphState removedNodeGraphState = testInstance.getCurrentState() ;
 		assertEquals ( "expected states" , REMOVED_ELEMENT_BITSTRING , removedNodeGraphState.getElementStates().toString()) ;
 		assertEquals ( "only two nodes" , NUMERIC_VALUES[2] , testInstance.getNumNodes() ) ;
@@ -197,7 +197,7 @@ public class AdditionalTest {
 		ISubCompoundGraphFactory subGraphFactory = testInstance.subgraphFactory() ;
 		subGraphFactory.addElement(edge1) ;
 		ISubCompoundGraph subGraph = subGraphFactory.createSubgraph() ;
-		testInstance.removeSubgraph(subGraph) ;
+		testInstance.newSubgraphRemovalBuilder().removeSubgraph(subGraph) ;
 		assertEquals ( "three nodes" , NUMERIC_VALUES[3] , testInstance.getNumNodes() ) ;
 		assertEquals ( "no edges" , NUMERIC_VALUES[0] , testInstance.getNumEdges() ) ;
 		testInstance.restoreState(nonEmptyGraphState) ;
@@ -211,7 +211,7 @@ public class AdditionalTest {
 		ISubCompoundGraphFactory subGraphFactory = testInstance.subgraphFactory() ;
 		subGraphFactory.addElement(node1) ;
 		ISubCompoundGraph subGraph = subGraphFactory.createSubgraph() ;
-		assertFalse ("cannot move to other diagram" , this.emptyTestInstance.getRoot().getChildCompoundGraph().canMoveHere(subGraph)) ;
+		assertFalse ("cannot move to other diagram" , this.emptyTestInstance.getRoot().getChildCompoundGraph().newMoveBuilder().canMoveHere(subGraph)) ;
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -220,7 +220,7 @@ public class AdditionalTest {
 		ISubCompoundGraphFactory subGraphFactory = testInstance.subgraphFactory() ;
 		subGraphFactory.addElement(node1) ;
 		ISubCompoundGraph subGraph = subGraphFactory.createSubgraph() ;
-		this.emptyTestInstance.getRoot().getChildCompoundGraph().moveHere(subGraph) ;
+		this.emptyTestInstance.getRoot().getChildCompoundGraph().newMoveBuilder().moveHere(subGraph) ;
 	}
 	
 	@Test
@@ -229,7 +229,7 @@ public class AdditionalTest {
 		ISubCompoundGraphFactory subGraphFactory = testInstance.subgraphFactory() ;
 		subGraphFactory.addElement(node1) ;
 		ISubCompoundGraph subGraph = subGraphFactory.createSubgraph() ;
-		assertTrue ("cannot move to other diagram" , this.emptyTestInstance.getRoot().getChildCompoundGraph().canCopyHere(subGraph)) ;
+		assertTrue ("cannot move to other diagram" , this.emptyTestInstance.getRoot().getChildCompoundGraph().newCopyBuilder().canCopyHere(subGraph)) ;
 	}
 	
 	@Test
@@ -238,7 +238,7 @@ public class AdditionalTest {
 		ISubCompoundGraphFactory subGraphFactory = testInstance.subgraphFactory() ;
 		subGraphFactory.addElement(node1) ;
 		ISubCompoundGraph subGraph = subGraphFactory.createSubgraph() ;
-		this.emptyTestInstance.getRoot().getChildCompoundGraph().canCopyHere(subGraph) ;
+		this.emptyTestInstance.getRoot().getChildCompoundGraph().newCopyBuilder().canCopyHere(subGraph) ;
 		assertEquals ( "emptyGraph has one node" , NUMERIC_VALUES[1] , this.emptyTestInstance.getNumNodes() ) ;
 	}
 	

@@ -166,11 +166,6 @@ public class CompoundGraphIntegrationTest {
 	}
 
 	@Test
-	public void testValidity() {
-	    assertTrue("is valid", this.testInstance.isValid());
-	}
-	
-	@Test
 	public final void testCompoundGraph() {
 		CompoundGraph testEmptyInstance = new CompoundGraph();
 		assertEquals("empty edges", EXPECTED_INITIAL_EDGES, testEmptyInstance.getNumEdges());
@@ -318,7 +313,7 @@ public class CompoundGraphIntegrationTest {
 		assertTrue("expected edge 7", this.testInstance.containsEdge(this.edge7));
 		assertTrue("expected edge 8", this.testInstance.containsEdge(this.edge8));
 		assertTrue("expected edge 8", this.testInstance.containsEdge(this.edge9));
-		assertFalse("expected no edge", this.testInstance.containsConnection(null));
+		assertFalse("expected no edge", this.testInstance.containsEdge(null));
 	}
 
 	@Test
@@ -496,7 +491,7 @@ public class CompoundGraphIntegrationTest {
 		ISubCompoundGraphFactory subgraphFact = this.testInstance.subgraphFactory();
 		subgraphFact.addElement(this.rootNode);
 		ISubCompoundGraph subGraph = subgraphFact.createSubgraph();
-		this.testInstance.removeSubgraph(subGraph);
+		this.testInstance.newSubgraphRemovalBuilder().removeSubgraph(subGraph);
 	}
 
 	@Test
@@ -504,7 +499,7 @@ public class CompoundGraphIntegrationTest {
 		ISubCompoundGraphFactory subgraphFact = this.testInstance.subgraphFactory();
 		subgraphFact.addElement(this.node2);
 		ISubCompoundGraph subGraph = subgraphFact.createInducedSubgraph();
-		this.testInstance.removeSubgraph(subGraph);
+		this.testInstance.newSubgraphRemovalBuilder().removeSubgraph(subGraph);
 		assertEquals("Expected num nodes", EXPECTED_NODES_AFTER_NODE2_DELETED, this.testInstance.getNumNodes());
 		assertEquals("Expected num edges", EXPECTED_EDGES_AFTER_NODE2_DELETED, this.testInstance.getNumEdges());
 		assertTrue("node 2 removed", this.testInstance.containsNode(this.node2)== false);
@@ -524,10 +519,9 @@ public class CompoundGraphIntegrationTest {
 		ISubCompoundGraphFactory subgraphFact = this.testInstance.subgraphFactory();
 		subgraphFact.addElement(this.edge2);
 		ISubCompoundGraph subGraph = subgraphFact.createSubgraph();
-		this.testInstance.removeSubgraph(subGraph);
+		this.testInstance.newSubgraphRemovalBuilder().removeSubgraph(subGraph);
 		assertEquals("Expected num nodes", EXPECTED_NUM_NODES, this.testInstance.getNumNodes());
 		assertEquals("Expected num edges", EXPECTED_EDGES_AFTER_EDGE2_DELETED, this.testInstance.getNumEdges());
-		assertTrue("edge 2 removed", this.testInstance.containsConnection(this.edge2.getConnectedNodes())== false);
 		assertTrue("edge 2 removed", this.testInstance.containsEdge(this.edge2)== false);
 		assertTrue("edge 2 marked removed", this.edge2.isRemoved());
 	}
@@ -538,12 +532,11 @@ public class CompoundGraphIntegrationTest {
 		subgraphFact.addElement(this.node5);
 		subgraphFact.addElement(this.edge2);
 		ISubCompoundGraph subGraph = subgraphFact.createSubgraph();
-		this.testInstance.removeSubgraph(subGraph);
+		this.testInstance.newSubgraphRemovalBuilder().removeSubgraph(subGraph);
 		assertEquals("Expected num nodes", EXPECTED_NODES_AFTER_NODE5_DELETED, this.testInstance.getNumNodes());
 		assertEquals("Expected num edges", EXPECTED_EDGES_AFTER_EDGE2_NODE5_DELETED, this.testInstance.getNumEdges());
 		assertTrue("node 5 removed", this.testInstance.containsNode(this.node5)== false);
 		assertTrue("edge 2 removed", this.testInstance.containsEdge(this.edge2)== false);
-		assertTrue("edge 2 removed", this.testInstance.containsConnection(this.edge2.getConnectedNodes())== false);
 		assertTrue("edge 1 present", this.testInstance.containsEdge(this.edge1));
 		assertTrue("node 5 marked removed", this.node5.isRemoved());
 		assertTrue("edge 2 marked removed", this.edge2.isRemoved());
@@ -555,13 +548,12 @@ public class CompoundGraphIntegrationTest {
 		subgraphFact.addElement(this.node1);
 		subgraphFact.addElement(this.node2);
 		ISubCompoundGraph subGraph = subgraphFact.createInducedSubgraph();
-		this.testInstance.removeSubgraph(subGraph);
+		this.testInstance.newSubgraphRemovalBuilder().removeSubgraph(subGraph);
 		assertEquals("Expected num nodes", EXPECTED_NODES_AFTER_NODES_1_AND_2_DELETED, this.testInstance.getNumNodes());
 		assertEquals("Expected num edges", EXPECTED_EDGES_AFTER_NODES_1_AND_2_DELETED, this.testInstance.getNumEdges());
 		assertTrue("node 1 removed", this.testInstance.containsNode(this.node1)== false);
 		assertTrue("node 2 removed", this.testInstance.containsNode(this.node2)== false);
 		assertTrue("edge 2 removed", this.testInstance.containsEdge(this.edge2)== false);
-		assertTrue("edge 2 removed", this.testInstance.containsConnection(this.edge2.getConnectedNodes())== false);
 		assertTrue("edge 1 removed", this.testInstance.containsEdge(this.edge1) == false);
 		assertTrue("node 1 marked removed", this.node1.isRemoved());
 		assertTrue("node 2 marked removed", this.node2.isRemoved());
@@ -573,13 +565,12 @@ public class CompoundGraphIntegrationTest {
 		subgraphFact.addElement(this.node1);
 		subgraphFact.addElement(this.node2);
 		ISubCompoundGraph subGraph = subgraphFact.createSubgraph();
-		this.testInstance.removeSubgraph(subGraph);
+		this.testInstance.newSubgraphRemovalBuilder().removeSubgraph(subGraph);
 		assertEquals("Expected num nodes", EXPECTED_NODES_AFTER_NODES_1_AND_2_DELETED, this.testInstance.getNumNodes());
 		assertEquals("Expected num edges", EXPECTED_EDGES_AFTER_NODES_1_AND_2_DELETED, this.testInstance.getNumEdges());
 		assertTrue("node 1 removed", this.testInstance.containsNode(this.node1)== false);
 		assertTrue("node 2 removed", this.testInstance.containsNode(this.node2)== false);
 		assertTrue("edge 2 removed", this.testInstance.containsEdge(this.edge2)== false);
-		assertTrue("edge 2 removed", this.testInstance.containsConnection(this.edge2.getConnectedNodes())== false);
 		assertTrue("edge 1 removed", this.testInstance.containsEdge(this.edge1) == false);
 		assertTrue("node 1 marked removed", this.node1.isRemoved());
 		assertTrue("node 2 marked removed", this.node2.isRemoved());
@@ -625,7 +616,7 @@ public class CompoundGraphIntegrationTest {
 		subGraphfactory.addElement(node1) ;
 		subGraphfactory.addElement(edge1);
 		ISubCompoundGraph  nonInducedSubGraph = subGraphfactory.createSubgraph() ;
-		this.testInstance.getRoot().getChildCompoundGraph().copyHere(nonInducedSubGraph) ;
+		this.testInstance.getRoot().getChildCompoundGraph().newCopyBuilder().copyHere(nonInducedSubGraph) ;
 		assertEquals ( "copied nodes" , EXPECTED_NUM_NODES + 3 , testInstance.getNumNodes() ) ;
 		assertEquals ( "copied edges" , EXPECTED_NUM_EDGES + 2, testInstance.getNumEdges() ) ;
 	}
@@ -637,7 +628,7 @@ public class CompoundGraphIntegrationTest {
 		subGraphfactory.addElement(node2) ;
 		ISubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
 		assertEquals ( "rootNode has 2 Nodes" , NUMERIC_VALUE[2] , rootNode.getChildCompoundGraph().getNumNodes()) ;
-		this.testInstance.getRoot().getChildCompoundGraph().copyHere(inducedSubGraph) ;
+		this.testInstance.getRoot().getChildCompoundGraph().newCopyBuilder().copyHere(inducedSubGraph) ;
 		assertEquals ( "copied nodes" , EXPECTED_NUM_NODES + 8 , testInstance.getNumNodes() ) ;
 		assertEquals ( "Copied edges" , EXPECTED_NUM_EDGES + 9, testInstance.getNumEdges() ) ;
 		assertEquals ( "rootNode has 4 Nodes" , NUMERIC_VALUE[4] , rootNode.getChildCompoundGraph().getNumNodes()) ;
@@ -647,7 +638,7 @@ public class CompoundGraphIntegrationTest {
 	public final void testCopyEmptySubGraph(){
 		ISubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		ISubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
-		this.testInstance.getRoot().getChildCompoundGraph().copyHere(inducedSubGraph) ;
+		this.testInstance.getRoot().getChildCompoundGraph().newCopyBuilder().copyHere(inducedSubGraph) ;
 		assertEquals ( "copied Edges nodes" , EXPECTED_NUM_NODES , testInstance.getNumNodes() ) ;
 		assertEquals ( "CopiedEdges edges" , EXPECTED_NUM_EDGES, testInstance.getNumEdges() ) ;
 	}
@@ -678,7 +669,7 @@ public class CompoundGraphIntegrationTest {
 		subGraphfactory.addElement(node1) ;
 		ISubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
 		assertTrue("snapshot consistent", ordinarySubGraph.isConsistentSnapShot());
-		testInstance.removeSubgraph(ordinarySubGraph) ;
+		testInstance.newSubgraphRemovalBuilder().removeSubgraph(ordinarySubGraph) ;
 		assertEquals ( "3 less Nodes" , EXPECTED_NUM_NODES - 3 , testInstance.getNumNodes()) ;
 		assertEquals ( "6 less Edges" , EXPECTED_NUM_EDGES - 6 , testInstance.getNumEdges()) ;
 		assertEquals ("expected nodes on subgraph" , 3 , ordinarySubGraph.getNumNodes()) ;
@@ -695,7 +686,7 @@ public class CompoundGraphIntegrationTest {
 		subGraphfactory.addElement(node3) ;
 		ISubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
 		assertTrue("snapshot consistent", ordinarySubGraph.isConsistentSnapShot());
-		testInstance.removeSubgraph(ordinarySubGraph) ;
+		testInstance.newSubgraphRemovalBuilder().removeSubgraph(ordinarySubGraph) ;
 		assertEquals ( "1 less Nodes" , EXPECTED_NUM_NODES - 1 , testInstance.getNumNodes()) ;
 		assertEquals ( "1 less Edges" , EXPECTED_NUM_EDGES - 1 , testInstance.getNumEdges()) ;
 		assertEquals ("expected nodes on subgraph" , 1 , ordinarySubGraph.getNumNodes()) ;
@@ -711,7 +702,7 @@ public class CompoundGraphIntegrationTest {
 		subGraphfactory.addElement(node7) ;
 		ISubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
 		assertTrue("snapshot consistent", ordinarySubGraph.isConsistentSnapShot());
-		testInstance.removeSubgraph(ordinarySubGraph) ;
+		testInstance.newSubgraphRemovalBuilder().removeSubgraph(ordinarySubGraph) ;
 		assertEquals ( "2 less Nodes" , EXPECTED_NUM_NODES - 2 , testInstance.getNumNodes()) ;
 		assertEquals ( "2 less Edges" , EXPECTED_NUM_EDGES - 3 , testInstance.getNumEdges()) ;
 		assertEquals ("expected nodes on subgraph" , 2 , ordinarySubGraph.getNumNodes()) ;
@@ -728,7 +719,7 @@ public class CompoundGraphIntegrationTest {
 		subGraphfactory.addElement(node2) ;
 		ISubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
 		assertTrue("snapshot consistent", inducedSubGraph.isConsistentSnapShot());
-		testInstance.removeSubgraph(inducedSubGraph) ;
+		testInstance.newSubgraphRemovalBuilder().removeSubgraph(inducedSubGraph) ;
 		assertEquals ( "3 less Nodes" , EXPECTED_NUM_NODES - 8 , testInstance.getNumNodes()) ;
 		assertEquals ( "6 less Edges" , EXPECTED_NUM_EDGES - 9 , testInstance.getNumEdges()) ;
 		assertEquals ("empty nodes on subgraph" , 8 , inducedSubGraph.getNumNodes()) ;
@@ -744,7 +735,7 @@ public class CompoundGraphIntegrationTest {
 		ISubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
 		assertEquals ( "rootNode has 2 nodes" , NUMERIC_VALUE[2] , rootNode.getChildCompoundGraph().getNumNodes()) ;
 		assertEquals ( "node2 has 2 nodes" , NUMERIC_VALUE[2] , node2.getChildCompoundGraph().getNumNodes()) ;
-		rootNode.getChildCompoundGraph().moveHere(ordinarySubGraph) ;		
+		rootNode.getChildCompoundGraph().newMoveBuilder().moveHere(ordinarySubGraph) ;		
 		assertEquals ( "same Nodes" , EXPECTED_NUM_NODES , testInstance.getNumNodes()) ;
 		assertEquals ( "same Edges" , EXPECTED_NUM_EDGES , testInstance.getNumEdges()) ;
 		assertEquals ( "rootNode has 3 nodes" , NUMERIC_VALUE[3] , rootNode.getChildCompoundGraph().getNumNodes()) ;
@@ -762,7 +753,7 @@ public class CompoundGraphIntegrationTest {
 		assertTrue("node6 exists", this.testInstance.containsNode(NODE6_IDX));
 		assertEquals ( "node1 has 2 nodes" , EXPECTED_NUM_ROOTNODE_CHILDREN , rootNode.getChildCompoundGraph().getNumNodes()) ;
 		assertEquals ( "node2 has 2 nodes" , EXPECTED_NUM_NODE2_CHILDREN , node2.getChildCompoundGraph().getNumNodes()) ;
-		rootNode.getChildCompoundGraph().moveHere(ordinarySubGraph) ;		
+		rootNode.getChildCompoundGraph().newMoveBuilder().moveHere(ordinarySubGraph) ;		
 		assertTrue("node1 still exists", this.testInstance.containsNode(NODE1_IDX));
 		assertFalse("node6 removed", this.testInstance.containsNode(NODE6_IDX));
 		assertFalse("node7 removed", this.testInstance.containsNode(NODE7_IDX));
@@ -788,7 +779,7 @@ public class CompoundGraphIntegrationTest {
 		ISubCompoundGraph  ordinarySubGraph = subGraphfactory.createSubgraph() ;
 		assertTrue("is induced", ordinarySubGraph.isInducedSubgraph()) ;
 		assertTrue("is consistent", ordinarySubGraph.isConsistentSnapShot()) ;
-		assertFalse("cannot move to same destination", this.node2.getChildCompoundGraph().canMoveHere(ordinarySubGraph));		
+		assertFalse("cannot move to same destination", this.node2.getChildCompoundGraph().newMoveBuilder().canMoveHere(ordinarySubGraph));		
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -799,7 +790,7 @@ public class CompoundGraphIntegrationTest {
 		ISubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
 		assertTrue("is induced", inducedSubGraph.isInducedSubgraph()) ;
 		assertTrue("is consistent", inducedSubGraph.isConsistentSnapShot()) ;
-		node6.getParent().getChildCompoundGraph().moveHere(inducedSubGraph) ;
+		node6.getParent().getChildCompoundGraph().newMoveBuilder().moveHere(inducedSubGraph) ;
 	}
 	
 	@Test
@@ -810,7 +801,7 @@ public class CompoundGraphIntegrationTest {
 		ISubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
 		assertTrue("is induced", inducedSubGraph.isInducedSubgraph()) ;
 		assertTrue("is consistent", inducedSubGraph.isConsistentSnapShot()) ;
-		assertFalse("cannot move to same node", node6.getParent().getChildCompoundGraph().canMoveHere(inducedSubGraph)) ;
+		assertFalse("cannot move to same node", node6.getParent().getChildCompoundGraph().newMoveBuilder().canMoveHere(inducedSubGraph)) ;
 	}
 	
 	@Test
@@ -821,7 +812,7 @@ public class CompoundGraphIntegrationTest {
 		ISubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
 		assertTrue("is induced", inducedSubGraph.isInducedSubgraph()) ;
 		assertTrue("is consistent", inducedSubGraph.isConsistentSnapShot()) ;
-		assertFalse("cannot move to same root node", node1.getParent().getChildCompoundGraph().canMoveHere(inducedSubGraph)) ;
+		assertFalse("cannot move to same root node", node1.getParent().getChildCompoundGraph().newMoveBuilder().canMoveHere(inducedSubGraph)) ;
 	}
 	
 	@Test
@@ -830,7 +821,7 @@ public class CompoundGraphIntegrationTest {
 		ISubCompoundGraphFactory subGraphfactory = testInstance.subgraphFactory() ; 
 		subGraphfactory.addElement(node6) ;
 		ISubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
-		rootNode.getChildCompoundGraph().moveHere(inducedSubGraph) ;
+		rootNode.getChildCompoundGraph().newMoveBuilder().moveHere(inducedSubGraph) ;
 
 		assertEquals ( "same Nodes" , EXPECTED_NUM_NODES , testInstance.getNumNodes()) ;
 		assertEquals ( "same Edges" , EXPECTED_NUM_EDGES , testInstance.getNumEdges()) ;
@@ -847,7 +838,7 @@ public class CompoundGraphIntegrationTest {
 		ISubCompoundGraph  inducedSubGraph = subGraphfactory.createInducedSubgraph() ;
 		assertEquals ( "expected 1 Node" , 1, inducedSubGraph.getNumNodes()) ;
 		assertEquals ( "expected no Edges" , 0 , inducedSubGraph.getNumEdges()) ;
-		node8.getChildCompoundGraph().moveHere(inducedSubGraph) ;
+		node8.getChildCompoundGraph().newMoveBuilder().moveHere(inducedSubGraph) ;
 
 		assertEquals ( "same Nodes" , EXPECTED_NUM_NODES , testInstance.getNumNodes()) ;
 		assertEquals ( "same Edges" , EXPECTED_NUM_EDGES , testInstance.getNumEdges()) ;
@@ -867,7 +858,7 @@ public class CompoundGraphIntegrationTest {
 		ISubCompoundGraphFactory subGraphfactory2 = testInstance.subgraphFactory() ; 
 		subGraphfactory2.addElement(node4) ;
 		ISubCompoundGraph  node4SubGraph = subGraphfactory2.createSubgraph() ;
-		testInstance.removeSubgraph(node4SubGraph) ;
+		testInstance.newSubgraphRemovalBuilder().removeSubgraph(node4SubGraph) ;
 		assertTrue("node 4 removed", node4.isRemoved());
 		assertEquals ( "one less Node" , EXPECTED_NUM_NODES - 1 , testInstance.getNumNodes()) ;
 		assertFalse ( "is not Consistent with diagram" , node1SubGraph.isConsistentSnapShot()) ;

@@ -122,7 +122,7 @@ public class CreatedEmptyCompoundGraphTest {
 		
 		ISubCompoundGraph producedSubGraph = testSubGraphFactory.createSubgraph() ;
 		
-		testGraph.removeSubgraph(producedSubGraph) ;
+		testGraph.newSubgraphRemovalBuilder().removeSubgraph(producedSubGraph) ;
 	}
 	
 	@Test

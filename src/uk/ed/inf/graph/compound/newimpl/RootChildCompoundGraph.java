@@ -27,11 +27,6 @@ public class RootChildCompoundGraph extends CommonChildCompoundGraph implements 
 	}
 
 	@Override
-	protected boolean hasPassedAdditionalValidation() {
-		return true;
-	}
-
-	@Override
 	protected void notifyCopyOperationComplete(ISubCompoundGraph originalSubgraph, ISubCompoundGraph copiedSubgraph) {
 		// TODO Auto-generated method stub
 		

@@ -16,17 +16,20 @@ import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
 public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 	private ISubCompoundGraph sourceSubCigraph;
-	private IChildCompoundGraph destSubCigraph;
+	private final IChildCompoundGraph destSubCigraph;
 	private ISubCompoundGraphFactory subGraphFactory;
 	private final Map<ICompoundGraphElement, ICompoundGraphElement> oldNewEquivList;
+	private ISubCompoundGraph copiedComponents;
 
-	public CompoundGraphCopyBuilder(){
+	public CompoundGraphCopyBuilder(IChildCompoundGraph dest){
 		this.oldNewEquivList = new HashMap<ICompoundGraphElement, ICompoundGraphElement>();
+		this.copiedComponents = null; 
+		this.destSubCigraph = dest;
 	}
 	
 	@Override
 	public ISubCompoundGraph getCopiedComponents() {
-		return this.subGraphFactory.createSubgraph();
+		return this.copiedComponents;
 	}
 
 	@Override
@@ -40,12 +43,33 @@ public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 	}
 
 	@Override
+	public boolean canCopyHere() {
+		ISubCompoundGraph subGraph = this.sourceSubCigraph;
+		return subGraph != null && subGraph instanceof ISubCompoundGraph && subGraph.isInducedSubgraph()
+		&& subGraph.isConsistentSnapShot() && !subGraph.containsRoot();
+	}
+	
+	@Override
+	public boolean canCopyHere(ISubCompoundGraph subGraph) {
+		this.setSourceSubgraph(subGraph);
+		return this.canCopyHere();
+	}
+
+	@Override
+	public void copyHere(ISubCompoundGraph subGraph) {
+		this.setSourceSubgraph(subGraph);
+		this.makeCopy();
+	}
+
+	@Override
 	public void makeCopy() {
+		this.copiedComponents = null;
 		this.oldNewEquivList.clear();
 		this.subGraphFactory = this.destSubCigraph.getSuperGraph().subgraphFactory();
 		copyNodes();
 		// avoid holding onto additional unneeded memory
 		this.oldNewEquivList.clear();
+		this.copiedComponents = this.subGraphFactory.createSubgraph();
 	}
 
 	private void copyNodes(){
@@ -92,11 +116,6 @@ public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 		ICompoundNodeFactory fact = destParentNode.getChildCompoundGraph().nodeFactory();
 		ICompoundNode newNode = fact.createNode();
 		return newNode;
-	}
-
-	@Override
-	public void setDestinatChildCompoundGraph(IChildCompoundGraph childCompoundGraph) {
-		this.destSubCigraph = childCompoundGraph;
 	}
 
 	@Override

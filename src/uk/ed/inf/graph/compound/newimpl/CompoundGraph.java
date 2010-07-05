@@ -19,20 +19,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
-import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundGraph;
-import uk.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodeFactory;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.IRootCompoundNode;
-import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
+import uk.ed.inf.graph.compound.ISubgraphRemovalBuilder;
 import uk.ed.inf.graph.state.IGraphState;
 import uk.ed.inf.graph.state.IGraphStateHandler;
 import uk.ed.inf.graph.state.IRestorableGraph;
@@ -45,51 +40,26 @@ import uk.ed.inf.tree.ITree;
 public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 	private final static int ROOT_NODE_IDX = 0;
 
-	private static final String DEBUG_PROP_NAME = "uk.ed.inf.graph.compound.base.debugging";
 	// added debug checks to graph
-	private final boolean debuggingEnabled;
-    private final Logger logger = Logger.getLogger(this.getClass());
-//	private final IndexCounter elementCounter;
+//    private final Logger logger = Logger.getLogger(this.getClass());
 	private final IRootCompoundNode rootNode;
-	private ICompoundGraphCopyBuilder copyBuilder;
 	private final IGraphStateHandler stateHandler;
 	private static Map<ICompoundGraph, IndexCounter> counterLookup = new HashMap<ICompoundGraph, IndexCounter>();
 
 //	private ICompoundGraphServices services;
 
 	public CompoundGraph(){
-		this(new CompoundGraphCopyBuilder());
-	}
-		
-	public CompoundGraph(ICompoundGraphCopyBuilder copyBuilder){
-		this.debuggingEnabled = Boolean.getBoolean(DEBUG_PROP_NAME);
 		this.stateHandler = new CompoundGraphStateHandler(this);
-//		this.elementCounter = new IndexCounter(ROOT_NODE_IDX);
-//		this.services =  new ICompoundGraphServices() {
-//			
-//			@Override
-//			public ICompoundGraphMoveBuilder newMoveBuilder() {
-//				return new CompoundGraphMoveBuilder();
-//			}
-//			
-//			@Override
-//			public ICompoundGraphCopyBuilder newCopyBuilder() {
-//				return new CompoundGraphCopyBuilder();
-//			}
-//			
-//			@Override
-//			public IndexCounter getIndexCounter() {
-//				return elementCounter;
-//			}
-//		};
 		this.rootNode = new RootCompoundNode(this, ROOT_NODE_IDX);
-//		this.copyBuilder = this.services.newCopyBuilder();
-		this.copyBuilder = copyBuilder;
-		counterLookup.put(this, new IndexCounter(ROOT_NODE_IDX));
 	}
 	
 	public static IndexCounter getIndexCounter(ICompoundGraph graph){
-		return counterLookup.get(graph);
+		IndexCounter retVal = counterLookup.get(graph);
+		if(retVal == null){
+			retVal = new IndexCounter(ROOT_NODE_IDX);
+			counterLookup.put(graph, retVal);
+		}
+		return retVal;
 	}
 	
 	
@@ -109,21 +79,6 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 			ICompoundGraphElement node = this.getElementTree().getLowestCommonAncestor(thisNode, thatNode);
 			if(node != null){
 				retVal = node.getChildCompoundGraph().containsConnection(thisNode, thatNode);
-			}
-		}
-		return retVal;
-	}
-
-	@Override
-	public boolean containsConnection(ICompoundNodePair ends) {
-		boolean retVal = false;
-		if(ends != null){
-			ICompoundNode oneNode = ends.getOutNode();
-			ICompoundNode twoNode = ends.getInNode();
-			// check that at least one node belongs to this graph, if so then we
-			// can be sure that the other node and edge will.
-			if(oneNode.getGraph().equals(this)){
-				retVal = this.containsConnection(oneNode, twoNode);
 			}
 		}
 		return retVal;
@@ -150,12 +105,9 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 	public boolean containsEdge(int edgeIdx) {
 		boolean retVal = false;
 		Iterator<ICompoundGraphElement> iter = this.getElementTree().levelOrderIterator();
-		while(iter.hasNext()){
+		while(iter.hasNext() && !retVal){
 			ICompoundGraphElement node = iter.next();
-			retVal = node.getChildCompoundGraph().containsEdge(edgeIdx);
-			if(retVal == true){
-				break;
-			}
+			retVal = node.isLink() && (node.getIndex() == edgeIdx);
 		}
 		return retVal;
 	}
@@ -190,7 +142,6 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 	@Override
 	public ICompoundNode getNode(int nodeIdx) {
 		ICompoundGraphElement retVal = this.getElementTree().get(nodeIdx);
-		if(retVal == null || !(retVal instanceof ICompoundNode)) throw new IllegalArgumentException("nodeIdx does not refer toa  node contained in this graph");
 		return (ICompoundNode)retVal;
 	}
 
@@ -227,90 +178,13 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 	}
 
 	@Override
-	public boolean canCopyHere(ISubCompoundGraph subGraph) {
-		return subGraph != null && subGraph.isInducedSubgraph() && subGraph.isConsistentSnapShot();
-	}
-
-	protected void notifyCopyOperationComplete(ISubCompoundGraph sourceSubgraph, ISubCompoundGraph copiedComponents) {
-		//TODO: Add listener that is notified
-	}
-
-	@Override
-	public boolean canRemoveSubgraph(ISubCompoundGraph subgraph) {
-		return subgraph != null && subgraph.getSuperGraph().equals(this) && !subgraph.containsRoot() && subgraph.isConsistentSnapShot();
-	}
-
-	@Override
-	public void copyHere(ISubCompoundGraph subGraph) {
-		if(this.debuggingEnabled && !canCopyHere(subGraph)) throw new IllegalArgumentException("Cannot copy graph here");
-		
-		IChildCompoundGraph rootCiGraph = this.getRoot().getChildCompoundGraph();
-		copyBuilder.setDestinatChildCompoundGraph(rootCiGraph);
-		copyBuilder.setSourceSubgraph(subGraph);
-		copyBuilder.makeCopy();
-		notifyCopyOperationComplete(copyBuilder.getSourceSubgraph(), copyBuilder.getCopiedComponents());
-	}
-
-	@Override
 	public ICompoundEdgeFactory edgeFactory() {
 		return new CompoundEdgeFactory(this);
 	}
 
 	@Override
-	public ISubCompoundGraph getCopiedComponents() {
-		return this.copyBuilder.getCopiedComponents();
-	}
-
-	@Override
-	public boolean isValid() {
-	    boolean retVal = true;
-	    retVal = this.getRoot().getChildCompoundGraph().getNumEdges() == 0
-	        && this.getRoot().getParent() == this.getRoot()
-	        && this.getRoot().isRemoved() == false;
-	    if(retVal) {
-	        retVal = this.getRoot().getChildCompoundGraph().isValid();
-	    }
-	    else {
-	        logger.error("Graph Invalid: root node is inconsistent: " + this.getRoot());
-	    }
-	    if(retVal) {
-	        retVal = this.hasPassedAdditionalValidation();
-	    }
-	    else {
-	        logger.error("Graph Invalid: addition validation from super class has failed");
-	    }
-	    return retVal;
-	}
-
-	protected boolean hasPassedAdditionalValidation() {
-		// TODO : do something more clever than this for validation
-		return true;
-	}
-
-	@Override
 	public ICompoundNodeFactory nodeFactory() {
 		return this.getRoot().getChildCompoundGraph().nodeFactory();
-	}
-
-	@Override
-	public void removeSubgraph(ISubCompoundGraph subgraph) {
-		if(this.debuggingEnabled && !this.canRemoveSubgraph(subgraph)) throw new IllegalArgumentException("subgraph does not satify canRemoveSubgraph()");
-		
-		ISubCompoundGraphFactory selnFactory = this.subgraphFactory();
-		removeElements(selnFactory, subgraph.elementIterator());
-	}
-
-	private void removeElements(ISubCompoundGraphFactory selnFactory, Iterator<ICompoundGraphElement> elementIterator) {
-		while(elementIterator.hasNext()){
-			ICompoundGraphElement node = elementIterator.next();
-			node.markRemoved(true);
-			selnFactory.addElement(node);
-		}
-	}
-
-	protected void notifyRemovalOperationComplete(ISubCompoundGraph removedGraph) {
-		// TODO : add a listener!
-		
 	}
 
 	@Override
@@ -349,5 +223,10 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 			}
 			
 		};
+	}
+
+	@Override
+	public ISubgraphRemovalBuilder newSubgraphRemovalBuilder() {
+		return new CompoundSubgraphRemovalBuilder(this);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.util.IFilterCriteria;
@@ -126,17 +127,12 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 
 	@Override
 	public SortedSet<ICompoundEdge> getEdgesWith(ICompoundNode other) {
-		if(other == null) throw new IllegalArgumentException("IOther cannot be null");
-
 		final SortedSet<ICompoundEdge> retVal = new TreeSet<ICompoundEdge>();
 		if(this.edgeInList.hasEdgesWith(this, other)){
 			retVal.addAll(this.edgeInList.getEdgesWith(this, other));
 		}
 		if(this.edgeOutList.hasEdgesWith(this, other)){
 			retVal.addAll(this.edgeOutList.getEdgesWith(this, other));
-		}
-		if(retVal.isEmpty()){
-			throw new IllegalArgumentException("edge must be contained by this node");
 		}
 		return retVal;
 	}
@@ -297,7 +293,8 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 	@Override
 	public boolean containsInEdge(ICompoundEdge edge) {
 		boolean retVal = false;
-		if(edge != null && edge.getGraph().equals(this.getGraph())){
+		ICompoundGraph thisGraph = this.getGraph();
+		if(edge != null && edge.getGraph().equals(thisGraph)){
 			retVal = this.edgeInList.contains(edge);
 		}
 		return retVal;

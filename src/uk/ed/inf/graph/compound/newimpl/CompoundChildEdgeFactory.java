@@ -11,11 +11,9 @@ public class CompoundChildEdgeFactory implements ICompoundChildEdgeFactory {
 	private final ICompoundGraphElement parent;
 	private ICompoundNode outNode;
 	private ICompoundNode inNode;
-	private final ICompoundElementRegistration registration;
 	
-	public CompoundChildEdgeFactory(ICompoundGraphElement parent, ICompoundElementRegistration registration){
+	public CompoundChildEdgeFactory(ICompoundGraphElement parent){
 		this.parent = parent;
-		this.registration = registration;
 	}
 	
 	@Override
@@ -26,7 +24,7 @@ public class CompoundChildEdgeFactory implements ICompoundChildEdgeFactory {
 	@Override
 	public ICompoundEdge createEdge() {
 		ICompoundEdge retVal = new CompoundEdge(this.parent, CompoundGraph.getIndexCounter(this.getGraph()).nextIndex(), this.outNode, this.inNode);
-		registration.registerEdge(retVal);
+		parent.getChildCompoundGraph().addEdge(retVal);
 		return retVal;
 	}
 

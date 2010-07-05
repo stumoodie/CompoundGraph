@@ -21,7 +21,7 @@ public interface IModifiableCompoundGraph {
 
 	/**
 	 * Gets the node factory to add new nodes to the root child graph of this compound graph.
-	 * @return the edge factory, which cannot be null.
+	 * @return A new instance of the node factory, which cannot be null.
 	 */
 	ICompoundNodeFactory nodeFactory();
 
@@ -31,7 +31,7 @@ public interface IModifiableCompoundGraph {
 	 * edge factory from a ChildCompoundGraph, which requires to to know that the edge
 	 * belongs in that child graph (i.e. its root node is the LCA of the out and in nodes 
 	 * of the edge).  
-	 * @return The edge factory, which cannot be null.
+	 * @return A new instance of the edge factory, which cannot be null.
 	 */
 	ICompoundEdgeFactory edgeFactory();
 
@@ -42,48 +42,5 @@ public interface IModifiableCompoundGraph {
 	 */
 	ISubCompoundGraphFactory subgraphFactory();
 
-
-	/**
-	 * Tests if subgraph removal will succeed. To succeed the subgraph must belong to this graph,
-	 *  it must be a consistent snapshot and cannot be null.
-	 * @param subgraph the subgraph to be removed, which can be null.
-	 * @return true if the subgraph will succeed, false otherwise. 
-	 */
-	boolean canRemoveSubgraph(ISubCompoundGraph subgraph);
-	
-	/**
-	 * Removes the nodes and edges defined in the subgraph from this graph. The subgraph must be consistent with
-	 *  this graph and be a subgraph of this graph.
-	 * @param subgraph The subgraph to remove, cannot be null.
-	 * @throws IllegalArgumentException if <code>canRemoveSubgraph(subgraph) == false</code>.
-	 */ 
-	void removeSubgraph(ISubCompoundGraph subgraph);
-
-	/**
-	 * Tests whether the subGraph can be copied to this graph. To be true the subgraph must be an induced subgraph
-	 *  that is a consistent of the super graph. It must also be not null.
-	 * @param subGraph the subgraph to test, can be null. 
-	 * @return true if the subgraph is valid to copy from, false otherwise.
-	 */
-	boolean canCopyHere(ISubCompoundGraph subgraph);
-
-	/**
-	 * Copies a subgraph into this graph. Note that the subgraph can be from a different graph or subgraph
-	 * of this graph, since the structure of the graph is copied not the nodes and edges instances
-	 * themselves. Note that the subgraph must be valid to be copied.
-	 * @param subGraph the subgraph to copy
-	 * @throws IllegalArgumentException if <code>canCopyHere(subGraph) == false</code>.
-	 */
-	void copyHere(ISubCompoundGraph subgraph);
-	
-	/**
-	 * Retrieves the nodes and edges created in this graph by the last copy operation. The subgraph
-	 * is <b>not</b> guaranteed to be a consistent snapshot of this graph.   If not copy operation has
-	 * been performed then an empty subset will be returned.
-	 * @return the subgraph of copied components, or an empty subset of not copy operation has been perfromed. 
-	 */
-	ISubCompoundGraph getCopiedComponents();
-
-
-	boolean isValid();
+	ISubgraphRemovalBuilder newSubgraphRemovalBuilder();
 }

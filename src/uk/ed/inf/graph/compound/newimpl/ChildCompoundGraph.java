@@ -14,11 +14,6 @@ public class ChildCompoundGraph extends CommonChildCompoundGraph {
 	}
 
 	@Override
-	protected boolean hasPassedAdditionalValidation() {
-		return true;
-	}
-
-	@Override
 	protected void notifyCopyOperationComplete(ISubCompoundGraph originalSubgraph, ISubCompoundGraph copiedSubgraph) {
 
 	}

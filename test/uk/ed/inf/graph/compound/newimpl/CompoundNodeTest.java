@@ -1,7 +1,11 @@
 package uk.ed.inf.graph.compound.newimpl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,8 +13,6 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import static org.hamcrest.Matchers.*;
-import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -24,161 +26,72 @@ import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
-import uk.ed.inf.tree.ITree;
 
 @RunWith(JMock.class)
 public class CompoundNodeTest {
-	private static final int EXPECTED_IDX = 22;
-
 	private static final int EXPECTED_LEVEL = 1;
-
-	private static final int IN_EDGE_OUT_NODE_IDX = 25;
-	private static final int OUT_EDGE_IN_NODE_IDX = 26;
-
-	private static final int OUT_EDGE_IN_NODE_LEVEL = 1;
-
-	private static final int IN_EDGE_OUT_NODE_LEVEL = 1;
-
 	private static final int EXPECTED_NUM_CONNECTED_NODES = 2;
-
 	private static final int EXPECTED_DEGREE = 2;
-	private static final int OUT_EDGE_IDX = 30;
-	private static final int IN_EDGE_IDX = 32;
+//	private static final int OUT_EDGE_IDX = 30;
 	private static final int EXPECTED_IN_DEGREE = 1;
 	private static final int EXPECTED_OUT_DEGREE = 1;
 	private static final int EXPECTED_NUM_IN_EDGES = 1;
 	private static final int EXPECTED_NUM_OUT_EDGES = 1;
-
-	private static final int EXPECTED_PARENT_IDX = 0;
-
-	private static final int EXPECTED_PARENT_LEVEL = 0;
-
+//	private static final int EXPECTED_PARENT_IDX = 0;
 	private static final int EXPECTED_NUM_ANCESTOR_NODES = 2;
-
-	private static final int EXPECTED_NUM_PREORDER_NODES = 1;
+//	private static final int EXPECTED_NUM_PREORDER_NODES = 3;
+//	private static final int EXPECTED_NUM_LEVEL_ORDER_NODES = 3;
 
 	private Mockery mockery = new JUnit4Mockery();
 	
+	private ComplexGraphFixture testFixture;
 	private ICompoundNode testInstance;
-
 	private ICompoundGraphElement mockParent;
-
 	private ICompoundGraph mockGraph;
-
 	private ICompoundGraphElement mockNonParent;
-
 	private ICompoundEdge mockInEdge;
-
-	private ICompoundNodePair mockInEdgePair;
-
-//	private ICompoundNode mockInEdgeInNode;
-
 	private ICompoundNode mockInEdgeOutNode;
-
 	private ICompoundEdge mockOutEdge;
-
-	private ICompoundNodePair mockOutEdgePair;
-
 	private ICompoundNode mockOutEdgeInNode;
-
 	private ICompoundEdge mockOtherGraphEdge;
-
-	private ICompoundGraph mockOtherGraph;
-
 	private ICompoundNode mockOtherGraphNode;
+	private ComplexGraphFixture otherTestFixture;
 
-	private ITree<ICompoundGraphElement> mockElementTree;
-
-//	private ICompoundNode mockOutEdgeOutNode;
-
-	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws Exception {
-		this.mockOtherGraphEdge = this.mockery.mock(ICompoundEdge.class, "mockOtherGraphEdge");
-		this.mockOtherGraph = this.mockery.mock(ICompoundGraph.class, "mockOtherGraph");
-		this.mockOtherGraphNode = this.mockery.mock(ICompoundNode.class, "mockOtherGraphNode");
+		this.testFixture = new ComplexGraphFixture(this.mockery, ""){
+			
+			@Override
+			protected void buildNode1(final ICompoundNode node){
+				node.addInEdge(getEdge1());
+				node.addOutEdge(getEdge4());
+				node.getChildCompoundGraph().addNode(testFixture.getNode2());
+			}
+			
+		};
+		this.testFixture.createElements();
+		this.mockGraph = this.testFixture.getGraph();
+		this.mockParent = this.testFixture.getRootNode();
+		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"graph"}));
+		this.testFixture.buildObjects();
+		this.testInstance = new CompoundNode(mockParent, ComplexGraphFixture.NODE1_IDX);
+		this.testFixture.setNode1(testInstance);
+		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"elementTree", "node2", "node3", "node4", "node5",
+				"edge1", "edge2", "edge3", "edge4", "node1" }));
+		this.testFixture.buildObjects();
 		
-		this.mockParent = this.mockery.mock(ICompoundGraphElement.class, "mockParent");
-		this.mockNonParent = this.mockery.mock(ICompoundGraphElement.class, "mockNonParent");
-		this.mockGraph = this.mockery.mock(ICompoundGraph.class, "mockGraph");
-		this.mockInEdge = this.mockery.mock(ICompoundEdge.class, "mockInEdge");
-		this.mockInEdgePair = this.mockery.mock(ICompoundNodePair.class, "mockInEdgePair");
-//		this.mockInEdgeInNode = this.mockery.mock(ICompoundNode.class, "mockInEdgeInNode");
-		this.mockInEdgeOutNode = this.mockery.mock(ICompoundNode.class, "mockInEdgeOutNode");
-		this.mockOutEdge = this.mockery.mock(ICompoundEdge.class, "mockOutEdge");
-		this.mockOutEdgePair = this.mockery.mock(ICompoundNodePair.class, "mockOutEdgePair");
-		this.mockOutEdgeInNode = this.mockery.mock(ICompoundNode.class, "mockOutEdgeInNode");
-//		this.mockOutEdgeOutNode = this.mockery.mock(ICompoundNode.class, "mockOutEdgeOutNode");
-		this.mockElementTree = this.mockery.mock(ITree.class, "mockElementTree");
+		this.mockNonParent = this.testFixture.getNode4();
+		this.mockInEdge = this.testFixture.getEdge1();
+		this.mockInEdgeOutNode = this.testFixture.getNode2();
+		this.mockOutEdge = this.testFixture.getEdge4();
+		this.mockOutEdgeInNode = this.testFixture.getNode3();
 		
-		this.mockery.checking(new Expectations(){{
-			allowing(mockParent).getGraph(); will(returnValue(mockGraph));
-			allowing(mockParent).getParent(); will(returnValue(mockParent));
-		}});
-		this.testInstance = new CompoundNode(this.mockParent, EXPECTED_IDX);
+		this.otherTestFixture = new ComplexGraphFixture(this.mockery, "other_");
+		this.otherTestFixture.createElements();
+		this.otherTestFixture.buildObjects();
 		
-		this.mockery.checking(new Expectations(){{
-			allowing(mockOtherGraphEdge).getIndex(); will(returnValue(OUT_EDGE_IDX));
-			allowing(mockOtherGraphEdge).getGraph(); will(returnValue(mockOtherGraph));
-			allowing(mockOtherGraphEdge).compareTo(mockInEdge); will(returnValue(1));
-			allowing(mockOtherGraphEdge).compareTo(mockOutEdge); will(returnValue(0));
-			allowing(mockOtherGraphEdge).isRemoved(); will(returnValue(false));
-			
-			allowing(mockOtherGraphNode).getIndex(); will(returnValue(EXPECTED_PARENT_IDX));
-			allowing(mockOtherGraphNode).getGraph(); will(returnValue(mockOtherGraph));
-
-			allowing(mockGraph).getElementTree(); will(returnValue(mockElementTree));
-
-			allowing(mockElementTree).isAncestor(testInstance, mockParent); will(returnValue(true));
-			allowing(mockElementTree).isAncestor(with(any(ICompoundNode.class)), with(not(mockParent))); will(returnValue(false));
-			allowing(mockElementTree).isDescendant(with(any(ICompoundNode.class)), with(any(ICompoundGraphElement.class))); will(returnValue(false));
-			
-			allowing(mockParent).getGraph(); will(returnValue(mockGraph));
-			allowing(mockParent).getParent(); will(returnValue(mockParent));
-			allowing(mockParent).getRoot(); will(returnValue(mockParent));
-			allowing(mockParent).getIndex(); will(returnValue(EXPECTED_PARENT_IDX));
-			allowing(mockParent).getLevel(); will(returnValue(EXPECTED_PARENT_LEVEL));
-		
-			allowing(mockInEdge).getGraph(); will(returnValue(mockGraph));
-			allowing(mockInEdge).getConnectedNodes(); will(returnValue(mockInEdgePair));
-			allowing(mockInEdge).isRemoved(); will(returnValue(false));
-			allowing(mockInEdge).getIndex(); will(returnValue(IN_EDGE_IDX));
-			allowing(mockInEdge).compareTo(mockOutEdge); will(returnValue(1));
-			allowing(mockInEdge).compareTo(mockOtherGraphEdge); will(returnValue(1));
-			allowing(mockInEdge).compareTo(mockInEdge); will(returnValue(0));
-			
-			allowing(mockInEdgePair).getInNode(); will(returnValue(testInstance));
-			allowing(mockInEdgePair).getOutNode(); will(returnValue(mockInEdgeOutNode));
-			allowing(mockInEdgePair).getOtherNode(testInstance); will(returnValue(mockInEdgeOutNode));
-			allowing(mockInEdgePair).getOtherNode(mockInEdgeOutNode); will(returnValue(testInstance));
-			allowing(mockInEdgePair).containsNode(mockInEdgeOutNode); will(returnValue(true));
-			allowing(mockInEdgePair).containsNode(with(not(mockInEdgeOutNode))); will(returnValue(false));
-			
-			allowing(mockInEdgeOutNode).getIndex(); will(returnValue(IN_EDGE_OUT_NODE_IDX));
-			allowing(mockInEdgeOutNode).getLevel(); will(returnValue(IN_EDGE_OUT_NODE_LEVEL));
-			
-			allowing(mockOutEdge).getGraph(); will(returnValue(mockGraph));
-			allowing(mockOutEdge).getConnectedNodes(); will(returnValue(mockOutEdgePair));
-			allowing(mockOutEdge).isRemoved(); will(returnValue(false));
-			allowing(mockOutEdge).getIndex(); will(returnValue(OUT_EDGE_IDX));
-			allowing(mockOutEdge).compareTo(mockInEdge); will(returnValue(-1));
-			allowing(mockOutEdge).compareTo(mockOutEdge); will(returnValue(0));
-			allowing(mockOutEdge).compareTo(mockOtherGraphEdge); will(returnValue(0));
-			
-			allowing(mockOutEdgePair).getInNode(); will(returnValue(mockOutEdgeInNode));
-			allowing(mockOutEdgePair).getOutNode(); will(returnValue(testInstance));
-			allowing(mockOutEdgePair).getOtherNode(mockOutEdgeInNode); will(returnValue(testInstance));
-			allowing(mockOutEdgePair).getOtherNode(testInstance); will(returnValue(mockOutEdgeInNode));
-			allowing(mockOutEdgePair).containsNode(mockOutEdgeInNode); will(returnValue(true));
-			allowing(mockOutEdgePair).containsNode(with(not(mockOutEdgeInNode))); will(returnValue(false));
-			
-			allowing(mockOutEdgeInNode).getIndex(); will(returnValue(OUT_EDGE_IN_NODE_IDX));
-			allowing(mockOutEdgeInNode).getLevel(); will(returnValue(OUT_EDGE_IN_NODE_LEVEL));
-		}});
-		
-		this.testInstance.addInEdge(this.mockInEdge);
-		this.testInstance.addOutEdge(this.mockOutEdge);
+		this.mockOtherGraphEdge = this.otherTestFixture.getEdge2();
+		this.mockOtherGraphNode = this.otherTestFixture.getNode1();
 	}
 
 	@After
@@ -242,7 +155,7 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testEdgeIterator() {
-		ICompoundEdge expectedresults[] = new ICompoundEdge[] { this.mockOutEdge, this.mockInEdge };
+		ICompoundEdge expectedresults[] = new ICompoundEdge[] {  this.mockInEdge, this.mockOutEdge };
 		SortedSet<ICompoundEdge> sortedSet = new TreeSet<ICompoundEdge>(new Comparator<ICompoundEdge>(){
 
 			@Override
@@ -342,7 +255,7 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testGetIndex() {
-		assertEquals("expected index", EXPECTED_IDX, this.testInstance.getIndex());
+		assertEquals("expected index", ComplexGraphFixture.NODE1_IDX, this.testInstance.getIndex());
 	}
 
 	@Test
@@ -445,6 +358,8 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testIsDescendent() {
+		assertTrue("node2 is ancestor", this.testInstance.isDescendent(this.testFixture.getNode2()));
+		assertTrue("is ancestor", this.testInstance.isDescendent(this.testFixture.getEdge3()));
 		assertFalse("not is ancestor", this.testInstance.isDescendent(mockParent));
 		assertFalse("not ancestor", this.testInstance.isDescendent(null));
 		assertFalse("not ancestor", this.testInstance.isDescendent(this.testInstance));
@@ -486,30 +401,56 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testChildIterator() {
-		assertFalse("no children", this.testInstance.childIterator().hasNext());
+		ICompoundGraphElement expectedresults[] = new ICompoundGraphElement[] { this.testFixture.getNode2() };
+		List<ICompoundGraphElement> actualResults = new LinkedList<ICompoundGraphElement>();
+		Iterator<ICompoundGraphElement> iter = this.testInstance.childIterator();
+		while(iter.hasNext()){
+			ICompoundGraphElement node = iter.next();
+			actualResults.add(node);
+		}
+		assertEquals("expected child nodes", expectedresults.length, actualResults.size());
+		int cntr = 0;
+		for(ICompoundGraphElement actualNode : actualResults){
+			assertEquals("expectedNodes", expectedresults[cntr++], actualNode);
+		}
 	}
 
 	@Test
 	public void testIsChild() {
+		assertTrue("is child", this.testInstance.isChild(this.testFixture.getNode2()));
+		assertFalse("is not child", this.testInstance.isChild(this.testFixture.getEdge3()));
 		assertFalse("not child", this.testInstance.isChild(mockParent));
 		assertFalse("not child", this.testInstance.isChild(null));
 	}
 
 	@Test
 	public void testLevelOrderIterator() {
-		assertEquals("expected node", this.testInstance, this.testInstance.levelOrderIterator().next());
-	}
-
-	@Test
-	public void testPreOrderIterator() {
-		ICompoundGraphElement expectedresults[] = new ICompoundGraphElement[] { this.testInstance };
+		ICompoundGraphElement expectedresults[] = new ICompoundGraphElement[] { this.testInstance,
+				this.testFixture.getNode2(), this.testFixture.getEdge3() };
 		List<ICompoundGraphElement> actualResults = new LinkedList<ICompoundGraphElement>();
 		Iterator<ICompoundGraphElement> iter = this.testInstance.preOrderIterator();
 		while(iter.hasNext()){
 			ICompoundGraphElement node = iter.next();
 			actualResults.add(node);
 		}
-		assertEquals("expected num ancestor nodes", EXPECTED_NUM_PREORDER_NODES, actualResults.size());
+		assertEquals("expected level order nodes", expectedresults.length, actualResults.size());
+		int cntr = 0;
+		for(ICompoundGraphElement actualNode : actualResults){
+			assertEquals("expectedNodes", expectedresults[cntr++], actualNode);
+		}
+	}
+
+	@Test
+	public void testPreOrderIterator() {
+		ICompoundGraphElement expectedresults[] = new ICompoundGraphElement[] { this.testInstance,
+				this.testFixture.getNode2(), this.testFixture.getEdge3() };
+		List<ICompoundGraphElement> actualResults = new LinkedList<ICompoundGraphElement>();
+		Iterator<ICompoundGraphElement> iter = this.testInstance.preOrderIterator();
+		while(iter.hasNext()){
+			ICompoundGraphElement node = iter.next();
+			actualResults.add(node);
+		}
+		assertEquals("expected pre-order nodes", expectedresults.length, actualResults.size());
 		int cntr = 0;
 		for(ICompoundGraphElement actualNode : actualResults){
 			assertEquals("expectedNodes", expectedresults[cntr++], actualNode);

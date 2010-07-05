@@ -22,13 +22,6 @@ public interface IImmutableCompoundGraph {
 	 */
 	boolean containsDirectedEdge(ICompoundNode outNode, ICompoundNode inNode);
 
-	/**
-	 * Test if there is one or more directed edge defined by the end pair <code>ends</code>.
-	 * @param ends the pair of nodes to be tested, can be null.
-	 * @return true if there is at least one edge between then, false otherwise.
-	 */
-	boolean containsConnection(ICompoundNodePair nodePair);
-	
 	boolean containsConnection(ICompoundNode thisNode, ICompoundNode thatNode);
 
 	/**
