@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
@@ -211,6 +212,25 @@ public class ElementTreeStructure {
 
 	public boolean isEmpty() {
 		return this.topElements.isEmpty();
+	}
+
+	public boolean containsConnection(CompoundNodePair testPair) {
+		boolean retVal = false;
+		if(testPair != null){
+			Iterator<ITree<ICompoundGraphElement>> elementTreeIter = this.topElements.iterator();
+			while(elementTreeIter.hasNext() && !retVal){
+				ITree<ICompoundGraphElement> elementTree = elementTreeIter.next();
+				Iterator<ICompoundGraphElement> iter = elementTree.levelOrderIterator();
+				while(iter.hasNext() && ! retVal){
+					ICompoundGraphElement element = iter.next();
+					if(element instanceof ICompoundEdge){
+						ICompoundEdge edge = (ICompoundEdge)element;
+						retVal = edge.hasEnds(testPair);
+					}
+				}
+			}
+		}
+		return retVal;
 	}
 	
 }

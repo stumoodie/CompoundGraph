@@ -24,6 +24,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundNode;
@@ -84,7 +85,7 @@ public class CreatedEmptyCompoundGraphTest {
 		ICompoundNode producedNode = testGraph.nodeFactory().createNode() ;
 		
 		ICompoundEdgeFactory testEdgeFactory = testGraph.edgeFactory() ;
-		testEdgeFactory.setPair(producedNode, producedNode) ;
+		testEdgeFactory.setPair(new CompoundNodePair(producedNode, producedNode));
 		ICompoundEdge producedEdge = testEdgeFactory.createEdge() ;
 		
 		assertEquals ( "one Edge" , NUMERIC[1] , testGraph.getNumEdges()) ;
@@ -133,7 +134,7 @@ public class CreatedEmptyCompoundGraphTest {
 		ICompoundNode node2 = nodeFactory.createNode() ;
 		
 		ICompoundEdgeFactory edgeFactory = testGraph.edgeFactory() ;
-		edgeFactory.setPair(node1, node2) ;
+		edgeFactory.setPair(new CompoundNodePair(node1, node2));
 		edgeFactory.createEdge() ;
 		
 		assertEquals ( "three nodes" , NUMERIC[3] , testGraph.getNumNodes()) ;

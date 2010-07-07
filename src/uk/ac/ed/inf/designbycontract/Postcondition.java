@@ -1,16 +1,14 @@
 package uk.ac.ed.inf.designbycontract;
 
-public class Postcondition {
+public class Postcondition extends Assertion {
 
 	public Postcondition(){
 		
 	}
-	
-	public boolean assertion(boolean result, String label){
-		if(!result){
-			throw new PostConditionException(label);
-		}
-		return result;
+
+	@Override
+	protected void failAssertion(String label) {
+		throw new PostConditionException(label);
 	}
 	
 }

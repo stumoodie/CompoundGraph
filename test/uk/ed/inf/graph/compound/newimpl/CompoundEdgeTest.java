@@ -15,10 +15,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
+import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 
 @RunWith(JMock.class)
 public class CompoundEdgeTest {
@@ -93,7 +94,7 @@ public class CompoundEdgeTest {
 
 	@Test
 	public void testGetConnectedNodes() {
-		ICompoundNodePair actualPair = this.testInstance.getConnectedNodes();
+		CompoundNodePair actualPair = this.testInstance.getConnectedNodes();
 		assertNotNull("pair exists", actualPair);
 		assertEquals("exepcted in node", this.testFixture.getNode5(), actualPair.getInNode());
 		assertEquals("exepcted out node", this.testFixture.getNode3(), actualPair.getOutNode());
@@ -114,7 +115,7 @@ public class CompoundEdgeTest {
 	}
 
 	@Test
-	public void testHasDirectedEndsICompoundNodePair() {
+	public void testHasDirectedEndsCompoundNodePair() {
 		assertTrue("ends present", this.testInstance.hasDirectedEnds(new CompoundNodePair(this.mockOutNode, this.mockInNode)));
 		assertFalse("ends not present", this.testInstance.hasDirectedEnds(new CompoundNodePair(this.mockOtherGraphOutNode, this.mockOtherGraphInNode)));
 		assertFalse("null ends not present", this.testInstance.hasDirectedEnds(null));
@@ -131,7 +132,7 @@ public class CompoundEdgeTest {
 	}
 
 	@Test
-	public void testHasEndsICompoundNodePair() {
+	public void testHasEndsCompoundNodePair() {
 		assertTrue("ends present", this.testInstance.hasEnds(new CompoundNodePair(this.mockOutNode, this.mockInNode)));
 		assertFalse("ends not present", this.testInstance.hasEnds(new CompoundNodePair(this.mockOtherGraphOutNode, this.mockOtherGraphInNode)));
 		assertFalse("null ends not present", this.testInstance.hasEnds(null));

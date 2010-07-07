@@ -25,7 +25,7 @@ public class ElementTreeIterator<T extends ICompoundGraphElement> implements Ite
 	}
 	
 	private void readAhead(){
-		while(this.currIter.hasNext() && !this.stack.isEmpty()){
+		while(this.currIter.hasNext() && this.stack.isEmpty()){
 			ICompoundGraphElement topElement = this.currIter.next();
 			if(this.filter.matched(topElement)){
 				this.stack.push(topElement);

@@ -2,12 +2,12 @@ package uk.ed.inf.graph.compound.newimpl;
 
 import java.util.Iterator;
 
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.tree.AncestorTreeIterator;
 import uk.ed.inf.tree.LevelOrderTreeIterator;
 import uk.ed.inf.tree.PreOrderTreeIterator;
@@ -16,7 +16,7 @@ public class CompoundEdge implements ICompoundEdge {
 	private final int level;
 	private final ICompoundGraphElement parentElement;
 	private final IChildCompoundGraph childGraph;
-	private final ICompoundNodePair nodePair;
+	private final CompoundNodePair nodePair;
 	private final int index;
 	private boolean removed;
 
@@ -43,7 +43,7 @@ public class CompoundEdge implements ICompoundEdge {
 	}
 
 	@Override
-	public ICompoundNodePair getConnectedNodes() {
+	public CompoundNodePair getConnectedNodes() {
 		return new CompoundNodePair(this.nodePair.getOutNode(), this.nodePair.getInNode());
 	}
 
@@ -58,7 +58,7 @@ public class CompoundEdge implements ICompoundEdge {
 	}
 
 	@Override
-	public boolean hasDirectedEnds(ICompoundNodePair ends) {
+	public boolean hasDirectedEnds(CompoundNodePair ends) {
 		return this.nodePair.equals(ends);
 	}
 
@@ -68,7 +68,7 @@ public class CompoundEdge implements ICompoundEdge {
 	}
 
 	@Override
-	public boolean hasEnds(ICompoundNodePair ends) {
+	public boolean hasEnds(CompoundNodePair ends) {
 		return this.nodePair.equals(ends) || this.nodePair.reversedNodes().equals(ends);
 	}
 
@@ -188,6 +188,38 @@ public class CompoundEdge implements ICompoundEdge {
 	@Override
 	public Iterator<ICompoundGraphElement> preOrderIterator() {
 		return new PreOrderTreeIterator<ICompoundGraphElement>(this);
+	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + this.getGraph().hashCode();
+		result = prime * result + index;
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof CompoundEdge)) {
+			return false;
+		}
+		CompoundEdge other = (CompoundEdge) obj;
+		if(!this.getGraph().equals(other.getGraph())){
+			return false;
+		}
+		if (index != other.index) {
+			return false;
+		}
+		return true;
 	}
 
 }

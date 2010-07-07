@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import uk.ac.ed.inf.designbycontract.PreConditionException;
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraph;
@@ -194,9 +194,9 @@ public class CompoundGraphCopyBuilderTest {
 		assertNotNull("copied elements present", copiedComponents);
 	}
 
-	@Test(expected=PreConditionException.class)
 	public void testSetSourceSubgraph() {
 		this.testInstance.setSourceSubgraph(null);
+		assertNull("src is null", this.testInstance.getSourceSubgraph());
 	}
 
 }

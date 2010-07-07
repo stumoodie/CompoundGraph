@@ -1,9 +1,7 @@
-package uk.ed.inf.graph.compound.newimpl;
+package uk.ed.inf.graph.compound;
 
-import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
 
-public class CompoundNodePair implements ICompoundNodePair {
+public class CompoundNodePair {
 	private final ICompoundNode outNode;
 	private final ICompoundNode inNode;
 	
@@ -12,38 +10,31 @@ public class CompoundNodePair implements ICompoundNodePair {
 		this.inNode = inNode;
 	}
 	
-	@Override
 	public boolean containsNode(ICompoundNode node) {
 		return this.outNode.equals(node) || this.inNode.equals(node);
 	}
 
-	@Override
 	public ICompoundNode getInNode() {
 		return this.inNode;
 	}
 
-	@Override
 	public ICompoundNode getOtherNode(ICompoundNode node) {
 		return this.inNode.equals(node) ? this.outNode : this.inNode;
 	}
 
-	@Override
 	public ICompoundNode getOutNode() {
 		return this.outNode;
 	}
 
-	@Override
 	public boolean hasDirectedEnds(ICompoundNode outNode, ICompoundNode inNode) {
 		return this.outNode.equals(outNode) && this.inNode.equals(inNode);
 	}
 
-	@Override
 	public boolean hasEnds(ICompoundNode endOne, ICompoundNode endTwo) {
 		return this.hasDirectedEnds(endOne, endTwo) || this.hasDirectedEnds(endTwo, endOne);
 	}
 
-	@Override
-	public ICompoundNodePair reversedNodes() {
+	public CompoundNodePair reversedNodes() {
 		return new CompoundNodePair(inNode, outNode);
 	}
 
@@ -96,9 +87,12 @@ public class CompoundNodePair implements ICompoundNodePair {
 		return builder.toString();
 	}
 
-	@Override
 	public boolean isSelfEdge() {
 		return this.outNode.equals(inNode);
+	}
+
+	public ICompoundGraph getGraph() {
+		return outNode.getGraph();
 	}
 
 }

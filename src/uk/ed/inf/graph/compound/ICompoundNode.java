@@ -16,7 +16,6 @@ limitations under the License.
 package uk.ed.inf.graph.compound;
 
 import java.util.Iterator;
-import java.util.SortedSet;
 
 import uk.ed.inf.graph.state.IRestorableNode;
 
@@ -42,7 +41,7 @@ public interface ICompoundNode extends ICompoundGraphElement, IRestorableNode {
 	 * @param outNode the out node to the edge
 	 * @return a set of edges with this node as in node and <code>outNode</code> as out node.
 	 */
-	SortedSet<ICompoundEdge> getInEdgesFrom(ICompoundNode outNode);  
+	Iterator<ICompoundEdge> getInEdgesFrom(ICompoundNode outNode);  
 	
 	/**
 	 * Has at least one edge going out from this node to inNode.
@@ -57,7 +56,7 @@ public interface ICompoundNode extends ICompoundGraphElement, IRestorableNode {
 	 * @param inNode the in node to the edge
 	 * @return a set of edges with this node as out node and <code>inNode</code> as in node.
 	 */
-	SortedSet<ICompoundEdge> getOutEdgesTo(ICompoundNode inNode);  
+	Iterator<ICompoundEdge> getOutEdgesTo(ICompoundNode inNode);  
 
 	/**
 	 * Gets all edges connecting this node
@@ -100,7 +99,7 @@ public interface ICompoundNode extends ICompoundGraphElement, IRestorableNode {
 	 * @return A set of edges sorted by edge index, which 
 	 * 
 	 */
-	SortedSet<ICompoundEdge> getEdgesWith(ICompoundNode other);
+	Iterator<ICompoundEdge> getEdgesWith(ICompoundNode other);
 	
 	/**
 	 * Get the degree of the this node. That is the number of edges associated with it. Note that in graph theory

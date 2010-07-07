@@ -2,11 +2,11 @@ package uk.ed.inf.graph.compound.newimpl;
 
 import java.util.Iterator;
 
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.ISubgraphAlgorithms;
 import uk.ed.inf.graph.util.SubgraphAlgorithms;
@@ -24,15 +24,16 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 	@Override
 	public boolean containsConnection(ICompoundNode thisNode, ICompoundNode thatNode) {
 		boolean retVal = false;
-		// first test if the connection exists at all
-		if(thisNode.hasEdgeWith(thatNode)){
-			retVal = topElements.containsNodes(thisNode, thatNode);
+		//first test existence of edge
+		if(thisNode != null && thatNode != null){
+			CompoundNodePair testPair = new CompoundNodePair(thisNode, thatNode);
+			retVal = topElements.containsConnection(testPair);
 		}
 		return retVal;
 	}
 	
 	@Override
-	public boolean containsConnection(ICompoundNodePair ends) {
+	public boolean containsConnection(CompoundNodePair ends) {
 		boolean retVal = false;
 		if(ends != null){
 			ICompoundNode oneNode = ends.getOutNode();
@@ -46,15 +47,19 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 	@Override
 	public boolean containsDirectedEdge(ICompoundNode outNode, ICompoundNode inNode) {
 		boolean retVal = false;
-		// check if directed edge is present then if nores are in subgraph
-		if(outNode.hasOutEdgeTo(inNode)){
-			retVal = this.topElements.containsNodes(outNode, inNode);
+		// check if directed edge is present then if nodes are in subgraph
+		if(outNode != null && inNode != null && outNode.getGraph().equals(this.graph)
+				 && inNode.getGraph().equals(this.graph) && outNode.hasOutEdgeTo(inNode)){
+			Iterator<ICompoundEdge> testEdge = outNode.getOutEdgesTo(inNode);
+			while(testEdge.hasNext() && !retVal){
+				retVal = this.topElements.containsEdges(testEdge.next());
+			}
 		}
 		return retVal;
 	}
 
 	@Override
-	public boolean containsDirectedEdge(ICompoundNodePair ends) {
+	public boolean containsDirectedEdge(CompoundNodePair ends) {
 		boolean retVal = false;
 		if(ends != null){
 			ICompoundNode outNode = ends.getOutNode();
@@ -67,7 +72,11 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 
 	@Override
 	public boolean containsEdge(ICompoundEdge edge) {
-		return this.topElements.containsEdges(edge);
+		boolean retVal = false;
+		if(edge != null && edge.getGraph().equals(this.graph)){
+			retVal = this.topElements.containsEdges(edge); 
+		}
+		return retVal;
 	}
 
 	@Override
@@ -77,7 +86,11 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 
 	@Override
 	public boolean containsElement(ICompoundGraphElement element) {
-		return this.topElements.containsElement(element);
+		boolean retVal = false;
+		if(element != null && element.getGraph().equals(this.graph)){
+			retVal = this.topElements.containsElement(element);
+		}
+		return retVal;
 	}
 
 	@Override
@@ -92,7 +105,11 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 
 	@Override
 	public boolean containsNode(ICompoundNode node) {
-		return this.topElements.containsNodes(node);
+		boolean retVal = false;
+		if(node != null && node.getGraph().equals(this.graph)){
+			retVal = this.topElements.containsNodes(node);
+		}
+		return retVal;
 	}
 
 	@Override
@@ -159,7 +176,7 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 	public boolean isInducedSubgraph() {
 		if(isInducedSubgraphFlag  == null){
 			ISubgraphAlgorithms alg = new SubgraphAlgorithms(this);
-			this.isInducedSubgraphFlag = new Boolean(alg.isInducedSubgraph());
+			this.isInducedSubgraphFlag = Boolean.valueOf(alg.isInducedSubgraph());
 		}
 		return this.isInducedSubgraphFlag;
 	}
@@ -199,8 +216,13 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 		return new DFSNodeFirstIterator(this.topElements.topElementIterator());
 	}
 
-	public void addTopNode(ICompoundGraphElement element) {
+	public void addTopElement(ICompoundGraphElement element) {
 		this.topElements.addTopElement(element);
+	}
+
+	@Override
+	public int getNumTopEdges() {
+		return this.topElements.numTopEdges();
 	}
 
 }

@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundGraph;
@@ -84,21 +85,21 @@ public class SubCompoundGraphIntegrationTest {
 		node8 = node7Fact.createNode();
 		
 		ICompoundEdgeFactory edgeFact = this.testInstance.edgeFactory();
-		edgeFact.setPair(node1, node2);
+		edgeFact.setPair(new CompoundNodePair(node1, node2));
 		edge1 = edgeFact.createEdge();
-		edgeFact.setPair(node2, node1);
+		edgeFact.setPair(new CompoundNodePair(node2, node1));
 		edge2 = edgeFact.createEdge();
-		edgeFact.setPair(node2, node6);
+		edgeFact.setPair(new CompoundNodePair(node2, node6));
 		edge3 = edgeFact.createEdge();
-		edgeFact.setPair(node2, node4);
+		edgeFact.setPair(new CompoundNodePair(node2, node4));
 		edge4 = edgeFact.createEdge();
-		edgeFact.setPair(node7, node6);
+		edgeFact.setPair(new CompoundNodePair(node7, node6));
 		edge5 = edgeFact.createEdge();
-		edgeFact.setPair(node6, node7);
+		edgeFact.setPair(new CompoundNodePair(node6, node7));
 		edge6 = edgeFact.createEdge();
-		edgeFact.setPair(node7, node3);
+		edgeFact.setPair(new CompoundNodePair(node7, node3));
 		edge7 = edgeFact.createEdge();
-		edgeFact.setPair(node1, node1);
+		edgeFact.setPair(new CompoundNodePair(node1, node1));
 		edge8 = edgeFact.createEdge();
 		edge9 = edgeFact.createEdge();
 	}

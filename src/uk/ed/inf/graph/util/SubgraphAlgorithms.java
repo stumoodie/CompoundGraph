@@ -17,9 +17,9 @@ package uk.ed.inf.graph.util;
 
 import java.util.Iterator;
 
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.ISubgraphAlgorithms;
 
@@ -53,8 +53,10 @@ public final class SubgraphAlgorithms implements ISubgraphAlgorithms {
 					ICompoundNode thatNode = thatNodeIter.next();
 					if(this.basicSubgraph.containsNode(thatNode)){
 						// subgraph contains both nodes. To be induced it must contain
-						// any edges that exist between them.
-						for(ICompoundEdge edge : thisNode.getEdgesWith(thatNode)){
+						// all edges that exist between them.
+						Iterator<ICompoundEdge> edgeIter = thisNode.getEdgesWith(thatNode); 
+						while(edgeIter.hasNext()){
+							ICompoundEdge edge = edgeIter.next();
 							if(this.basicSubgraph.containsEdge(edge) == false){
 								retVal = false;
 								break;
@@ -67,7 +69,7 @@ public final class SubgraphAlgorithms implements ISubgraphAlgorithms {
 		Iterator<ICompoundEdge> edgeIter = this.basicSubgraph.edgeIterator();
 		while(edgeIter.hasNext()){
 			ICompoundEdge edge = edgeIter.next();
-			ICompoundNodePair pair = edge.getConnectedNodes();
+			CompoundNodePair pair = edge.getConnectedNodes();
 			if(this.basicSubgraph.containsConnection(pair) == false){
 				retVal = false;
 				break;

@@ -17,9 +17,9 @@ package uk.ed.inf.graph.util.impl;
 
 import java.util.Iterator;
 
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
 
 public class ConnectedNodeIterator implements Iterator<ICompoundNode> {
 	
@@ -37,7 +37,7 @@ public class ConnectedNodeIterator implements Iterator<ICompoundNode> {
 
 	public ICompoundNode next() {
 		ICompoundEdge edge = this.edgeIterator.next();
-		ICompoundNodePair nodePair = edge.getConnectedNodes();
+		CompoundNodePair nodePair = edge.getConnectedNodes();
 		ICompoundNode retVal = nodePair.getOtherNode(this.currNode);
 		return retVal;
 	}

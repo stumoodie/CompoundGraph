@@ -22,7 +22,7 @@ public interface ICompoundEdge extends ICompoundGraphElement, IRestorableEdge {
 
 	int getIndex();
 	
-	ICompoundNodePair getConnectedNodes();
+	CompoundNodePair getConnectedNodes();
 
 	/**
 	 * Tests if this directed edge has these ends. Ignores the directions of the ends.
@@ -51,7 +51,7 @@ public interface ICompoundEdge extends ICompoundGraphElement, IRestorableEdge {
 //	 */
 //	boolean isRemoved();
 
-	boolean hasEnds(ICompoundNodePair ends);
+	boolean hasEnds(CompoundNodePair ends);
 
-	boolean hasDirectedEnds(ICompoundNodePair ends);
+	boolean hasDirectedEnds(CompoundNodePair ends);
 }

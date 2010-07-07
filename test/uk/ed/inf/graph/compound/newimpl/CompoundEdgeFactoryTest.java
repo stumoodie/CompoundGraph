@@ -16,87 +16,88 @@ limitations under the License.
 package uk.ed.inf.graph.compound.newimpl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import uk.ac.ed.inf.designbycontract.PreConditionException;
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
-import uk.ed.inf.graph.compound.ICompoundGraph;
-import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 
 @RunWith(JMock.class)
 public class CompoundEdgeFactoryTest {
-	private Mockery mockery = new JUnit4Mockery();
+	private Mockery mockery;
 	
-	private ICompoundEdgeFactory testEdgeFactory ;
+	private ICompoundEdgeFactory testInstance ;
 
-	private static ICompoundGraph mockCompoundGraph ;
-	private static ICompoundNode mockOneNode ;
-	private static ICompoundNode mockTwoNode ;
-	private static ICompoundNode otherOneNode ;
-	private static ICompoundNode otherTwoNode ;
-	
-	private static final int COMPOUND_NODE_INDEX_ONE = 1 ;
-	private static final int COMPOUND_NODE_INDEX_TWO = 2 ;
-	private static final int COMPOUND_NODE_INDEX_THREE = 3 ;
-	private static final int COMPOUND_NODE_INDEX_FOUR = 2 ;
-	private static final int COMPOUND_NODE_INDEX_FIVE = 3 ;
+	private ComplexGraphFixture testFixture;
+
+	private ComplexGraphFixture otherTestFixture;
 
 	@Before
 	public void setUp() throws Exception {
-		mockCompoundGraph = this.mockery.mock(ICompoundGraph.class, "mockCompoundGraph");
-		mockOneNode = this.mockery.mock(ICompoundNode.class, "mockOneNode");
-		mockTwoNode = this.mockery.mock(ICompoundNode.class, "mockTwoNode");
-		otherOneNode = this.mockery.mock(ICompoundNode.class, "otherOneNode");
-		otherTwoNode = this.mockery.mock(ICompoundNode.class, "otherTwoNode");
-
-		this.mockery.checking(new Expectations(){{
-			allowing(mockOneNode).getIndex(); will(returnValue(COMPOUND_NODE_INDEX_TWO));
-			allowing(mockTwoNode).getIndex(); will(returnValue(COMPOUND_NODE_INDEX_THREE));
-
-			allowing(otherOneNode).getIndex(); will(returnValue(COMPOUND_NODE_INDEX_FOUR));
-			allowing(otherTwoNode).getIndex(); will(returnValue(COMPOUND_NODE_INDEX_FIVE));
-		}});
+		this.mockery = new JUnit4Mockery();
+		this.testFixture = new ComplexGraphFixture(mockery, "");
+		this.testFixture.createElements();
+		this.testFixture.buildObjects();
 		
+		this.otherTestFixture = new ComplexGraphFixture(mockery, "other_");
+		this.otherTestFixture.createElements();
+		this.otherTestFixture.buildObjects();
 		
-		testEdgeFactory = new CompoundEdgeFactory (mockCompoundGraph) ;
+		testInstance = new CompoundEdgeFactory (this.testFixture.getGraph()) ;
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		this.mockery = null;
+		this.testInstance = null;
+		this.testFixture = null;
 	}
 
-	@Ignore @Test
-	public final void testCiEdgeFactory() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Ignore @Test
+	@Test
 	public final void testSetPair() {
-		testEdgeFactory.setPair(otherOneNode, otherTwoNode) ;
-		fail("Not yet implemented"); // TODO
+		CompoundNodePair expectedNodePair = new CompoundNodePair(this.testFixture.getNode3(),this.testFixture.getNode5());
+		testInstance.setPair(expectedNodePair);
+		assertTrue("can create edge", testInstance.canCreateEdge());
+		assertEquals("expected pair", expectedNodePair, testInstance.getCurrentNodePair());
 	}
 
-	@Ignore @Test
+	
+	@Test(expected=PreConditionException.class)
+	public final void testSetPairNull() {
+		testInstance.setPair(null) ;
+	}
+	
+	public final void testIsValidNodePair(){
+		assertFalse("invalidNodePair", this.testInstance.isValidNodePair(null));
+		CompoundNodePair expectedNodePair = new CompoundNodePair(this.testFixture.getNode3(),this.testFixture.getNode5());
+		assertTrue("validNodePair", this.testInstance.isValidNodePair(expectedNodePair));
+		CompoundNodePair expectedOtherNodePair = new CompoundNodePair(this.otherTestFixture.getNode3(),this.otherTestFixture.getNode5());
+		assertFalse("invalidNodePair", this.testInstance.isValidNodePair(expectedOtherNodePair));
+	}
+
+	@Test
 	public final void testCreateEdge() {
-		this.testEdgeFactory.setPair(mockOneNode, mockTwoNode);
-		ICompoundEdge generatedEdge = testEdgeFactory.createEdge() ;//newEdge(mockChildCompoundGraph, COMPOUND_NODE_INDEX_ONE, mockOneNode, mockTwoNode) ;
-		assertEquals ( "get graph" , mockCompoundGraph , generatedEdge.getGraph() ) ;
-		assertEquals ( "get index" , COMPOUND_NODE_INDEX_ONE , generatedEdge.getIndex() ) ;
+		CompoundNodePair expectedNodePair = new CompoundNodePair(this.testFixture.getNode3(),this.testFixture.getNode5());
+		this.testInstance.setPair(expectedNodePair);
+		ICompoundEdge generatedEdge = testInstance.createEdge();
+		assertNotNull("expected edge" , generatedEdge) ;
 	}
 
-	@Ignore @Test
+	@Test
 	public final void testGetGraph() {
-		assertEquals ( "get graph" , mockCompoundGraph , testEdgeFactory.getGraph()) ;
+		assertEquals("get graph", this.testFixture.getGraph(), testInstance.getGraph()) ;
 	}
 
 }

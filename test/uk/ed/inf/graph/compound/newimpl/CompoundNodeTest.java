@@ -26,6 +26,7 @@ import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 
 @RunWith(JMock.class)
 public class CompoundNodeTest {
@@ -183,10 +184,28 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testGetEdgesWith() {
-		assertEquals("expected in edge", this.mockInEdge, this.testInstance.getEdgesWith(this.mockInEdgeOutNode).first());
-		assertEquals("expected out edge", this.mockOutEdge, this.testInstance.getEdgesWith(this.mockOutEdgeInNode).first());
+		IteratorTestUtility<ICompoundEdge> inNodetest = new IteratorTestUtility<ICompoundEdge>(this.mockInEdge);
+		inNodetest.testIterator(this.testInstance.getEdgesWith(this.mockInEdgeOutNode));
+		IteratorTestUtility<ICompoundEdge> outNodetest = new IteratorTestUtility<ICompoundEdge>(this.mockOutEdge);
+		outNodetest.testIterator(this.testInstance.getEdgesWith(this.mockOutEdgeInNode));
 	}
 
+	@Test(expected=PreConditionException.class)
+	public void testGetEdgesWithNull(){
+		this.testInstance.getEdgesWith(null);
+	}
+	
+	@Test(expected=PreConditionException.class)
+	public void testGetEdgesWithNonIncidentNode(){
+		this.testInstance.getEdgesWith(this.testFixture.getRootNode());
+	}
+	
+	@Test
+	public void testMarkRemovedTrue(){
+		this.testInstance.markRemoved(true);
+		assertTrue("node removed", this.testInstance.isRemoved());
+	}
+	
 	@Test
 	public void testGetInDegree() {
 		assertEquals("expected in degree", EXPECTED_IN_DEGREE, this.testInstance.getInDegree());
@@ -217,7 +236,7 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testGetInEdgesFrom() {
-		assertEquals("expected in edge", this.mockInEdge, this.testInstance.getInEdgesFrom(this.mockInEdgeOutNode).first());
+		assertEquals("expected in edge", this.mockInEdge, this.testInstance.getInEdgesFrom(this.mockInEdgeOutNode).next());
 	}
 
 	@Test(expected=PreConditionException.class)
@@ -288,7 +307,7 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testGetOutEdgesTo() {
-		assertEquals("expected out edge", this.mockOutEdge, this.testInstance.getOutEdgesTo(this.mockOutEdgeInNode).first());
+		assertEquals("expected out edge", this.mockOutEdge, this.testInstance.getOutEdgesTo(this.mockOutEdgeInNode).next());
 	}
 
 	@Test(expected=PreConditionException.class)

@@ -18,6 +18,7 @@ package uk.ed.inf.graph.util.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -50,7 +51,7 @@ public class FilteredEdgeSet <
 	}
 
 	public boolean addAll(Collection<? extends E> c) {
-		return this.addAll(c);
+		return this.edgeSet.addAll(c);
 	}
 
 	public void clear() {
@@ -167,35 +168,39 @@ public class FilteredEdgeSet <
 		return retVal;
 	}
 
-	public SortedSet<E> getEdgesWith(N thisNode, N otherNode) {
-		SortedSet<E> retVal = this.edgeSet.getEdgesWith(thisNode, otherNode);
-		Iterator<E> iter = retVal.iterator();
+	public Iterator<E> getEdgesWith(N thisNode, N otherNode) {
+		Iterator<E> iter = this.edgeSet.getEdgesWith(thisNode, otherNode);
+		List<E> retVal = new LinkedList<E>();
 		while(iter.hasNext()){
 			E edge = iter.next();
 			if(!this.criteria.matched(edge)){
 				iter.remove();
 			}
+			else{
+				retVal.add(edge);
+			}
 		}
 		if(retVal.isEmpty()){
 			throw new IllegalArgumentException("No edges that matched the filter criteria contained this node");
 		}
-		return retVal;
+		return retVal.iterator();
 	}
 
 	public boolean hasEdgesWith(N thisNode, N otherNode) {
 		boolean retVal = this.edgeSet.hasEdgesWith(thisNode, otherNode);
 		if(retVal){
 			// now check edge matches filter criteria
-			Set<E> edges = this.edgeSet.getEdgesWith(thisNode, otherNode);
 			int unmatchedCnt = 0;
-			Iterator<E> iter = edges.iterator();
+			int edgeCntr = 0;
+			Iterator<E> iter = this.edgeSet.getEdgesWith(thisNode, otherNode);
 			while(iter.hasNext()){
 				E edge = iter.next();
+				edgeCntr++;
 				if(!this.criteria.matched(edge)){
 					unmatchedCnt++;
 				}
 			}
-			retVal = (unmatchedCnt < edges.size()); 
+			retVal = (unmatchedCnt < edgeCntr); 
 		}
 		return retVal;
 	}

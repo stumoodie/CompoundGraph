@@ -15,31 +15,56 @@ limitations under the License.
 */
 package uk.ed.inf.graph.compound.newimpl;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JMock;
+import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodeFactory;
+import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
+
+@RunWith(JMock.class)
 public class CompoundNodeFactoryTest {
-
+	private Mockery mockery;
+	private ComplexGraphFixture testFixture;
+	private ICompoundNodeFactory testInstance;
+	
 	@Before
 	public void setUp() throws Exception {
+		this.mockery = new JUnit4Mockery();
+		this.testFixture = new ComplexGraphFixture(mockery, "");
+		this.testFixture.createElements();
+		this.testFixture.buildObjects();
+		this.testInstance = new CompoundNodeFactory(this.testFixture.getNode1());
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		this.mockery = null;
+		this.testFixture = null;
 	}
 
-	@Ignore @Test
-	public final void testCiNodeFactory() {
-		fail("Not yet implemented"); // TODO
+	@Test
+	public void testGetGraph(){
+		assertEquals("correct graph", this.testFixture.getGraph(), this.testInstance.getGraph());
 	}
-
-	@Ignore @Test
+	
+	@Test
+	public void testGetParent(){
+		assertEquals("correct parent", this.testFixture.getNode1(), this.testInstance.getParentNode());
+	}
+	
+	@Test
 	public final void testCreateNode() {
-		fail("Not yet implemented"); // TODO
+		ICompoundNode newNode = this.testInstance.createNode();
+		assertEquals("expected parent", this.testFixture.getNode1(), newNode.getParent());
+		assertEquals("expected graph", this.testFixture.getGraph(), newNode.getGraph());
 	}
 
 }

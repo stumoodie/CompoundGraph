@@ -1,17 +1,15 @@
 package uk.ed.inf.graph.compound.newimpl;
 
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
-import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
 
 public class CompoundEdgeFactory implements ICompoundEdgeFactory {
 	private final ICompoundGraph graph;
-	private ICompoundNode outNode;
-	private ICompoundNode inNode;
+	private CompoundNodePair pair;
 	
 	public CompoundEdgeFactory(ICompoundGraph graph){
 		this.graph = graph;
@@ -19,21 +17,20 @@ public class CompoundEdgeFactory implements ICompoundEdgeFactory {
 	
 	@Override
 	public boolean canCreateEdge() {
-		return this.inNode != null && this.outNode != null && isValidNodePair(this.outNode, this.inNode);
+		return isValidNodePair(this.pair);
 	}
 
 	@Override
 	public ICompoundEdge createEdge() {
-		
 		ICompoundGraphElement lcmNode = this.getParent();
 		ICompoundChildEdgeFactory childEdgeFact = lcmNode.getChildCompoundGraph().edgeFactory();
-		childEdgeFact.setPair(outNode, inNode);
+		childEdgeFact.setPair(this.pair);
 		return childEdgeFact.createEdge();
 	}
 
 	@Override
-	public ICompoundNodePair getCurrentNodePair() {
-		return new CompoundNodePair(outNode, inNode);
+	public CompoundNodePair getCurrentNodePair() {
+		return this.pair;
 	}
 
 	@Override
@@ -43,20 +40,21 @@ public class CompoundEdgeFactory implements ICompoundEdgeFactory {
 
 	@Override
 	public ICompoundGraphElement getParent() {
-		ICompoundGraphElement lcmNode = this.getGraph().getElementTree().getLowestCommonAncestor(this.outNode, this.inNode);
+		ICompoundGraphElement lcmNode = null;
+		if(this.pair != null){
+			lcmNode = this.getGraph().getElementTree().getLowestCommonAncestor(this.pair.getOutNode(), this.pair.getInNode());
+		}
 		return lcmNode;
 	}
 
 	@Override
-	public boolean isValidNodePair(ICompoundNode outNode, ICompoundNode inNode) {
-		return this.outNode != null && this.inNode != null && this.outNode.getGraph().equals(this.graph)
-				&& this.outNode.getGraph().equals(this.graph);
+	public boolean isValidNodePair(CompoundNodePair nodePair) {
+		return nodePair != null && nodePair.getGraph().equals(this.graph);
 	}
 
 	@Override
-	public void setPair(ICompoundNode outNode, ICompoundNode inNode) {
-		this.outNode = outNode;
-		this.inNode = inNode;
+	public void setPair(CompoundNodePair pair) {
+		this.pair = pair;
 	}
 
 }

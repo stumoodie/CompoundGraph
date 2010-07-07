@@ -16,9 +16,9 @@ limitations under the License.
 package uk.ed.inf.graph.compound.base;
 
 import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
+import uk.ed.inf.graph.compound.CompoundNodePair;
 
-public abstract class BaseCompoundNodePair implements ICompoundNodePair {
+public abstract class BaseCompoundNodePair implements CompoundNodePair {
 
 	@Override
 	public boolean containsNode(ICompoundNode node) {

@@ -25,7 +25,7 @@ import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 
 public class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder {
@@ -150,7 +150,7 @@ public class BaseGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 		Iterator<ICompoundEdge> edgeIter = this.sourceSubCigraph.edgeIterator();
 		while(edgeIter.hasNext()){
 			BaseCompoundEdge srcEdge = (BaseCompoundEdge)edgeIter.next();
-			ICompoundNodePair ends = srcEdge.getConnectedNodes();
+			CompoundNodePair ends = srcEdge.getConnectedNodes();
 			BaseCompoundNode newInNode = this.oldNewEquivList.get(ends.getInNode());
 			BaseCompoundNode newOutNode = this.oldNewEquivList.get(ends.getOutNode());
 			BaseCompoundGraphElement oldOwner = srcEdge.getParent();

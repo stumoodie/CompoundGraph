@@ -16,6 +16,7 @@ limitations under the License.
 package uk.ed.inf.graph.compound;
 
 
+
 /**
  * Factory that creates an edge within a particular child graph. It may work out the LCA node that the
  * edge should be added to. the newly created edge will be added to the child graoh returned by <code>getOwningChildGraph()</code>. 
@@ -52,7 +53,7 @@ public interface ICompoundEdgeFactory {
 	 */
 	ICompoundEdge createEdge();
 	
-	boolean isValidNodePair(ICompoundNode outNode, ICompoundNode inNode);
+	boolean isValidNodePair(CompoundNodePair pair);
 
 	/**
 	 * Sets the nodes to be used to create the edge.
@@ -60,7 +61,7 @@ public interface ICompoundEdgeFactory {
 	 * @param inNode inNode, cannot be null.
 	 * @throws IllegalArgumentException if <code>isValidNodePair(outNode, inNode) == false</code>.
 	 */
-	void setPair(ICompoundNode outNode, ICompoundNode inNode);
+	void setPair(CompoundNodePair pair);
 
-	ICompoundNodePair getCurrentNodePair();
+	CompoundNodePair getCurrentNodePair();
 }

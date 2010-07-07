@@ -17,7 +17,7 @@ package uk.ed.inf.graph.compound.base;
 
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.archetypal.ArchetypalChildCompoundGraph;
 import uk.ed.inf.graph.compound.archetypal.ArchetypalCompoundNode;
 
@@ -74,7 +74,7 @@ public class BaseCompoundEdge extends BaseCompoundGraphElement implements ICompo
 	}
 	
 	@Override
-	public final ICompoundNodePair getConnectedNodes() {
+	public final CompoundNodePair getConnectedNodes() {
 		return new CiNodePair(this.getOutNode(), this.getInNode());
 	}
 
@@ -98,13 +98,13 @@ public class BaseCompoundEdge extends BaseCompoundGraphElement implements ICompo
 	protected abstract void removalAction(boolean removed);
 	
 	@Override
-	public final boolean hasEnds(ICompoundNodePair ends) {
+	public final boolean hasEnds(CompoundNodePair ends) {
 		return ends.hasEnds(getInNode(), getOutNode());
 	}
 
 
 	@Override
-	public final boolean hasDirectedEnds(ICompoundNodePair ends) {
+	public final boolean hasDirectedEnds(CompoundNodePair ends) {
 		return ends.hasEnds(getInNode(), getOutNode());
 	}
 
@@ -131,7 +131,7 @@ public class BaseCompoundEdge extends BaseCompoundGraphElement implements ICompo
 		return this.getInNode().equals(this.getOutNode());
 	}
 	
-	private static class CiNodePair implements ICompoundNodePair {
+	private static class CiNodePair implements CompoundNodePair {
 		private final BaseCompoundNode outNode;
 		private final BaseCompoundNode inNode;
 		
@@ -183,7 +183,7 @@ public class BaseCompoundEdge extends BaseCompoundGraphElement implements ICompo
 		}
 
 		@Override
-		public ICompoundNodePair reversedNodes() {
+		public CompoundNodePair reversedNodes() {
 			return new CiNodePair(this.inNode, this.outNode);
 		}
 		

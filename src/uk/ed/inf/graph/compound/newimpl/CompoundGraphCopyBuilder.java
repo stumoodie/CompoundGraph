@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundEdge;
@@ -45,8 +46,8 @@ public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 	@Override
 	public boolean canCopyHere() {
 		ISubCompoundGraph subGraph = this.sourceSubCigraph;
-		return subGraph != null && subGraph instanceof ISubCompoundGraph && subGraph.isInducedSubgraph()
-		&& subGraph.isConsistentSnapShot() && !subGraph.containsRoot();
+		return subGraph != null && subGraph.isInducedSubgraph()
+			&& subGraph.isConsistentSnapShot() && !subGraph.containsRoot();
 	}
 	
 	@Override
@@ -108,7 +109,7 @@ public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 
 	private ICompoundEdge copyEdge(ICompoundEdge srcEdge, ICompoundGraphElement parent, ICompoundNode outNode, ICompoundNode inNode) {
 		ICompoundChildEdgeFactory edgefact = parent.getChildCompoundGraph().edgeFactory();
-		edgefact.setPair(outNode, inNode);
+		edgefact.setPair(new CompoundNodePair(outNode, inNode));
 		return edgefact.createEdge();
 	}
 

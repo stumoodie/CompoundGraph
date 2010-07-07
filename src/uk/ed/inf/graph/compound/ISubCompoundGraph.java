@@ -17,6 +17,7 @@ package uk.ed.inf.graph.compound;
 
 import java.util.Iterator;
 
+
 public interface ISubCompoundGraph {
 
 	ICompoundGraph getSuperGraph();
@@ -95,7 +96,7 @@ public interface ISubCompoundGraph {
 	 * @param pair the pair of nodes to test
 	 * @return true if a connection involving these nodes exists.
 	 */
-	boolean containsConnection(ICompoundNodePair pair);
+	boolean containsConnection(CompoundNodePair pair);
 
 	/**
 	 * Tests if the graph contains the edge. 
@@ -106,7 +107,7 @@ public interface ISubCompoundGraph {
 
 	boolean containsDirectedEdge(ICompoundNode outNode, ICompoundNode inNode);
 
-	boolean containsDirectedEdge(ICompoundNodePair ends);
+	boolean containsDirectedEdge(CompoundNodePair ends);
 
 		/**
 	 * Tests if the graph contains the edge of the given index. 
@@ -136,4 +137,6 @@ public interface ISubCompoundGraph {
 	Iterator<ICompoundGraphElement> elementIterator();
 
 	Iterator<ICompoundGraphElement> edgeLastElementIterator();
+
+	int getNumTopEdges();
 }

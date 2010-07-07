@@ -24,6 +24,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundNode;
@@ -64,7 +65,7 @@ public class AdditionalTest {
 		
 		
 		ICompoundEdgeFactory edgeFact = this.testInstance.edgeFactory();
-		edgeFact.setPair(node1, node1);
+		edgeFact.setPair(new CompoundNodePair(node1, node1));
 		edge1 = edgeFact.createEdge();
 	}
 	

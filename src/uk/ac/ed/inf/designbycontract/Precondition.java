@@ -1,16 +1,14 @@
 package uk.ac.ed.inf.designbycontract;
 
-public class Precondition {
+public class Precondition extends Assertion {
 
 	public Precondition(){
 		
 	}
-	
-	public boolean assertion(boolean result, String label){
-		if(!result){
-			throw new PreConditionException(label);
-		}
-		return result;
+
+	@Override
+	protected void failAssertion(String label) {
+		throw new PreConditionException(label);
 	}
-	
+		
 }

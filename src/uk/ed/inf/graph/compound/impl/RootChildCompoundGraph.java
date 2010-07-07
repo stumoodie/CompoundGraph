@@ -8,7 +8,7 @@ import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodeFactory;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.IRootChildCompoundGraph;
 import uk.ed.inf.graph.compound.IRootCompoundNode;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
@@ -39,7 +39,7 @@ public class RootChildCompoundGraph implements IRootChildCompoundGraph {
 	}
 
 	@Override
-	public boolean containsConnection(ICompoundNodePair nodePair) {
+	public boolean containsConnection(CompoundNodePair nodePair) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -51,13 +51,13 @@ public class RootChildCompoundGraph implements IRootChildCompoundGraph {
 	}
 
 	@Override
-	public boolean containsDirectedEdge(ICompoundNodePair ends) {
+	public boolean containsDirectedEdge(CompoundNodePair ends) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean containsEdge(ICompoundNodePair ends) {
+	public boolean containsEdge(CompoundNodePair ends) {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundEdge;
@@ -119,7 +120,7 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 		ICompoundEdge retVal = srcEdge;
 		if(!srcEdge.getParent().equals(parent)){
 			ICompoundChildEdgeFactory edgefact = parent.getChildCompoundGraph().edgeFactory();
-			edgefact.setPair(outNode, inNode);
+			edgefact.setPair(new CompoundNodePair(outNode, inNode));
 			retVal = edgefact.createEdge();
 			srcEdge.markRemoved(true);
 			this.removalSubGraphFactory.addElement(srcEdge);

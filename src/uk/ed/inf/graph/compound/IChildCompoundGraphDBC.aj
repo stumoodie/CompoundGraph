@@ -8,7 +8,7 @@ public abstract aspect IChildCompoundGraphDBC {
 	public abstract pointcut theClass(IChildCompoundGraph obj);
 	
 	pointcut getEdge(IChildCompoundGraph cn, int idx) :
-		call(public ICompoundEdge IChildCompoundGraph.getEdge(int))
+		execution(public ICompoundEdge IChildCompoundGraph.getEdge(int))
 		&& target(cn) && args(idx) ;
 
 	before(final IChildCompoundGraph cn, final int idx) : getEdge(cn, idx) {
@@ -18,7 +18,7 @@ public abstract aspect IChildCompoundGraphDBC {
 	}
 		
 	pointcut getNode(IChildCompoundGraph cn, int idx) :
-		call(public ICompoundNode IChildCompoundGraph.getNode(int))
+		execution(public ICompoundNode IChildCompoundGraph.getNode(int))
 		&& target(cn) && args(idx) ;
 
 	before(final IChildCompoundGraph cn, final int idx) : getNode(cn, idx) {
@@ -29,7 +29,7 @@ public abstract aspect IChildCompoundGraphDBC {
 		
 	
 	pointcut allMethods(IChildCompoundGraph cn) :
-		call(public void IChildCompoundGraph.*(..))
+		execution(public void IChildCompoundGraph.*(..))
 		&& target(cn);
 	
 	after(final IChildCompoundGraph cn) : allMethods(cn) {

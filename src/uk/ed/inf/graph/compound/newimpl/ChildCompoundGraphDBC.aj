@@ -12,7 +12,7 @@ public aspect ChildCompoundGraphDBC extends IChildCompoundGraphDBC {
 		&& within(ChildCompoundGraph);
 
 	pointcut constructor(ICompoundGraphElement root) :
-		call(public ChildCompoundGraph.new(ICompoundGraphElement))
+		execution(public ChildCompoundGraph.new(ICompoundGraphElement))
 		&& args(root);
 	
 	before(final ICompoundGraphElement root) : constructor(root) {

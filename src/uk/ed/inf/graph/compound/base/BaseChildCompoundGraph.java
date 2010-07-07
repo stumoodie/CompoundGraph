@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.impl.ChildCompoundEdgeFactory;
 import uk.ed.inf.graph.compound.impl.CompoundNodeFactory;
@@ -103,7 +103,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph {
 	}
 
 	@Override
-	public final boolean containsEdge(ICompoundNodePair ends) {
+	public final boolean containsEdge(CompoundNodePair ends) {
 		boolean retVal = false;
 		if(ends != null){
 			ICompoundNode outNode = ends.getOutNode();
@@ -219,7 +219,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph {
 	}
 
 	@Override
-	public final boolean containsDirectedEdge(ICompoundNodePair ends) {
+	public final boolean containsDirectedEdge(CompoundNodePair ends) {
 		boolean retVal = false;
 		if(ends != null){
 			for(ICompoundEdge edge : this.edgeSet){
@@ -233,7 +233,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph {
 	}
 
 	@Override
-	public final boolean containsConnection(ICompoundNodePair ends) {
+	public final boolean containsConnection(CompoundNodePair ends) {
 		boolean retVal = false;
 		if(ends != null){
 			for(ICompoundEdge edge : this.edgeSet){
@@ -382,7 +382,7 @@ public abstract class BaseChildCompoundGraph implements IChildCompoundGraph {
         }
         if (retVal) {
             for (ICompoundEdge edge : this.edgeSet.getUnfilteredEdgeSet()) {
-            	ICompoundNodePair pair = edge.getConnectedNodes();
+            	CompoundNodePair pair = edge.getConnectedNodes();
                 BaseCompoundNode inNode = (BaseCompoundNode)pair.getInNode();
                 BaseCompoundNode outNode = (BaseCompoundNode)pair.getOutNode();
                 if (edge.getChildCompoundGraph().equals(this)) {

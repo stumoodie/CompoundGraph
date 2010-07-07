@@ -1,6 +1,6 @@
 package uk.ed.inf.graph.compound;
 
-import java.util.SortedSet;
+import java.util.Iterator;
 
 import uk.ac.ed.inf.designbycontract.ClassInvariant;
 import uk.ac.ed.inf.designbycontract.Postcondition;
@@ -26,10 +26,10 @@ public aspect ICompoundNodeDBC {
 		previousDegree = cn.getDegree();
 	}
 	
-	after(final ICompoundNode cn, ICompoundEdge inEdge) returning : addInEdge(cn, inEdge) {
+	after(final ICompoundNode cn, final ICompoundEdge inEdge) returning : addInEdge(cn, inEdge) {
 		new Postcondition(){{
-			assertion(cn.getInDegree() == previousInDegree + 1, "In degree not incremented");
-			assertion(cn.getDegree() == previousDegree + 1, "Degree not incremented");
+			assertion(implies(!inEdge.isRemoved(), cn.getInDegree() == previousInDegree + 1), "In degree incremented");
+			assertion(implies(inEdge.isRemoved(), cn.getDegree() == previousDegree), "Degree not incremented if removed");
 		}};
 	}
 		
@@ -48,16 +48,16 @@ public aspect ICompoundNodeDBC {
 		previousDegree = cn.getDegree();
 	}
 
-	after(final ICompoundNode cn, ICompoundEdge outEdge) returning : addOutEdge(cn, outEdge) {
+	after(final ICompoundNode cn, final ICompoundEdge outEdge) returning : addOutEdge(cn, outEdge) {
 		new Postcondition(){{
-			assertion(cn.getOutDegree() == previousOutDegree + 1, "In degree not incremented");
-			assertion(cn.getDegree() == previousDegree + 1, "Degree not incremented");
+			assertion(implies(!outEdge.isRemoved(), cn.getInDegree() == previousInDegree + 1), "Out degree incremented");
+			assertion(implies(outEdge.isRemoved(), cn.getDegree() == previousDegree), "Degree not incremented if removed");
 		}};
 	}
 		
 //	SortedSet<ICompoundEdge> getInEdgesFrom(ICompoundNode outNode);  
 	pointcut getInEdgesFrom(ICompoundNode cn, ICompoundNode outNode) :
-		execution(public SortedSet<ICompoundEdge> getInEdgesFrom(ICompoundNode))
+		execution(public Iterator<ICompoundEdge> getInEdgesFrom(ICompoundNode))
 		&& target(cn)
 		&& args(outNode);
 	
@@ -67,16 +67,16 @@ public aspect ICompoundNodeDBC {
 		}};
 	}
 
-	after(final ICompoundNode cn, ICompoundNode outEdge) returning (final SortedSet<ICompoundEdge> retVal) : getInEdgesFrom(cn, outEdge) {
+	after(final ICompoundNode cn, ICompoundNode outEdge) returning (final Iterator<ICompoundEdge> retVal) : getInEdgesFrom(cn, outEdge) {
 		new Postcondition(){{
 			assertion(retVal != null, "retVal is not null");
-			assertion(retVal.size() > 0, "At least one edge found");
+			assertion(retVal.hasNext(), "At least one edge found");
 		}};
 	}
 
 //	SortedSet<ICompoundEdge> getOutEdgesTo(ICompoundNode inNode);  
 	pointcut getOutEdgesTo(ICompoundNode cn, ICompoundNode inNode) :
-		execution(public SortedSet<ICompoundEdge> getOutEdgesTo(ICompoundNode))
+		execution(public Iterator<ICompoundEdge> getOutEdgesTo(ICompoundNode))
 		&& target(cn)
 		&& args(inNode);
 	
@@ -86,17 +86,17 @@ public aspect ICompoundNodeDBC {
 		}};
 	}
 
-	after(final ICompoundNode cn, ICompoundNode inNode) returning (final SortedSet<ICompoundEdge> retVal) : getOutEdgesTo(cn, inNode) {
+	after(final ICompoundNode cn, ICompoundNode inNode) returning (final Iterator<ICompoundEdge> retVal) : getOutEdgesTo(cn, inNode) {
 		new Postcondition(){{
 			assertion(retVal != null, "retVal is not null");
-			assertion(retVal.size() > 0, "At least one edge found");
+			assertion(retVal.hasNext(), "At least one edge found");
 		}};
 	}
 
 	
 //	SortedSet<ICompoundEdge> getEdgesWith(ICompoundNode other);
 	pointcut getEdgesWith(ICompoundNode cn, ICompoundNode other) :
-		execution(public SortedSet<ICompoundEdge> getEdgesWith(ICompoundNode))
+		execution(public Iterator<ICompoundEdge> getEdgesWith(ICompoundNode))
 		&& target(cn)
 		&& args(other);
 	
@@ -106,10 +106,10 @@ public aspect ICompoundNodeDBC {
 		}};
 	}
 
-	after(final ICompoundNode cn, ICompoundNode other) returning (final SortedSet<ICompoundEdge> retVal) : getEdgesWith(cn, other) {
+	after(final ICompoundNode cn, ICompoundNode other) returning (final Iterator<ICompoundEdge> retVal) : getEdgesWith(cn, other) {
 		new Postcondition(){{
 			assertion(retVal != null, "retVal is not null");
-			assertion(retVal.size() > 0, "At least one edge found");
+			assertion(retVal.hasNext(), "At least one edge found");
 		}};
 	}
 

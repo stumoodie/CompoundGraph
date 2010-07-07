@@ -15,6 +15,7 @@ limitations under the License.
 */
 package uk.ed.inf.graph.util;
 
+import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -77,7 +78,7 @@ public interface IEdgeSet<
 	 * @throws NullPointerException of node is null.
 	 * @throws IllegalArgumentException if <code>hasEdgesWith(node) == false</code>.  
 	 */
-	SortedSet<E> getEdgesWith(N thisNode, N otherNode);
+	Iterator<E> getEdgesWith(N thisNode, N otherNode);
 	
 	/**
 	 * Does an edge with this index exist in the set. 

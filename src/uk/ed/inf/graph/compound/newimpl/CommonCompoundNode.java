@@ -126,15 +126,21 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 	}
 
 	@Override
-	public SortedSet<ICompoundEdge> getEdgesWith(ICompoundNode other) {
+	public Iterator<ICompoundEdge> getEdgesWith(ICompoundNode other) {
 		final SortedSet<ICompoundEdge> retVal = new TreeSet<ICompoundEdge>();
 		if(this.edgeInList.hasEdgesWith(this, other)){
-			retVal.addAll(this.edgeInList.getEdgesWith(this, other));
+			Iterator<ICompoundEdge> iter = this.edgeInList.getEdgesWith(this, other); 
+			while(iter.hasNext()){
+				retVal.add(iter.next());
+			}
 		}
 		if(this.edgeOutList.hasEdgesWith(this, other)){
-			retVal.addAll(this.edgeOutList.getEdgesWith(this, other));
+			Iterator<ICompoundEdge> iter = this.edgeOutList.getEdgesWith(this, other);
+			while(iter.hasNext()){
+				retVal.add(iter.next());
+			}
 		}
-		return retVal;
+		return retVal.iterator();
 	}
 
 	@Override
@@ -148,7 +154,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 	}
 
 	@Override
-	public SortedSet<ICompoundEdge> getInEdgesFrom(ICompoundNode outNode) {
+	public Iterator<ICompoundEdge> getInEdgesFrom(ICompoundNode outNode) {
 		return this.edgeInList.getEdgesWith(this, outNode);
 	}
 
@@ -173,7 +179,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 	}
 
 	@Override
-	public SortedSet<ICompoundEdge> getOutEdgesTo(ICompoundNode inNode) {
+	public Iterator<ICompoundEdge> getOutEdgesTo(ICompoundNode inNode) {
 		return this.edgeOutList.getEdgesWith(this, inNode);
 	}
 
@@ -248,13 +254,13 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 	}
 
 	@Override
-	public boolean isChild(ICompoundGraphElement childNode) {
+	public boolean isChild(ICompoundGraphElement childElement) {
 		boolean retVal = false;
-		if(childNode != null){
-			Iterator<ICompoundNode> childIter = this.getChildCompoundGraph().nodeIterator();
-			while(childIter.hasNext() && retVal == false){
-				ICompoundNode possChild = childIter.next();
-				if(possChild.equals(childNode)){
+		if(childElement != null){
+			Iterator<ICompoundGraphElement> childIter = this.getChildCompoundGraph().elementIterator();
+			while(childIter.hasNext() && !retVal){
+				ICompoundGraphElement possChild = childIter.next();
+				if(possChild.equals(childElement)){
 					retVal = true;
 				}
 			}

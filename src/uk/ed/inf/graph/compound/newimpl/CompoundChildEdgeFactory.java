@@ -1,16 +1,14 @@
 package uk.ed.inf.graph.compound.newimpl;
 
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
-import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
 
 public class CompoundChildEdgeFactory implements ICompoundChildEdgeFactory {
 	private final ICompoundGraphElement parent;
-	private ICompoundNode outNode;
-	private ICompoundNode inNode;
+	private CompoundNodePair pair;
 	
 	public CompoundChildEdgeFactory(ICompoundGraphElement parent){
 		this.parent = parent;
@@ -18,19 +16,19 @@ public class CompoundChildEdgeFactory implements ICompoundChildEdgeFactory {
 	
 	@Override
 	public boolean canCreateEdge() {
-		return this.isValidNodePair(outNode, inNode);
+		return this.isValidNodePair(this.pair);
 	}
 
 	@Override
 	public ICompoundEdge createEdge() {
-		ICompoundEdge retVal = new CompoundEdge(this.parent, CompoundGraph.getIndexCounter(this.getGraph()).nextIndex(), this.outNode, this.inNode);
+		ICompoundEdge retVal = new CompoundEdge(this.parent, CompoundGraph.getIndexCounter(this.getGraph()).nextIndex(), this.pair.getOutNode(), this.pair.getInNode());
 		parent.getChildCompoundGraph().addEdge(retVal);
 		return retVal;
 	}
 
 	@Override
-	public ICompoundNodePair getCurrentNodePair() {
-		return new CompoundNodePair(outNode, inNode);
+	public CompoundNodePair getCurrentNodePair() {
+		return this.pair;
 	}
 
 	@Override
@@ -44,18 +42,16 @@ public class CompoundChildEdgeFactory implements ICompoundChildEdgeFactory {
 	}
 
 	@Override
-	public boolean isValidNodePair(ICompoundNode outNode, ICompoundNode inNode) {
+	public boolean isValidNodePair(CompoundNodePair nodePair) {
 		boolean retVal = false;
-		if(outNode != null  && inNode != null){
-			retVal = this.parent.getChildCompoundGraph().getElementTree().getLowestCommonAncestor(outNode, inNode).equals(parent);
+		if(nodePair != null){
+			retVal = this.parent.getChildCompoundGraph().getElementTree().getLowestCommonAncestor(nodePair.getOutNode(), nodePair.getInNode()).equals(parent);
 		}
 		return retVal;
 	}
 
 	@Override
-	public void setPair(ICompoundNode outNode, ICompoundNode inNode) {
-		this.outNode = outNode;
-		this.inNode = inNode;
+	public void setPair(CompoundNodePair nodePair) {
+		this.pair = nodePair;
 	}
-
 }

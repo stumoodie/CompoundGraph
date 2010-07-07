@@ -6,11 +6,11 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.ICompoundNodePair;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.ISubCompoundGraphBuilder;
 
@@ -84,7 +84,7 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 		for(ICompoundGraphElement topEl : new HashSet<ICompoundGraphElement>(this.topElements)){
 			if(topEl.isLink()){
 				ICompoundEdge topEdge = (ICompoundEdge)topEl;
-				ICompoundNodePair pair = topEdge.getConnectedNodes();
+				CompoundNodePair pair = topEdge.getConnectedNodes();
 				// remove if not incident and not part of the original selection: this preserves only non-incident edges if they were in the original selection 
 				if(!this.originalEdgeSelection.contains(topEl) && (!visited.contains(pair.getOutNode()) || !visited.contains(pair.getInNode()))){
 					this.topElements.remove(topEl);
@@ -97,7 +97,7 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 	public void buildSubgraph() {
 		SubCompoundGraph subGraph = new SubCompoundGraph(this.graph);
 		for(ICompoundGraphElement element : this.topElements){
-			subGraph.addTopNode(element);
+			subGraph.addTopElement(element);
 		}
 		this.currentSubgraph = subGraph;
 	}
@@ -169,7 +169,7 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 		for(ICompoundGraphElement topEl : new HashSet<ICompoundGraphElement>(this.topElements)){
 			if(topEl.isLink()){
 				ICompoundEdge topEdge = (ICompoundEdge)topEl;
-				ICompoundNodePair pair = topEdge.getConnectedNodes();
+				CompoundNodePair pair = topEdge.getConnectedNodes();
 				// remove if not incident 
 				if(!visited.contains(pair.getOutNode()) || !visited.contains(pair.getInNode())){
 					this.topElements.remove(topEl);

@@ -138,19 +138,32 @@ public class BitStringBuffer {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((bitVector == null) ? 0 : bitVector.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (!(obj instanceof BitStringBuffer)) {
 			return false;
-		final BitStringBuffer other = (BitStringBuffer) obj;
+		}
+		BitStringBuffer other = (BitStringBuffer) obj;
 		if (bitVector == null) {
-			if (other.bitVector != null)
+			if (other.bitVector != null) {
 				return false;
-		} else if (!bitVector.equals(other.bitVector))
+			}
+		} else if (!bitVector.equals(other.bitVector)) {
 			return false;
+		}
 		return true;
 	}
 }
