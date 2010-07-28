@@ -25,9 +25,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
+import uk.ed.inf.graph.compound.testfixture.INodeConstructor;
 
 @RunWith(JMock.class)
 public class CompoundNodeFactoryTest {
@@ -39,9 +41,43 @@ public class CompoundNodeFactoryTest {
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(mockery, "");
-		this.testFixture.createElements();
-		this.testFixture.buildObjects();
-		this.testInstance = new CompoundNodeFactory(this.testFixture.getNode1());
+		this.testFixture.redefineNode(ComplexGraphFixture.NODE1_ID, new INodeConstructor() {
+			
+			@Override
+			public ICompoundNodeFactory createNodeFactory(IChildCompoundGraph childGraph) {
+				testInstance = new CompoundNodeFactory(childGraph.getRoot());
+				return testInstance;
+			}
+			
+			@Override
+			public ICompoundNode createCompoundNode() {
+				return null;
+			}
+			
+			@Override
+			public IChildCompoundGraph createCompoundChildGraph(ICompoundNode node) {
+				return null;
+			}
+			
+			@Override
+			public boolean buildNodeFactory(ICompoundNodeFactory nodeFactory) {
+				return true;
+			}
+			
+			@Override
+			public boolean buildNode(ICompoundNode node) {
+				return false;
+			}
+			
+			@Override
+			public boolean buildChildGraph(IChildCompoundGraph node) {
+				return false;
+			}
+		});
+		this.testFixture.doAll();
+//		this.testFixture.createElements();
+//		this.testFixture.buildObjects();
+//		this.testInstance = 
 	}
 
 	@After

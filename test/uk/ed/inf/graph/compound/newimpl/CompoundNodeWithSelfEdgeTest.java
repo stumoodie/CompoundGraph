@@ -5,8 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -19,7 +17,9 @@ import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
+import uk.ed.inf.graph.compound.testfixture.INodeConstructor;
 
 @RunWith(JMock.class)
 public class CompoundNodeWithSelfEdgeTest {
@@ -34,30 +34,69 @@ public class CompoundNodeWithSelfEdgeTest {
 
 	@Before
 	public void setUp() throws Exception {
-		this.testFixture = new ComplexGraphFixture(this.mockery, ""){
-			
+		this.testFixture = new ComplexGraphFixture(this.mockery, "");
+		this.testFixture.redefineNode(ComplexGraphFixture.NODE2_ID, new INodeConstructor(){
+
 			@Override
-			protected void buildNode2(final ICompoundNode node){
-				node.addInEdge(getEdge3());
-				node.addOutEdge(getEdge3());
+			public boolean buildChildGraph(IChildCompoundGraph child) {
+				child.addEdge(testFixture.getEdge3());
+				return true;
+			}
+
+			@Override
+			public boolean buildNode(ICompoundNode node) {
+				node.addInEdge(testFixture.getEdge3());
+				node.addOutEdge(testFixture.getEdge3());
+				return true;
+			}
+
+			@Override
+			public boolean buildNodeFactory(ICompoundNodeFactory nodeFactory) {
+				return true;
+			}
+
+			@Override
+			public IChildCompoundGraph createCompoundChildGraph(ICompoundNode node) {
+				return node.getChildCompoundGraph();
+			}
+
+			@Override
+			public ICompoundNode createCompoundNode() {
+				testInstance = new CompoundNode(testFixture.getNode1(), ComplexGraphFixture.NODE2_IDX);
+				return testInstance;
+			}
+
+			@Override
+			public ICompoundNodeFactory createNodeFactory(IChildCompoundGraph childGraph) {
+				return childGraph.nodeFactory();
 			}
 			
-			@Override
-			protected void buildNode2ChildGraph(final IChildCompoundGraph child){
-				child.addEdge(getEdge3());
-			}
-			
-		};
-		this.testFixture.createElements();
-		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"graph", "node1", "node1ChildGraph" }));
-		this.testFixture.buildObjects();
-		this.testInstance = new CompoundNode(this.testFixture.getNode1(), ComplexGraphFixture.NODE2_IDX);
-		this.testFixture.setNode2(testInstance);
-		this.testFixture.setNode2ChildGraph(this.testInstance.getChildCompoundGraph());
-		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"elementTree", "node3", "node3ChildGraph", "node4", "node4ChildGraph", "node5", "node5ChildGraph",
-				"edge1", "edge1ChildGraph", "edge2", "edge2ChildGraph", "edge3", "edge3ChildGraph",
-				"edge4", "edge4ChildGraph", "node2", "node2ChildGraph" }));
-		this.testFixture.buildObjects();
+		});
+		this.testFixture.doAll();
+//		{
+//			
+//			@Override
+//			protected void buildNode2(final ICompoundNode node){
+//				node.addInEdge(getEdge3());
+//				node.addOutEdge(getEdge3());
+//			}
+//			
+//			@Override
+//			protected void buildNode2ChildGraph(final IChildCompoundGraph child){
+//				child.addEdge(getEdge3());
+//			}
+//			
+//		};
+//		this.testFixture.createElements();
+//		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"graph", "node1", "node1ChildGraph" }));
+//		this.testFixture.buildObjects();
+//		this.testInstance = new CompoundNode(this.testFixture.getNode1(), ComplexGraphFixture.NODE2_IDX);
+//		this.testFixture.setNode2(testInstance);
+//		this.testFixture.setNode2ChildGraph(this.testInstance.getChildCompoundGraph());
+//		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"elementTree", "node3", "node3ChildGraph", "node4", "node4ChildGraph", "node5", "node5ChildGraph",
+//				"edge1", "edge1ChildGraph", "edge2", "edge2ChildGraph", "edge3", "edge3ChildGraph",
+//				"edge4", "edge4ChildGraph", "node2", "node2ChildGraph" }));
+//		this.testFixture.buildObjects();
 	}
 
 	@After
@@ -70,7 +109,7 @@ public class CompoundNodeWithSelfEdgeTest {
 	@Test
 	public void testGetChildCompoundGraph() {
 		assertNotNull("Child exists", this.testInstance.getChildCompoundGraph());
-		assertEquals("expected child graph", this.testFixture.getNode2ChildGraph(), this.testInstance.getChildCompoundGraph());
+		assertEquals("expected child graph", this.testFixture.getNode2().getChildCompoundGraph(), this.testInstance.getChildCompoundGraph());
 	}
 
 	@Test

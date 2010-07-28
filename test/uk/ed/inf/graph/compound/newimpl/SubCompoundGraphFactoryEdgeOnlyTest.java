@@ -1,6 +1,7 @@
 package uk.ed.inf.graph.compound.newimpl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -28,8 +29,7 @@ public class SubCompoundGraphFactoryEdgeOnlyTest {
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(mockery, "");
-		this.testFixture.createElements();
-		this.testFixture.buildObjects();
+		this.testFixture.doAll();
 		this.testInstance = new SubCompoundGraphFactory(this.testFixture.getGraph());
 		this.testInstance.addElement(this.testFixture.getEdge1());
 	}

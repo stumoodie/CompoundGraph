@@ -14,10 +14,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import uk.ed.inf.graph.compound.CompoundNodePair;
+import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
+import uk.ed.inf.graph.compound.testfixture.IEdgeConstructor;
+import uk.ed.inf.graph.compound.testfixture.INodeConstructor;
 
 @RunWith(JMock.class)
 public class SubCompoundGraphWithRemovedNodesTest {
@@ -34,59 +39,301 @@ public class SubCompoundGraphWithRemovedNodesTest {
 	@Before
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
-		this.testFixture = new ComplexGraphFixture(this.mockery, ""){
+		this.testFixture = new ComplexGraphFixture(this.mockery, "");
+		this.testFixture.redefineNode(ComplexGraphFixture.NODE3_ID, new INodeConstructor() {
 			
 			@Override
-			protected void buildNode3(final ICompoundNode node){
+			public ICompoundNodeFactory createNodeFactory(IChildCompoundGraph childGraph) {
+				return null;
+			}
+			
+			@Override
+			public ICompoundNode createCompoundNode() {
+				return null;
+			}
+			
+			@Override
+			public IChildCompoundGraph createCompoundChildGraph(ICompoundNode node) {
+				return null;
+			}
+			
+			@Override
+			public boolean buildNodeFactory(ICompoundNodeFactory nodeFactory) {
+				return false;
+			}
+			
+			@Override
+			public boolean buildNode(final ICompoundNode node) {
 				mockery.checking(new Expectations(){{
 					allowing(node).isRemoved(); will(returnValue(true));
 				}});
-				super.buildNode3(node);
+				return false;
 			}
 			
 			@Override
-			protected void buildNode4(final ICompoundNode node){
+			public boolean buildChildGraph(IChildCompoundGraph node) {
+				return false;
+			}
+		});
+		this.testFixture.redefineNode(ComplexGraphFixture.NODE4_ID, new INodeConstructor() {
+			
+			@Override
+			public ICompoundNodeFactory createNodeFactory(IChildCompoundGraph childGraph) {
+				return null;
+			}
+			
+			@Override
+			public ICompoundNode createCompoundNode() {
+				return null;
+			}
+			
+			@Override
+			public IChildCompoundGraph createCompoundChildGraph(ICompoundNode node) {
+				return null;
+			}
+			
+			@Override
+			public boolean buildNodeFactory(ICompoundNodeFactory nodeFactory) {
+				return false;
+			}
+			
+			@Override
+			public boolean buildNode(final ICompoundNode node) {
 				mockery.checking(new Expectations(){{
 					allowing(node).isRemoved(); will(returnValue(true));
 				}});
-				super.buildNode4(node);
+				return false;
 			}
 			
 			@Override
-			protected void buildNode5(final ICompoundNode node){
+			public boolean buildChildGraph(IChildCompoundGraph node) {
+				return false;
+			}
+		});
+		this.testFixture.redefineNode(ComplexGraphFixture.NODE5_ID, new INodeConstructor() {
+			
+			@Override
+			public ICompoundNodeFactory createNodeFactory(IChildCompoundGraph childGraph) {
+				return null;
+			}
+			
+			@Override
+			public ICompoundNode createCompoundNode() {
+				return null;
+			}
+			
+			@Override
+			public IChildCompoundGraph createCompoundChildGraph(ICompoundNode node) {
+				return null;
+			}
+			
+			@Override
+			public boolean buildNodeFactory(ICompoundNodeFactory nodeFactory) {
+				return false;
+			}
+			
+			@Override
+			public boolean buildNode(final ICompoundNode node) {
 				mockery.checking(new Expectations(){{
 					allowing(node).isRemoved(); will(returnValue(true));
 				}});
-				super.buildNode5(node);
+				return false;
 			}
 			
 			@Override
-			protected void buildEdge1(final ICompoundEdge edge){
-				mockery.checking(new Expectations(){{
-					allowing(edge).isRemoved(); will(returnValue(true));
-				}});
-				super.buildEdge1(edge);
+			public boolean buildChildGraph(IChildCompoundGraph node) {
+				return false;
+			}
+		});
+		this.testFixture.redefineEdge(ComplexGraphFixture.EDGE1_ID, new IEdgeConstructor() {
+			
+			@Override
+			public ICompoundNodeFactory createNodeFactory(IChildCompoundGraph childGraph) {
+				return null;
 			}
 			
 			@Override
-			protected void buildEdge2(final ICompoundEdge edge){
-				mockery.checking(new Expectations(){{
-					allowing(edge).isRemoved(); will(returnValue(true));
-				}});
-				super.buildEdge2(edge);
+			public ICompoundEdgeFactory createEdgeFactory(IChildCompoundGraph childGraph) {
+				return null;
 			}
 			
 			@Override
-			protected void buildEdge3(final ICompoundEdge edge){
+			public ICompoundEdge createCompoundEdge() {
+				return null;
+			}
+			
+			@Override
+			public IChildCompoundGraph createCompoundChildGraph(ICompoundEdge edge) {
+				return null;
+			}
+			
+			@Override
+			public boolean buildNodeFactory(ICompoundNodeFactory nodeFactory) {
+				return false;
+			}
+			
+			@Override
+			public boolean buildEdgeFactory(ICompoundEdgeFactory edgeFactory) {
+				return false;
+			}
+			
+			@Override
+			public boolean buildEdge(final ICompoundEdge edge) {
 				mockery.checking(new Expectations(){{
 					allowing(edge).isRemoved(); will(returnValue(true));
 				}});
-				super.buildEdge3(edge);
+				return false;
 			}
 			
-		};
-		this.testFixture.createElements();
-		this.testFixture.buildObjects();
+			@Override
+			public boolean buildChildGraph(IChildCompoundGraph childGraph) {
+				return false;
+			}
+		});
+		this.testFixture.redefineEdge(ComplexGraphFixture.EDGE2_ID, new IEdgeConstructor() {
+			
+			@Override
+			public ICompoundNodeFactory createNodeFactory(IChildCompoundGraph childGraph) {
+				return null;
+			}
+			
+			@Override
+			public ICompoundEdgeFactory createEdgeFactory(IChildCompoundGraph childGraph) {
+				return null;
+			}
+			
+			@Override
+			public ICompoundEdge createCompoundEdge() {
+				return null;
+			}
+			
+			@Override
+			public IChildCompoundGraph createCompoundChildGraph(ICompoundEdge edge) {
+				return null;
+			}
+			
+			@Override
+			public boolean buildNodeFactory(ICompoundNodeFactory nodeFactory) {
+				return false;
+			}
+			
+			@Override
+			public boolean buildEdgeFactory(ICompoundEdgeFactory edgeFactory) {
+				return false;
+			}
+			
+			@Override
+			public boolean buildEdge(final ICompoundEdge edge) {
+				mockery.checking(new Expectations(){{
+					allowing(edge).isRemoved(); will(returnValue(true));
+				}});
+				return false;
+			}
+			
+			@Override
+			public boolean buildChildGraph(IChildCompoundGraph childGraph) {
+				return false;
+			}
+		});
+		this.testFixture.redefineEdge(ComplexGraphFixture.EDGE3_ID, new IEdgeConstructor() {
+			
+			@Override
+			public ICompoundNodeFactory createNodeFactory(IChildCompoundGraph childGraph) {
+				return null;
+			}
+			
+			@Override
+			public ICompoundEdgeFactory createEdgeFactory(IChildCompoundGraph childGraph) {
+				return null;
+			}
+			
+			@Override
+			public ICompoundEdge createCompoundEdge() {
+				return null;
+			}
+			
+			@Override
+			public IChildCompoundGraph createCompoundChildGraph(ICompoundEdge edge) {
+				return null;
+			}
+			
+			@Override
+			public boolean buildNodeFactory(ICompoundNodeFactory nodeFactory) {
+				return false;
+			}
+			
+			@Override
+			public boolean buildEdgeFactory(ICompoundEdgeFactory edgeFactory) {
+				return false;
+			}
+			
+			@Override
+			public boolean buildEdge(final ICompoundEdge edge) {
+				mockery.checking(new Expectations(){{
+					allowing(edge).isRemoved(); will(returnValue(true));
+				}});
+				return false;
+			}
+			
+			@Override
+			public boolean buildChildGraph(IChildCompoundGraph childGraph) {
+				return false;
+			}
+		});
+//		{
+//			
+//			@Override
+//			protected void buildNode3(final ICompoundNode node){
+//				mockery.checking(new Expectations(){{
+//					allowing(node).isRemoved(); will(returnValue(true));
+//				}});
+//				super.buildNode3(node);
+//			}
+//			
+//			@Override
+//			protected void buildNode4(final ICompoundNode node){
+//				mockery.checking(new Expectations(){{
+//					allowing(node).isRemoved(); will(returnValue(true));
+//				}});
+//				super.buildNode4(node);
+//			}
+//			
+//			@Override
+//			protected void buildNode5(final ICompoundNode node){
+//				mockery.checking(new Expectations(){{
+//					allowing(node).isRemoved(); will(returnValue(true));
+//				}});
+//				super.buildNode5(node);
+//			}
+//			
+//			@Override
+//			protected void buildEdge1(final ICompoundEdge edge){
+//				mockery.checking(new Expectations(){{
+//					allowing(edge).isRemoved(); will(returnValue(true));
+//				}});
+//				super.buildEdge1(edge);
+//			}
+//			
+//			@Override
+//			protected void buildEdge2(final ICompoundEdge edge){
+//				mockery.checking(new Expectations(){{
+//					allowing(edge).isRemoved(); will(returnValue(true));
+//				}});
+//				super.buildEdge2(edge);
+//			}
+//			
+//			@Override
+//			protected void buildEdge3(final ICompoundEdge edge){
+//				mockery.checking(new Expectations(){{
+//					allowing(edge).isRemoved(); will(returnValue(true));
+//				}});
+//				super.buildEdge3(edge);
+//			}
+//			
+//		};
+		this.testFixture.doAll();
+//		this.testFixture.createElements();
+//		this.testFixture.buildObjects();
 
 		this.testInstance = new SubCompoundGraph(this.testFixture.getGraph());
 		this.testInstance.addTopElement(this.testFixture.getRootNode());

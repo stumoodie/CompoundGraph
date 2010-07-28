@@ -5,8 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -16,10 +14,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import uk.ed.inf.graph.compound.CompoundNodePair;
+import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
+import uk.ed.inf.graph.compound.testfixture.IEdgeConstructor;
 
 @RunWith(JMock.class)
 public class CompoundEdgeTest {
@@ -51,32 +53,97 @@ public class CompoundEdgeTest {
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
 
-		this.testFixture = new ComplexGraphFixture(this.mockery, ""){
+//		this.testFixture = new ComplexGraphFixture(this.mockery, ""){
+//			
+//			@Override
+//			protected void buildEdge2(ICompoundEdge edge){
+//			}
+//			
+//			@Override
+//			protected void buildEdge2ChildGraph(IChildCompoundGraph childGraph){
+//				childGraph.addNode(getNode4());
+//			}
+//			
+//		};
+		
+		this.testFixture = new ComplexGraphFixture(mockery, "");
+//		final ElementBuilder edge2OriginalBuilder = this.testFixture.getElementBuilder("edge2");
+		this.testFixture.redefineEdge(ComplexGraphFixture.EDGE2_ID, new IEdgeConstructor(){
 			
 			@Override
-			protected void buildEdge2(ICompoundEdge edge){
-				edge.getChildCompoundGraph().addNode(getNode4());
+			public boolean buildChildGraph(IChildCompoundGraph childGraph) {
+				childGraph.addNode(testFixture.getNode4());
+				return true;
 			}
-			
-		};
 
-		this.testFixture.createElements();
+			@Override
+			public boolean buildEdge(ICompoundEdge edge) {
+				return true;
+			}
+
+			@Override
+			public boolean buildEdgeFactory(ICompoundEdgeFactory edgeFactory) {
+				return true;
+			}
+
+			@Override
+			public boolean buildNodeFactory(ICompoundNodeFactory nodeFactory) {
+				return true;
+			}
+
+			@Override
+			public IChildCompoundGraph createCompoundChildGraph(ICompoundEdge edge) {
+				return edge.getChildCompoundGraph();
+			}
+
+			@Override
+			public ICompoundEdge createCompoundEdge() {
+				testInstance = new CompoundEdge(testFixture.getEdge1(), ComplexGraphFixture.EDGE2_IDX,	testFixture.getNode3(), testFixture.getNode5());
+				return testInstance;
+			}
+
+			@Override
+			public ICompoundEdgeFactory createEdgeFactory(IChildCompoundGraph childGraph) {
+				return childGraph.edgeFactory();
+			}
+
+			@Override
+			public ICompoundNodeFactory createNodeFactory(IChildCompoundGraph childGraph) {
+				return childGraph.nodeFactory();
+			}
+		});
+
+//		this.testFixture.setCreationDependencies("graph", "elementTree", "node1", "node2", "edge3", "node5", "edge1", "node3", "edge2", "node4", "edge4");
+		this.testFixture.doAll();
+//		this.testFixture.setBuildDependencies("graph", "elementTree", "node1", "node2", "edge3", "node5", "edge1", "node3", "edge2", "node4", "edge4");
+//		this.testFixture.buildGraphStructure();
+
+//		this.testInstance = this.testFixture.getEdge2();
+//		this.testFixture.createElements();
 		
-		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"graph", "edge1", "node3", "node5" }));
-		this.testFixture.buildObjects();
+//		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"graph", "edge1", "node3", "node5" }));
+//		this.testFixture.buildTree();
+//
+//		this.testInstance = new CompoundEdge(this.testFixture.getEdge1(), ComplexGraphFixture.EDGE2_IDX,
+//				this.testFixture.getNode3(), this.testFixture.getNode5());
+		
+//		this.testFixture.setEdge2(this.testInstance);
+//		this.testFixture.setEdge2ChildGraph(this.testInstance.getChildCompoundGraph());
 
-		this.testInstance = new CompoundEdge(this.testFixture.getEdge1(), ComplexGraphFixture.EDGE2_IDX,
-				this.testFixture.getNode3(), this.testFixture.getNode5());
-		this.testFixture.setEdge2(this.testInstance);
-
-		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"elementTree", "node1", "node2", "node4",
-				"edge3", "edge4","edge2" }));
-		this.testFixture.buildObjects();
+//		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"elementTree", "node1", "node2", "node4",
+//				"edge3", "edge4","edge2" }));
+//		this.testFixture.buildTree();
+//		this.testFixture.resetBuildDependencies();
+//		this.testFixture.buildGraphStructure();
 
 		
 		this.otherTestFixture = new ComplexGraphFixture(this.mockery, "other_");
-		this.otherTestFixture.createElements();
-		this.otherTestFixture.buildObjects();
+//		this.otherTestFixture.createElements();
+//		this.otherTestFixture.buildObjects();
+//		this.otherTestFixture.setCreationDependencies("graph", "elementTree", "node1", "node2", "edge3", "node5", "edge1", "node3", "edge2", "node4", "edge4");
+		this.otherTestFixture.doAll();
+//		this.otherTestFixture.setBuildDependencies("graph", "elementTree", "node1", "node2", "edge3", "node5", "edge1", "node3", "edge2", "node4", "edge4");
+//		this.otherTestFixture.buildGraphStructure();
 		
 		this.mockOtherParent = this.otherTestFixture.getEdge1();
 		this.mockOtherGraphOutNode = this.otherTestFixture.getNode3();
@@ -117,7 +184,6 @@ public class CompoundEdgeTest {
 	@Test
 	public void testHasDirectedEndsCompoundNodePair() {
 		assertTrue("ends present", this.testInstance.hasDirectedEnds(new CompoundNodePair(this.mockOutNode, this.mockInNode)));
-		assertFalse("ends not present", this.testInstance.hasDirectedEnds(new CompoundNodePair(this.mockOtherGraphOutNode, this.mockOtherGraphInNode)));
 		assertFalse("null ends not present", this.testInstance.hasDirectedEnds(null));
 		assertFalse("reversed directed ends present", this.testInstance.hasDirectedEnds(new CompoundNodePair(this.mockInNode, this.mockOutNode)));
 	}
@@ -134,7 +200,6 @@ public class CompoundEdgeTest {
 	@Test
 	public void testHasEndsCompoundNodePair() {
 		assertTrue("ends present", this.testInstance.hasEnds(new CompoundNodePair(this.mockOutNode, this.mockInNode)));
-		assertFalse("ends not present", this.testInstance.hasEnds(new CompoundNodePair(this.mockOtherGraphOutNode, this.mockOtherGraphInNode)));
 		assertFalse("null ends not present", this.testInstance.hasEnds(null));
 		assertTrue("reversed directed ends present", this.testInstance.hasEnds(new CompoundNodePair(this.mockInNode, this.mockOutNode)));
 	}

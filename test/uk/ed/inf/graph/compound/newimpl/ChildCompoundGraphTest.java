@@ -20,8 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-
+import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -37,6 +36,7 @@ import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
+import uk.ed.inf.graph.compound.testfixture.IEdgeConstructor;
 
 @RunWith(JMock.class)
 public class ChildCompoundGraphTest {
@@ -55,25 +55,76 @@ public class ChildCompoundGraphTest {
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
 		
-		this.testFixture = new ComplexGraphFixture(this.mockery, ""){
+		this.testFixture = new ComplexGraphFixture(this.mockery, "");
+		this.testFixture.redefineEdge(ComplexGraphFixture.EDGE1_ID, new IEdgeConstructor() {
 			
 			@Override
-			protected void buildEdge1ChildGraph(IChildCompoundGraph childGraph){
-				childGraph.addEdge(getEdge2());
-				childGraph.addNode(getNode3());
-				childGraph.addNode(getNode5());
+			public ICompoundNodeFactory createNodeFactory(IChildCompoundGraph childGraph) {
+				return childGraph.nodeFactory();
 			}
-		};
+			
+			@Override
+			public ICompoundEdgeFactory createEdgeFactory(IChildCompoundGraph childGraph) {
+				return childGraph.edgeFactory();
+			}
+			
+			@Override
+			public ICompoundEdge createCompoundEdge() {
+				return null;
+			}
+			
+			@Override
+			public IChildCompoundGraph createCompoundChildGraph(final ICompoundEdge edge1) {
+				testInstance = new ChildCompoundGraph(edge1);
+				mockery.checking(new Expectations(){{
+					allowing(edge1).getChildCompoundGraph(); will(returnValue(testInstance));
+				}});
+				return testInstance;
+			}
+			
+			@Override
+			public boolean buildNodeFactory(ICompoundNodeFactory nodeFactory) {
+				return true;
+			}
+			
+			@Override
+			public boolean buildEdgeFactory(ICompoundEdgeFactory edgeFactory) {
+				return true;
+			}
+			
+			@Override
+			public boolean buildEdge(ICompoundEdge edge) {
+				return false;
+			}
+			
+			@Override
+			public boolean buildChildGraph(IChildCompoundGraph childGraph) {
+				childGraph.addEdge(testFixture.getEdge2());
+				childGraph.addNode(testFixture.getNode3());
+				childGraph.addNode(testFixture.getNode5());
+				return true;
+			}
+		});
+		this.testFixture.doAll();
+//		{
+//			
+//			@Override
+//			protected void buildEdge1ChildGraph(IChildCompoundGraph childGraph){
+//				childGraph.addEdge(getEdge2());
+//				childGraph.addNode(getNode3());
+//				childGraph.addNode(getNode5());
+//			}
+//		};
 		
-		this.testFixture.createElements();
-		this.testInstance = new ChildCompoundGraph(this.testFixture.getEdge1());
-		this.testFixture.setEdge1ChildGraph(testInstance);
-		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{
-				"graph", "elementTree", "node1", "node1ChildGraph", "node2", "node2ChildGraph", "node3", "node3ChildGraph",
-				"node4", "node4ChildGraph", "node5", "node5ChildGraph", "edge4", "edge4ChildGraph", "edge3", "edge3ChildGraph",
-				"edge2", "edge2ChildGraph", "edge1", "edge1ChildGraph"
-		}));
-		this.testFixture.buildObjects();
+//		this.testFixture.createElements();
+//		this.testInstance = new ChildCompoundGraph(this.testFixture.getEdge1());
+//		this.testFixture.setEdge1ChildGraph(testInstance);
+//		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{
+//				"graph", "elementTree", "node1", "node1ChildGraph", "node2", "node2ChildGraph", "node3", "node3ChildGraph",
+//				"node4", "node4ChildGraph", "node5", "node5ChildGraph", "edge4", "edge4ChildGraph", "edge3", "edge3ChildGraph",
+//				"edge2", "edge2ChildGraph", "edge1", "edge1ChildGraph"
+//		}));
+//		this.testFixture.buildObjects();
 		
 	}
 

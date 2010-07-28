@@ -37,11 +37,13 @@ public class SubCompoundGraphTest {
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(this.mockery, "");
-		this.testFixture.createElements();
-		this.testFixture.buildObjects();
+		this.testFixture.doAll();
+//		this.testFixture.createElements();
+//		this.testFixture.buildObjects();
 		this.otherTestFixture = new ComplexGraphFixture(this.mockery, "other_");
-		this.otherTestFixture.createElements();
-		this.otherTestFixture.buildObjects();
+		this.otherTestFixture.doAll();
+//		this.otherTestFixture.createElements();
+//		this.otherTestFixture.buildObjects();
 
 		this.testInstance = new SubCompoundGraph(this.testFixture.getGraph());
 		this.testInstance.addTopElement(this.testFixture.getEdge2());

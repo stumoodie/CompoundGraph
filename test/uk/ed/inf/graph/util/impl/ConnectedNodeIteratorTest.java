@@ -15,9 +15,7 @@ limitations under the License.
 */
 package uk.ed.inf.graph.util.impl;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.util.NoSuchElementException;
 
@@ -45,8 +43,9 @@ public class ConnectedNodeIteratorTest {
 	@Before
 	public void setUp() throws Exception {
 		this.testFixture = new ComplexGraphFixture(mockery, "");
-		this.testFixture.createElements();
-		this.testFixture.buildObjects();
+		this.testFixture.doAll();
+//		this.testFixture.createElements();
+//		this.testFixture.buildObjects();
 		testBasicNodeIterator = new ConnectedNodeIterator (this.testFixture.getNode4(), this.testFixture.getNode4().edgeIterator()) ;
 	}
 

@@ -34,9 +34,11 @@ import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodeFactory;
+import uk.ed.inf.graph.compound.IRootChildCompoundGraph;
+import uk.ed.inf.graph.compound.IRootCompoundNode;
 import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ed.inf.tree.ITree;
+import uk.ed.inf.graph.compound.testfixture.IGraphConstructor;
 
 @RunWith(JMock.class)
 public class CompoundGraphTest {
@@ -90,32 +92,88 @@ public class CompoundGraphTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		this.testFixture = new ComplexGraphFixture(mockery, ""){
+		this.testFixture = new ComplexGraphFixture(mockery, "");
+		this.testFixture.redefineGraph(new IGraphConstructor() {
+			
 			@Override
-			protected void buildGraph(ICompoundGraph graph){
-				graph.getRoot().getChildCompoundGraph().addNode(getNode1());
-				graph.getRoot().getChildCompoundGraph().addEdge(getEdge1());
-				graph.getRoot().getChildCompoundGraph().addEdge(getEdge4());
+			public IRootCompoundNode createRootNode(ICompoundGraph graph) {
+				return graph.getRoot();
 			}
 			
 			@Override
-			protected void buildElementTree(ITree<ICompoundGraphElement> tree){
-				
+			public ICompoundNodeFactory createNodeFactory(ICompoundGraph graph) {
+				return graph.nodeFactory();
 			}
-		};
-		this.testFixture.createElements();
-		testCompoundGraph = new CompoundGraph () ;
-		this.testFixture.setGraph(testCompoundGraph);
-		this.testFixture.setRootNode(this.testCompoundGraph.getRoot());
-		this.testFixture.setRootChildGraph(this.testCompoundGraph.getRoot().getChildCompoundGraph());
-		this.testFixture.setElementTree(this.testCompoundGraph.getElementTree());
-		this.testFixture.buildObjects();
+			
+			@Override
+			public ICompoundGraph createGraph() {
+				return testCompoundGraph = new CompoundGraph();
+			}
+			
+			@Override
+			public ICompoundEdgeFactory createEdgeFactory(ICompoundGraph graph) {
+				return graph.edgeFactory();
+			}
+			
+			@Override
+			public IRootChildCompoundGraph createChildGraph(IRootCompoundNode node) {
+				return node.getChildCompoundGraph();
+			}
+			
+			@Override
+			public boolean buildRootNode(IRootCompoundNode node) {
+				return true;
+			}
+			
+			@Override
+			public boolean buildNodeFactory(ICompoundNodeFactory nodeFactory) {
+				return true;
+			}
+			
+			@Override
+			public boolean buildGraph(ICompoundGraph graph) {
+				return true;
+			}
+			
+			@Override
+			public boolean buildEdgeFactory(ICompoundEdgeFactory edgeFactory) {
+				return true;
+			}
+			
+			@Override
+			public boolean buildChildGraph(IRootChildCompoundGraph childGraph) {
+				childGraph.addNode(testFixture.getNode1());
+				childGraph.addEdge(testFixture.getEdge1());
+				childGraph.addEdge(testFixture.getEdge4());
+				return true;
+			}
+		});
+		this.testFixture.doAll();
+//		{
+//			@Override
+//			protected void buildGraph(ICompoundGraph graph){
+//				graph.getRoot().getChildCompoundGraph().addNode(getNode1());
+//				graph.getRoot().getChildCompoundGraph().addEdge(getEdge1());
+//				graph.getRoot().getChildCompoundGraph().addEdge(getEdge4());
+//			}
+//			
+//			@Override
+//			protected void buildElementTree(ITree<ICompoundGraphElement> tree){
+//				
+//			}
+//		};
+//		this.testFixture.createElements();
+//		testCompoundGraph = new CompoundGraph () ;
+//		this.testFixture.setGraph(testCompoundGraph);
+//		this.testFixture.setRootNode(this.testCompoundGraph.getRoot());
+//		this.testFixture.setRootChildGraph(this.testCompoundGraph.getRoot().getChildCompoundGraph());
+//		this.testFixture.setElementTree(this.testCompoundGraph.getElementTree());
+//		this.testFixture.buildObjects();
 		
 		this.otherTestFixture = new ComplexGraphFixture(mockery, "other_");
-		this.otherTestFixture.createElements();
-		this.otherTestFixture.buildObjects();
-		
-		
+		this.otherTestFixture.doAll();
+//		this.otherTestFixture.createElements();
+//		this.otherTestFixture.buildObjects();
 	}
 
 	@After
@@ -170,21 +228,21 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testEdgeFactory() {
-		ICompoundEdgeFactory actualFact = this.testFixture.getEdgeFactory();
+		ICompoundEdgeFactory actualFact = this.testFixture.getGraph().edgeFactory();
 		assertTrue ( "has edge factory" , actualFact != null ) ;
 		assertTrue ( "not same instance" , testCompoundGraph.edgeFactory() != actualFact) ;
 	}
 
 	@Test
 	public final void testNodeFactory() {
-		ICompoundNodeFactory actualFact = this.testFixture.getNodeFactory();
+		ICompoundNodeFactory actualFact = this.testFixture.getGraph().nodeFactory();
 		assertTrue ( "has node factory" , actualFact != null ) ;
 		assertTrue ( "not same instance" , testCompoundGraph.nodeFactory() != actualFact) ;
 	}
 
 	@Test
 	public final void testSubgraphFactory() {
-		ISubCompoundGraphFactory subGraphFactory = this.testFixture.getSubgraphFactory();
+		ISubCompoundGraphFactory subGraphFactory = this.testFixture.getGraph().subgraphFactory();
 		assertNotNull ( "has Subgraph factory" , subGraphFactory) ;
 		assertTrue ( "not same instance" , testCompoundGraph.subgraphFactory() != subGraphFactory ) ;
 	}

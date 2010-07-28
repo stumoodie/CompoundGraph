@@ -54,7 +54,12 @@ public class CompoundEdge implements ICompoundEdge {
 
 	@Override
 	public boolean hasDirectedEnds(ICompoundNode outNode, ICompoundNode inNode) {
-		return this.hasDirectedEnds(new CompoundNodePair(outNode, inNode));
+		boolean retVal = false;
+		
+		if(outNode != null && inNode != null && outNode.getGraph().equals(inNode.getGraph())){
+			retVal = this.hasDirectedEnds(new CompoundNodePair(outNode, inNode));
+		}
+		return retVal;
 	}
 
 	@Override

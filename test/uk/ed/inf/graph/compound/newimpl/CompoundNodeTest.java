@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,11 +21,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import uk.ac.ed.inf.designbycontract.PreConditionException;
+import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundEdge;
-import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
+import uk.ed.inf.graph.compound.testfixture.INodeConstructor;
 
 @RunWith(JMock.class)
 public class CompoundNodeTest {
@@ -48,7 +49,6 @@ public class CompoundNodeTest {
 	private ComplexGraphFixture testFixture;
 	private ICompoundNode testInstance;
 	private ICompoundGraphElement mockParent;
-	private ICompoundGraph mockGraph;
 	private ICompoundGraphElement mockNonParent;
 	private ICompoundEdge mockInEdge;
 	private ICompoundNode mockInEdgeOutNode;
@@ -60,27 +60,66 @@ public class CompoundNodeTest {
 
 	@Before
 	public void setUp() throws Exception {
-		this.testFixture = new ComplexGraphFixture(this.mockery, ""){
+		this.testFixture = new ComplexGraphFixture(this.mockery, "");
+		this.testFixture.redefineNode(ComplexGraphFixture.NODE1_ID, new INodeConstructor() {
 			
 			@Override
-			protected void buildNode1(final ICompoundNode node){
-				node.addInEdge(getEdge1());
-				node.addOutEdge(getEdge4());
-				node.getChildCompoundGraph().addNode(testFixture.getNode2());
+			public ICompoundNodeFactory createNodeFactory(IChildCompoundGraph childGraph) {
+				return childGraph.nodeFactory();
 			}
 			
-		};
-		this.testFixture.createElements();
-		this.mockGraph = this.testFixture.getGraph();
-		this.mockParent = this.testFixture.getRootNode();
-		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"graph"}));
-		this.testFixture.buildObjects();
-		this.testInstance = new CompoundNode(mockParent, ComplexGraphFixture.NODE1_IDX);
-		this.testFixture.setNode1(testInstance);
-		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"elementTree", "node2", "node3", "node4", "node5",
-				"edge1", "edge2", "edge3", "edge4", "node1" }));
-		this.testFixture.buildObjects();
+			@Override
+			public ICompoundNode createCompoundNode() {
+				testInstance = new CompoundNode(testFixture.getRootNode(), ComplexGraphFixture.NODE1_IDX);
+				return testInstance;
+			}
+			
+			@Override
+			public IChildCompoundGraph createCompoundChildGraph(ICompoundNode node) {
+				return node.getChildCompoundGraph();
+			}
+			
+			@Override
+			public boolean buildNodeFactory(ICompoundNodeFactory nodeFactory) {
+				return true;
+			}
+			
+			@Override
+			public boolean buildNode(ICompoundNode node) {
+				node.addInEdge(testFixture.getEdge1());
+				node.addOutEdge(testFixture.getEdge4());
+				return true;
+			}
+			
+			@Override
+			public boolean buildChildGraph(IChildCompoundGraph node) {
+				node.addNode(testFixture.getNode2());
+				return true;
+			}
+		});
+//		{
+//			
+//			@Override
+//			protected void buildNode1(final ICompoundNode node){
+//				node.addInEdge(getEdge1());
+//				node.addOutEdge(getEdge4());
+//				node.getChildCompoundGraph().addNode(testFixture.getNode2());
+//			}
+//			
+//		};
+		this.testFixture.doAll();
+//		this.testFixture.createElements();
+//		this.mockGraph = this.testFixture.getGraph();
+//		this.mockParent = this.testFixture.getRootNode();
+//		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"graph"}));
+//		this.testFixture.buildObjects();
+//		this.testInstance = new CompoundNode(mockParent, ComplexGraphFixture.NODE1_IDX);
+//		this.testFixture.setNode1(testInstance);
+//		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"elementTree", "node2", "node3", "node4", "node5",
+//				"edge1", "edge2", "edge3", "edge4", "node1" }));
+//		this.testFixture.buildObjects();
 		
+		this.mockParent = this.testFixture.getRootNode();
 		this.mockNonParent = this.testFixture.getNode4();
 		this.mockInEdge = this.testFixture.getEdge1();
 		this.mockInEdgeOutNode = this.testFixture.getNode2();
@@ -88,8 +127,9 @@ public class CompoundNodeTest {
 		this.mockOutEdgeInNode = this.testFixture.getNode3();
 		
 		this.otherTestFixture = new ComplexGraphFixture(this.mockery, "other_");
-		this.otherTestFixture.createElements();
-		this.otherTestFixture.buildObjects();
+		this.otherTestFixture.doAll();
+//		this.otherTestFixture.createElements();
+//		this.otherTestFixture.buildObjects();
 		
 		this.mockOtherGraphEdge = this.otherTestFixture.getEdge2();
 		this.mockOtherGraphNode = this.otherTestFixture.getNode1();
@@ -101,7 +141,7 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testGetGraph() {
-		assertEquals("expected graph", this.mockGraph, this.testInstance.getGraph());
+		assertEquals("expected graph", this.testFixture.getGraph(), this.testInstance.getGraph());
 	}
 
 	@Test
