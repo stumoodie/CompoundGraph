@@ -15,8 +15,9 @@ limitations under the License.
 */
 package uk.ed.inf.graph.util.impl;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+
+import java.util.NoSuchElementException;
 
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -32,7 +33,7 @@ import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 
 
 @RunWith(JMock.class)
-public class CopyOfConnectedNodeIteratorEmptyTest {
+public class ConnectedNodeIteratorEmptyTest {
 	
 	private Mockery mockery = new JUnit4Mockery();
 	
@@ -45,7 +46,7 @@ public class CopyOfConnectedNodeIteratorEmptyTest {
 		this.testFixture.doAll();
 //		this.testFixture.createElements();
 //		this.testFixture.buildObjects();
-		testBasicNodeIterator = new ConnectedNodeIterator (this.testFixture.getNode1(), this.testFixture.getNode1().edgeIterator()) ;
+		testBasicNodeIterator = new ConnectedNodeIterator (this.testFixture.getNode4(), this.testFixture.getNode4().edgeIterator()) ;
 	}
 
 	@After
@@ -54,18 +55,17 @@ public class CopyOfConnectedNodeIteratorEmptyTest {
 
 	@Test
 	public final void testHasNext() {
-		assertTrue ( "has next" , testBasicNodeIterator.hasNext()) ;
+		assertFalse ( "has next" , testBasicNodeIterator.hasNext()) ;
 	}
 
-	@Test
+	@Test(expected=NoSuchElementException.class)
 	public final void testNext() {
-		ICompoundNode nextNode = testBasicNodeIterator.next() ;
-		assertNotNull ("node" , nextNode) ;
+		testBasicNodeIterator.next();
 	}
 
 	@Test
 	public void testExpectedResults(){
-		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>(this.testFixture.getNode2(), this.testFixture.getNode3());
+		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>();
 		testIter.testSortedIterator(this.testBasicNodeIterator);
 	}
 	

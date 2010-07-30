@@ -50,7 +50,7 @@ public aspect ICompoundNodeDBC {
 
 	after(final ICompoundNode cn, final ICompoundEdge outEdge) returning : addOutEdge(cn, outEdge) {
 		new Postcondition(){{
-			assertion(implies(!outEdge.isRemoved(), cn.getInDegree() == previousInDegree + 1), "Out degree incremented");
+			assertion(implies(!outEdge.isRemoved(), cn.getOutDegree() == previousOutDegree + 1), "Out degree incremented");
 			assertion(implies(outEdge.isRemoved(), cn.getDegree() == previousDegree), "Degree not incremented if removed");
 		}};
 	}

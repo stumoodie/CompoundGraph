@@ -159,7 +159,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 	}
 
 	@Override
-	public Iterator<ICompoundNode> getInNodeIterator() {
+	public Iterator<ICompoundNode> outEdgeIncidentNodesIterator() {
 		return new ConnectedNodeIterator(this, this.edgeOutList.iterator());
 	}
 
@@ -184,7 +184,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 	}
 
 	@Override
-	public Iterator<ICompoundNode> getOutNodeIterator() {
+	public Iterator<ICompoundNode> inEdgeIncidentNodesIterator() {
 		return new ConnectedNodeIterator(this, this.edgeInList.iterator());
 	}
 

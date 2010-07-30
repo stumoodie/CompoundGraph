@@ -48,7 +48,7 @@ public class DFSNodeFirstIterator implements Iterator<ICompoundGraphElement> {
 					retVal = -1;
 				}
 				if(retVal == 0){
-					retVal = o1.getIndex() < o2.getIndex() ? -1 : (o1.getIndex() > o2.getIndex() ? 1 : 0);
+					retVal = o1.getIndex() < o2.getIndex() ? 1 : (o1.getIndex() > o2.getIndex() ? -1 : 0);
 				}
 				return retVal;
 			}

@@ -71,18 +71,16 @@ public interface ICompoundNode extends ICompoundGraphElement, IRestorableNode {
 	Iterator<ICompoundEdge> getOutEdgeIterator();
 
 	/**
-	 * Gets the incident nodes which are the in nodes to the incident edge.
-	 * This means that this node is the out node to the given edge.
-	 * @return an iterator over all the resulting in nodes.
+	 * Gets the incident nodes which are the in nodes to the out edge.
+	 * @return an iterator over all the resulting adjacent out edge nodes.
 	 */
-	Iterator<ICompoundNode> getInNodeIterator();
+	Iterator<ICompoundNode> outEdgeIncidentNodesIterator();
 	
 	/**
-	 * Gets the incident nodes which are out nodes to the incident directed edge.
-	 * This means that this node is the in node to given edge.  
-	 * @return an iterator for the results.
+	 * Gets the incident nodes which are out nodes to the in edge.
+	 * @return an iterator for the resulting adjacent in edge nodes.
 	 */
-	Iterator<ICompoundNode> getOutNodeIterator();
+	Iterator<ICompoundNode> inEdgeIncidentNodesIterator();
 
 	
 	/**

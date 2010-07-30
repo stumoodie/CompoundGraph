@@ -19,13 +19,13 @@ import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 
 @RunWith(JMock.class)
-public class SubCompoundGraphWithRemovedNodesTest {
-	private static final int EXPECTED_NUM_EDGES = 2;
-	private static final int EXPECTED_NUM_NODES = 3;
+public class SubCompoundGraphWithRemovedNodesAndRootTest {
+	private static final int EXPECTED_NUM_EDGES = 4;
+	private static final int EXPECTED_NUM_NODES = 7;
 	private static final int EXPECTED_NUM_TOP_NODES = 1;
-	private static final int EXPECTED_NUM_ELEMENTS = 5;
-	private static final int EXPECTED_NUM_TOP_ELEMENTS = 2;
-	private static final int EXPECTED_NUM_TOP_EDGES = 1;
+	private static final int EXPECTED_NUM_ELEMENTS = 11;
+	private static final int EXPECTED_NUM_TOP_ELEMENTS = 1;
+	private static final int EXPECTED_NUM_TOP_EDGES = 0;
 	private SubCompoundGraph testInstance;
 	private Mockery mockery;
 	private ComplexGraphFixture testFixture;
@@ -35,14 +35,13 @@ public class SubCompoundGraphWithRemovedNodesTest {
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(this.mockery, "");
 		this.testFixture.setElementRemoved(ComplexGraphFixture.NODE2_ID, true);
-		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE3_ID, true);
 		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE2_ID, true);
+		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE3_ID, true);
 		this.testFixture.setElementRemoved(ComplexGraphFixture.NODE4_ID, true);
 		this.testFixture.doAll();
 
 		this.testInstance = new SubCompoundGraph(this.testFixture.getGraph());
-		this.testInstance.addTopElement(this.testFixture.getNode1());
-		this.testInstance.addTopElement(this.testFixture.getEdge2());
+		this.testInstance.addTopElement(this.testFixture.getRootNode());
 	}
 
 	@After
@@ -56,8 +55,6 @@ public class SubCompoundGraphWithRemovedNodesTest {
 	public void testContainsConnectionICompoundNodeICompoundNode() {
 		CompoundNodePair testPair = this.testFixture.getEdge3().getConnectedNodes();
 		assertTrue("connection exists", this.testInstance.containsConnection(testPair.getOutNode(), testPair.getInNode()));
-		CompoundNodePair testOutsidePair = this.testFixture.getEdge1().getConnectedNodes();
-		assertFalse("no connection exists", this.testInstance.containsConnection(testOutsidePair.getOutNode(), testOutsidePair.getInNode()));
 	}
 
 	@Test
@@ -72,12 +69,8 @@ public class SubCompoundGraphWithRemovedNodesTest {
 	public void testContainsDirectedEdgeICompoundNodeICompoundNode() {
 		CompoundNodePair testPair = this.testFixture.getEdge2().getConnectedNodes();
 		assertTrue("directed edge exists", this.testInstance.containsDirectedEdge(testPair.getOutNode(), testPair.getInNode()));
-		testPair = this.testFixture.getEdge3().getConnectedNodes();
-		assertTrue("directed edge exists", this.testInstance.containsDirectedEdge(testPair.getOutNode(), testPair.getInNode()));
 		CompoundNodePair reversedPair = this.testFixture.getEdge2().getConnectedNodes().reversedNodes();
 		assertFalse("reversed directed edge not exists", this.testInstance.containsDirectedEdge(reversedPair.getOutNode(), testPair.getInNode()));
-		CompoundNodePair testOutsidePair = this.testFixture.getEdge1().getConnectedNodes();
-		assertFalse("no edge exists", this.testInstance.containsDirectedEdge(testOutsidePair.getOutNode(), testOutsidePair.getInNode()));
 	}
 
 	@Test
@@ -96,74 +89,68 @@ public class SubCompoundGraphWithRemovedNodesTest {
 	public void testContainsDirectedEdgeCompoundNodePair() {
 		CompoundNodePair testPair = this.testFixture.getEdge3().getConnectedNodes();
 		assertTrue("directed edge exists", this.testInstance.containsDirectedEdge(testPair));
-		CompoundNodePair testOutsidePair = this.testFixture.getEdge1().getConnectedNodes();
-		assertFalse("no edge exists", this.testInstance.containsDirectedEdge(testOutsidePair));
 	}
 
 	@Test
 	public void testContainsEdgeICompoundEdge() {
 		ICompoundEdge testEdge = this.testFixture.getEdge3();
 		assertTrue("edge exists", this.testInstance.containsEdge(testEdge));
-		ICompoundEdge testOutsideEdge = this.testFixture.getEdge1();
-		assertFalse("edge not exists", this.testInstance.containsEdge(testOutsideEdge));
 	}
 
 	@Test
 	public void testContainsEdgeInt() {
 		ICompoundEdge testEdge = this.testFixture.getEdge3();
 		assertTrue("edge exists", this.testInstance.containsEdge(testEdge.getIndex()));
-		ICompoundEdge testOutsideEdge = this.testFixture.getEdge1();
-		assertFalse("edge exists", this.testInstance.containsEdge(testOutsideEdge.getIndex()));
 	}
 
 	@Test
 	public void testContainsElementICompoundGraphElement() {
+		assertTrue("element present", this.testInstance.containsElement(this.testFixture.getRootNode()));
 		assertTrue("element present", this.testInstance.containsElement(this.testFixture.getEdge3()));
 		assertTrue("element present", this.testInstance.containsElement(this.testFixture.getEdge2()));
 		assertTrue("element present", this.testInstance.containsElement(this.testFixture.getNode1()));
-		assertFalse("element not present", this.testInstance.containsElement(this.testFixture.getEdge1()));
-		assertFalse("element not present", this.testInstance.containsElement(this.testFixture.getNode5()));
 	}
 
 	@Test
 	public void testContainsElementInt() {
+		assertTrue("element present", this.testInstance.containsElement(this.testFixture.getRootNode().getIndex()));
 		assertTrue("element present", this.testInstance.containsElement(this.testFixture.getEdge3().getIndex()));
 		assertTrue("element present", this.testInstance.containsElement(this.testFixture.getNode4().getIndex()));
 		assertTrue("element present", this.testInstance.containsElement(this.testFixture.getNode1().getIndex()));
-		assertFalse("element not present", this.testInstance.containsElement(this.testFixture.getEdge1().getIndex()));
-		assertFalse("element not present", this.testInstance.containsElement(this.testFixture.getNode5().getIndex()));
 	}
 
 	@Test
 	public void testContainsNodeInt() {
 		assertTrue("node present", this.testInstance.containsNode(this.testFixture.getNode4().getIndex()));
-		assertFalse("no node present", this.testInstance.containsNode(this.testFixture.getNode5().getIndex()));
+		assertTrue("root node present", this.testInstance.containsNode(this.testFixture.getRootNode().getIndex()));
 	}
 
 	@Test
 	public void testContainsNodeICompoundNode() {
+		assertTrue("root node present", this.testInstance.containsNode(this.testFixture.getRootNode()));
 		assertTrue("element not present", this.testInstance.containsNode(this.testFixture.getNode4()));
 		assertTrue("element present", this.testInstance.containsNode(this.testFixture.getNode2()));
 		assertTrue("element present", this.testInstance.containsNode(this.testFixture.getNode1()));
-		assertFalse("element present", this.testInstance.containsNode(this.testFixture.getNode5()));
 	}
 
 	@Test
 	public void testContainsRoot() {
-		assertFalse("contains root", this.testInstance.containsRoot());
+		assertTrue("contains root", this.testInstance.containsRoot());
 	}
 
 	@Test
 	public void testEdgeIterator() {
-		IteratorTestUtility<ICompoundEdge> testIter = new IteratorTestUtility<ICompoundEdge>(this.testFixture.getEdge2(),
-				this.testFixture.getEdge3());
+		IteratorTestUtility<ICompoundEdge> testIter = new IteratorTestUtility<ICompoundEdge>(this.testFixture.getEdge1(), this.testFixture.getEdge2(),
+				this.testFixture.getEdge3(), this.testFixture.getEdge4());
 		testIter.testSortedIterator(this.testInstance.edgeIterator());
 	}
 
 	@Test
 	public void testElementIterator() {
-		IteratorTestUtility<ICompoundGraphElement> testIter = new IteratorTestUtility<ICompoundGraphElement>(this.testFixture.getNode1(),
-				this.testFixture.getNode2(), this.testFixture.getNode4(), this.testFixture.getEdge2(), this.testFixture.getEdge3());
+		IteratorTestUtility<ICompoundGraphElement> testIter = new IteratorTestUtility<ICompoundGraphElement>(this.testFixture.getRootNode(), this.testFixture.getNode1(), this.testFixture.getNode2(),
+				this.testFixture.getNode3(), this.testFixture.getNode4(), this.testFixture.getNode5(), this.testFixture.getNode6(),
+				this.testFixture.getEdge1(), this.testFixture.getEdge2(),
+				this.testFixture.getEdge3(), this.testFixture.getEdge4());
 		testIter.testSortedIterator(this.testInstance.elementIterator());
 	}
 
@@ -215,13 +202,13 @@ public class SubCompoundGraphWithRemovedNodesTest {
 
 	@Test
 	public void testIsInducedSubgraph() {
-		assertFalse("is not induced subgraph", this.testInstance.isInducedSubgraph());
+		assertTrue("is induced subgraph", this.testInstance.isInducedSubgraph());
 	}
 
 	@Test
 	public void testNodeIterator() {
-		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>(this.testFixture.getNode1(), this.testFixture.getNode2(),
-				this.testFixture.getNode4());
+		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>(this.testFixture.getRootNode(), this.testFixture.getNode1(), this.testFixture.getNode2(),
+				this.testFixture.getNode3(), this.testFixture.getNode4(), this.testFixture.getNode5(), this.testFixture.getNode6());
 		testIter.testSortedIterator(this.testInstance.nodeIterator());
 	}
 
@@ -237,26 +224,27 @@ public class SubCompoundGraphWithRemovedNodesTest {
 
 	@Test
 	public void testTopElementIterator() {
-		IteratorTestUtility<ICompoundGraphElement> testIter = new IteratorTestUtility<ICompoundGraphElement>(this.testFixture.getNode1(), this.testFixture.getEdge2());
+		IteratorTestUtility<ICompoundGraphElement> testIter = new IteratorTestUtility<ICompoundGraphElement>(this.testFixture.getRootNode());
 		testIter.testSortedIterator(this.testInstance.topElementIterator());
 	}
 
 	@Test
 	public void testTopNodeIterator() {
-		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>(this.testFixture.getNode1());
+		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>(this.testFixture.getRootNode());
 		testIter.testSortedIterator(this.testInstance.topNodeIterator());
 	}
 
 	@Test
 	public void testTopEdgeIterator() {
-		IteratorTestUtility<ICompoundEdge> testIter = new IteratorTestUtility<ICompoundEdge>(this.testFixture.getEdge2());
+		IteratorTestUtility<ICompoundEdge> testIter = new IteratorTestUtility<ICompoundEdge>();
 		testIter.testSortedIterator(this.testInstance.topEdgeIterator());
 	}
 
 	@Test
 	public void testEdgeLastElementIterator() {
-		IteratorTestUtility<ICompoundGraphElement> testIter = new IteratorTestUtility<ICompoundGraphElement>(this.testFixture.getNode1(), this.testFixture.getNode2(),
-				this.testFixture.getEdge3(), this.testFixture.getEdge2(), this.testFixture.getNode4());
+		IteratorTestUtility<ICompoundGraphElement> testIter = new IteratorTestUtility<ICompoundGraphElement>(this.testFixture.getRootNode(), this.testFixture.getNode1(), this.testFixture.getNode2(),
+				this.testFixture.getEdge3(), this.testFixture.getNode6(), this.testFixture.getEdge1(), this.testFixture.getNode3(), this.testFixture.getNode5(), this.testFixture.getEdge2(), this.testFixture.getNode4(),
+				this.testFixture.getEdge4());
 		testIter.testIterator(this.testInstance.edgeLastElementIterator());
 	}
 

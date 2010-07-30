@@ -21,10 +21,10 @@ import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ed.inf.graph.compound.testfixture.INodeConstructor;
 
 @RunWith(JMock.class)
-public class CompoundNodeWithRemovedEdgeTest {
-	private static final int EXPECTED_DEGREE = 1;
+public class CompoundNodeWithInAndOutEdgesTest {
+	private static final int EXPECTED_DEGREE = 2;
 	private static final int EXPECTED_IN_DEGREE = 1;
-	private static final int EXPECTED_OUT_DEGREE = 0;
+	private static final int EXPECTED_OUT_DEGREE = 1;
 
 	private Mockery mockery = new JUnit4Mockery();
 	
@@ -69,8 +69,6 @@ public class CompoundNodeWithRemovedEdgeTest {
 				return true;
 			}
 		});
-		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE2_ID, true);
-		this.testFixture.setElementRemoved(ComplexGraphFixture.NODE4_ID, true);
 		this.testFixture.doAll();
 	}
 
@@ -85,13 +83,13 @@ public class CompoundNodeWithRemovedEdgeTest {
 
 	@Test
 	public void testConnectedNodeIterator() {
-		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>(this.testFixture.getNode2());
+		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>(this.testFixture.getNode2(), this.testFixture.getNode5());
 		testIter.testIterator(this.testInstance.connectedNodeIterator());
 	}
 
 	@Test
 	public void testEdgeIterator() {
-		IteratorTestUtility<ICompoundEdge> testIter = new IteratorTestUtility<ICompoundEdge>(this.testFixture.getEdge4());
+		IteratorTestUtility<ICompoundEdge> testIter = new IteratorTestUtility<ICompoundEdge>(this.testFixture.getEdge2(), this.testFixture.getEdge4());
 		testIter.testSortedIterator(this.testInstance.edgeIterator());
 	}
 
@@ -113,7 +111,7 @@ public class CompoundNodeWithRemovedEdgeTest {
 
 	@Test
 	public void testOutEdgeIncidentNodesIterator() {
-		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>();
+		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>(this.testFixture.getNode5());
 		testIter.testIterator(this.testInstance.outEdgeIncidentNodesIterator());
 	}
 
@@ -129,7 +127,7 @@ public class CompoundNodeWithRemovedEdgeTest {
 
 	@Test
 	public void testGetOutEdgeIterator() {
-		IteratorTestUtility<ICompoundEdge> testIter = new IteratorTestUtility<ICompoundEdge>();
+		IteratorTestUtility<ICompoundEdge> testIter = new IteratorTestUtility<ICompoundEdge>(this.testFixture.getEdge2());
 		testIter.testIterator(this.testInstance.getOutEdgeIterator());
 	}
 
@@ -142,19 +140,18 @@ public class CompoundNodeWithRemovedEdgeTest {
 	@Test
 	public void testHasEdgeWith() {
 		assertTrue("contains in edge", this.testInstance.hasEdgeWith(this.testFixture.getNode2()));
-		assertFalse("not contains removed edge", this.testInstance.hasEdgeWith(this.testFixture.getNode5()));
+		assertTrue("contains in edge", this.testInstance.hasEdgeWith(this.testFixture.getNode5()));
 		assertFalse("does not contains other edge", this.testInstance.hasEdgeWith(this.testFixture.getNode4()));
 	}
 
 	@Test
 	public void testHasInEdgeFrom() {
 		assertTrue("contains in edge", this.testInstance.hasInEdgeFrom(this.testFixture.getNode2()));
-		assertFalse("does not contains other edge", this.testInstance.hasEdgeWith(this.testFixture.getNode5()));
 	}
 
 	@Test
 	public void testHasOutEdgeTo() {
-		assertFalse("contains out edge", this.testInstance.hasOutEdgeTo(this.testFixture.getNode5()));
+		assertTrue("contains out edge", this.testInstance.hasOutEdgeTo(this.testFixture.getNode5()));
 		assertFalse("not contains out edge", this.testInstance.hasOutEdgeTo(this.testFixture.getNode1()));
 		assertFalse("not contains out edge", this.testInstance.hasOutEdgeTo(this.testFixture.getNode4()));
 	}
@@ -191,7 +188,7 @@ public class CompoundNodeWithRemovedEdgeTest {
 	@Test
 	public void testContainsEdge() {
 		assertTrue("contains edge", this.testInstance.containsEdge(this.testFixture.getEdge4()));
-		assertFalse("not contains edge", this.testInstance.containsEdge(this.testFixture.getEdge2()));
+		assertTrue("contains edge", this.testInstance.containsEdge(this.testFixture.getEdge2()));
 		assertFalse("not contains edge", this.testInstance.containsEdge(this.testFixture.getEdge3()));
 	}
 
@@ -202,8 +199,8 @@ public class CompoundNodeWithRemovedEdgeTest {
 
 	@Test
 	public void testContainsOutEdge() {
-		assertFalse("contains out edge", this.testInstance.containsOutEdge(this.testFixture.getEdge4()));
-		assertFalse("not contains out edge", this.testInstance.containsOutEdge(this.testFixture.getEdge2()));
+		assertTrue("contains out edge", this.testInstance.containsOutEdge(this.testFixture.getEdge2()));
+		assertFalse("not contains out edge", this.testInstance.containsOutEdge(this.testFixture.getEdge4()));
 		assertFalse("not contains out edge", this.testInstance.containsOutEdge(this.testFixture.getEdge3()));
 	}
 

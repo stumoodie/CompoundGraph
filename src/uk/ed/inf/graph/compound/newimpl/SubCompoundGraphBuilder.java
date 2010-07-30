@@ -34,6 +34,7 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 		Set<ICompoundGraphElement> initialElements = new HashSet<ICompoundGraphElement>(this.topElements);
 		Set<ICompoundGraphElement> missingIncidentEdges = new HashSet<ICompoundGraphElement>();
 		do {
+			missingIncidentEdges.clear();
 			Iterator<ICompoundGraphElement> elementIter = initialElements.iterator();
 			while (elementIter.hasNext()) {
 				ICompoundGraphElement element = elementIter.next();
@@ -73,8 +74,8 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 					// record element as having been visited
 					visited.add(childElement);
 				}
-				initialElements = new HashSet<ICompoundGraphElement>(missingIncidentEdges);
 			}
+			initialElements = new HashSet<ICompoundGraphElement>(missingIncidentEdges);
 		}
 		while (!missingIncidentEdges.isEmpty());
 		pruneUnselectedNonIncidentEdges();

@@ -16,123 +16,127 @@ limitations under the License.
 package uk.ed.inf.graph.compound.newimpl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import uk.ed.inf.graph.compound.ICompoundEdge;
-import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
-import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
+import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 
 @RunWith(JMock.class)
 public class SubCompoundGraphFactoryTest {
-	private Mockery mockery = new JUnit4Mockery() {{
-		setImposteriser(ClassImposteriser.INSTANCE);
-	}};
+	private Mockery mockery;
 
 	private SubCompoundGraphFactory testSubCompoundGraphFactory ;
-	private ICompoundGraph mockCompoundGraph ;
-	private ICompoundNode mockCompoundNode ;
-	private ICompoundEdge mockCompoundEdge ;
-	private ICompoundNode mockCompoundNode2 ;
-	private ICompoundEdge mockCompoundEdge2 ;
-	private List<ICompoundGraphElement> expectedElements;
+	private ComplexGraphFixture testFixture;
 	
-	private static final int EXPECTED_COMPOUND_NODE_IDX = 1;
-	private static final int EXPECTED_COMPOUND_NODE_LEVEL = 1;
-	private static final int EXPECTED_COMPOUND_NODE2_IDX = 3;
-	private static final int EXPECTED_COMPOUND_NODE2_LEVEL = 1;
-	private static final int EXPECTED_COMPOUND_EDGE_IDX = 2;
-	private static final int EXPECTED_COMPOUND_EDGE_LEVEL = 1;
-	private static final int EXPECTED_COMPOUND_EDGE2_IDX = 4;
-	private static final int EXPECTED_COMPOUND_EDGE2_LEVEL = 1;
-	private static final int EXPECTED_TOP_SUBGRAPH_ELEMENTS = 2;
+	private static final int EXPECTED_TOP_SUBGRAPH_ELEMENTS = 3;
+	private static final int EXPECTED_NUM_SUBGRAPH_ELEMENTS = 5;
+	private static final int EXPECTED_TOP_PERMSSIVE_INDUCED_SUBGRAPH_ELEMENTS = 4;
+	private static final int EXPECTED_PERMSSIVE_INDUCED_SUBGRAPH_ELEMENTS = 6;
+	private static final int EXPECTED_TOP_INDUCED_SUBGRAPH_ELEMENTS = 3;
+	private static final int EXPECTED_INDUCED_SUBGRAPH_ELEMENTS = 4;
 	
 	
 	@Before
 	public void setUp() throws Exception {
-		mockCompoundGraph = mockery.mock(ICompoundGraph.class , "mockCompoundGraph");
-		mockCompoundNode = mockery.mock(ICompoundNode.class , "mockCompoundNode") ;
-		mockCompoundEdge = mockery.mock(ICompoundEdge.class , "mockCompoundEdge") ;
-		mockCompoundNode2 = mockery.mock(ICompoundNode.class , "mockCompoundNode2") ;
-		mockCompoundEdge2 = mockery.mock(ICompoundEdge.class , "mockCompoundEdge2") ;
+		mockery = new JUnit4Mockery();
+	
+		this.testFixture = new ComplexGraphFixture(mockery, ""); 
+		this.testFixture.doAll();
 		
-		testSubCompoundGraphFactory = new SubCompoundGraphFactory (mockCompoundGraph) ;
+		testSubCompoundGraphFactory = new SubCompoundGraphFactory (testFixture.getGraph()) ;
 		
-		this.mockery.checking(new Expectations(){{
-			allowing(mockCompoundNode).getIndex(); will(returnValue(EXPECTED_COMPOUND_NODE_IDX));
-			allowing(mockCompoundNode).getLevel(); will(returnValue(EXPECTED_COMPOUND_NODE_LEVEL));
-			allowing(mockCompoundNode).isLink(); will(returnValue(false));
-			allowing(mockCompoundNode).isNode(); will(returnValue(true));
-			allowing(mockCompoundNode).levelOrderIterator(); will(returnIterator(mockCompoundNode));
-			allowing(mockCompoundNode).childIterator(); will(returnIterator());
-			
-			allowing(mockCompoundNode2).getIndex(); will(returnValue(EXPECTED_COMPOUND_NODE2_IDX));
-			allowing(mockCompoundNode2).getLevel(); will(returnValue(EXPECTED_COMPOUND_NODE2_LEVEL));
-
-			allowing(mockCompoundEdge).getIndex(); will(returnValue(EXPECTED_COMPOUND_EDGE_IDX));
-			allowing(mockCompoundEdge).getLevel(); will(returnValue(EXPECTED_COMPOUND_EDGE_LEVEL));
-			allowing(mockCompoundEdge).isLink(); will(returnValue(true));
-			allowing(mockCompoundEdge).isNode(); will(returnValue(false));
-			allowing(mockCompoundEdge).levelOrderIterator(); will(returnIterator(mockCompoundEdge));
-			allowing(mockCompoundEdge).childIterator(); will(returnIterator());
-
-			allowing(mockCompoundEdge2).getIndex(); will(returnValue(EXPECTED_COMPOUND_EDGE2_IDX));
-			allowing(mockCompoundEdge2).getLevel(); will(returnValue(EXPECTED_COMPOUND_EDGE2_LEVEL));
-		}});
- 
-		testSubCompoundGraphFactory.addElement(mockCompoundNode ) ;
-		testSubCompoundGraphFactory.addElement(mockCompoundEdge) ;
-		this.expectedElements = new LinkedList<ICompoundGraphElement>(Arrays.asList(new ICompoundGraphElement[] { this.mockCompoundNode, this.mockCompoundEdge }));
+		testSubCompoundGraphFactory.addElement(this.testFixture.getNode2()) ;
+		testSubCompoundGraphFactory.addElement(this.testFixture.getNode3()) ;
+		testSubCompoundGraphFactory.addElement(this.testFixture.getEdge2()) ;
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		this.testFixture = null;
+		this.mockery = null;
+		this.testSubCompoundGraphFactory = null;
 	}
 
 	@Test
 	public final void testAddElement() {
-		testSubCompoundGraphFactory.addElement(mockCompoundNode2) ; 
-		testSubCompoundGraphFactory.addElement(mockCompoundEdge2) ; 
+		testSubCompoundGraphFactory.addElement(this.testFixture.getNode5()) ; 
+		testSubCompoundGraphFactory.addElement(this.testFixture.getEdge4()) ; 
 		
-		assertEquals ( "correct size" , 4 , this.testSubCompoundGraphFactory.numElements()) ;
+		assertEquals ( "correct size" , 5 , this.testSubCompoundGraphFactory.numElements()) ;
 
 	}
 
 	@Test
 	public final void testElementIterator() {
-		
-		Iterator<ICompoundGraphElement> nodeIterator = testSubCompoundGraphFactory.elementIterator() ;
-		
-		while ( nodeIterator.hasNext()){
-			assertTrue ( "same Element" , this.expectedElements.remove(nodeIterator.next()));
-		}
-		this.mockery.assertIsSatisfied();
+		IteratorTestUtility<ICompoundGraphElement> testIterator = new IteratorTestUtility<ICompoundGraphElement>(this.testFixture.getNode2(), this.testFixture.getNode3(), this.testFixture.getEdge2());
+		testIterator.testSortedIterator(testSubCompoundGraphFactory.elementIterator());
 	}
 
 	@Test
 	public final void testCreateSubgraph() {
 		ISubCompoundGraph generatedSubGraph = testSubCompoundGraphFactory.createSubgraph() ;
 		
-		assertTrue("edge found", generatedSubGraph.containsEdge(mockCompoundEdge));
-		assertTrue("node found", generatedSubGraph.containsNode(mockCompoundNode));
+		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge2()));
+		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge3()));
+		assertFalse("not edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge1()));
+		assertFalse("edge not found", generatedSubGraph.containsEdge(this.testFixture.getEdge4()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode2()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode3()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode4()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getRootNode()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode1()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode5()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode6()));
 		assertEquals("expected top elements", EXPECTED_TOP_SUBGRAPH_ELEMENTS, generatedSubGraph.numTopElements());
-		assertEquals("expected elemenbt", EXPECTED_TOP_SUBGRAPH_ELEMENTS, generatedSubGraph.numElements());
+		assertEquals("expected elements", EXPECTED_NUM_SUBGRAPH_ELEMENTS, generatedSubGraph.numElements());
+	}
+
+	@Test
+	public final void testCreateInducedSubgraph() {
+		ISubCompoundGraph generatedSubGraph = testSubCompoundGraphFactory.createInducedSubgraph() ;
+		
+		assertFalse("edge not found", generatedSubGraph.containsEdge(this.testFixture.getEdge2()));
+		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge3()));
+		assertFalse("not edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge1()));
+		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge4()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode2()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode3()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode4()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getRootNode()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode1()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode5()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode6()));
+		assertEquals("expected top elements", EXPECTED_TOP_INDUCED_SUBGRAPH_ELEMENTS, generatedSubGraph.numTopElements());
+		assertEquals("expected elemenbt", EXPECTED_INDUCED_SUBGRAPH_ELEMENTS, generatedSubGraph.numElements());
+	}
+
+	@Test
+	public final void testCreatePermissiveInducedSubgraph() {
+		ISubCompoundGraph generatedSubGraph = testSubCompoundGraphFactory.createPermissiveInducedSubgraph() ;
+		
+		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge2()));
+		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge3()));
+		assertFalse("not edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge1()));
+		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge4()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode2()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode3()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode4()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getRootNode()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode1()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode5()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode6()));
+		assertEquals("expected top elements", EXPECTED_TOP_PERMSSIVE_INDUCED_SUBGRAPH_ELEMENTS, generatedSubGraph.numTopElements());
+		assertEquals("expected elemenbt", EXPECTED_PERMSSIVE_INDUCED_SUBGRAPH_ELEMENTS, generatedSubGraph.numElements());
 	}
 
 }

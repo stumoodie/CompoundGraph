@@ -136,6 +136,11 @@ public interface ISubCompoundGraph {
 	 */
 	Iterator<ICompoundGraphElement> elementIterator();
 
+	/**
+	 * Performs a DFS traversal of the graph, but selecting nodes before edges. Nodes and edges are
+	 * selected in ascending index order.
+	 * @return the iterator, which cannot be null.
+	 */
 	Iterator<ICompoundGraphElement> edgeLastElementIterator();
 
 	int getNumTopEdges();

@@ -32,13 +32,12 @@ import uk.ed.inf.graph.compound.testfixture.INodeConstructor;
 @RunWith(JMock.class)
 public class CompoundNodeTest {
 	private static final int EXPECTED_LEVEL = 1;
-	private static final int EXPECTED_NUM_CONNECTED_NODES = 2;
-	private static final int EXPECTED_DEGREE = 2;
+	private static final int EXPECTED_DEGREE = 1;
 //	private static final int OUT_EDGE_IDX = 30;
-	private static final int EXPECTED_IN_DEGREE = 1;
+	private static final int EXPECTED_IN_DEGREE = 0;
 	private static final int EXPECTED_OUT_DEGREE = 1;
-	private static final int EXPECTED_NUM_IN_EDGES = 1;
-	private static final int EXPECTED_NUM_OUT_EDGES = 1;
+	private static final int EXPECTED_NUM_IN_EDGES = 0;
+//	private static final int EXPECTED_NUM_OUT_EDGES = 1;
 //	private static final int EXPECTED_PARENT_IDX = 0;
 	private static final int EXPECTED_NUM_ANCESTOR_NODES = 2;
 //	private static final int EXPECTED_NUM_PREORDER_NODES = 3;
@@ -86,8 +85,7 @@ public class CompoundNodeTest {
 			
 			@Override
 			public boolean buildNode(ICompoundNode node) {
-				node.addInEdge(testFixture.getEdge1());
-				node.addOutEdge(testFixture.getEdge4());
+				node.addOutEdge(testFixture.getEdge1());
 				return true;
 			}
 			
@@ -121,10 +119,8 @@ public class CompoundNodeTest {
 		
 		this.mockParent = this.testFixture.getRootNode();
 		this.mockNonParent = this.testFixture.getNode4();
-		this.mockInEdge = this.testFixture.getEdge1();
-		this.mockInEdgeOutNode = this.testFixture.getNode2();
-		this.mockOutEdge = this.testFixture.getEdge4();
-		this.mockOutEdgeInNode = this.testFixture.getNode3();
+		this.mockOutEdge = this.testFixture.getEdge1();
+		this.mockOutEdgeInNode = this.testFixture.getNode6();
 		
 		this.otherTestFixture = new ComplexGraphFixture(this.mockery, "other_");
 		this.otherTestFixture.doAll();
@@ -173,48 +169,14 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testConnectedNodeIterator() {
-		ICompoundNode expectedresults[] = new ICompoundNode[] { this.mockInEdgeOutNode, this.mockOutEdgeInNode };
-		SortedSet<ICompoundNode> sortedSet = new TreeSet<ICompoundNode>(new Comparator<ICompoundNode>(){
-
-			@Override
-			public int compare(ICompoundNode o1, ICompoundNode o2) {
-				return (o1.getIndex() < o2.getIndex() ? -1 : (o1.getIndex() > o2.getIndex() ? 1 : 0));
-			}
-			
-		});
-		Iterator<ICompoundNode> iter = this.testInstance.connectedNodeIterator();
-		while(iter.hasNext()){
-			ICompoundNode node = iter.next();
-			sortedSet.add(node);
-		}
-		assertEquals("expected num connected nodes", EXPECTED_NUM_CONNECTED_NODES, sortedSet.size());
-		int cntr = 0;
-		for(ICompoundNode actualNode : sortedSet){
-			assertEquals("expectedNodes", expectedresults[cntr++], actualNode);
-		}
+		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>(this.testFixture.getNode6());
+		testIter.testSortedIterator(this.testInstance.connectedNodeIterator());
 	}
 
 	@Test
 	public void testEdgeIterator() {
-		ICompoundEdge expectedresults[] = new ICompoundEdge[] {  this.mockInEdge, this.mockOutEdge };
-		SortedSet<ICompoundEdge> sortedSet = new TreeSet<ICompoundEdge>(new Comparator<ICompoundEdge>(){
-
-			@Override
-			public int compare(ICompoundEdge o1, ICompoundEdge o2) {
-				return (o1.getIndex() < o2.getIndex() ? -1 : (o1.getIndex() > o2.getIndex() ? 1 : 0));
-			}
-			
-		});
-		Iterator<ICompoundEdge> iter = this.testInstance.edgeIterator();
-		while(iter.hasNext()){
-			ICompoundEdge node = iter.next();
-			sortedSet.add(node);
-		}
-		assertEquals("expected num connected nodes", EXPECTED_NUM_CONNECTED_NODES, sortedSet.size());
-		int cntr = 0;
-		for(ICompoundEdge actualNode : sortedSet){
-			assertEquals("expectedNodes", expectedresults[cntr++], actualNode);
-		}
+		IteratorTestUtility<ICompoundEdge> testIter = new IteratorTestUtility<ICompoundEdge>(this.testFixture.getEdge1());
+		testIter.testSortedIterator(this.testInstance.edgeIterator());
 	}
 
 	@Test
@@ -224,8 +186,6 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testGetEdgesWith() {
-		IteratorTestUtility<ICompoundEdge> inNodetest = new IteratorTestUtility<ICompoundEdge>(this.mockInEdge);
-		inNodetest.testIterator(this.testInstance.getEdgesWith(this.mockInEdgeOutNode));
 		IteratorTestUtility<ICompoundEdge> outNodetest = new IteratorTestUtility<ICompoundEdge>(this.mockOutEdge);
 		outNodetest.testIterator(this.testInstance.getEdgesWith(this.mockOutEdgeInNode));
 	}
@@ -275,41 +235,9 @@ public class CompoundNodeTest {
 	}
 
 	@Test
-	public void testGetInEdgesFrom() {
-		assertEquals("expected in edge", this.mockInEdge, this.testInstance.getInEdgesFrom(this.mockInEdgeOutNode).next());
-	}
-
-	@Test(expected=PreConditionException.class)
-	public void testGetInEdgesFromWithNonOutNode() {
-		this.testInstance.getInEdgesFrom(this.mockOutEdgeInNode);
-	}
-
-	@Test(expected=PreConditionException.class)
-	public void testGetInEdgesFromWithNull() {
-		this.testInstance.getInEdgesFrom(null);
-	}
-
-	@Test
-	public void testGetInNodeIterator() {
-		ICompoundNode expectedresults[] = new ICompoundNode[] { this.mockOutEdgeInNode };
-		SortedSet<ICompoundNode> sortedSet = new TreeSet<ICompoundNode>(new Comparator<ICompoundNode>(){
-
-			@Override
-			public int compare(ICompoundNode o1, ICompoundNode o2) {
-				return (o1.getIndex() < o2.getIndex() ? -1 : (o1.getIndex() > o2.getIndex() ? 1 : 0));
-			}
-			
-		});
-		Iterator<ICompoundNode> iter = this.testInstance.getInNodeIterator();
-		while(iter.hasNext()){
-			ICompoundNode node = iter.next();
-			sortedSet.add(node);
-		}
-		assertEquals("expected num connected nodes", EXPECTED_NUM_IN_EDGES, sortedSet.size());
-		int cntr = 0;
-		for(ICompoundNode actualNode : sortedSet){
-			assertEquals("expectedNodes", expectedresults[cntr++], actualNode);
-		}
+	public void testOutEdgeIncidentNodesIterator() {
+		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>(this.testFixture.getNode6());
+		testIter.testIterator(this.testInstance.outEdgeIncidentNodesIterator());
 	}
 
 	@Test
@@ -324,25 +252,27 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testGetOutEdgeIterator() {
-		ICompoundEdge expectedresults[] = new ICompoundEdge[] { this.mockOutEdge };
-		SortedSet<ICompoundEdge> sortedSet = new TreeSet<ICompoundEdge>(new Comparator<ICompoundEdge>(){
-
-			@Override
-			public int compare(ICompoundEdge o1, ICompoundEdge o2) {
-				return (o1.getIndex() < o2.getIndex() ? -1 : (o1.getIndex() > o2.getIndex() ? 1 : 0));
-			}
-			
-		});
-		Iterator<ICompoundEdge> iter = this.testInstance.getOutEdgeIterator();
-		while(iter.hasNext()){
-			ICompoundEdge node = iter.next();
-			sortedSet.add(node);
-		}
-		assertEquals("expected num connected nodes", EXPECTED_NUM_OUT_EDGES, sortedSet.size());
-		int cntr = 0;
-		for(ICompoundEdge actualEdge : sortedSet){
-			assertEquals("expectedEdge", expectedresults[cntr++], actualEdge);
-		}
+		IteratorTestUtility<ICompoundEdge> testIter = new IteratorTestUtility<ICompoundEdge>(this.mockOutEdge);
+		testIter.testSortedIterator(this.testInstance.getOutEdgeIterator());
+//		ICompoundEdge expectedresults[] = new ICompoundEdge[] { this.mockOutEdge };
+//		SortedSet<ICompoundEdge> sortedSet = new TreeSet<ICompoundEdge>(new Comparator<ICompoundEdge>(){
+//
+//			@Override
+//			public int compare(ICompoundEdge o1, ICompoundEdge o2) {
+//				return (o1.getIndex() < o2.getIndex() ? -1 : (o1.getIndex() > o2.getIndex() ? 1 : 0));
+//			}
+//			
+//		});
+//		Iterator<ICompoundEdge> iter = this.testInstance.getOutEdgeIterator();
+//		while(iter.hasNext()){
+//			ICompoundEdge node = iter.next();
+//			sortedSet.add(node);
+//		}
+//		assertEquals("expected num connected nodes", EXPECTED_NUM_OUT_EDGES, sortedSet.size());
+//		int cntr = 0;
+//		for(ICompoundEdge actualEdge : sortedSet){
+//			assertEquals("expectedEdge", expectedresults[cntr++], actualEdge);
+//		}
 	}
 
 	@Test
@@ -361,31 +291,14 @@ public class CompoundNodeTest {
 	}
 
 	@Test
-	public void testGetOutNodeIterator() {
-		ICompoundNode expectedresults[] = new ICompoundNode[] { this.mockInEdgeOutNode };
-		SortedSet<ICompoundNode> sortedSet = new TreeSet<ICompoundNode>(new Comparator<ICompoundNode>(){
-
-			@Override
-			public int compare(ICompoundNode o1, ICompoundNode o2) {
-				return (o1.getIndex() < o2.getIndex() ? -1 : (o1.getIndex() > o2.getIndex() ? 1 : 0));
-			}
-			
-		});
-		Iterator<ICompoundNode> iter = this.testInstance.getOutNodeIterator();
-		while(iter.hasNext()){
-			ICompoundNode node = iter.next();
-			sortedSet.add(node);
-		}
-		assertEquals("expected num connected nodes", EXPECTED_NUM_OUT_EDGES, sortedSet.size());
-		int cntr = 0;
-		for(ICompoundNode actualNode : sortedSet){
-			assertEquals("expectedNodes", expectedresults[cntr++], actualNode);
-		}
+	public void testinEdgeIncidentNodesIterator() {
+		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>();
+		testIter.testSortedIterator(this.testInstance.inEdgeIncidentNodesIterator());
 	}
 
 	@Test
 	public void testHasEdgeWith() {
-		assertTrue("contains in edge", this.testInstance.hasEdgeWith(this.mockInEdgeOutNode));
+		assertFalse("contains in edge", this.testInstance.hasEdgeWith(this.mockInEdgeOutNode));
 		assertTrue("contains out edge", this.testInstance.hasEdgeWith(this.mockOutEdgeInNode));
 		assertFalse("does not contains null", this.testInstance.hasEdgeWith(null));
 		assertFalse("does not contains other edge", this.testInstance.hasEdgeWith(this.mockOtherGraphNode));
@@ -393,7 +306,7 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testHasInEdgeFrom() {
-		assertTrue("contains in edge", this.testInstance.hasInEdgeFrom(this.mockInEdgeOutNode));
+		assertFalse("contains in edge", this.testInstance.hasInEdgeFrom(this.mockInEdgeOutNode));
 		assertFalse("not contains out edge", this.testInstance.hasInEdgeFrom(this.mockOutEdgeInNode));
 		assertFalse("does not contains null", this.testInstance.hasInEdgeFrom(null));
 		assertFalse("does not contains other edge", this.testInstance.hasInEdgeFrom(this.mockOtherGraphNode));
@@ -523,7 +436,7 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testContainsEdge() {
-		assertTrue("contains edge", this.testInstance.containsEdge(mockInEdge));
+		assertFalse("contains edge", this.testInstance.containsEdge(mockInEdge));
 		assertTrue("contains edge", this.testInstance.containsEdge(mockOutEdge));
 		assertFalse("not contains edge", this.testInstance.containsEdge(null));
 		assertFalse("not contains edge", this.testInstance.containsEdge(this.mockOtherGraphEdge));
@@ -531,7 +444,7 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testContainsInEdge() {
-		assertTrue("contains in edge", this.testInstance.containsInEdge(mockInEdge));
+		assertFalse("contains in edge", this.testInstance.containsInEdge(mockInEdge));
 		assertFalse("not contains in edge", this.testInstance.containsInEdge(mockOutEdge));
 		assertFalse("not contains in edge", this.testInstance.containsInEdge(null));
 		assertFalse("not contains in edge", this.testInstance.containsInEdge(this.mockOtherGraphEdge));

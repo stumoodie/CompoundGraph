@@ -5,6 +5,7 @@ import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.IRootChildCompoundGraph;
 import uk.ed.inf.graph.compound.IRootCompoundNode;
+import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
 public class GraphBuilder implements IGraphBuilder {
 	private ICompoundGraph graph;
@@ -12,6 +13,7 @@ public class GraphBuilder implements IGraphBuilder {
 	private IRootChildCompoundGraph childGraph;
 	private ICompoundNodeFactory nodeFactory;
 	private ICompoundEdgeFactory edgeFactory;
+	private ISubCompoundGraphFactory subgraphFactory;
 	private final IGraphConstructor defaultConstructor;
 	private IGraphConstructor overridingConstructor;
 	private String elementId;
@@ -46,6 +48,9 @@ public class GraphBuilder implements IGraphBuilder {
 		}
 		if(overridingConstructor == null || (edgeFactory = overridingConstructor.createEdgeFactory(graph)) == null){
 			edgeFactory = defaultConstructor.createEdgeFactory(graph);
+		}
+		if(overridingConstructor == null || (subgraphFactory = overridingConstructor.createSubgraphFactory(graph)) == null){
+			subgraphFactory = defaultConstructor.createSubgraphFactory(graph);
 		}
 	}
 
@@ -86,6 +91,9 @@ public class GraphBuilder implements IGraphBuilder {
 		if(overridingConstructor == null || !overridingConstructor.buildEdgeFactory(edgeFactory)){
 			defaultConstructor.buildEdgeFactory(edgeFactory);
 		}
+		if(overridingConstructor == null || !overridingConstructor.buildSubgraphFactory(subgraphFactory)){
+			defaultConstructor.buildSubgraphFactory(subgraphFactory);
+		}
 	}
 
 
@@ -103,6 +111,11 @@ public class GraphBuilder implements IGraphBuilder {
 	@Override
 	public ICompoundGraph getGraph() {
 		return this.graph;
+	}
+
+	@Override
+	public ISubCompoundGraphFactory getSubgraphFactory() {
+		return this.subgraphFactory;
 	}
 
 }

@@ -167,7 +167,7 @@ public class CompoundNodeWithSelfEdgeTest {
 	@Test
 	public void testGetInNodeIterator() {
 		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>(this.testFixture.getNode2());
-		testIter.testIterator(this.testInstance.getInNodeIterator());
+		testIter.testIterator(this.testInstance.outEdgeIncidentNodesIterator());
 	}
 
 	@Test
@@ -195,7 +195,7 @@ public class CompoundNodeWithSelfEdgeTest {
 	@Test
 	public void testGetOutNodeIterator() {
 		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>(this.testFixture.getNode2());
-		testIter.testIterator(this.testInstance.getOutNodeIterator());
+		testIter.testIterator(this.testInstance.inEdgeIncidentNodesIterator());
 	}
 
 	@Test

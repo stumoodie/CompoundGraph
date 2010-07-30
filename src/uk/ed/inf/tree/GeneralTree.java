@@ -75,7 +75,7 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 	
 	public T getLowestCommonAncestor(final T thisNode, final T thatNode){
 		if(!thisNode.getRoot().equals(this.rootNode) || !thatNode.getRoot().equals(this.rootNode))
-			throw new IllegalArgumentException("Noth nodes must belong to the same this tree");
+			throw new IllegalArgumentException("Both nodes must belong to the same this tree");
 		
 		this.lcaCalc.findLowestCommonAncestor(thisNode, thatNode);
 		return this.lcaCalc.getLCANode();

@@ -77,7 +77,7 @@ public class CompoundGraphTest {
 
 	private ComplexGraphFixture otherTestFixture;
 	
-	private static final String EXPECTED_STATE_STRING = "{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}";
+	private static final String EXPECTED_STATE_STRING = "{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}";
 
 	private static final int UNFOUND_EDGE_IDX = 99;
 
@@ -85,9 +85,9 @@ public class CompoundGraphTest {
 
 	private static final int EXPECTED_NUM_EDGES = 4;
 
-	private static final int EXPECTED_NUM_NODES = 6;
+	private static final int EXPECTED_NUM_NODES = 7;
 
-	private static final int EXPECTED_NUM_ELEMENTS = 10;
+	private static final int EXPECTED_NUM_ELEMENTS = 11;
 	
 	
 	@Before
@@ -143,9 +143,20 @@ public class CompoundGraphTest {
 			@Override
 			public boolean buildChildGraph(IRootChildCompoundGraph childGraph) {
 				childGraph.addNode(testFixture.getNode1());
+				childGraph.addNode(testFixture.getNode6());
 				childGraph.addEdge(testFixture.getEdge1());
 				childGraph.addEdge(testFixture.getEdge4());
 				return true;
+			}
+
+			@Override
+			public boolean buildSubgraphFactory(ISubCompoundGraphFactory subgraphFactory) {
+				return true;
+			}
+
+			@Override
+			public ISubCompoundGraphFactory createSubgraphFactory(ICompoundGraph graph) {
+				return graph.subgraphFactory();
 			}
 		});
 		this.testFixture.doAll();
@@ -300,8 +311,8 @@ public class CompoundGraphTest {
 //		
 //		assertEquals ( "correct number" , NUMERIC[3] , counter ) ;
 		IteratorTestUtility<ICompoundNode> testIterator = new IteratorTestUtility<ICompoundNode>(this.testFixture.getRootNode(), this.testFixture.getNode1(),
-				this.testFixture.getNode3(), this.testFixture.getNode5(), this.testFixture.getNode2(), this.testFixture.getNode4());
-		testIterator.testIterator(this.testCompoundGraph.nodeIterator());
+				this.testFixture.getNode2(), this.testFixture.getNode3(), this.testFixture.getNode4(), this.testFixture.getNode5(), this.testFixture.getNode6());
+		testIterator.testSortedIterator(this.testCompoundGraph.nodeIterator());
 	}
 
 	@Test
@@ -337,7 +348,7 @@ public class CompoundGraphTest {
 	@Test
 	public void elementIteratorTest(){
 		IteratorTestUtility<ICompoundGraphElement> iterTest = new IteratorTestUtility<ICompoundGraphElement>(this.testFixture.getRootNode(), this.testFixture.getNode1(),
-				this.testFixture.getNode2(), this.testFixture.getNode3(), this.testFixture.getNode4(), this.testFixture.getNode5(),
+				this.testFixture.getNode2(), this.testFixture.getNode3(), this.testFixture.getNode4(), this.testFixture.getNode5(), this.testFixture.getNode6(),
 				this.testFixture.getEdge1(), this.testFixture.getEdge2(), this.testFixture.getEdge3(), this.testFixture.getEdge4());
 		iterTest.testSortedIterator(this.testCompoundGraph.elementIterator());
 	}

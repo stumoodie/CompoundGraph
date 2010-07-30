@@ -48,8 +48,10 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 	public boolean containsDirectedEdge(ICompoundNode outNode, ICompoundNode inNode) {
 		boolean retVal = false;
 		// check if directed edge is present then if nodes are in subgraph
-		if(outNode != null && inNode != null && outNode.getGraph().equals(this.graph)
-				 && inNode.getGraph().equals(this.graph) && outNode.hasOutEdgeTo(inNode)){
+		if(outNode != null && inNode != null
+				&& outNode.getGraph().equals(this.graph)
+				&& inNode.getGraph().equals(this.graph)
+				&& outNode.hasOutEdgeTo(inNode)){
 			Iterator<ICompoundEdge> testEdge = outNode.getOutEdgesTo(inNode);
 			while(testEdge.hasNext() && !retVal){
 				retVal = this.topElements.containsEdges(testEdge.next());
@@ -166,8 +168,9 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 	public boolean isConsistentSnapShot() {
 		boolean retVal = true;
 		Iterator <ICompoundGraphElement> nodeIter = this.elementIterator() ;
-		while ( nodeIter.hasNext() && retVal){
-			retVal = !nodeIter.next().isRemoved();
+		while (nodeIter.hasNext() && retVal){
+			ICompoundGraphElement element = nodeIter.next(); 
+			retVal = !element.isRemoved();
 		}
 		return retVal;
 	}

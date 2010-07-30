@@ -70,7 +70,7 @@ public final class SubgraphAlgorithms implements ISubgraphAlgorithms {
 		while(edgeIter.hasNext()){
 			ICompoundEdge edge = edgeIter.next();
 			CompoundNodePair pair = edge.getConnectedNodes();
-			if(this.basicSubgraph.containsConnection(pair) == false){
+			if(!this.basicSubgraph.containsNode(pair.getOutNode()) || !this.basicSubgraph.containsNode(pair.getInNode())){
 				retVal = false;
 				break;
 			}

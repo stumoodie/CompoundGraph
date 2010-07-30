@@ -15,9 +15,7 @@ limitations under the License.
 */
 package uk.ed.inf.graph.util.impl;
 
-import static org.junit.Assert.assertFalse;
-
-import java.util.NoSuchElementException;
+import static org.junit.Assert.assertTrue;
 
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -46,7 +44,7 @@ public class ConnectedNodeIteratorTest {
 		this.testFixture.doAll();
 //		this.testFixture.createElements();
 //		this.testFixture.buildObjects();
-		testBasicNodeIterator = new ConnectedNodeIterator (this.testFixture.getNode4(), this.testFixture.getNode4().edgeIterator()) ;
+		testBasicNodeIterator = new ConnectedNodeIterator (this.testFixture.getNode2(), this.testFixture.getNode2().edgeIterator()) ;
 	}
 
 	@After
@@ -57,17 +55,12 @@ public class ConnectedNodeIteratorTest {
 
 	@Test
 	public final void testHasNext() {
-		assertFalse ( "not has next" , testBasicNodeIterator.hasNext()) ;
-	}
-
-	@Test(expected=NoSuchElementException.class)
-	public final void testNext() {
-		testBasicNodeIterator.next() ;
+		assertTrue ( "has next" , testBasicNodeIterator.hasNext()) ;
 	}
 
 	@Test
 	public void testExpectedResults(){
-		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>();
+		IteratorTestUtility<ICompoundNode> testIter = new IteratorTestUtility<ICompoundNode>(this.testFixture.getNode2(), this.testFixture.getNode3());
 		testIter.testSortedIterator(this.testBasicNodeIterator);
 	}
 	
