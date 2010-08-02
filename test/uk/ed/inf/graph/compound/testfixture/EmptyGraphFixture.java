@@ -1,4 +1,4 @@
-package uk.ed.inf.graph.compound.newimpl;
+package uk.ed.inf.graph.compound.testfixture;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;

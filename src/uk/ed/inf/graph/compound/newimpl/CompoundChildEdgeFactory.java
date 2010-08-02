@@ -44,8 +44,8 @@ public class CompoundChildEdgeFactory implements ICompoundChildEdgeFactory {
 	@Override
 	public boolean isValidNodePair(CompoundNodePair nodePair) {
 		boolean retVal = false;
-		if(nodePair != null){
-			retVal = this.parent.getChildCompoundGraph().getElementTree().getLowestCommonAncestor(nodePair.getOutNode(), nodePair.getInNode()).equals(parent);
+		if(nodePair != null && nodePair.getGraph().equals(this.getGraph())){
+			retVal = this.parent.getGraph().getElementTree().getLowestCommonAncestor(nodePair.getOutNode(), nodePair.getInNode()).equals(parent);
 		}
 		return retVal;
 	}

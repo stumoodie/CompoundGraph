@@ -135,13 +135,14 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 	@Override
 	public ICompoundEdge getEdge(int edgeIdx) {
 		ICompoundGraphElement retVal = this.getElementTree().get(edgeIdx);
-		if(retVal == null || !(retVal instanceof ICompoundEdge)) throw new IllegalArgumentException("edgeIdx does not refer toa  node contained in this graph");
+		if(retVal != null && !(retVal instanceof ICompoundEdge)) throw new IllegalArgumentException("edgeIdx does not refer to an edge contained in this graph");
 		return (ICompoundEdge)retVal;
 	}
 
 	@Override
 	public ICompoundNode getNode(int nodeIdx) {
 		ICompoundGraphElement retVal = this.getElementTree().get(nodeIdx);
+		if(retVal != null && !(retVal instanceof ICompoundNode)) throw new IllegalArgumentException("nodeIdx does not refer to a node contained in this graph");
 		return (ICompoundNode)retVal;
 	}
 

@@ -59,5 +59,17 @@ public class CompoundNode extends CommonCompoundNode {
 	public ICompoundGraphElement getRoot() {
 		return this.parentElement.getRoot();
 	}
+	
+	@Override
+	public String toString(){
+		StringBuilder buf = new StringBuilder(this.getClass().getSimpleName());
+		buf.append("(");
+		buf.append("index=");
+		buf.append(this.getIndex());
+		buf.append(",parent=");
+		buf.append(this.getParent().getIndex());
+		buf.append(")");
+		return buf.toString();
+	}
 
 }

@@ -20,6 +20,7 @@ import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ed.inf.graph.compound.testfixture.INodeConstructor;
+import uk.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 
 @RunWith(JMock.class)
 public class CompoundNodeWithSelfEdgeTest {

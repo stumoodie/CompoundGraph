@@ -28,8 +28,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import uk.ed.inf.graph.compound.ICompoundNode;
-import uk.ed.inf.graph.compound.newimpl.IteratorTestUtility;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
+import uk.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 
 
 @RunWith(JMock.class)

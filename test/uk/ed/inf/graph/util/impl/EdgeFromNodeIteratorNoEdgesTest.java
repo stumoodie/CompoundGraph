@@ -32,7 +32,7 @@ import uk.ed.inf.graph.compound.testfixture.IGraphTestFixture;
 import uk.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 
 @RunWith(JMock.class)
-public class EdgeFromNodeIteratorTest {
+public class EdgeFromNodeIteratorNoEdgesTest {
 	private Mockery mockery;
 	private IGraphTestFixture testFixture;
 	private Iterator<ICompoundEdge> testInstance;
@@ -44,7 +44,7 @@ public class EdgeFromNodeIteratorTest {
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		this.testFixture.doAll();
 		
-		this.testInstance = new EdgeFromNodeIterator<ICompoundNode, ICompoundEdge>(this.testFixture.getEdge(ComplexGraphFixture.EDGE1_ID).getChildCompoundGraph().nodeIterator());
+		this.testInstance = new EdgeFromNodeIterator<ICompoundNode, ICompoundEdge>(this.testFixture.getEdge(ComplexGraphFixture.EDGE2_ID).getChildCompoundGraph().nodeIterator());
 	}
 
 	@After
@@ -60,7 +60,7 @@ public class EdgeFromNodeIteratorTest {
 
 	@Test
 	public final void testEdgeIteratorContents() {
-		IteratorTestUtility<ICompoundEdge> testIterator = new IteratorTestUtility<ICompoundEdge>(this.testFixture.getEdge(ComplexGraphFixture.EDGE2_ID), this.testFixture.getEdge(ComplexGraphFixture.EDGE4_ID));
+		IteratorTestUtility<ICompoundEdge> testIterator = new IteratorTestUtility<ICompoundEdge>();
 		testIterator.testSortedIterator(this.testInstance);
 	}
 

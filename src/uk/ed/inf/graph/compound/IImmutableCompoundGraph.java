@@ -75,8 +75,7 @@ public interface IImmutableCompoundGraph {
 	/**
 	 * Get the edge with this index.
 	 * @param edgeIdx The index of the edge.
-	 * @return The edge matching the index.
-	 * @throws IllegalArgumentException if an edge matching this index does not exist, i.IBasicEdge. <code>containsEdge(edgeIdx) == false</code>.  
+	 * @return The edge matching the index or null if it does not exist.
 	 */
 	ICompoundEdge getEdge(int edgeIdx);
 

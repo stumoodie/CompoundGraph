@@ -36,7 +36,8 @@ public class BitString implements IBitString {
 	}
 
 	BitString(BitSet rep){
-		this.bitVector = rep;
+		this.bitVector = new BitSet(rep.size());
+		this.bitVector.or(rep);
 	}
 	
 	/* (non-Javadoc)

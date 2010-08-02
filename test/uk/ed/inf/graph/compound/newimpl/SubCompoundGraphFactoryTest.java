@@ -30,6 +30,7 @@ import org.junit.runner.RunWith;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
+import uk.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 
 @RunWith(JMock.class)
 public class SubCompoundGraphFactoryTest {

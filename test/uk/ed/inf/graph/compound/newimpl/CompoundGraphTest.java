@@ -18,8 +18,10 @@ package uk.ed.inf.graph.compound.newimpl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -28,6 +30,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import uk.ed.inf.bitstring.BitStringBuffer;
+import uk.ed.inf.bitstring.IBitString;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundGraph;
@@ -39,59 +43,30 @@ import uk.ed.inf.graph.compound.IRootCompoundNode;
 import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ed.inf.graph.compound.testfixture.IGraphConstructor;
+import uk.ed.inf.graph.compound.testfixture.IteratorTestUtility;
+import uk.ed.inf.graph.state.IGraphState;
 
 @RunWith(JMock.class)
 public class CompoundGraphTest {
-	private Mockery mockery = new JUnit4Mockery();
+	private Mockery mockery;
 	
 	private ICompoundGraph testCompoundGraph ;
-//	private ICompoundGraph anotherCompoundGraph ;
-	
-//	private ICompoundNode aNode ;
-//	private ICompoundNode anotherNode ;
-//	private ICompoundNode rootNode ;
-	
-//	private IGraphState originalState ; 
-//	private IGraphState currentState ;
-	
-//	private ICompoundEdge anEdge ;
-	
-//	private ICompoundEdge subEdge ;
-//	private ICompoundNode subNode ;
-	
-//	private ICompoundEdgeFactory edgeFactory ;
-//	private ICompoundNodeFactory nodeFactory ;
-//	private ISubCompoundGraphFactory subGraphFactory ;
-	
-//	private ICompoundEdgeFactory anotherEdgeFactory ;
-//	private ICompoundNodeFactory anotherNodeFactory ;
-//	private ISubCompoundGraphFactory anotherSubGraphFactory ;
-//
-//	private ICompoundGraphCopyBuilder mockCopyBuilder;
-//
-//	private ISubCompoundGraph mockSrcSubgraph;
-//
-//	private ISubCompoundGraph mockCopiedSubgraph;
-
 	private ComplexGraphFixture testFixture;
-
 	private ComplexGraphFixture otherTestFixture;
+	private IGraphState expectedRestoreState;
+	private IBitString expectedBitString;
 	
 	private static final String EXPECTED_STATE_STRING = "{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}";
-
 	private static final int UNFOUND_EDGE_IDX = 99;
-
 	private static final int UNFOUND_NODE_IDX = 77;
-
 	private static final int EXPECTED_NUM_EDGES = 4;
-
 	private static final int EXPECTED_NUM_NODES = 7;
-
 	private static final int EXPECTED_NUM_ELEMENTS = 11;
 	
 	
 	@Before
 	public void setUp() throws Exception {
+		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		this.testFixture.redefineGraph(new IGraphConstructor() {
 			
@@ -160,35 +135,27 @@ public class CompoundGraphTest {
 			}
 		});
 		this.testFixture.doAll();
-//		{
-//			@Override
-//			protected void buildGraph(ICompoundGraph graph){
-//				graph.getRoot().getChildCompoundGraph().addNode(getNode1());
-//				graph.getRoot().getChildCompoundGraph().addEdge(getEdge1());
-//				graph.getRoot().getChildCompoundGraph().addEdge(getEdge4());
-//			}
-//			
-//			@Override
-//			protected void buildElementTree(ITree<ICompoundGraphElement> tree){
-//				
-//			}
-//		};
-//		this.testFixture.createElements();
-//		testCompoundGraph = new CompoundGraph () ;
-//		this.testFixture.setGraph(testCompoundGraph);
-//		this.testFixture.setRootNode(this.testCompoundGraph.getRoot());
-//		this.testFixture.setRootChildGraph(this.testCompoundGraph.getRoot().getChildCompoundGraph());
-//		this.testFixture.setElementTree(this.testCompoundGraph.getElementTree());
-//		this.testFixture.buildObjects();
 		
 		this.otherTestFixture = new ComplexGraphFixture(mockery, "other_");
 		this.otherTestFixture.doAll();
-//		this.otherTestFixture.createElements();
-//		this.otherTestFixture.buildObjects();
+		
+		BitStringBuffer buf = new BitStringBuffer();
+		buf.set(0, this.testFixture.getGraph().numElements()-1, false);
+		buf.set(4, true);
+		this.expectedBitString = buf.toBitString();
+		expectedRestoreState = mockery.mock(IGraphState.class, "expectedRestoreState");
+		mockery.checking(new Expectations(){{
+			allowing(expectedRestoreState).getElementStates(); will(returnValue(expectedBitString));
+			allowing(expectedRestoreState).getGraph(); will(returnValue(testFixture.getGraph()));
+		}});
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		this.mockery = null;
+		this.testFixture = null;
+		this.otherTestFixture = null;
+		this.expectedRestoreState = null;
 	}
 
 	@Test
@@ -264,27 +231,13 @@ public class CompoundGraphTest {
 		assertEquals ( "get Edge" , expectedEdge, testCompoundGraph.getEdge(expectedEdge.getIndex())) ;
 	}
 
-	@Test(expected=IllegalArgumentException.class)
+	@Test
 	public final void testGetEdgeFails() {
-		ICompoundEdge expectedEdge = this.testFixture.getEdge4();
-		assertEquals ( "get Edge" , expectedEdge , testCompoundGraph.getEdge(UNFOUND_EDGE_IDX)) ;
+		assertNull ( "get Edge" , testCompoundGraph.getEdge(UNFOUND_EDGE_IDX)) ;
 	}
 
 	@Test
 	public final void testEdgeIterator() {
-//		ICompoundEdge edgeArray [] = {  } ;
-//		
-//		Iterator<ICompoundEdge> edgeIterator = testCompoundGraph.edgeIterator() ;
-//		
-//		int counter = 0 ;
-//		
-//		while ( edgeIterator.hasNext())
-//		{
-//			assertEquals ( "same node" , edgeArray[counter] , edgeIterator.next()) ;
-//			counter++ ;
-//		}
-//		
-//		assertEquals ( "correct number" , NUMERIC[1] , counter ) ;
 		IteratorTestUtility<ICompoundEdge> testIterator = new IteratorTestUtility<ICompoundEdge>(this.testFixture.getEdge4(), this.testFixture.getEdge1(),
 				this.testFixture.getEdge2(), this.testFixture.getEdge3());
 		testIterator.testIterator(this.testCompoundGraph.edgeIterator());
@@ -297,19 +250,6 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testNodeIterator() {
-//		ICompoundNode [] nodeArray = { rootNode , aNode , anotherNode } ;
-//		
-//		Iterator<ICompoundNode> nodeIterator = testCompoundGraph.nodeIterator() ;
-//		
-//		int counter = 0 ;
-//		
-//		while ( nodeIterator.hasNext())
-//		{
-//			assertEquals ( "same node" , nodeArray[counter] , nodeIterator.next()) ;
-//			counter++ ;
-//		}
-//		
-//		assertEquals ( "correct number" , NUMERIC[3] , counter ) ;
 		IteratorTestUtility<ICompoundNode> testIterator = new IteratorTestUtility<ICompoundNode>(this.testFixture.getRootNode(), this.testFixture.getNode1(),
 				this.testFixture.getNode2(), this.testFixture.getNode3(), this.testFixture.getNode4(), this.testFixture.getNode5(), this.testFixture.getNode6());
 		testIterator.testSortedIterator(this.testCompoundGraph.nodeIterator());
@@ -333,11 +273,7 @@ public class CompoundGraphTest {
 	@Test
 	public final void testRestoreState() {
 		assertEquals ("correct Original node State" , EXPECTED_STATE_STRING , testCompoundGraph.getCurrentState().getElementStates().toString() ) ;
-//		FIXME: do this! 
-//		testCompoundGraph.restoreState(originalState) ;
-//		assertEquals("current state graph" , originalState.getGraph() , testCompoundGraph.getCurrentState().getGraph() );
-//		assertEquals ( "Only one node" , NUMERIC[1] , testCompoundGraph.getNumNodes()) ;
-//		assertEquals ( "no edges" , NUMERIC[0] , testCompoundGraph.getNumEdges()) ;
+		testCompoundGraph.restoreState(expectedRestoreState) ;
 	}
 	
 	@Test

@@ -18,6 +18,7 @@ import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
+import uk.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 
 @RunWith(JMock.class)
 public class SubCompoundGraphTest {

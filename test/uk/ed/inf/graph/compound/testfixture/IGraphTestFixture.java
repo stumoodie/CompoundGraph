@@ -3,6 +3,7 @@ package uk.ed.inf.graph.compound.testfixture;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundNode;
+import uk.ed.inf.graph.compound.IRootCompoundNode;
 
 public interface IGraphTestFixture {
 
@@ -19,4 +20,10 @@ public interface IGraphTestFixture {
 	ICompoundEdge getEdge(String edgeId);
 	
 	void doAll();
+
+	void setElementRemoved(String elementId, boolean markRemoved);
+
+	boolean isRemoved(String elementId);
+
+	IRootCompoundNode getRootNode();
 }

@@ -17,6 +17,7 @@ package uk.ed.inf.graph.compound.newimpl;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -98,6 +99,9 @@ public class CompoundNodeFactoryTest {
 	
 	@Test
 	public final void testCreateNode() {
+		mockery.checking(new Expectations(){{
+			one(testInstance.getParentNode().getChildCompoundGraph()).addNode(with(any(ICompoundNode.class)));
+		}});
 		ICompoundNode newNode = this.testInstance.createNode();
 		assertEquals("expected parent", this.testFixture.getNode1(), newNode.getParent());
 		assertEquals("expected graph", this.testFixture.getGraph(), newNode.getGraph());
