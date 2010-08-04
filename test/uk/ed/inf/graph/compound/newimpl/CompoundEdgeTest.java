@@ -24,6 +24,7 @@ import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ed.inf.graph.compound.testfixture.IEdgeConstructor;
 import uk.ed.inf.graph.compound.testfixture.IteratorTestUtility;
+import uk.ed.inf.tree.ITree;
 
 @RunWith(JMock.class)
 public class CompoundEdgeTest {
@@ -87,12 +88,16 @@ public class CompoundEdgeTest {
 			public ICompoundEdge createCompoundEdge() {
 				final ICompoundNode node3 = testFixture.getNode3();
 				final ICompoundNode node5 = testFixture.getNode5();
+				final ICompoundEdge edge1 = testFixture.getEdge1();
+				final ITree<ICompoundGraphElement> elementTree = testFixture.getGraph().getElementTree();
 				mockery.checking(new Expectations(){{
 					exactly(1).of(node3).addOutEdge(with(any(ICompoundEdge.class)));
 					exactly(1).of(node5).addInEdge(with(any(ICompoundEdge.class)));
 //					allowing(node3).addOutEdge(with(any(ICompoundEdge.class)));
+					allowing(elementTree).getLowestCommonAncestor(node3, node5); will(returnValue(edge1));
+					allowing(elementTree).getLowestCommonAncestor(node5, node3); will(returnValue(edge1));
 				}});
-				testInstance = new CompoundEdge(testFixture.getEdge1(), ComplexGraphFixture.EDGE2_IDX,	node3, node5);
+				testInstance = new CompoundEdge(edge1, ComplexGraphFixture.EDGE2_IDX,	node3, node5);
 				return testInstance;
 			}
 

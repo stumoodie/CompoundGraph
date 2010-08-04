@@ -27,6 +27,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
+import uk.ed.inf.graph.compound.ICompoundChildEdgeFactory;
+import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
@@ -74,11 +76,18 @@ public class CompoundNodeFactoryTest {
 			public boolean buildChildGraph(IChildCompoundGraph node) {
 				return false;
 			}
+
+			@Override
+			public boolean buildEdgeFactory(ICompoundEdgeFactory edgeFactory) {
+				return false;
+			}
+
+			@Override
+			public ICompoundChildEdgeFactory createEdgeFactory(IChildCompoundGraph childGraph) {
+				return null;
+			}
 		});
 		this.testFixture.doAll();
-//		this.testFixture.createElements();
-//		this.testFixture.buildObjects();
-//		this.testInstance = 
 	}
 
 	@After

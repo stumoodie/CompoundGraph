@@ -7,7 +7,7 @@ import uk.ac.ed.inf.designbycontract.Postcondition;
 import uk.ac.ed.inf.designbycontract.Precondition;
 
 
-public aspect ICompoundNodeDBC {
+public abstract aspect ICompoundNodeDBC {
 	
 	pointcut addInEdge(ICompoundNode cn, ICompoundEdge inEdge) :
 		execution(public void ICompoundNode.addInEdge(ICompoundEdge))
@@ -114,9 +114,7 @@ public aspect ICompoundNodeDBC {
 	}
 
 	
-	pointcut allMethods(ICompoundNode cn) :
-		execution(public void ICompoundNode.*(..))
-		&& target(cn);
+	public abstract pointcut allMethods(ICompoundNode cn);
 	
 	after(final ICompoundNode cn) : allMethods(cn) {
 		new ClassInvariant(){{

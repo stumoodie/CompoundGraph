@@ -26,7 +26,7 @@ import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 
 @RunWith(JMock.class)
-public class CompoundGraphCopyBuilderTest {
+public class CompoundGraphCopyBuilderSameGraphTest {
 
 	private Mockery mockery;
 
@@ -45,8 +45,7 @@ public class CompoundGraphCopyBuilderTest {
 		this.mockSrcSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSrcSubgraph");
 
 		// dstn graph
-		this.destnFixture = new ComplexGraphFixture(mockery, "destn");
-		this.destnFixture.doAll();
+		this.destnFixture = this.testFixture;
 		
 		this.mockery.checking(new Expectations(){{
 			allowing(mockSrcSubgraph).getSuperGraph(); will(returnValue(testFixture.getGraph()));
@@ -119,7 +118,7 @@ public class CompoundGraphCopyBuilderTest {
 			
 		}});
 		this.testInstance.makeCopy();
-		
+		this.mockery.assertIsSatisfied();
 	}
 	
 	@Test

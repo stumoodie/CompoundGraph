@@ -22,7 +22,9 @@ import org.junit.runner.RunWith;
 
 import uk.ac.ed.inf.designbycontract.PreConditionException;
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
+import uk.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodeFactory;
@@ -94,6 +96,16 @@ public class CompoundNodeTest {
 			public boolean buildChildGraph(IChildCompoundGraph node) {
 				node.addNode(testFixture.getNode2());
 				return true;
+			}
+
+			@Override
+			public boolean buildEdgeFactory(ICompoundEdgeFactory edgeFactory) {
+				return false;
+			}
+
+			@Override
+			public ICompoundChildEdgeFactory createEdgeFactory(IChildCompoundGraph childGraph) {
+				return null;
 			}
 		});
 //		{

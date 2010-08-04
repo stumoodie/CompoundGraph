@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundChildEdgeFactory;
@@ -16,15 +18,18 @@ import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
 public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
+	private final Logger logger = Logger.getLogger(this.getClass());
 	private ISubCompoundGraph sourceSubCigraph;
-	private final IChildCompoundGraph destSubCigraph;
+	private final IChildCompoundGraph destChildGraph;
 	private ISubCompoundGraphFactory subGraphFactory;
 	private final Map<ICompoundGraphElement, ICompoundGraphElement> oldNewEquivList;
 	private ISubCompoundGraphFactory removalSubGraphFactory;
 
 	public CompoundGraphMoveBuilder(IChildCompoundGraph destn){
 		this.oldNewEquivList = new HashMap<ICompoundGraphElement, ICompoundGraphElement>();
-		this.destSubCigraph = destn;
+		this.destChildGraph = destn;
+		this.subGraphFactory = this.destChildGraph.getSuperGraph().subgraphFactory();
+		this.removalSubGraphFactory = this.destChildGraph.getSuperGraph().subgraphFactory();
 	}
 	
 	@Override
@@ -34,7 +39,7 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 
 	@Override
 	public IChildCompoundGraph getDestinationChildGraph() {
-		return this.destSubCigraph;
+		return this.destChildGraph;
 	}
 
 	@Override
@@ -51,17 +56,31 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	@Override
 	public boolean canMoveHere() {
 		ISubCompoundGraph subGraph = this.sourceSubCigraph;
-		boolean retVal = subGraph != null && subGraph.getSuperGraph().equals(this.destSubCigraph.getSuperGraph())
-			&& subGraph.isInducedSubgraph() && subGraph.isConsistentSnapShot()
-			&& !subGraph.containsElement(this.destSubCigraph.getRoot());
+		boolean retVal = subGraph != null
+			&& subGraph.getSuperGraph().equals(this.destChildGraph.getSuperGraph())
+			&& subGraph.isInducedSubgraph()
+			&& subGraph.isConsistentSnapShot()
+			&& !subGraph.containsRoot();
 		if(retVal){
-			retVal = false;
-			Iterator<? extends ICompoundNode> topNodeIter = subGraph.topNodeIterator();
-			while(topNodeIter.hasNext()){
-				ICompoundNode topNode = topNodeIter.next();
-				if(!topNode.getParent().equals(this.destSubCigraph.getRoot())){
-					retVal = true;
+			boolean isDestnChildOfTopNode = false;
+			int numTopElsWithDifferntParents = subGraph.numTopElements();
+			Iterator<ICompoundGraphElement> topNodeIter = subGraph.topElementIterator();
+			while(topNodeIter.hasNext() && !isDestnChildOfTopNode){
+				ICompoundGraphElement topNode = topNodeIter.next();
+				ICompoundGraphElement destn = this.destChildGraph.getRoot();
+				if(topNode.getParent().equals(destn)){
+					numTopElsWithDifferntParents--;
 				}
+				isDestnChildOfTopNode = topNode.isChild(destn);
+			}
+			retVal = !isDestnChildOfTopNode && numTopElsWithDifferntParents > 0;
+		}
+		if(retVal){
+			// now check if has any incident nodes in the subgraph as these will violate the compound graph structure
+			Iterator<ICompoundNode> incidentNodeIterator = ((ICompoundNode)this.destChildGraph.getRoot()).connectedNodeIterator();
+			while(incidentNodeIterator.hasNext() && retVal){
+				ICompoundNode incidentNode = incidentNodeIterator.next();
+				retVal = !subGraph.containsNode(incidentNode);
 			}
 		}
 		return retVal;
@@ -76,7 +95,7 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	@Override
 	public void makeMove() {
 		this.oldNewEquivList.clear();
-		this.subGraphFactory = this.destSubCigraph.getSuperGraph().subgraphFactory();
+		this.subGraphFactory = this.destChildGraph.getSuperGraph().subgraphFactory();
 		moveElements();
 		// avoid holding onto additional unneeded memory
 		this.oldNewEquivList.clear();
@@ -88,19 +107,39 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 		while(sourceNodeIter.hasNext()){
 			ICompoundGraphElement srcElement = sourceNodeIter.next();
 			ICompoundGraphElement newElement = null;
+			ICompoundGraphElement equivParent = this.oldNewEquivList.get(srcElement.getParent());
 			if(srcElement instanceof ICompoundNode){
-				ICompoundGraphElement equivParent = this.oldNewEquivList.get(srcElement.getParent());
-				newElement = moveNode((ICompoundNode)srcElement, equivParent);
+				if(logger.isTraceEnabled()){
+					logger.trace("Creating node src=" + srcElement + ", parent=" + equivParent);
+				}
+				if(!srcElement.getParent().equals(equivParent)){
+					newElement = moveNode((ICompoundNode)srcElement, equivParent);
+				}
+				else{
+					newElement = srcElement;
+				}
 			}
 			else if(srcElement instanceof ICompoundEdge){
 				ICompoundEdge srcEdge = (ICompoundEdge)srcElement;
-				ICompoundGraphElement equivParent = this.oldNewEquivList.get(srcElement.getParent());
-				ICompoundNode equivOutNode = (ICompoundNode)this.oldNewEquivList.get(srcEdge.getConnectedNodes().getOutNode());
-				ICompoundNode equivInNode = (ICompoundNode)this.oldNewEquivList.get(srcEdge.getConnectedNodes().getInNode());
-				newElement = moveEdge((ICompoundEdge)srcElement, equivParent, equivOutNode, equivInNode);
+				CompoundNodePair srcNodePair = srcEdge.getConnectedNodes();
+				ICompoundNode equivOutNode = (ICompoundNode)this.oldNewEquivList.get(srcNodePair.getOutNode());
+				ICompoundNode equivInNode = (ICompoundNode)this.oldNewEquivList.get(srcNodePair.getInNode());
+				if(logger.isTraceEnabled()){
+					logger.trace("Creating edge src=" + srcElement + ", parent=" + equivParent +", outNode=" + equivOutNode + ", inNode=" + equivInNode);
+				}
+				// test if edge connections and parent are unchanged. If so leave edge alone. otherwise create a new edge
+				if(!(equivInNode.equals(srcNodePair.getInNode()) && equivOutNode.equals(srcNodePair.getOutNode()) && equivParent.equals(srcElement.getParent()))){
+					newElement = moveEdge((ICompoundEdge)srcElement, equivParent, equivOutNode, equivInNode);
+				}
+				else{
+					newElement = srcElement;
+				}
 			}
 			else{
 				throw new RuntimeException("Unrecognised element type");
+			}
+			if(logger.isTraceEnabled()){
+				logger.trace("Moving src=" + srcElement + ", tgt=" + newElement);
 			}
 			this.oldNewEquivList.put(srcElement, newElement);
 			this.subGraphFactory.addElement(newElement);
@@ -108,40 +147,47 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	}
 
 	private void initRootNodeEquivalent() {
-		Iterator<ICompoundGraphElement> topElements = this.sourceSubCigraph.elementIterator();
+		Iterator<ICompoundGraphElement> topElements = this.sourceSubCigraph.topElementIterator();
 		while(topElements.hasNext()){
 			ICompoundGraphElement topElement = topElements.next();
-			this.oldNewEquivList.put(topElement.getParent(), this.destSubCigraph.getRoot());
+			ICompoundGraphElement topParent = topElement.getParent();
+			ICompoundGraphElement destElement = this.destChildGraph.getRoot(); 
+			if(logger.isTraceEnabled()){
+				logger.trace("topElement=" + topElement + ", topParent=" + topParent +", destRoot=" + destElement);
+			}
+			this.oldNewEquivList.put(topParent, destElement);
 		}
 		
 	}
 
 	private ICompoundEdge moveEdge(ICompoundEdge srcEdge, ICompoundGraphElement parent, ICompoundNode outNode, ICompoundNode inNode) {
 		ICompoundEdge retVal = srcEdge;
-		if(!srcEdge.getParent().equals(parent)){
-			ICompoundChildEdgeFactory edgefact = parent.getChildCompoundGraph().edgeFactory();
-			edgefact.setPair(new CompoundNodePair(outNode, inNode));
-			retVal = edgefact.createEdge();
-			srcEdge.markRemoved(true);
-			this.removalSubGraphFactory.addElement(srcEdge);
-		}
+		ICompoundChildEdgeFactory edgefact = parent.getChildCompoundGraph().edgeFactory();
+		edgefact.setPair(new CompoundNodePair(outNode, inNode));
+		retVal = edgefact.createEdge();
+		srcEdge.markRemoved(true);
+		this.removalSubGraphFactory.addElement(srcEdge);
 		return retVal;
 	}
 
 	private ICompoundNode moveNode(ICompoundNode srcNode, ICompoundGraphElement destParentNode){
 		ICompoundNode newNode = srcNode; 
-		if(!srcNode.getParent().equals(destParentNode.getParent())){
-			ICompoundNodeFactory fact = destParentNode.getChildCompoundGraph().nodeFactory();
-			newNode = fact.createNode();
-			srcNode.markRemoved(true);
-			this.removalSubGraphFactory.addElement(srcNode);
-		}
+		ICompoundNodeFactory fact = destParentNode.getChildCompoundGraph().nodeFactory();
+		newNode = fact.createNode();
+		srcNode.markRemoved(true);
+		this.removalSubGraphFactory.addElement(srcNode);
 		return newNode;
 	}
 
 	@Override
 	public void setSourceSubgraph(ISubCompoundGraph sourceSubCompoundGraph) {
 		this.sourceSubCigraph = sourceSubCompoundGraph;
+		if(sourceSubCompoundGraph != null){
+			this.removalSubGraphFactory = this.sourceSubCigraph.getSuperGraph().subgraphFactory();
+		}
+		else{
+			this.removalSubGraphFactory = this.destChildGraph.getSuperGraph().subgraphFactory();
+		}
 	}
 
 	@Override

@@ -14,7 +14,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import uk.ed.inf.graph.compound.IChildCompoundGraph;
+import uk.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundEdge;
+import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ICompoundNode;
 import uk.ed.inf.graph.compound.ICompoundNodeFactory;
@@ -71,33 +73,19 @@ public class CompoundNodeWithSelfEdgeTest {
 			public ICompoundNodeFactory createNodeFactory(IChildCompoundGraph childGraph) {
 				return childGraph.nodeFactory();
 			}
+
+			@Override
+			public boolean buildEdgeFactory(ICompoundEdgeFactory edgeFactory) {
+				return false;
+			}
+
+			@Override
+			public ICompoundChildEdgeFactory createEdgeFactory(IChildCompoundGraph childGraph) {
+				return null;
+			}
 			
 		});
 		this.testFixture.doAll();
-//		{
-//			
-//			@Override
-//			protected void buildNode2(final ICompoundNode node){
-//				node.addInEdge(getEdge3());
-//				node.addOutEdge(getEdge3());
-//			}
-//			
-//			@Override
-//			protected void buildNode2ChildGraph(final IChildCompoundGraph child){
-//				child.addEdge(getEdge3());
-//			}
-//			
-//		};
-//		this.testFixture.createElements();
-//		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"graph", "node1", "node1ChildGraph" }));
-//		this.testFixture.buildObjects();
-//		this.testInstance = new CompoundNode(this.testFixture.getNode1(), ComplexGraphFixture.NODE2_IDX);
-//		this.testFixture.setNode2(testInstance);
-//		this.testFixture.setNode2ChildGraph(this.testInstance.getChildCompoundGraph());
-//		this.testFixture.setBuildDependencies(Arrays.asList(new String[]{"elementTree", "node3", "node3ChildGraph", "node4", "node4ChildGraph", "node5", "node5ChildGraph",
-//				"edge1", "edge1ChildGraph", "edge2", "edge2ChildGraph", "edge3", "edge3ChildGraph",
-//				"edge4", "edge4ChildGraph", "node2", "node2ChildGraph" }));
-//		this.testFixture.buildObjects();
 	}
 
 	@After

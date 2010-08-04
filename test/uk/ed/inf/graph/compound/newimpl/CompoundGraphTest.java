@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.jmock.Sequence;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
@@ -41,6 +42,7 @@ import uk.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ed.inf.graph.compound.IRootChildCompoundGraph;
 import uk.ed.inf.graph.compound.IRootCompoundNode;
 import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
+import uk.ed.inf.graph.compound.ISubgraphRemovalBuilder;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ed.inf.graph.compound.testfixture.IGraphConstructor;
 import uk.ed.inf.graph.compound.testfixture.IteratorTestUtility;
@@ -140,8 +142,8 @@ public class CompoundGraphTest {
 		this.otherTestFixture.doAll();
 		
 		BitStringBuffer buf = new BitStringBuffer();
-		buf.set(0, this.testFixture.getGraph().numElements()-1, false);
-		buf.set(4, true);
+		buf.set(0, this.testFixture.getGraph().numElements(), true);
+		buf.set(4, false);
 		this.expectedBitString = buf.toBitString();
 		expectedRestoreState = mockery.mock(IGraphState.class, "expectedRestoreState");
 		mockery.checking(new Expectations(){{
@@ -165,6 +167,14 @@ public class CompoundGraphTest {
 		assertEquals ( "same graph" , testCompoundGraph , rootNode.getGraph() );
 	}
 
+	@Test
+	public final void testNewSubgraphRemovalBuilder(){
+		ISubgraphRemovalBuilder firstInstance = this.testCompoundGraph.newSubgraphRemovalBuilder();
+		assertNotNull("removalBuilder created", firstInstance);
+		ISubgraphRemovalBuilder secondInstance = this.testCompoundGraph.newSubgraphRemovalBuilder();
+		assertTrue("not same instance", firstInstance != secondInstance);
+	}
+	
 	@Test
 	public final void testContainsDirectedEdgeCompoundNodeCompoundNode() {
 		assertTrue ("directed edge" ,  testCompoundGraph.containsDirectedEdge(this.testFixture.getNode3(), this.testFixture.getNode5()) );
@@ -273,7 +283,43 @@ public class CompoundGraphTest {
 	@Test
 	public final void testRestoreState() {
 		assertEquals ("correct Original node State" , EXPECTED_STATE_STRING , testCompoundGraph.getCurrentState().getElementStates().toString() ) ;
+//		final Sequence rootNodeSequence = this.mockery.sequence("rootNodeSequence"); 
+		final Sequence node1Sequence = this.mockery.sequence("node1Sequence"); 
+		final Sequence node2Sequence = this.mockery.sequence("node2Sequence"); 
+		final Sequence node3Sequence = this.mockery.sequence("node3Sequence"); 
+		final Sequence node4Sequence = this.mockery.sequence("node4Sequence"); 
+		final Sequence node5Sequence = this.mockery.sequence("node5Sequence"); 
+		final Sequence node6Sequence = this.mockery.sequence("node6Sequence"); 
+		final Sequence edge1Sequence = this.mockery.sequence("edge1Sequence"); 
+		final Sequence edge2Sequence = this.mockery.sequence("edge2Sequence"); 
+		final Sequence edge3Sequence = this.mockery.sequence("edge3Sequence"); 
+		final Sequence edge4Sequence = this.mockery.sequence("edge4Sequence"); 
+		this.mockery.checking(new Expectations(){{
+//			one(testFixture.getRootNode()).markRemoved(true); inSequence(rootNodeSequence);
+//			one(testFixture.getRootNode()).markRemoved(false); inSequence(rootNodeSequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE1_ID)).markRemoved(true); inSequence(node1Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE1_ID)).markRemoved(false); inSequence(node1Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE2_ID)).markRemoved(true); inSequence(node2Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE2_ID)).markRemoved(false); inSequence(node2Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE3_ID)).markRemoved(true); inSequence(node3Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE3_ID)).markRemoved(false); inSequence(node3Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE4_ID)).markRemoved(true); inSequence(node4Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE4_ID)).markRemoved(true); inSequence(node4Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE5_ID)).markRemoved(true); inSequence(node5Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE5_ID)).markRemoved(false); inSequence(node5Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE6_ID)).markRemoved(true); inSequence(node6Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE6_ID)).markRemoved(false); inSequence(node6Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE1_ID)).markRemoved(true); inSequence(edge1Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE1_ID)).markRemoved(false); inSequence(edge1Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE2_ID)).markRemoved(true); inSequence(edge2Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE2_ID)).markRemoved(false); inSequence(edge2Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE3_ID)).markRemoved(true); inSequence(edge3Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE3_ID)).markRemoved(false); inSequence(edge3Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)).markRemoved(true); inSequence(edge4Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)).markRemoved(false); inSequence(edge4Sequence);
+		}});
 		testCompoundGraph.restoreState(expectedRestoreState) ;
+		this.mockery.assertIsSatisfied();
 	}
 	
 	@Test

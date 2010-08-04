@@ -2,11 +2,9 @@ package uk.ed.inf.graph.compound;
 
 import uk.ac.ed.inf.designbycontract.ClassInvariant;
 
-public aspect ICompoundEdgeDBC {
+public abstract aspect ICompoundEdgeDBC {
 
-	pointcut allMethods(ICompoundEdge cn) :
-		execution(public void ICompoundEdge.*(..))
-		&& target(cn);
+	public abstract pointcut allMethods(ICompoundEdge cn);
 	
 	after(final ICompoundEdge cn) : allMethods(cn) {
 		new ClassInvariant(){{

@@ -4,10 +4,6 @@ import uk.ac.ed.inf.designbycontract.Precondition;
 
 public aspect CompoundNodePairDBC {
 
-	public pointcut theClass(CompoundNodePair pair) :
-		target(pair)
-		&& within(CompoundNodePair);
-
 	pointcut constructor(ICompoundNode outNode, ICompoundNode inNode) :
 		execution(public CompoundNodePair.new(ICompoundNode, ICompoundNode))
 		&& args(outNode, inNode);

@@ -18,7 +18,8 @@ public abstract aspect ICompoundGraphCopyBuilderDBC {
 	
 	after(final ICompoundGraphCopyBuilder cb) returning : makeCopy(cb) {
 		new Postcondition(){{
-			assertion(cb.getCopiedComponents() != null && cb.getCopiedComponents().getSuperGraph().equals(cb.getDestinationChildGraph().getSuperGraph()), "copied to destn graph");
+			assertion(cb.getCopiedComponents() != null, "copied components exists");
+			assertion(cb.getCopiedComponents().getSuperGraph().equals(cb.getDestinationChildGraph().getSuperGraph()), "copied components have same desnt graph");
 		}};
 	}
 	
@@ -36,11 +37,7 @@ public abstract aspect ICompoundGraphCopyBuilderDBC {
 		}};
 	}
 	
-	public abstract pointcut theClass(ICompoundGraphCopyBuilder obj);
-	
-	pointcut allMethods(ICompoundGraphCopyBuilder cn) :
-		call(public void ICompoundGraphCopyBuilder.*(..))
-		&& target(cn);
+	public abstract pointcut allMethods(ICompoundGraphCopyBuilder obj);
 	
 	after(final ICompoundGraphCopyBuilder cn) : allMethods(cn) {
 		new ClassInvariant(){{

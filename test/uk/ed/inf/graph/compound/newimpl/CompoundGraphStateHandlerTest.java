@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.jmock.Sequence;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
@@ -41,7 +42,8 @@ public class CompoundGraphStateHandlerTest {
 		this.mockState = this.mockery.mock(IGraphState.class, "mockState");
 		int bitStringSize = this.testFixture.getGraph().numElements();
 		BitStringBuffer buf = new BitStringBuffer(bitStringSize);
-		buf.set(0, bitStringSize-1, true);
+		buf.set(0, bitStringSize, true);
+		buf.set(4, false);
 		this.restoreBitString = buf.toBitString();
 		this.mockery.checking(new Expectations(){{
 			allowing(mockState).getGraph(); will(returnValue(testFixture.getGraph()));
@@ -76,7 +78,43 @@ public class CompoundGraphStateHandlerTest {
 
 	@Test
 	public void testRestoreState() {
+		final Sequence rootNodeSequence = this.mockery.sequence("rootNodeSequence"); 
+		final Sequence node1Sequence = this.mockery.sequence("node1Sequence"); 
+		final Sequence node2Sequence = this.mockery.sequence("node2Sequence"); 
+		final Sequence node3Sequence = this.mockery.sequence("node3Sequence"); 
+		final Sequence node4Sequence = this.mockery.sequence("node4Sequence"); 
+		final Sequence node5Sequence = this.mockery.sequence("node5Sequence"); 
+		final Sequence node6Sequence = this.mockery.sequence("node6Sequence"); 
+		final Sequence edge1Sequence = this.mockery.sequence("edge1Sequence"); 
+		final Sequence edge2Sequence = this.mockery.sequence("edge2Sequence"); 
+		final Sequence edge3Sequence = this.mockery.sequence("edge3Sequence"); 
+		final Sequence edge4Sequence = this.mockery.sequence("edge4Sequence"); 
+		this.mockery.checking(new Expectations(){{
+			one(testFixture.getRootNode()).markRemoved(true); inSequence(rootNodeSequence);
+			one(testFixture.getRootNode()).markRemoved(false); inSequence(rootNodeSequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE1_ID)).markRemoved(true); inSequence(node1Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE1_ID)).markRemoved(false); inSequence(node1Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE2_ID)).markRemoved(true); inSequence(node2Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE2_ID)).markRemoved(false); inSequence(node2Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE3_ID)).markRemoved(true); inSequence(node3Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE3_ID)).markRemoved(false); inSequence(node3Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE4_ID)).markRemoved(true); inSequence(node4Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE4_ID)).markRemoved(true); inSequence(node4Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE5_ID)).markRemoved(true); inSequence(node5Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE5_ID)).markRemoved(false); inSequence(node5Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE6_ID)).markRemoved(true); inSequence(node6Sequence);
+			one(testFixture.getNode(ComplexGraphFixture.NODE6_ID)).markRemoved(false); inSequence(node6Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE1_ID)).markRemoved(true); inSequence(edge1Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE1_ID)).markRemoved(false); inSequence(edge1Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE2_ID)).markRemoved(true); inSequence(edge2Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE2_ID)).markRemoved(false); inSequence(edge2Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE3_ID)).markRemoved(true); inSequence(edge3Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE3_ID)).markRemoved(false); inSequence(edge3Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)).markRemoved(true); inSequence(edge4Sequence);
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)).markRemoved(false); inSequence(edge4Sequence);
+		}});
 		this.testInstance.restoreState(mockState);
+		this.mockery.assertIsSatisfied();
 	}
 
 	@Test(expected=NullPointerException.class)

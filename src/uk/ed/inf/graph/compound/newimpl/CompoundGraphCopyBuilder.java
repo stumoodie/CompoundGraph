@@ -86,8 +86,9 @@ public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 			else if(srcElement instanceof ICompoundEdge){
 				ICompoundEdge srcEdge = (ICompoundEdge)srcElement;
 				ICompoundGraphElement equivParent = this.oldNewEquivList.get(srcElement.getParent());
-				ICompoundNode equivOutNode = (ICompoundNode)this.oldNewEquivList.get(srcEdge.getConnectedNodes().getOutNode());
-				ICompoundNode equivInNode = (ICompoundNode)this.oldNewEquivList.get(srcEdge.getConnectedNodes().getInNode());
+				CompoundNodePair srcNodePair = srcEdge.getConnectedNodes();
+				ICompoundNode equivOutNode = (ICompoundNode)this.oldNewEquivList.get(srcNodePair.getOutNode());
+				ICompoundNode equivInNode = (ICompoundNode)this.oldNewEquivList.get(srcNodePair.getInNode());
 				newElement = copyEdge((ICompoundEdge)srcElement, equivParent, equivOutNode, equivInNode);
 			}
 			else{

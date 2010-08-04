@@ -38,6 +38,7 @@ public interface ICompoundGraphCopyBuilder {
 	 * of this graph, since the structure of the graph is copied not the nodes and edges instances
 	 * themselves. Note that the subgraph must be valid to be copied.
 	 * @param subGraph the subgraph to copy
+	 * @deprecated use <code>copyHere()</code> instead.
 	 */
 	void copyHere(ISubCompoundGraph subgraph);
 	

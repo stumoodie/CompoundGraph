@@ -20,6 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -30,6 +31,7 @@ import org.junit.runner.RunWith;
 
 import uk.ac.ed.inf.designbycontract.PreConditionException;
 import uk.ed.inf.graph.compound.CompoundNodePair;
+import uk.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
@@ -91,6 +93,12 @@ public class CompoundEdgeFactoryTest {
 
 	@Test
 	public final void testCreateEdge() {
+		final ICompoundChildEdgeFactory edge1ChildEdgeFactory = this.testFixture.getEdge(ComplexGraphFixture.EDGE1_ID).getChildCompoundGraph().edgeFactory();
+		final ICompoundEdge mockEdge = this.mockery.mock(ICompoundEdge.class, "mockEdge");
+		mockery.checking(new Expectations(){{
+			exactly(1).of(edge1ChildEdgeFactory).setPair(with(any(CompoundNodePair.class)));
+			exactly(1).of(edge1ChildEdgeFactory).createEdge(); will(returnValue(mockEdge));
+		}});
 		CompoundNodePair expectedNodePair = new CompoundNodePair(this.testFixture.getNode3(),this.testFixture.getNode5());
 		this.testInstance.setPair(expectedNodePair);
 		ICompoundEdge generatedEdge = testInstance.createEdge();

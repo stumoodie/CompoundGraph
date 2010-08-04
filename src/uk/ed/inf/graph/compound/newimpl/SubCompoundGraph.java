@@ -2,6 +2,7 @@ package uk.ed.inf.graph.compound.newimpl;
 
 import java.util.Iterator;
 
+import uk.ac.ed.inf.designbycontract.Precondition;
 import uk.ed.inf.graph.compound.CompoundNodePair;
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraph;
@@ -12,6 +13,36 @@ import uk.ed.inf.graph.compound.ISubgraphAlgorithms;
 import uk.ed.inf.graph.util.SubgraphAlgorithms;
 
 public class SubCompoundGraph implements ISubCompoundGraph {
+	static aspect SubCompoundGraphDBC extends ISubCompoundGraphDBC {
+
+		@Override
+		public pointcut allMethods(ISubCompoundGraph object) :
+			execution(public * SubCompoundGraph.*(*))
+			&& target(object);
+
+		pointcut constructor(ICompoundGraph root) :
+			execution(public SubCompoundGraph.new(ICompoundGraph))
+			&& args(root);
+		
+		before(final ICompoundGraph root) : constructor(root) {
+			new Precondition(){{
+				assertion(root != null, "parameters not null");
+			}};
+		}
+		
+		pointcut addTopElement(SubCompoundGraph sg, ICompoundGraphElement element) :
+			execution(public void addTopElement(ICompoundGraphElement))
+			&& args(element)
+			&& target(sg);
+		
+		before(SubCompoundGraph sg, final ICompoundGraphElement element) : addTopElement(sg, element) {
+			new Precondition(){{
+				assertion(element != null, "parameter not null");
+			}};
+		}
+	}
+
+	
 	private final ElementTreeStructure topElements;
 	private Boolean isInducedSubgraphFlag = null;
 	private final ICompoundGraph graph;
