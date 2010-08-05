@@ -36,15 +36,9 @@ import uk.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 public class CompoundNodeTest {
 	private static final int EXPECTED_LEVEL = 1;
 	private static final int EXPECTED_DEGREE = 1;
-//	private static final int OUT_EDGE_IDX = 30;
 	private static final int EXPECTED_IN_DEGREE = 0;
 	private static final int EXPECTED_OUT_DEGREE = 1;
 	private static final int EXPECTED_NUM_IN_EDGES = 0;
-//	private static final int EXPECTED_NUM_OUT_EDGES = 1;
-//	private static final int EXPECTED_PARENT_IDX = 0;
-	private static final int EXPECTED_NUM_ANCESTOR_NODES = 2;
-//	private static final int EXPECTED_NUM_PREORDER_NODES = 3;
-//	private static final int EXPECTED_NUM_LEVEL_ORDER_NODES = 3;
 
 	private Mockery mockery = new JUnit4Mockery();
 	
@@ -370,18 +364,8 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testAncestorIterator() {
-		ICompoundGraphElement expectedresults[] = new ICompoundGraphElement[] { this.testInstance, this.mockParent };
-		List<ICompoundGraphElement> actualResults = new LinkedList<ICompoundGraphElement>();
-		Iterator<ICompoundGraphElement> iter = this.testInstance.ancestorIterator();
-		while(iter.hasNext()){
-			ICompoundGraphElement node = iter.next();
-			actualResults.add(node);
-		}
-		assertEquals("expected num ancestor nodes", EXPECTED_NUM_ANCESTOR_NODES, actualResults.size());
-		int cntr = 0;
-		for(ICompoundGraphElement actualNode : actualResults){
-			assertEquals("expectedNodes", expectedresults[cntr++], actualNode);
-		}
+		IteratorTestUtility<ICompoundGraphElement> testIter = new IteratorTestUtility<ICompoundGraphElement>(this.mockParent);
+		testIter.testIterator(this.testInstance.ancestorIterator());
 	}
 
 	@Test

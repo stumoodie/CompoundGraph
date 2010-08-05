@@ -40,7 +40,11 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 	 * @see uk.ed.inf.graph.impl.ITree#containsNode(T)
 	 */
 	public boolean containsNode(T testNode){
-		return this.containsNode(testNode.getIndex());
+		boolean retVal = false;
+		if(testNode != null && this.rootNode.equals(testNode.getRoot())){
+			retVal = this.containsNode(testNode.getIndex());
+		}
+		return retVal;
 	}
 	
 	/* (non-Javadoc)

@@ -26,6 +26,7 @@ public class CompoundSubgraphRemovalBuilderWithSubgraphTest {
 	private ISubgraphRemovalBuilder testInstance;
 	private ISubCompoundGraph mockSubgraph;
 
+	
 	@Before
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
@@ -64,11 +65,11 @@ public class CompoundSubgraphRemovalBuilderWithSubgraphTest {
 	public void testRemoveSubgraph() {
 		final ISubCompoundGraphFactory mocksubgraphFactory = this.testFixture.getGraph().subgraphFactory();
 		this.mockery.checking(new Expectations(){{
-			one(testFixture.getNode(ComplexGraphFixture.NODE2_ID)).markRemoved(true);
-			one(testFixture.getEdge(ComplexGraphFixture.EDGE3_ID)).markRemoved(true);
-			one(testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)).markRemoved(true);
+			one(testFixture.getNode(ComplexGraphFixture.NODE2_ID)).markRemoved(true); will(testFixture.setRemovalState(ComplexGraphFixture.NODE2_ID));
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE3_ID)).markRemoved(true); will(testFixture.setRemovalState(ComplexGraphFixture.EDGE3_ID));
+			one(testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)).markRemoved(true); will(testFixture.setRemovalState(ComplexGraphFixture.EDGE4_ID));
 			
-			exactly(2).of(mocksubgraphFactory).addElement(with(any(ICompoundGraphElement.class)));
+			exactly(3).of(mocksubgraphFactory).addElement(with(any(ICompoundGraphElement.class)));
 		}});
 		this.testInstance.removeSubgraph();
 		this.mockery.assertIsSatisfied();

@@ -1,5 +1,7 @@
 package uk.ed.inf.graph.compound.testfixture;
 
+import org.jmock.api.Action;
+
 import uk.ed.inf.graph.compound.ICompoundEdge;
 import uk.ed.inf.graph.compound.ICompoundGraph;
 import uk.ed.inf.graph.compound.ICompoundNode;
@@ -26,4 +28,6 @@ public interface IGraphTestFixture {
 	boolean isRemoved(String elementId);
 
 	IRootCompoundNode getRootNode();
+
+	Action setRemovalState(String elementId);
 }

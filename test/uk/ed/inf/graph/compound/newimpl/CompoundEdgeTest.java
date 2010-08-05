@@ -255,7 +255,7 @@ public class CompoundEdgeTest {
 //		for(ICompoundGraphElement actualNode : actualResults){
 //			assertEquals("expectedNodes", expectedresults[cntr++], actualNode);
 //		}
-		IteratorTestUtility<ICompoundGraphElement> testUtility = new IteratorTestUtility<ICompoundGraphElement>(new ICompoundGraphElement[] { this.testInstance, this.testFixture.getEdge1(), this.testFixture.getRootNode() });
+		IteratorTestUtility<ICompoundGraphElement> testUtility = new IteratorTestUtility<ICompoundGraphElement>(this.testFixture.getEdge1(), this.testFixture.getRootNode());
 		testUtility.testIterator(this.testInstance.ancestorIterator());
 	}
 

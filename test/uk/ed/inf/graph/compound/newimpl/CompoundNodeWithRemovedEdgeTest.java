@@ -174,7 +174,7 @@ public class CompoundNodeWithRemovedEdgeTest {
 
 	@Test
 	public void testAncestorIterator() {
-		IteratorTestUtility<ICompoundGraphElement> testIter = new IteratorTestUtility<ICompoundGraphElement>(this.testInstance, this.testFixture.getEdge1(), this.testFixture.getRootNode());
+		IteratorTestUtility<ICompoundGraphElement> testIter = new IteratorTestUtility<ICompoundGraphElement>(this.testFixture.getEdge1(), this.testFixture.getRootNode());
 		testIter.testIterator(this.testInstance.ancestorIterator());
 	}
 
