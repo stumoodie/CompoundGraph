@@ -45,7 +45,7 @@ public class FilteredIteratorTest {
 		 this.testFixture.setElementRemoved(ComplexGraphFixture.NODE2_ID, true);
 		 this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE3_ID, true);
 		 this.testFixture.setElementRemoved(ComplexGraphFixture.NODE4_ID, true);
-		 this.testFixture.doAll();
+		 this.testFixture.buildFixture();
 		 this.testInstance = new FilteredIterator<ICompoundNode>(this.testFixture.getGraph().nodeIterator(), new IFilterCriteria<ICompoundNode>() {
 
 			@Override

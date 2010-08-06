@@ -36,10 +36,10 @@ public abstract aspect ICompoundGraphDBC {
 		new ClassInvariant(){{
 			assertion(cn.getRoot() != null, "root is not null");
 			assertion(cn.getRoot().getChildCompoundGraph().equals(cn), "root node has this as child graph");
-			assertion(cn.getNumEdges() >= 0, "num edges is a whole number");
-			assertion(cn.getNumNodes() >= 0, "num nodes is a whole number");
+			assertion(cn.numEdges() >= 0, "num edges is a whole number");
+			assertion(cn.numNodes() >= 0, "num nodes is a whole number");
 			assertion(cn.numElements() >= 0, "num elements is a whole number");
-			assertion(cn.numElements() == cn.getNumEdges() + cn.getNumNodes(), "element count consistent with nodes and edges");
+			assertion(cn.numElements() == cn.numEdges() + cn.numNodes(), "element count consistent with nodes and edges");
 		}};
 	}
 	

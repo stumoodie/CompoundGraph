@@ -50,12 +50,12 @@ public class CompoundEdgeFactoryTest {
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(mockery, "");
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 //		this.testFixture.createElements();
 //		this.testFixture.buildObjects();
 		
 		this.otherTestFixture = new ComplexGraphFixture(mockery, "other_");
-		this.otherTestFixture.doAll();
+		this.otherTestFixture.buildFixture();
 //		this.otherTestFixture.createElements();
 //		this.otherTestFixture.buildObjects();
 		

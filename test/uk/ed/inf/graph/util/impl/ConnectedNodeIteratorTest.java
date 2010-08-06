@@ -41,7 +41,7 @@ public class ConnectedNodeIteratorTest {
 	@Before
 	public void setUp() throws Exception {
 		this.testFixture = new ComplexGraphFixture(mockery, "");
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 //		this.testFixture.createElements();
 //		this.testFixture.buildObjects();
 		testBasicNodeIterator = new ConnectedNodeIterator (this.testFixture.getNode2(), this.testFixture.getNode2().edgeIterator()) ;

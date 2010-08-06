@@ -82,7 +82,7 @@ public class CompoundNodeWithInAndOutEdgesTest {
 				return null;
 			}
 		});
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 	}
 
 	@After

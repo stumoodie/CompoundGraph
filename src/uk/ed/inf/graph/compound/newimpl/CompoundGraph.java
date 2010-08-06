@@ -147,7 +147,7 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 	}
 
 	@Override
-	public int getNumEdges() {
+	public int numEdges() {
 		Iterator<ICompoundEdge> iter = this.edgeIterator();
 		int cntr = 0;
 		while(iter.hasNext()){
@@ -158,7 +158,7 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 	}
 
 	@Override
-	public int getNumNodes() {
+	public int numNodes() {
 		Iterator<ICompoundNode> iter = this.nodeIterator();
 		int cntr = 0;
 		while(iter.hasNext()){

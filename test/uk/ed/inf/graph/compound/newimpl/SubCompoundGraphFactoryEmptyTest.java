@@ -51,7 +51,7 @@ public class SubCompoundGraphFactoryEmptyTest {
 		mockery = new JUnit4Mockery();
 	
 		this.testFixture = new ComplexGraphFixture(mockery, ""); 
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 		
 		testSubCompoundGraphFactory = new SubCompoundGraphFactory (testFixture.getGraph()) ;
 	}

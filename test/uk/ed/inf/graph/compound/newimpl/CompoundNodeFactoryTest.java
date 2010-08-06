@@ -87,7 +87,7 @@ public class CompoundNodeFactoryTest {
 				return null;
 			}
 		});
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 	}
 
 	@After

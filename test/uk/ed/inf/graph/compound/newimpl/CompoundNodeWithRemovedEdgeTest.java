@@ -84,7 +84,7 @@ public class CompoundNodeWithRemovedEdgeTest {
 		});
 		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE2_ID, true);
 		this.testFixture.setElementRemoved(ComplexGraphFixture.NODE4_ID, true);
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 	}
 
 	@After

@@ -35,7 +35,7 @@ public class SubCompoundGraphFactoryEdgeOnlyTest {
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(mockery, "");
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 		this.testSubCompoundGraphFactory = new SubCompoundGraphFactory(this.testFixture.getGraph());
 		this.testSubCompoundGraphFactory.addElement(this.testFixture.getEdge1());
 	}

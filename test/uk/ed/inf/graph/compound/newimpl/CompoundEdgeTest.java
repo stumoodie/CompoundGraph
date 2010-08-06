@@ -112,11 +112,11 @@ public class CompoundEdgeTest {
 			}
 		});
 
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 
 		
 		this.otherTestFixture = new ComplexGraphFixture(this.mockery, "other_");
-		this.otherTestFixture.doAll();
+		this.otherTestFixture.buildFixture();
 		
 		this.mockOtherParent = this.otherTestFixture.getEdge1();
 		this.mockOtherGraphOutNode = this.otherTestFixture.getNode3();

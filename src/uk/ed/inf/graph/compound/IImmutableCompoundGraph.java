@@ -28,13 +28,13 @@ public interface IImmutableCompoundGraph {
 	 * Get the number of nodes in the graph.
 	 * @return The number of nodes.
 	 */
-	int getNumNodes();
+	int numNodes();
 	
 	/**
 	 * Get the number of edges in the graph.
 	 * @return The number of edges.
 	 */
-	int getNumEdges();
+	int numEdges();
 	
 	/**
 	 * Tests if the graph contains the node with the given index number.

@@ -27,24 +27,22 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 
 @RunWith(JMock.class)
-public class SubCompoundGraphFactoryTest {
+public class SubCompoundGraphFactoryNodeWithEdgesNotIncludedTest {
 	private Mockery mockery;
 
 	private SubCompoundGraphFactory testSubCompoundGraphFactory ;
 	private ComplexGraphFixture testFixture;
 	
-	private static final int EXPECTED_TOP_SUBGRAPH_ELEMENTS = 3;
-	private static final int EXPECTED_NUM_SUBGRAPH_ELEMENTS = 5;
+	private static final int EXPECTED_TOP_SUBGRAPH_ELEMENTS = 2;
+	private static final int EXPECTED_NUM_SUBGRAPH_ELEMENTS = 4;
 	private static final int EXPECTED_TOP_PERMSSIVE_INDUCED_SUBGRAPH_ELEMENTS = 4;
-	private static final int EXPECTED_PERMSSIVE_INDUCED_SUBGRAPH_ELEMENTS = 6;
-	private static final int EXPECTED_TOP_INDUCED_SUBGRAPH_ELEMENTS = 3;
-	private static final int EXPECTED_INDUCED_SUBGRAPH_ELEMENTS = 4;
+	private static final int EXPECTED_PERMSSIVE_INDUCED_SUBGRAPH_ELEMENTS = 10;
+	private static final int EXPECTED_TOP_INDUCED_SUBGRAPH_ELEMENTS = 4;
+	private static final int EXPECTED_INDUCED_SUBGRAPH_ELEMENTS = 10;
 	
 	
 	@Before
@@ -56,9 +54,8 @@ public class SubCompoundGraphFactoryTest {
 		
 		testSubCompoundGraphFactory = new SubCompoundGraphFactory (testFixture.getGraph()) ;
 		
-		testSubCompoundGraphFactory.addElement(this.testFixture.getNode2()) ;
-		testSubCompoundGraphFactory.addElement(this.testFixture.getNode3()) ;
-		testSubCompoundGraphFactory.addElement(this.testFixture.getEdge2()) ;
+		testSubCompoundGraphFactory.addElement(this.testFixture.getNode1()) ;
+		testSubCompoundGraphFactory.addElement(this.testFixture.getNode6()) ;
 	}
 
 	@After
@@ -69,35 +66,20 @@ public class SubCompoundGraphFactoryTest {
 	}
 
 	@Test
-	public final void testAddElement() {
-		testSubCompoundGraphFactory.addElement(this.testFixture.getNode5()) ; 
-		testSubCompoundGraphFactory.addElement(this.testFixture.getEdge4()) ; 
-		
-		assertEquals ( "correct size" , 5 , this.testSubCompoundGraphFactory.numElements()) ;
-
-	}
-
-	@Test
-	public final void testElementIterator() {
-		IteratorTestUtility<ICompoundGraphElement> testIterator = new IteratorTestUtility<ICompoundGraphElement>(this.testFixture.getNode2(), this.testFixture.getNode3(), this.testFixture.getEdge2());
-		testIterator.testSortedIterator(testSubCompoundGraphFactory.elementIterator());
-	}
-
-	@Test
 	public final void testCreateSubgraph() {
 		ISubCompoundGraph generatedSubGraph = testSubCompoundGraphFactory.createSubgraph() ;
 		
-		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge2()));
+		assertFalse("edge not found", generatedSubGraph.containsEdge(this.testFixture.getEdge2()));
 		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge3()));
 		assertFalse("not edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge1()));
 		assertFalse("edge not found", generatedSubGraph.containsEdge(this.testFixture.getEdge4()));
 		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode2()));
-		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode3()));
-		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode4()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode3()));
+		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode4()));
 		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getRootNode()));
-		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode1()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode1()));
 		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode5()));
-		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode6()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode6()));
 		assertEquals("expected top elements", EXPECTED_TOP_SUBGRAPH_ELEMENTS, generatedSubGraph.numTopElements());
 		assertEquals("expected elements", EXPECTED_NUM_SUBGRAPH_ELEMENTS, generatedSubGraph.numElements());
 	}
@@ -106,17 +88,17 @@ public class SubCompoundGraphFactoryTest {
 	public final void testCreateInducedSubgraph() {
 		ISubCompoundGraph generatedSubGraph = testSubCompoundGraphFactory.createInducedSubgraph() ;
 		
-		assertFalse("edge not found", generatedSubGraph.containsEdge(this.testFixture.getEdge2()));
+		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge2()));
 		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge3()));
-		assertFalse("not edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge1()));
+		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge1()));
 		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge4()));
 		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode2()));
 		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode3()));
-		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode4()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode4()));
 		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getRootNode()));
-		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode1()));
-		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode5()));
-		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode6()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode1()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode5()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode6()));
 		assertEquals("expected top elements", EXPECTED_TOP_INDUCED_SUBGRAPH_ELEMENTS, generatedSubGraph.numTopElements());
 		assertEquals("expected elemenbt", EXPECTED_INDUCED_SUBGRAPH_ELEMENTS, generatedSubGraph.numElements());
 	}
@@ -127,15 +109,15 @@ public class SubCompoundGraphFactoryTest {
 		
 		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge2()));
 		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge3()));
-		assertFalse("not edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge1()));
+		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge1()));
 		assertTrue("edge found", generatedSubGraph.containsEdge(this.testFixture.getEdge4()));
 		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode2()));
 		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode3()));
 		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode4()));
 		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getRootNode()));
-		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode1()));
-		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode5()));
-		assertFalse("node not found", generatedSubGraph.containsNode(this.testFixture.getNode6()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode1()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode5()));
+		assertTrue("node found", generatedSubGraph.containsNode(this.testFixture.getNode6()));
 		assertEquals("expected top elements", EXPECTED_TOP_PERMSSIVE_INDUCED_SUBGRAPH_ELEMENTS, generatedSubGraph.numTopElements());
 		assertEquals("expected elemenbt", EXPECTED_PERMSSIVE_INDUCED_SUBGRAPH_ELEMENTS, generatedSubGraph.numElements());
 	}

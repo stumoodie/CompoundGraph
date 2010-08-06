@@ -158,12 +158,12 @@ public abstract class CommonChildCompoundGraph implements IChildCompoundGraph {
 	}
 
 	@Override
-	public int getNumEdges() {
+	public int numEdges() {
 		return this.edgeSet.size();
 	}
 
 	@Override
-	public int getNumNodes() {
+	public int numNodes() {
 		return this.nodeSet.size();
 	}
 

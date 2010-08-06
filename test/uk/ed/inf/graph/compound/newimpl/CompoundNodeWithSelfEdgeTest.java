@@ -85,7 +85,7 @@ public class CompoundNodeWithSelfEdgeTest {
 			}
 			
 		});
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 	}
 
 	@After

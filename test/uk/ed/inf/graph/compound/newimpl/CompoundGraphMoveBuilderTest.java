@@ -33,9 +33,9 @@ public class CompoundGraphMoveBuilderTest {
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(mockery, "");
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 		this.destnFixture = new ComplexGraphFixture(mockery, "destn_");
-		this.destnFixture.doAll();
+		this.destnFixture.buildFixture();
 		this.testInstance = new CompoundGraphMoveBuilder(this.destnFixture.getGraph().getRoot().getChildCompoundGraph());
 		this.mockSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSubgraph");
 		this.mockery.checking(new Expectations(){{

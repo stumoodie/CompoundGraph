@@ -127,8 +127,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 						allowing(node1ChildGraph).getRoot(); will(returnValue(getNode1()));
 						allowing(node1ChildGraph).getSuperGraph(); will(returnValue(getGraph()));
-						allowing(node1ChildGraph).getNumNodes(); will(returnValue(1));
-						allowing(node1ChildGraph).getNumEdges(); will(returnValue(1));
+						allowing(node1ChildGraph).numNodes(); will(returnValue(1));
+						allowing(node1ChildGraph).numEdges(); will(returnValue(1));
 						allowing(node1ChildGraph).numElements(); will(returnValue(2));
 						allowing(node1ChildGraph).containsEdge(with(any(Integer.class))); will(returnValue(false));
 						allowing(node1ChildGraph).containsEdge(with(any(ICompoundEdge.class))); will(returnValue(false));
@@ -218,7 +218,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node2).isChild(with(not(isOneOf(getEdge3())))); will(returnValue(false));
 						allowing(node2).levelOrderIterator(); will(returnIterator(node2, getEdge3()));
 						allowing(node2).getEdgesWith(with(getNode3())); will(returnIterator(getEdge4()));
-						allowing(node2).getEdgesWith(with(node2)); will(returnIterator(getEdge3()));
+						allowing(node2).getEdgesWith(with(node2)); will(returnIterator(getEdge3(), getEdge3()));
 						allowing(node2).getOutEdgesTo(with(getNode3())); will(returnIterator(getEdge4()));
 						allowing(node2).getOutEdgesTo(with(node2)); will(returnIterator(getEdge3()));
 						allowing(node2).hasOutEdgeTo(with(isOneOf(getNode3(), getNode2()))); will(returnValue(true));
@@ -226,7 +226,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node2).getInEdgesFrom(with(node2)); will(returnIterator(getEdge3()));
 						allowing(node2).hasInEdgeFrom(with(isOneOf(getNode2()))); will(returnValue(true));
 						allowing(node2).hasInEdgeFrom(with(not(isOneOf(getNode2())))); will(returnValue(false));
-						allowing(node2).edgeIterator(); will(returnIterator(getEdge4(), getEdge3()));
+						allowing(node2).edgeIterator(); will(returnIterator(getEdge4(), getEdge3(), getEdge3()));
 					}});
 					return true;
 				}
@@ -243,10 +243,10 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node2).getChildCompoundGraph(); will(returnValue(node2ChildGraph));
 						allowing(node2ChildGraph).getRoot(); will(returnValue(node2));
 						allowing(node2ChildGraph).getSuperGraph(); will(returnValue(getGraph()));
-						allowing(node2ChildGraph).getNumNodes(); will(returnValue(0));
-						allowing(node2ChildGraph).getNumEdges(); will(returnValue(1));
+						allowing(node2ChildGraph).numNodes(); will(returnValue(0));
+						allowing(node2ChildGraph).numEdges(); will(returnValue(1));
 						allowing(node2ChildGraph).numElements(); will(returnValue(1));
-						allowing(node2ChildGraph).getNumEdges(); will(returnValue(1));
+						allowing(node2ChildGraph).numEdges(); will(returnValue(1));
 						allowing(node2ChildGraph).containsEdge(with(any(Integer.class))); will(returnValue(false));
 						allowing(node2ChildGraph).containsEdge(with(any(ICompoundEdge.class))); will(returnValue(false));
 					}});
@@ -276,7 +276,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 //						allowing(node2).hasOutEdgeTo(with(not(isOneOf(getNode3(), node2)))); will(returnValue(false));
 //						allowing(node2).hasInEdgeFrom(with(isOneOf(node2))); will(returnValue(true));
 //						allowing(node2).hasInEdgeFrom(with(not(isOneOf(node2)))); will(returnValue(false));
-						allowing(node2).connectedNodeIterator(); will(returnIterator(getNode3(), node2));
+						allowing(node2).connectedNodeIterator(); will(returnIterator(getNode3(), node2, node2));
 					}});
 					return node2;
 				}
@@ -339,8 +339,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 						allowing(node3ChildGraph).getRoot(); will(returnValue(node3));
 						allowing(node3ChildGraph).getSuperGraph(); will(returnValue(getGraph()));
-						allowing(node3ChildGraph).getNumNodes(); will(returnValue(0));
-						allowing(node3ChildGraph).getNumEdges(); will(returnValue(0));
+						allowing(node3ChildGraph).numNodes(); will(returnValue(0));
+						allowing(node3ChildGraph).numEdges(); will(returnValue(0));
 						allowing(node3ChildGraph).numElements(); will(returnValue(0));
 						allowing(node3ChildGraph).containsNode(with(any(Integer.class))); will(returnValue(false));
 						allowing(node3ChildGraph).containsNode(with(any(ICompoundNode.class))); will(returnValue(false));
@@ -418,8 +418,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 						allowing(node4ChildGraph).getRoot(); will(returnValue(node4));
 						allowing(node4ChildGraph).getSuperGraph(); will(returnValue(getGraph()));
-						allowing(node4ChildGraph).getNumNodes(); will(returnValue(0));
-						allowing(node4ChildGraph).getNumEdges(); will(returnValue(0));
+						allowing(node4ChildGraph).numNodes(); will(returnValue(0));
+						allowing(node4ChildGraph).numEdges(); will(returnValue(0));
 						allowing(node4ChildGraph).numElements(); will(returnValue(0));
 						allowing(node4ChildGraph).containsEdge(with(any(Integer.class))); will(returnValue(false));
 						allowing(node4ChildGraph).containsEdge(with(any(ICompoundEdge.class))); will(returnValue(false));
@@ -505,8 +505,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 						allowing(node5ChildGraph).getRoot(); will(returnValue(node5));
 						allowing(node5ChildGraph).getSuperGraph(); will(returnValue(getGraph()));
-						allowing(node5ChildGraph).getNumNodes(); will(returnValue(0));
-						allowing(node5ChildGraph).getNumEdges(); will(returnValue(0));
+						allowing(node5ChildGraph).numNodes(); will(returnValue(0));
+						allowing(node5ChildGraph).numEdges(); will(returnValue(0));
 						allowing(node5ChildGraph).numElements(); will(returnValue(0));
 						allowing(node5ChildGraph).containsDirectedEdge(with(any(ICompoundNode.class)), with(any(ICompoundNode.class))); will(returnValue(false));
 						allowing(node5ChildGraph).containsConnection(with(any(ICompoundNode.class)), with(any(ICompoundNode.class))); will(returnValue(false));
@@ -578,6 +578,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node6).hasOutEdgeTo(with(any(ICompoundNode.class))); will(returnValue(false));
 						allowing(node6).connectedNodeIterator(); will(returnIterator(getNode1()));
 						allowing(node6).edgeIterator(); will(returnIterator(getEdge1()));
+						allowing(node6).levelOrderIterator(); will(returnIterator(node6));
 					}});
 					return true;
 				}
@@ -595,8 +596,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 						allowing(node6ChildGraph).getRoot(); will(returnValue(node6));
 						allowing(node6ChildGraph).getSuperGraph(); will(returnValue(getGraph()));
-						allowing(node6ChildGraph).getNumNodes(); will(returnValue(0));
-						allowing(node6ChildGraph).getNumEdges(); will(returnValue(0));
+						allowing(node6ChildGraph).numNodes(); will(returnValue(0));
+						allowing(node6ChildGraph).numEdges(); will(returnValue(0));
 						allowing(node6ChildGraph).numElements(); will(returnValue(0));
 						allowing(node6ChildGraph).containsDirectedEdge(with(any(ICompoundNode.class)), with(any(ICompoundNode.class))); will(returnValue(false));
 						allowing(node6ChildGraph).containsConnection(with(any(ICompoundNode.class)), with(any(ICompoundNode.class))); will(returnValue(false));
@@ -716,8 +717,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 						allowing(edge1ChildGraph).getRoot(); will(returnValue(edge1));
 						allowing(edge1ChildGraph).getSuperGraph(); will(returnValue(getGraph()));
-						allowing(edge1ChildGraph).getNumNodes(); will(returnValue(2));
-						allowing(edge1ChildGraph).getNumEdges(); will(returnValue(1));
+						allowing(edge1ChildGraph).numNodes(); will(returnValue(2));
+						allowing(edge1ChildGraph).numEdges(); will(returnValue(1));
 						allowing(edge1ChildGraph).numElements(); will(returnValue(3));
 					}});
 					return edge1ChildGraph;
@@ -806,8 +807,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 						allowing(edge2ChildGraph).getRoot(); will(returnValue(edge2));
 						allowing(edge2ChildGraph).getSuperGraph(); will(returnValue(getGraph()));
-						allowing(edge2ChildGraph).getNumNodes(); will(returnValue(1));
-						allowing(edge2ChildGraph).getNumEdges(); will(returnValue(0));
+						allowing(edge2ChildGraph).numNodes(); will(returnValue(1));
+						allowing(edge2ChildGraph).numEdges(); will(returnValue(0));
 						allowing(edge2ChildGraph).numElements(); will(returnValue(1));
 						allowing(edge2ChildGraph).containsEdge(with(any(Integer.class))); will(returnValue(false));
 						allowing(edge2ChildGraph).containsEdge(with(any(ICompoundEdge.class))); will(returnValue(false));
@@ -881,8 +882,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 						allowing(edge3ChildGraph).getRoot(); will(returnValue(edge3));
 						allowing(edge3ChildGraph).getSuperGraph(); will(returnValue(getGraph()));
-						allowing(edge3ChildGraph).getNumNodes(); will(returnValue(0));
-						allowing(edge3ChildGraph).getNumEdges(); will(returnValue(0));
+						allowing(edge3ChildGraph).numNodes(); will(returnValue(0));
+						allowing(edge3ChildGraph).numEdges(); will(returnValue(0));
 						allowing(edge3ChildGraph).numElements(); will(returnValue(0));
 						allowing(edge3ChildGraph).containsEdge(with(any(Integer.class))); will(returnValue(false));
 						allowing(edge3ChildGraph).containsEdge(with(any(ICompoundEdge.class))); will(returnValue(false));
@@ -963,8 +964,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 						allowing(edge4ChildGraph).getRoot(); will(returnValue(edge4));
 						allowing(edge4ChildGraph).getSuperGraph(); will(returnValue(getGraph()));
-						allowing(edge4ChildGraph).getNumNodes(); will(returnValue(0));
-						allowing(edge4ChildGraph).getNumEdges(); will(returnValue(0));
+						allowing(edge4ChildGraph).numNodes(); will(returnValue(0));
+						allowing(edge4ChildGraph).numEdges(); will(returnValue(0));
 						allowing(edge4ChildGraph).numElements(); will(returnValue(0));
 						allowing(edge4ChildGraph).containsEdge(with(any(Integer.class))); will(returnValue(false));
 						allowing(edge4ChildGraph).containsEdge(with(any(ICompoundEdge.class))); will(returnValue(false));
@@ -1135,8 +1136,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 					allowing(rootChildGraph).getRoot(); will(returnValue(rootNode));
 					allowing(rootChildGraph).getSuperGraph(); will(returnValue(graph));
-					allowing(rootChildGraph).getNumNodes(); will(returnValue(6));
-					allowing(rootChildGraph).getNumEdges(); will(returnValue(4));
+					allowing(rootChildGraph).numNodes(); will(returnValue(6));
+					allowing(rootChildGraph).numEdges(); will(returnValue(4));
 					allowing(rootChildGraph).numElements(); will(returnValue(9));
 
 					allowing(rootChildGraph).edgeFactory(); will(returnValue(rootChildEdgeFactory));
@@ -2037,7 +2038,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 		return ((IGraphBuilder)this.builderMap.get(GRAPH_ID)).getGraph();
 	}
 
-	public void doAll() {
+	public void buildFixture() {
 		for(String element : this.creationDepList){
 			IGraphObjectBuilder builder = this.builderMap.get(element);
 			builder.create();

@@ -136,10 +136,10 @@ public class CompoundGraphTest {
 				return graph.subgraphFactory();
 			}
 		});
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 		
 		this.otherTestFixture = new ComplexGraphFixture(mockery, "other_");
-		this.otherTestFixture.doAll();
+		this.otherTestFixture.buildFixture();
 		
 		BitStringBuffer buf = new BitStringBuffer();
 		buf.set(0, this.testFixture.getGraph().numElements(), true);
@@ -267,12 +267,12 @@ public class CompoundGraphTest {
 
 	@Test
 	public final void testGetNumEdges() {
-		assertEquals ( "num edges" , EXPECTED_NUM_EDGES , testCompoundGraph.getNumEdges()) ;
+		assertEquals ( "num edges" , EXPECTED_NUM_EDGES , testCompoundGraph.numEdges()) ;
 	}
 
 	@Test
 	public final void testGetNumNodes() {
-		assertEquals ( "num nodes" , EXPECTED_NUM_NODES , testCompoundGraph.getNumNodes()) ;
+		assertEquals ( "num nodes" , EXPECTED_NUM_NODES , testCompoundGraph.numNodes()) ;
 	}
 
 	@Test

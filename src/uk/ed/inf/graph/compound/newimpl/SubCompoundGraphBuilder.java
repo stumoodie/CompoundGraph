@@ -32,7 +32,7 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 	@Override
 	public void addIncidentEdges() {
 		Set<ICompoundGraphElement> initialElements = new HashSet<ICompoundGraphElement>(this.topElements);
-		Set<ICompoundGraphElement> missingIncidentEdges = new HashSet<ICompoundGraphElement>();
+		Set<ICompoundEdge> missingIncidentEdges = new HashSet<ICompoundEdge>();
 		do {
 			missingIncidentEdges.clear();
 			Iterator<ICompoundGraphElement> elementIter = initialElements.iterator();
@@ -55,7 +55,7 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 						while (edgeIter.hasNext()) {
 							ICompoundEdge incidentEdge = edgeIter.next();
 							// check the edge is new and that it is incident to another node in this subgraph
-							if (!visited.contains(incidentEdge)) {
+							if (!visited.contains(incidentEdge) && visited.contains(incidentEdge.getConnectedNodes().getOtherNode(node))) {
 								missingIncidentEdges.add(incidentEdge);
 								// make all incident edges top nodes. They must be. 
 								this.topElements.add(incidentEdge);
@@ -74,6 +74,10 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 					// record element as having been visited
 					visited.add(childElement);
 				}
+			}
+			// now we should expand the missing incident edges
+			for(ICompoundEdge missingIncidentEdge : missingIncidentEdges){
+				expandElement(missingIncidentEdge);
 			}
 			initialElements = new HashSet<ICompoundGraphElement>(missingIncidentEdges);
 		}
@@ -110,33 +114,37 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 		Iterator<ICompoundGraphElement> elementIter = initialElements.iterator();
 		while (elementIter.hasNext()) {
 			ICompoundGraphElement element = elementIter.next();
-			// this iterator will return the root node as the first node, so
-			// their is no
-			// need to deal with this explicitly.
-			Iterator<ICompoundGraphElement> iter = element.levelOrderIterator();
-			boolean isRoot = true;
-			boolean skip = false;
-			while (iter.hasNext() && !skip) {
-				ICompoundGraphElement childElement = iter.next();
-				// if this node has already been visited, then so must its children and so there is no point in continuing
-				if (visited.contains(childElement)) {
-					skip = true;
-					if(logger.isTraceEnabled()){
-						logger.trace("Skipping visited element: " + childElement);
-					}
-				} else {
-					if(logger.isTraceEnabled()){
-						logger.trace("Visiting element: " + childElement);
-					}
-					// prune children from top node list
-					if (isRoot) {
-						isRoot = false;
-					} else {
-						this.topElements.remove(childElement);
-					}
-					// add node to allNode list
-					visited.add(childElement);
+			expandElement(element);
+		}
+	}
+	
+	private void expandElement(ICompoundGraphElement element){
+		// this iterator will return the root node as the first node, so
+		// their is no
+		// need to deal with this explicitly.
+		Iterator<ICompoundGraphElement> iter = element.levelOrderIterator();
+		boolean isRoot = true;
+		boolean skip = false;
+		while (iter.hasNext() && !skip) {
+			ICompoundGraphElement childElement = iter.next();
+			// if this node has already been visited, then so must its children and so there is no point in continuing
+			if (visited.contains(childElement)) {
+				skip = true;
+				if(logger.isTraceEnabled()){
+					logger.trace("Skipping visited element: " + childElement);
 				}
+			} else {
+				if(logger.isTraceEnabled()){
+					logger.trace("Visiting element: " + childElement);
+				}
+				// prune children from top node list
+				if (isRoot) {
+					isRoot = false;
+				} else {
+					this.topElements.remove(childElement);
+				}
+				// add node to allNode list
+				visited.add(childElement);
 			}
 		}
 	}
@@ -166,7 +174,6 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 
 	@Override
 	public void removeNonIncidentEdges() {
-		// assumes that the graph here is fully build and so the non-incident edges will be topElements
 		for(ICompoundGraphElement topEl : new HashSet<ICompoundGraphElement>(this.topElements)){
 			if(topEl.isLink()){
 				ICompoundEdge topEdge = (ICompoundEdge)topEl;

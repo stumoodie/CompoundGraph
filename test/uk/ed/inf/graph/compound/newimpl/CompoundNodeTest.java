@@ -112,7 +112,7 @@ public class CompoundNodeTest {
 //			}
 //			
 //		};
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 //		this.testFixture.createElements();
 //		this.mockGraph = this.testFixture.getGraph();
 //		this.mockParent = this.testFixture.getRootNode();
@@ -130,7 +130,7 @@ public class CompoundNodeTest {
 		this.mockOutEdgeInNode = this.testFixture.getNode6();
 		
 		this.otherTestFixture = new ComplexGraphFixture(this.mockery, "other_");
-		this.otherTestFixture.doAll();
+		this.otherTestFixture.buildFixture();
 //		this.otherTestFixture.createElements();
 //		this.otherTestFixture.buildObjects();
 		

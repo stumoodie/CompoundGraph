@@ -29,7 +29,7 @@ public class CompoundSubgraphRemovalBuilderWithRootInSubgraphTest {
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
 		testFixture = new ComplexGraphFixture(mockery, "");
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 		this.testInstance = new CompoundSubgraphRemovalBuilder(this.testFixture.getGraph());
 		
 		mockSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSubgraph");

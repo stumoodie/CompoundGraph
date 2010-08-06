@@ -106,7 +106,7 @@ public class ChildCompoundGraphTest {
 				return true;
 			}
 		});
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 //		{
 //			
 //			@Override
@@ -248,13 +248,13 @@ public class ChildCompoundGraphTest {
 	
 	@Test
 	public final void testGetNumEdges() {
-		assertEquals("expected num edges", EXPECTED_NUM_EDGES, this.testInstance.getNumEdges());
+		assertEquals("expected num edges", EXPECTED_NUM_EDGES, this.testInstance.numEdges());
 		this.mockery.assertIsSatisfied();
 	}
 
 	@Test
 	public final void testGetNumNodes() {
-		assertEquals("num nodes", EXPECTED_NUM_NODES, this.testInstance.getNumNodes());
+		assertEquals("num nodes", EXPECTED_NUM_NODES, this.testInstance.numNodes());
 		this.mockery.assertIsSatisfied();
 	}
 

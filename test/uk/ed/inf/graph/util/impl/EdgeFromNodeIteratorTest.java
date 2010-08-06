@@ -42,7 +42,7 @@ public class EdgeFromNodeIteratorTest {
 	public void setUp() throws Exception {
 		mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(mockery, "");
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 		
 		this.testInstance = new EdgeFromNodeIterator<ICompoundNode, ICompoundEdge>(this.testFixture.getEdge(ComplexGraphFixture.EDGE1_ID).getChildCompoundGraph().nodeIterator());
 	}

@@ -40,13 +40,13 @@ public class CompoundGraphCopyBuilderTest {
 		this.mockery = new JUnit4Mockery();
 
 		this.testFixture = new ComplexGraphFixture(mockery, "");
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 		// src graph
 		this.mockSrcSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSrcSubgraph");
 
 		// dstn graph
 		this.destnFixture = new ComplexGraphFixture(mockery, "destn");
-		this.destnFixture.doAll();
+		this.destnFixture.buildFixture();
 		
 		this.mockery.checking(new Expectations(){{
 			allowing(mockSrcSubgraph).getSuperGraph(); will(returnValue(testFixture.getGraph()));

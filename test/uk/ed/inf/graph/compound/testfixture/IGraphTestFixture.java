@@ -21,7 +21,7 @@ public interface IGraphTestFixture {
 	
 	ICompoundEdge getEdge(String edgeId);
 	
-	void doAll();
+	void buildFixture();
 
 	void setElementRemoved(String elementId, boolean markRemoved);
 

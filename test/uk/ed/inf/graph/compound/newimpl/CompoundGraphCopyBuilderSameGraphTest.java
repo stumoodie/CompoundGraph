@@ -40,7 +40,7 @@ public class CompoundGraphCopyBuilderSameGraphTest {
 		this.mockery = new JUnit4Mockery();
 
 		this.testFixture = new ComplexGraphFixture(mockery, "");
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 		// src graph
 		this.mockSrcSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSrcSubgraph");
 

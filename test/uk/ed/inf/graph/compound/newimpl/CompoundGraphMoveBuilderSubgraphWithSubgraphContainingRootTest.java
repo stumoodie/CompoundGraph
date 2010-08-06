@@ -30,7 +30,7 @@ public class CompoundGraphMoveBuilderSubgraphWithSubgraphContainingRootTest {
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE3_ID, true);
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 		this.testInstance = new CompoundGraphMoveBuilder(this.testFixture.getNode(ComplexGraphFixture.NODE6_ID).getChildCompoundGraph());
 		this.mockSrcSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSrcSubgraph");
 		this.mockery.checking(new Expectations(){{

@@ -36,7 +36,7 @@ public class CompoundGraphStateHandlerTest {
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		this.testFixture.setElementRemoved(ComplexGraphFixture.NODE6_ID, true);
 		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE1_ID, true);
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 		
 		this.testInstance = new CompoundGraphStateHandler(this.testFixture.getGraph());
 		this.mockState = this.mockery.mock(IGraphState.class, "mockState");

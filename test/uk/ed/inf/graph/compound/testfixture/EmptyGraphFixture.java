@@ -47,8 +47,8 @@ public class EmptyGraphFixture {
 		
 			allowing(mockChildgraphRoot).getRoot(); will(returnValue(mockRootNode));
 			allowing(mockChildgraphRoot).numElements(); will(returnValue(0));
-			allowing(mockChildgraphRoot).getNumEdges(); will(returnValue(0));
-			allowing(mockChildgraphRoot).getNumNodes(); will(returnValue(0));
+			allowing(mockChildgraphRoot).numEdges(); will(returnValue(0));
+			allowing(mockChildgraphRoot).numNodes(); will(returnValue(0));
 			allowing(mockChildgraphRoot).getSuperGraph(); will(returnValue(mockCompoundGraph));
 		
 		}});

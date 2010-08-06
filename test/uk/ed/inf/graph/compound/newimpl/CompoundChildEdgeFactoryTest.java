@@ -39,7 +39,7 @@ public class CompoundChildEdgeFactoryTest {
 		this.mockery = new JUnit4Mockery();
 		
 		this.otherTestFixture = new ComplexGraphFixture(mockery, "other");
-		this.otherTestFixture.doAll();
+		this.otherTestFixture.buildFixture();
 		
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		
@@ -86,7 +86,7 @@ public class CompoundChildEdgeFactoryTest {
 				return false;
 			}
 		});
-		this.testFixture.doAll();
+		this.testFixture.buildFixture();
 		this.testNodePair = new CompoundNodePair(this.testFixture.getNode(ComplexGraphFixture.NODE5_ID), this.testFixture.getNode(ComplexGraphFixture.NODE3_ID));
 		this.testInstance.setPair(this.testNodePair);
 	}
