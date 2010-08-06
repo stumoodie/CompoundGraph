@@ -12,7 +12,6 @@ import uk.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ed.inf.graph.compound.testfixture.IGraphTestFixture;
 import uk.ed.inf.graph.compound.testfixture.IteratorTestUtility;
-import uk.ed.inf.tree.GeneralIteratorTestUtility;
 
 public class SubCompoundGraphFactoryNodeOnlyIntegrationTest {
 	private IGraphTestFixture testFixture;

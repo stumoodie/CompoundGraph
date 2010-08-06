@@ -116,19 +116,19 @@ public class CompoundGraphMoveBuilderWithNonDestnSharingSubgraphTest {
 		final ICompoundChildEdgeFactory destnNodeEdgeFactory = destnNode.getChildCompoundGraph().edgeFactory();
 		
 		final ISubCompoundGraphFactory movedNodesSubgraphFactory = this.testFixture.getGraph().subgraphFactory();
-		final ISubCompoundGraphFactory removedNodesSubgraphFactory = this.testFixture.getGraph().subgraphFactory();
+//		final ISubCompoundGraphFactory removedNodesSubgraphFactory = this.testFixture.getGraph().subgraphFactory();
 		
 		final ICompoundNode mockNode = this.mockery.mock(ICompoundNode.class, "mockNode");
 		final IChildCompoundGraph mockNodeChildGraph = this.mockery.mock(IChildCompoundGraph.class, "mockNodeChildGraph");
-		final ICompoundNodeFactory mockNodeNodeFactory = this.mockery.mock(ICompoundNodeFactory.class, "mockNodeNodeFactory");
+//		final ICompoundNodeFactory mockNodeNodeFactory = this.mockery.mock(ICompoundNodeFactory.class, "mockNodeNodeFactory");
 		final ICompoundChildEdgeFactory mockNodeEdgeFactory = this.mockery.mock(ICompoundChildEdgeFactory.class, "mockNodeEdgeFactory");
 		
 		final ICompoundEdge mockEdge = this.mockery.mock(ICompoundEdge.class, "mockEdge");
 		final IChildCompoundGraph mockEdgeChildGraph = this.mockery.mock(IChildCompoundGraph.class, "mockEdgeChildGraph");
 		final ICompoundNodeFactory mockEdgeNodeFactory = this.mockery.mock(ICompoundNodeFactory.class, "mockEdgeNodeFactory");
-		final ICompoundChildEdgeFactory mockEdgeEdgeFactory = this.mockery.mock(ICompoundChildEdgeFactory.class, "mockEdgeEdgeFactory");
+//		final ICompoundChildEdgeFactory mockEdgeEdgeFactory = this.mockery.mock(ICompoundChildEdgeFactory.class, "mockEdgeEdgeFactory");
 
-		final ICompoundChildEdgeFactory destnrootChildEdgeFactory = testFixture.getGraph().getRoot().getChildCompoundGraph().edgeFactory();
+//		final ICompoundChildEdgeFactory destnrootChildEdgeFactory = testFixture.getGraph().getRoot().getChildCompoundGraph().edgeFactory();
 		final ISubCompoundGraph mockDestnSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockDestnSubgraph");
 		
 		this.mockery.checking(new Expectations(){{

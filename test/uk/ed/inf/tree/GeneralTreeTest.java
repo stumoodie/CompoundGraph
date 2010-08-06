@@ -42,7 +42,7 @@ public class GeneralTreeTest {
 	private static final int EXPECTED_NODE8_IDX = 8;
 	private static final int EXPECTED_MISSING_NODE_IDX = 9;
 	private static final int EXPECTED_POPULATED_SIZE = 9;
-	private static final int EXPECTED_EMPTY_SIZE = 1;
+//	private static final int EXPECTED_EMPTY_SIZE = 1;
 	private Mockery mockery = new JUnit4Mockery();
 	private GeneralTree<TestTreeNode> testInstance;
 	private TestTreeNode mockRootNode;

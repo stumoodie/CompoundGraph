@@ -41,7 +41,7 @@ public class GeneralTreeTestNonRootRoot {
 	private static final int EXPECTED_NODE7_IDX = 7;
 	private static final int EXPECTED_NODE8_IDX = 8;
 	private static final int EXPECTED_MISSING_NODE_IDX = 9;
-	private static final int EXPECTED_POPULATED_SIZE = 3;
+//	private static final int EXPECTED_POPULATED_SIZE = 3;
 	private Mockery mockery = new JUnit4Mockery();
 	private GeneralTree<TestTreeNode> testInstance;
 	private TestTreeNode mockRootNode;
