@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="uk/ed/inf/graph/compound/archetypal/|uk/ed/inf/graph/compound/base/|uk/ed/inf/graph/compound/impl/" kind="src" path="src"/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="integrationTest"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="lib" path="lib/junit4.4/junit-4.4.jar" sourcepath="lib/junit4.4/junit-4.4-src.jar"/>
