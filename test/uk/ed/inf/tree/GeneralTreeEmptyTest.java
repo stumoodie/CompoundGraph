@@ -41,7 +41,7 @@ public class GeneralTreeEmptyTest {
 	public void setUp() throws Exception {
 		mockRootNode = this.mockery.mock(TestTreeNode.class, "mockRootNode");
 		this.mockery.checking(new Expectations(){{
-			allowing(mockRootNode).childIterator(); will(returnIterator());
+			allowing(mockRootNode).childIterator(); will(returnIterator(new TestTreeNode[0]));
 			allowing(mockRootNode).getIndex(); will(returnValue(EXPECTED_ROOT_NODE_IDX));
 			allowing(mockRootNode).getParent(); will(returnValue(mockRootNode));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));

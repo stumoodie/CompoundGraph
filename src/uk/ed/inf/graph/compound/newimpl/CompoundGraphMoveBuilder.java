@@ -48,6 +48,7 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	}
 
 	@Override
+	@Deprecated
 	public boolean canMoveHere(ISubCompoundGraph subgraph) {
 		this.setSourceSubgraph(subgraph);
 		return this.canMoveHere();
@@ -87,6 +88,7 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	}
 
 	@Override
+	@Deprecated
 	public void moveHere(ISubCompoundGraph subGraph) {
 		this.setSourceSubgraph(subGraph);
 		this.makeMove();

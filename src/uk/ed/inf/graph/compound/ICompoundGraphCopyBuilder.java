@@ -24,6 +24,7 @@ public interface ICompoundGraphCopyBuilder {
 	 * @return true if the subgraph is valid to copy from, false otherwise.
 	 * @deprecated use setSourceSubgraph() then canCopyHere()
 	 */
+	@Deprecated
 	boolean canCopyHere(ISubCompoundGraph subgraph);
 
 	/**
@@ -40,6 +41,7 @@ public interface ICompoundGraphCopyBuilder {
 	 * @param subGraph the subgraph to copy
 	 * @deprecated use <code>copyHere()</code> instead.
 	 */
+	@Deprecated
 	void copyHere(ISubCompoundGraph subgraph);
 	
 	/**

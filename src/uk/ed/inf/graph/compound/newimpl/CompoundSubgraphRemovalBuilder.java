@@ -32,6 +32,7 @@ public class CompoundSubgraphRemovalBuilder implements ISubgraphRemovalBuilder {
 	}
 
 	@Override
+	@Deprecated
 	public void removeSubgraph(ISubCompoundGraph subgraph) {
 		this.setRemovalSubgraph(subgraph);
 		this.removeSubgraph();

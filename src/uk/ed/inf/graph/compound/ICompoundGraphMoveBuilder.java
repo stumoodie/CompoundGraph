@@ -27,6 +27,7 @@ public interface ICompoundGraphMoveBuilder {
 	 * @return true if the subgraph is valid to copy from, false otherwise.
 	 * @deprecated use setSourceSubgraph() and canMoveHere() instead
 	 */
+	@Deprecated
 	boolean canMoveHere(ISubCompoundGraph subGraph);
 
 	boolean canMoveHere();
@@ -40,6 +41,7 @@ public interface ICompoundGraphMoveBuilder {
 	 * @throws IllegalArgumentException if <code>canMoveHere(subGraph) == false</code>.
 	 * @deprecated Use setSourceSubgraph() and makeMove() instead.
 	 */
+	@Deprecated
 	void moveHere(ISubCompoundGraph subGraph);
 	
 	/**

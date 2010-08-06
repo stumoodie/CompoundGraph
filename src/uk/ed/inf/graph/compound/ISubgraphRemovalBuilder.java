@@ -30,6 +30,7 @@ public interface ISubgraphRemovalBuilder {
 	 * @throws IllegalArgumentException if <code>canRemoveSubgraph(subgraph) == false</code>.
 	 * @deprecated use setRemovalSubgraph() then removeSubgraph()
 	 */ 
+	@Deprecated
 	void removeSubgraph(ISubCompoundGraph subgraph);
 
 	void removeSubgraph();

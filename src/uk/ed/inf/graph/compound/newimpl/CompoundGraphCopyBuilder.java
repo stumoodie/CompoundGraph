@@ -51,12 +51,14 @@ public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 	}
 	
 	@Override
+	@Deprecated
 	public boolean canCopyHere(ISubCompoundGraph subGraph) {
 		this.setSourceSubgraph(subGraph);
 		return this.canCopyHere();
 	}
 
 	@Override
+	@Deprecated
 	public void copyHere(ISubCompoundGraph subGraph) {
 		this.setSourceSubgraph(subGraph);
 		this.makeCopy();

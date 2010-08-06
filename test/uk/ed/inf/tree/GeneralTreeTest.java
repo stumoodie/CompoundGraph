@@ -29,6 +29,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import uk.ed.inf.graph.compound.ICompoundGraphElement;
+
 @RunWith(JMock.class)
 public class GeneralTreeTest {
 	private static final int EXPECTED_ROOT_NODE_IDX = 0;
@@ -82,17 +84,17 @@ public class GeneralTreeTest {
 			allowing(mockNode2).getParent(); will(returnValue(mockRootNode));
 			allowing(mockNode2).getRoot(); will(returnValue(mockRootNode));
 
-			allowing(mockNode3).childIterator(); will(returnIterator());
+			allowing(mockNode3).childIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 			allowing(mockNode3).getIndex(); will(returnValue(EXPECTED_NODE3_IDX));
 			allowing(mockNode3).getParent(); will(returnValue(mockNode1));
 			allowing(mockNode3).getRoot(); will(returnValue(mockRootNode));
 
-			allowing(mockNode4).childIterator(); will(returnIterator());
+			allowing(mockNode4).childIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 			allowing(mockNode4).getIndex(); will(returnValue(EXPECTED_NODE4_IDX));
 			allowing(mockNode4).getParent(); will(returnValue(mockNode1));
 			allowing(mockNode4).getRoot(); will(returnValue(mockRootNode));
 
-			allowing(mockNode5).childIterator(); will(returnIterator());
+			allowing(mockNode5).childIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 			allowing(mockNode5).getIndex(); will(returnValue(EXPECTED_NODE5_IDX));
 			allowing(mockNode5).getParent(); will(returnValue(mockNode2));
 			allowing(mockNode5).getRoot(); will(returnValue(mockRootNode));
@@ -107,7 +109,7 @@ public class GeneralTreeTest {
 			allowing(mockNode7).getParent(); will(returnValue(mockNode6));
 			allowing(mockNode7).getRoot(); will(returnValue(mockRootNode));
 
-			allowing(mockNode8).childIterator(); will(returnIterator());
+			allowing(mockNode8).childIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 			allowing(mockNode8).getIndex(); will(returnValue(EXPECTED_NODE8_IDX));
 			allowing(mockNode8).getParent(); will(returnValue(mockNode7));
 			allowing(mockNode8).getRoot(); will(returnValue(mockRootNode));

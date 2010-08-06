@@ -58,7 +58,7 @@ public class LevelOrderTreeIteratorTest {
 		final TestTreeNode mockRootNode = this.mockery.mock(TestTreeNode.class, "mockRootNode");
 		this.mockery.checking(new Expectations(){{
 			
-			allowing(mockRootNode).childIterator(); will(returnIterator());
+			allowing(mockRootNode).childIterator(); will(returnIterator(new TestTreeNode[0]));
 			
 		}});
 		this.testInstance = new LevelOrderTreeIterator<TestTreeNode>(mockRootNode);
@@ -94,17 +94,17 @@ public class LevelOrderTreeIteratorTest {
 
 			allowing(mockNode2).childIterator(); will(returnIterator(mockNode5, mockNode6));
 
-			allowing(mockNode3).childIterator(); will(returnIterator());
+			allowing(mockNode3).childIterator(); will(returnIterator(new TestTreeNode[0]));
 
-			allowing(mockNode4).childIterator(); will(returnIterator());
+			allowing(mockNode4).childIterator(); will(returnIterator(new TestTreeNode[0]));
 
-			allowing(mockNode5).childIterator(); will(returnIterator());
+			allowing(mockNode5).childIterator(); will(returnIterator(new TestTreeNode[0]));
 
 			allowing(mockNode6).childIterator(); will(returnIterator(mockNode7));
 
 			allowing(mockNode7).childIterator(); will(returnIterator(mockNode8));
 
-			allowing(mockNode8).childIterator(); will(returnIterator());
+			allowing(mockNode8).childIterator(); will(returnIterator(new TestTreeNode[0]));
 		}});
 		this.testInstance = new LevelOrderTreeIterator<TestTreeNode>(mockRootNode);
 		TestTreeNode expectedIterationOrder[] = { mockRootNode, mockNode1, mockNode2, mockNode3,

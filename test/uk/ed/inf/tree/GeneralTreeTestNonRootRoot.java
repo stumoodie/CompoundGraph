@@ -90,17 +90,17 @@ public class GeneralTreeTestNonRootRoot {
 			allowing(mockNode2).getParent(); will(returnValue(mockRootNode));
 			allowing(mockNode2).getRoot(); will(returnValue(mockRootNode));
 
-			allowing(mockNode3).childIterator(); will(returnIterator());
+			allowing(mockNode3).childIterator(); will(returnIterator(new TestTreeNode[0]));
 			allowing(mockNode3).getIndex(); will(returnValue(EXPECTED_NODE3_IDX));
 			allowing(mockNode3).getParent(); will(returnValue(mockNode1));
 			allowing(mockNode3).getRoot(); will(returnValue(mockRootNode));
 
-			allowing(mockNode4).childIterator(); will(returnIterator());
+			allowing(mockNode4).childIterator(); will(returnIterator(new TestTreeNode[0]));
 			allowing(mockNode4).getIndex(); will(returnValue(EXPECTED_NODE4_IDX));
 			allowing(mockNode4).getParent(); will(returnValue(mockNode1));
 			allowing(mockNode4).getRoot(); will(returnValue(mockRootNode));
 
-			allowing(mockNode5).childIterator(); will(returnIterator());
+			allowing(mockNode5).childIterator(); will(returnIterator(new TestTreeNode[0]));
 			allowing(mockNode5).getIndex(); will(returnValue(EXPECTED_NODE5_IDX));
 			allowing(mockNode5).getParent(); will(returnValue(mockNode2));
 			allowing(mockNode5).getRoot(); will(returnValue(mockRootNode));
@@ -115,7 +115,7 @@ public class GeneralTreeTestNonRootRoot {
 			allowing(mockNode7).getParent(); will(returnValue(mockNode6));
 			allowing(mockNode7).getRoot(); will(returnValue(mockRootNode));
 
-			allowing(mockNode8).childIterator(); will(returnIterator());
+			allowing(mockNode8).childIterator(); will(returnIterator(new TestTreeNode[0]));
 			allowing(mockNode8).getIndex(); will(returnValue(EXPECTED_NODE8_IDX));
 			allowing(mockNode8).getParent(); will(returnValue(mockNode7));
 			allowing(mockNode8).getRoot(); will(returnValue(mockRootNode));
@@ -146,17 +146,17 @@ public class GeneralTreeTestNonRootRoot {
 			allowing(mockOtherNode2).getParent(); will(returnValue(mockOtherRootNode));
 			allowing(mockOtherNode2).getRoot(); will(returnValue(mockOtherRootNode));
 
-			allowing(mockOtherNode3).childIterator(); will(returnIterator());
+			allowing(mockOtherNode3).childIterator(); will(returnIterator(new TestTreeNode[0]));
 			allowing(mockOtherNode3).getIndex(); will(returnValue(EXPECTED_NODE3_IDX));
 			allowing(mockOtherNode3).getParent(); will(returnValue(mockOtherNode1));
 			allowing(mockOtherNode3).getRoot(); will(returnValue(mockOtherRootNode));
 
-			allowing(mockOtherNode4).childIterator(); will(returnIterator());
+			allowing(mockOtherNode4).childIterator(); will(returnIterator(new TestTreeNode[0]));
 			allowing(mockOtherNode4).getIndex(); will(returnValue(EXPECTED_NODE4_IDX));
 			allowing(mockOtherNode4).getParent(); will(returnValue(mockOtherNode1));
 			allowing(mockOtherNode4).getRoot(); will(returnValue(mockOtherRootNode));
 
-			allowing(mockOtherNode5).childIterator(); will(returnIterator());
+			allowing(mockOtherNode5).childIterator(); will(returnIterator(new TestTreeNode[0]));
 			allowing(mockOtherNode5).getIndex(); will(returnValue(EXPECTED_NODE5_IDX));
 			allowing(mockOtherNode5).getParent(); will(returnValue(mockOtherNode2));
 			allowing(mockOtherNode5).getRoot(); will(returnValue(mockOtherRootNode));
@@ -171,7 +171,7 @@ public class GeneralTreeTestNonRootRoot {
 			allowing(mockOtherNode7).getParent(); will(returnValue(mockOtherNode6));
 			allowing(mockOtherNode7).getRoot(); will(returnValue(mockOtherRootNode));
 
-			allowing(mockOtherNode8).childIterator(); will(returnIterator());
+			allowing(mockOtherNode8).childIterator(); will(returnIterator(new TestTreeNode[0]));
 			allowing(mockOtherNode8).getIndex(); will(returnValue(EXPECTED_NODE8_IDX));
 			allowing(mockOtherNode8).getParent(); will(returnValue(mockOtherNode7));
 			allowing(mockOtherNode8).getRoot(); will(returnValue(mockOtherRootNode));

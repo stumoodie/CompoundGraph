@@ -4,6 +4,7 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 
 import uk.ed.inf.graph.compound.ICompoundGraph;
+import uk.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ed.inf.graph.compound.IRootChildCompoundGraph;
 import uk.ed.inf.graph.compound.IRootCompoundNode;
 
@@ -37,7 +38,7 @@ public class EmptyGraphFixture {
 			allowing(mockRootNode).getParent(); will(returnValue(mockRootNode));
 			allowing(mockRootNode).getRoot(); will(returnValue(mockRootNode));
 			allowing(mockRootNode).getIndex(); will(returnValue(EXPECTED_ROOT_IDX));
-			allowing(mockRootNode).childIterator(); will(returnIterator());
+			allowing(mockRootNode).childIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 			allowing(mockRootNode).ancestorIterator(); will(returnIterator(mockRootNode));
 			allowing(mockRootNode).preOrderIterator(); will(returnIterator(mockRootNode));
 			allowing(mockRootNode).getOutDegree(); will(returnValue(0));
