@@ -24,12 +24,12 @@ import uk.ac.ed.inf.graph.compound.CompoundNodePair;
 import uk.ac.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
-import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
+import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.IRootChildCompoundGraph;
 import uk.ac.ed.inf.graph.compound.IRootCompoundNode;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
@@ -1337,11 +1337,6 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 	@Override
 	public ICompoundNode getNode(String nodeId) {
 		return ((INodeBuilder)this.builderMap.get(nodeId)).getCompoundNode();
-	}
-
-
-	public void setValidChildren(String elementId, boolean isValidFlag) {
-		this.elementAttributesMap.get(elementId).setEnableChildren(isValidFlag);
 	}
 
 }

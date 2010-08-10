@@ -21,7 +21,6 @@ public aspect CompoundNodeDBC extends ICompoundNodeDBC {
 			assertion(parent != null, "parameters not null");
 			assertion(idx >= 0, "index a positive number");
 			assertion(attrib != null, "attribute not null");
-			assertion(parent.getAttribute().isValidChild(attrib), "parent can create child");
 		}};
 	}
 	

@@ -33,9 +33,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import uk.ac.ed.inf.tree.ITreeNode;
-import uk.ac.ed.inf.tree.LevelOrderTreeIterator;
-
 @RunWith(JMock.class)
 public class LevelOrderTreeIteratorTest {
 	private Mockery mockery = new JUnit4Mockery();

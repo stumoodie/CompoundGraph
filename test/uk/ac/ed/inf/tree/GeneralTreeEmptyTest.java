@@ -28,9 +28,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import uk.ac.ed.inf.tree.GeneralTree;
-import uk.ac.ed.inf.tree.ITreeNode;
-
 @RunWith(JMock.class)
 public class GeneralTreeEmptyTest {
 	private static final int EXPECTED_ROOT_NODE_IDX = 0;

@@ -93,7 +93,6 @@ public class CompoundNodeFactoryNonParentingAttributeTest {
 			}
 		});
 		this.testFixture.buildFixture();
-		this.testFixture.setValidChildren(ComplexGraphFixture.GRAPH_ID, false);
 		this.expectedAttributeFactory = new IElementAttributeFactory() {
 			
 			@Override

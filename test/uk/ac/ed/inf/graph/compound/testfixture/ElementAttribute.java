@@ -6,23 +6,15 @@ import uk.ac.ed.inf.graph.compound.IElementAttribute;
 public class ElementAttribute implements IElementAttribute {
 	private final String name;
 	private ICompoundGraphElement currentElement;
-	private boolean enableChildren;
 	
 	public ElementAttribute(String name){
 		this.name = name;
-		this.enableChildren = true;
 	}
 	
 	public ElementAttribute(ElementAttribute otherEl){
 		this.name = otherEl.getName();
-		this.enableChildren = otherEl.enableChildren;
 	}
 	
-	@Override
-	public boolean isValidChild(IElementAttribute potentialChild) {
-		return this.enableChildren;
-	}
-
 	public String getName(){
 		return this.name;
 	}
@@ -69,9 +61,5 @@ public class ElementAttribute implements IElementAttribute {
 	@Override
 	public void setCurrentElement(ICompoundGraphElement newOwner) {
 		this.currentElement = newOwner;
-	}
-
-	public void setEnableChildren(boolean isValidFlag) {
-		this.enableChildren = isValidFlag;
 	}
 }

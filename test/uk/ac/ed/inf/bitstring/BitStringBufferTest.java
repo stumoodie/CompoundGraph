@@ -26,10 +26,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.ed.inf.bitstring.BitString;
-import uk.ac.ed.inf.bitstring.BitStringBuffer;
-import uk.ac.ed.inf.bitstring.IBitString;
-
 public class BitStringBufferTest {
 	
 	private BitStringBuffer testBitStringBuffer ;

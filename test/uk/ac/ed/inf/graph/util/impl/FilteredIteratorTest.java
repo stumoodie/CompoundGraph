@@ -29,7 +29,6 @@ import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphTestFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 import uk.ac.ed.inf.graph.util.IFilterCriteria;
-import uk.ac.ed.inf.graph.util.impl.FilteredIterator;
 
 @RunWith(JMock.class)
 public class FilteredIteratorTest {

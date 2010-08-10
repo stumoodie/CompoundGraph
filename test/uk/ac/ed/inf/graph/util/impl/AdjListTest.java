@@ -23,8 +23,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.ed.inf.graph.util.impl.AdjList;
-
 public class AdjListTest {
 	private static final int EXPECTED_LARGE_CAPACITY = 200;
 	private static final int TEST_NODE1_FIXTURE_IDX = 100;

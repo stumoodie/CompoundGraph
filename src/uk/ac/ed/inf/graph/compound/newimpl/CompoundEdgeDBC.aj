@@ -23,7 +23,6 @@ public aspect CompoundEdgeDBC extends ICompoundEdgeDBC {
 			assertion(parent.getGraph().equals(outNode.getGraph()) && parent.getGraph().equals(inNode.getGraph()), "same graph");
 			assertion(parent.getGraph().getElementTree().getLowestCommonAncestor(outNode, inNode).equals(parent), "parent is lca node");
 			assertion(!outNode.isAncestor(inNode) && !inNode.isAncestor(outNode), "no edges with child nodes");
-			assertion(parent.getAttribute().isValidChild(attribute), "is valid child attribute");
 		}};
 	}
 }

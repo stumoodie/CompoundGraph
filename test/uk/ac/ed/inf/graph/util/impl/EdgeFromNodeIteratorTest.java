@@ -30,7 +30,6 @@ import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphTestFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.IteratorTestUtility;
-import uk.ac.ed.inf.graph.util.impl.EdgeFromNodeIterator;
 
 @RunWith(JMock.class)
 public class EdgeFromNodeIteratorTest {

@@ -30,8 +30,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
-import uk.ac.ed.inf.tree.GeneralTree;
-import uk.ac.ed.inf.tree.ITreeNode;
 
 @RunWith(JMock.class)
 public class GeneralTreeTest {
