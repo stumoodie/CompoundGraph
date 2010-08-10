@@ -103,7 +103,7 @@
 		</target>
 
 	<target name="jar-bin" depends="build-src,init-jardirs">
-		<jar destfile="${jar.dir}/${jar.name.bin}" basedir="${build.dir}">
+		<jar destfile="${jar.dir}/${jar.name.bin}" basedir="${build.dir.src}">
 		</jar>
 	</target>
 
