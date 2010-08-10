@@ -17,10 +17,9 @@ package uk.ac.ed.inf.graph.compound.newimpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -31,10 +30,7 @@ import org.junit.runner.RunWith;
 
 import uk.ac.ed.inf.designbycontract.PreConditionException;
 import uk.ac.ed.inf.graph.compound.CompoundNodePair;
-import uk.ac.ed.inf.graph.compound.ICompoundChildEdgeFactory;
-import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundEdgeFactory;
-import uk.ac.ed.inf.graph.compound.newimpl.CompoundEdgeFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 
 @RunWith(JMock.class)
@@ -52,13 +48,9 @@ public class CompoundEdgeFactoryTest {
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		this.testFixture.buildFixture();
-//		this.testFixture.createElements();
-//		this.testFixture.buildObjects();
 		
 		this.otherTestFixture = new ComplexGraphFixture(mockery, "other_");
 		this.otherTestFixture.buildFixture();
-//		this.otherTestFixture.createElements();
-//		this.otherTestFixture.buildObjects();
 		
 		testInstance = new CompoundEdgeFactory (this.testFixture.getGraph()) ;
 	}
@@ -74,7 +66,6 @@ public class CompoundEdgeFactoryTest {
 	public final void testSetPair() {
 		CompoundNodePair expectedNodePair = new CompoundNodePair(this.testFixture.getNode3(),this.testFixture.getNode5());
 		testInstance.setPair(expectedNodePair);
-		assertTrue("can create edge", testInstance.canCreateEdge());
 		assertEquals("expected pair", expectedNodePair, testInstance.getCurrentNodePair());
 	}
 
@@ -92,20 +83,26 @@ public class CompoundEdgeFactoryTest {
 		assertFalse("invalidNodePair", this.testInstance.isValidNodePair(expectedOtherNodePair));
 	}
 
-	@Test
+	@Test(expected=PreConditionException.class)
 	public final void testCreateEdge() {
-		final ICompoundChildEdgeFactory edge1ChildEdgeFactory = this.testFixture.getEdge(ComplexGraphFixture.EDGE1_ID).getChildCompoundGraph().edgeFactory();
-		final ICompoundEdge mockEdge = this.mockery.mock(ICompoundEdge.class, "mockEdge");
-		mockery.checking(new Expectations(){{
-			exactly(1).of(edge1ChildEdgeFactory).setPair(with(any(CompoundNodePair.class)));
-			exactly(1).of(edge1ChildEdgeFactory).createEdge(); will(returnValue(mockEdge));
-		}});
-		CompoundNodePair expectedNodePair = new CompoundNodePair(this.testFixture.getNode3(),this.testFixture.getNode5());
-		this.testInstance.setPair(expectedNodePair);
-		ICompoundEdge generatedEdge = testInstance.createEdge();
-		assertNotNull("expected edge" , generatedEdge) ;
+		testInstance.createEdge();
 	}
 
+	@Test
+	public final void testGetCurrentNodePair(){
+		assertNull("node pair not set", this.testInstance.getCurrentNodePair());
+	}
+
+	@Test
+	public final void testGetAttributeFactory(){
+		assertNull("att fact not set", this.testInstance.getAttributeFactory());
+	}
+	
+	@Test
+	public final void testCanCreateEdge(){
+		assertFalse("cannot create edge", this.testInstance.canCreateEdge());
+	}
+	
 	@Test
 	public final void testGetGraph() {
 		assertEquals("get graph", this.testFixture.getGraph(), testInstance.getGraph()) ;

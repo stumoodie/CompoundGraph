@@ -25,6 +25,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
+import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.IRootCompoundNode;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.ISubgraphRemovalBuilder;
@@ -48,9 +49,9 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 
 //	private ICompoundGraphServices services;
 
-	public CompoundGraph(){
+	public CompoundGraph(IElementAttribute rootAttribute){
 		this.stateHandler = new CompoundGraphStateHandler(this);
-		this.rootNode = new RootCompoundNode(this, ROOT_NODE_IDX);
+		this.rootNode = new RootCompoundNode(this, ROOT_NODE_IDX, rootAttribute);
 	}
 	
 	public static IndexCounter getIndexCounter(ICompoundGraph graph){
@@ -68,6 +69,7 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 		return this.rootNode;
 	}
 
+	@Override
 	public ITree<ICompoundGraphElement> getElementTree(){
 		return this.getRoot().getChildCompoundGraph().getElementTree();
 	}

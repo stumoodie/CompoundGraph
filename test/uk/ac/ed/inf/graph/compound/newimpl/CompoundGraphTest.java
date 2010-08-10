@@ -39,12 +39,13 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
+import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.IRootChildCompoundGraph;
 import uk.ac.ed.inf.graph.compound.IRootCompoundNode;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.ISubgraphRemovalBuilder;
-import uk.ac.ed.inf.graph.compound.newimpl.CompoundGraph;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
+import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphConstructor;
 import uk.ac.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 import uk.ac.ed.inf.graph.state.IGraphState;
@@ -58,6 +59,8 @@ public class CompoundGraphTest {
 	private ComplexGraphFixture otherTestFixture;
 	private IGraphState expectedRestoreState;
 	private IBitString expectedBitString;
+
+	private IElementAttribute expectedAttribute;
 	
 	private static final String EXPECTED_STATE_STRING = "{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}";
 	private static final int UNFOUND_EDGE_IDX = 99;
@@ -69,6 +72,7 @@ public class CompoundGraphTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		this.expectedAttribute = new ElementAttribute(ComplexGraphFixture.GRAPH_ID);
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		this.testFixture.redefineGraph(new IGraphConstructor() {
@@ -85,7 +89,7 @@ public class CompoundGraphTest {
 			
 			@Override
 			public ICompoundGraph createGraph() {
-				return testCompoundGraph = new CompoundGraph();
+				return testCompoundGraph = new CompoundGraph(expectedAttribute);
 			}
 			
 			@Override
@@ -166,6 +170,13 @@ public class CompoundGraphTest {
 		assertTrue ( "not null" , testCompoundGraph.getRoot() != null ) ;
 		ICompoundNode rootNode = testCompoundGraph.getRoot() ;
 		assertEquals ( "same graph" , testCompoundGraph , rootNode.getGraph() );
+	}
+
+	@Test
+	public final void testGetRootAttribute() {
+		ICompoundNode rootNode = testCompoundGraph.getRoot() ;
+		assertEquals ( "expected attribute" , this.expectedAttribute, rootNode.getAttribute() );
+		assertEquals ( "expected attribute has curr element" , rootNode, rootNode.getAttribute().getCurrentElement());
 	}
 
 	@Test

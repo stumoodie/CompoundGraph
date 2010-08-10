@@ -19,8 +19,8 @@ import uk.ac.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
-import uk.ac.ed.inf.graph.compound.newimpl.CompoundNode;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
+import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.INodeConstructor;
 import uk.ac.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 
@@ -47,7 +47,7 @@ public class CompoundNodeWithRemovedEdgeTest {
 			
 			@Override
 			public ICompoundNode createCompoundNode() {
-				testInstance = new CompoundNode(testFixture.getEdge1(), ComplexGraphFixture.NODE3_IDX);
+				testInstance = new CompoundNode(testFixture.getEdge1(), ComplexGraphFixture.NODE3_IDX, new ElementAttribute(ComplexGraphFixture.NODE3_ID));
 				return testInstance;
 			}
 			

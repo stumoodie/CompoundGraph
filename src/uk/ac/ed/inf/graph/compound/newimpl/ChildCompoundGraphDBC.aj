@@ -7,9 +7,10 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 
 public aspect ChildCompoundGraphDBC extends IChildCompoundGraphDBC {
 
-	public pointcut theClass(IChildCompoundGraph object) :
-		target(object)
-		&& within(ChildCompoundGraph);
+	public pointcut allMethods(IChildCompoundGraph object) :
+		target(object) &&
+		(execution(public void ChildCompoundGraph.*(..)) ||
+				execution(public void CommonChildCompoundGraph.*(..)));
 
 	pointcut constructor(ICompoundGraphElement root) :
 		execution(public ChildCompoundGraph.new(ICompoundGraphElement))

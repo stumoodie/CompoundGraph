@@ -12,6 +12,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
+import uk.ac.ed.inf.graph.compound.IElementAttributeCopyFactory;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
@@ -21,6 +22,7 @@ public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 	private ISubCompoundGraphFactory subGraphFactory;
 	private final Map<ICompoundGraphElement, ICompoundGraphElement> oldNewEquivList;
 	private ISubCompoundGraph copiedComponents;
+	private IElementAttributeCopyFactory attributeCopyFactory;
 
 	public CompoundGraphCopyBuilder(IChildCompoundGraph dest){
 		this.oldNewEquivList = new HashMap<ICompoundGraphElement, ICompoundGraphElement>();
@@ -46,8 +48,20 @@ public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 	@Override
 	public boolean canCopyHere() {
 		ISubCompoundGraph subGraph = this.sourceSubCigraph;
-		return subGraph != null && subGraph.isInducedSubgraph()
-			&& subGraph.isConsistentSnapShot() && !subGraph.containsRoot();
+		boolean retVal = subGraph != null && subGraph.isInducedSubgraph()
+			&& subGraph.isConsistentSnapShot() && !subGraph.containsRoot()
+			&& this.attributeCopyFactory != null;
+		if(retVal){
+			// check that attributes can copy
+			this.attributeCopyFactory.setDestinationAttribute(this.destSubCigraph.getRoot().getAttribute());
+			Iterator<ICompoundGraphElement> topElIter = subGraph.topElementIterator();
+			while(retVal && topElIter.hasNext()){
+				ICompoundGraphElement topElement = topElIter.next();
+				this.attributeCopyFactory.setElementToCopy(topElement.getAttribute());
+				retVal = this.attributeCopyFactory.canCreateAttribute();
+			}
+		}
+		return retVal;
 	}
 	
 	@Override
@@ -112,12 +126,16 @@ public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 
 	private ICompoundEdge copyEdge(ICompoundEdge srcEdge, ICompoundGraphElement parent, ICompoundNode outNode, ICompoundNode inNode) {
 		ICompoundChildEdgeFactory edgefact = parent.getChildCompoundGraph().edgeFactory();
+		this.attributeCopyFactory.setElementToCopy(srcEdge.getAttribute());
+		edgefact.setAttributeFactory(attributeCopyFactory);
 		edgefact.setPair(new CompoundNodePair(outNode, inNode));
 		return edgefact.createEdge();
 	}
 
 	private ICompoundNode copyNode(ICompoundNode srcNode, ICompoundGraphElement destParentNode){
 		ICompoundNodeFactory fact = destParentNode.getChildCompoundGraph().nodeFactory();
+		this.attributeCopyFactory.setElementToCopy(srcNode.getAttribute());
+		fact.setAttributeFactory(attributeCopyFactory);
 		ICompoundNode newNode = fact.createNode();
 		return newNode;
 	}
@@ -125,6 +143,16 @@ public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 	@Override
 	public void setSourceSubgraph(ISubCompoundGraph sourceSubCompoundGraph) {
 		this.sourceSubCigraph = sourceSubCompoundGraph;
+	}
+
+	@Override
+	public void setElementAttributeFactory(IElementAttributeCopyFactory elementAttributeFactory) {
+		this.attributeCopyFactory = elementAttributeFactory;
+	}
+
+	@Override
+	public IElementAttributeCopyFactory getElementAttributeFactory() {
+		return this.attributeCopyFactory;
 	}
 
 }

@@ -26,6 +26,10 @@ package uk.ac.ed.inf.graph.compound;
   */
 public interface ICompoundEdgeFactory {
 
+	void setAttributeFactory(IElementAttributeFactory attributeFactory);
+	
+	IElementAttributeFactory getAttributeFactory();
+	
 	/**
 	 * Get the compound graph that owns this factory.
 	 * @return the graph, which cannot be null.

@@ -7,6 +7,8 @@ import uk.ac.ed.inf.tree.ITreeNode;
 public interface ICompoundGraphElement extends IRestorableGraphElement, Comparable<ICompoundGraphElement>, ITreeNode<ICompoundGraphElement> {
 	public static final int ROOT_LEVEL = 0;
 
+	IElementAttribute getAttribute();
+	
 	/**
 	 * Get subgraph of this compound node. Note that this node is the root-node of the
 	 * sub-Cigraph.
@@ -27,6 +29,4 @@ public interface ICompoundGraphElement extends IRestorableGraphElement, Comparab
 	boolean isLink();
 	
 	boolean isNode();
-	
-	boolean isRemoved();
 }

@@ -21,8 +21,8 @@ import uk.ac.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
-import uk.ac.ed.inf.graph.compound.newimpl.CompoundEdge;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
+import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.IEdgeConstructor;
 import uk.ac.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 import uk.ac.ed.inf.tree.ITree;
@@ -52,10 +52,13 @@ public class CompoundEdgeTest {
 	private ComplexGraphFixture testFixture;
 
 	private ComplexGraphFixture otherTestFixture;
+
+	private ElementAttribute expectedElementAttribute;
 	
 	@Before
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
+		this.expectedElementAttribute = new ElementAttribute(ComplexGraphFixture.EDGE2_ID);
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		this.testFixture.redefineEdge(ComplexGraphFixture.EDGE2_ID, new IEdgeConstructor(){
 			
@@ -98,7 +101,7 @@ public class CompoundEdgeTest {
 					allowing(elementTree).getLowestCommonAncestor(node3, node5); will(returnValue(edge1));
 					allowing(elementTree).getLowestCommonAncestor(node5, node3); will(returnValue(edge1));
 				}});
-				testInstance = new CompoundEdge(edge1, ComplexGraphFixture.EDGE2_IDX,	node3, node5);
+				testInstance = new CompoundEdge(edge1, ComplexGraphFixture.EDGE2_IDX, expectedElementAttribute, node3, node5);
 				return testInstance;
 			}
 
@@ -183,6 +186,11 @@ public class CompoundEdgeTest {
 		assertFalse("not self edge", this.testInstance.isSelfEdge());
 	}
 
+	@Test
+	public void testGetAttribute(){
+		assertEquals("expected attribute", this.expectedElementAttribute, this.testInstance.getAttribute());
+	}
+	
 	@Test
 	public void testGetChildCompoundGraph() {
 		assertNotNull("has compound graph", this.testInstance.getChildCompoundGraph());

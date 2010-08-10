@@ -27,6 +27,19 @@ public abstract aspect ICompoundGraphDBC {
 		}};
 	}
 		
+	public pointcut edgeFactory(ICompoundGraph cn, ICompoundNode outNode, ICompoundNode inNode) :
+		execution(public ICompoundEdgeFactory ICompoundGraph.edgeFactory(ICompoundNode, ICompoundNode))
+		&& target(cn)
+		&& args(outNode, inNode);
+	
+	before(final ICompoundGraph cn, final ICompoundNode outNode, final ICompoundNode inNode) : edgeFactory(cn, outNode, inNode) {
+		new Precondition(){{
+			assertion(outNode != null, "outNode is not null");
+			assertion(inNode != null, "inNode is not null");
+			assertion(outNode.getGraph().equals(cn), "outNode belongs to this graph");
+			assertion(inNode.getGraph().equals(cn), "inNode belongs to this graph");
+		}};
+	}
 	
 	pointcut allMethods(ICompoundGraph cn) :
 		execution(public void ICompoundGraph.*(..))

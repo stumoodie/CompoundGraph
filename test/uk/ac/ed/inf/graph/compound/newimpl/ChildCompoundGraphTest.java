@@ -35,7 +35,6 @@ import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
-import uk.ac.ed.inf.graph.compound.newimpl.ChildCompoundGraph;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.IEdgeConstructor;
 import uk.ac.ed.inf.graph.compound.testfixture.IteratorTestUtility;

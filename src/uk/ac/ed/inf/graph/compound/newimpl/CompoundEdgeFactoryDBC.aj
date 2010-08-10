@@ -7,9 +7,10 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 
 public aspect CompoundEdgeFactoryDBC extends ICompoundEdgeFactoryDBC {
 
-	public pointcut theClass(ICompoundEdgeFactory object) :
+	public pointcut allMethods(ICompoundEdgeFactory object) :
 		target(object)
-		&& within(CompoundEdgeFactory);
+		&& (execution(public void CompoundEdgeFactory.*(..)) ||
+				execution(public void CommonEdgeFactory.*(..)));
 
 	pointcut constructor(ICompoundGraph graph) :
 		execution(public CompoundEdgeFactory.new(ICompoundGraph))

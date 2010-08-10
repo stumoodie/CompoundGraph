@@ -31,8 +31,10 @@ import uk.ac.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
-import uk.ac.ed.inf.graph.compound.newimpl.CompoundNodeFactory;
+import uk.ac.ed.inf.graph.compound.IElementAttribute;
+import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
+import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.INodeConstructor;
 
 @RunWith(JMock.class)
@@ -40,6 +42,8 @@ public class CompoundNodeFactoryTest {
 	private Mockery mockery;
 	private ComplexGraphFixture testFixture;
 	private ICompoundNodeFactory testInstance;
+	private IElementAttributeFactory expectedAttribute;
+	private IElementAttribute expectedAtt;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -89,6 +93,20 @@ public class CompoundNodeFactoryTest {
 			}
 		});
 		this.testFixture.buildFixture();
+		this.expectedAtt = new ElementAttribute("new element");
+		this.expectedAttribute = new IElementAttributeFactory() {
+			
+			@Override
+			public IElementAttribute createAttribute() {
+				return expectedAtt;
+			}
+			
+			@Override
+			public boolean canCreateAttribute() {
+				return true;
+			}
+		};
+		this.testInstance.setAttributeFactory(this.expectedAttribute);
 	}
 
 	@After
@@ -108,13 +126,21 @@ public class CompoundNodeFactoryTest {
 	}
 	
 	@Test
+	public void testGetAttributeFactory(){
+		assertEquals("expected attribute", this.expectedAttribute, this.testInstance.getAttributeFactory());
+	}
+	
+	@Test
 	public final void testCreateNode() {
 		mockery.checking(new Expectations(){{
 			one(testInstance.getParentNode().getChildCompoundGraph()).addNode(with(any(ICompoundNode.class)));
 		}});
 		ICompoundNode newNode = this.testInstance.createNode();
 		assertEquals("expected parent", this.testFixture.getNode1(), newNode.getParent());
+		assertEquals("expected attribute", expectedAtt, newNode.getAttribute());
+		assertEquals("expected att links", newNode, expectedAtt.getCurrentElement());
 		assertEquals("expected graph", this.testFixture.getGraph(), newNode.getGraph());
+		mockery.assertIsSatisfied();
 	}
 
 }

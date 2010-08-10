@@ -8,6 +8,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
+import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.tree.AncestorTreeIterator;
 import uk.ac.ed.inf.tree.LevelOrderTreeIterator;
 import uk.ac.ed.inf.tree.PreOrderTreeIterator;
@@ -19,16 +20,20 @@ public class CompoundEdge implements ICompoundEdge {
 	private final CompoundNodePair nodePair;
 	private final int index;
 	private boolean removed;
+	private final IElementAttribute edgeAttribute;
 
-	public CompoundEdge(ICompoundGraphElement parent, int index, ICompoundNode outNode, ICompoundNode inNode){
+	public CompoundEdge(ICompoundGraphElement parent, int index, IElementAttribute attribute,
+			ICompoundNode outNode, ICompoundNode inNode){
 		this.index = index;
 		this.parentElement = parent;
 		this.childGraph = new ChildCompoundGraph(this);
 		this.nodePair = new CompoundNodePair(outNode, inNode);
 		this.level = calcTreeLevel();
 		this.removed = false;
+		this.edgeAttribute = attribute;
 		outNode.addOutEdge(this);
 		inNode.addInEdge(this);
+		attribute.setCurrentElement(this);
 	}
 	
 	
@@ -42,6 +47,11 @@ public class CompoundEdge implements ICompoundEdge {
 		return level;
 	}
 
+	@Override
+	public IElementAttribute getAttribute(){
+		return this.edgeAttribute;
+	}
+	
 	@Override
 	public CompoundNodePair getConnectedNodes() {
 		return new CompoundNodePair(this.nodePair.getOutNode(), this.nodePair.getInNode());
@@ -235,6 +245,8 @@ public class CompoundEdge implements ICompoundEdge {
 		buf.append(this.getIndex());
 		buf.append(",parent=");
 		buf.append(this.getParent().getIndex());
+		buf.append(",attrib=");
+		buf.append(this.getAttribute());
 		buf.append(")");
 		return buf.toString();
 	}

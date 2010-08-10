@@ -2,23 +2,17 @@ package uk.ac.ed.inf.graph.compound;
 
 import uk.ac.ed.inf.designbycontract.ClassInvariant;
 
-public abstract aspect ICompoundEdgeDBC {
+public abstract aspect ICompoundEdgeDBC extends ICompoundGraphElementDBC {
 
-	public abstract pointcut allMethods(ICompoundEdge cn);
+//	public abstract pointcut allMethodsICompoundEdge(ICompoundEdge cn);
 	
-	after(final ICompoundEdge cn) : allMethods(cn) {
+	after(final ICompoundGraphElement ce) : allMethods(ce) {
+		final ICompoundEdge cn = (ICompoundEdge)ce;
 		new ClassInvariant(){{
-			assertion(cn.getGraph() != null, "graph not null");
-			assertion(cn.getIndex() >= 0, "index is a whole number");
-			assertion(cn.getLevel() >= 0, "level is whole number");
-			assertion(cn.getParent() != null, "parent is not null");
-			assertion(cn.getChildCompoundGraph()!= null, "child graph is not null");
-			assertion(cn.getChildCompoundGraph().getRoot().equals(cn), "this is root of its child graph");
-			assertion(cn.getRoot() != null, "root is not null");
 			assertion(cn.getConnectedNodes() != null, "connected nodes is not null");
 			assertion(implies(cn.isSelfEdge(), cn.getConnectedNodes().isSelfEdge()), "consistent self edges");
 			assertion(implies(cn.isSelfEdge(), cn.getConnectedNodes().getOutNode().equals(cn.getConnectedNodes().getInNode())), "self edge has same nodes");
-			assertion(!cn.isNode(), "is not node");
+			assertion(!cn.isNode(), "is not a node");
 			assertion(cn.isLink(), "is edge");
 		}};
 	}

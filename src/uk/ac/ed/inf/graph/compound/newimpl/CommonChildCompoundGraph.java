@@ -29,6 +29,7 @@ public abstract class CommonChildCompoundGraph implements IChildCompoundGraph {
 		}
 		
 		
+		@Override
 		public boolean hasNext() {
 			boolean retVal = this.inNodeIterator.hasNext();
 			if(retVal == false){
@@ -37,6 +38,7 @@ public abstract class CommonChildCompoundGraph implements IChildCompoundGraph {
 			return retVal;
 		}
 
+		@Override
 		public ICompoundGraphElement next() {
 			ICompoundGraphElement retVal = null;
 			if(this.inNodeIterator.hasNext()){
@@ -48,6 +50,7 @@ public abstract class CommonChildCompoundGraph implements IChildCompoundGraph {
 			return retVal;
 		}
 
+		@Override
 		public void remove() {
 			throw new UnsupportedOperationException("This iterator does not support removal");
 		}
@@ -63,6 +66,7 @@ public abstract class CommonChildCompoundGraph implements IChildCompoundGraph {
 	protected CommonChildCompoundGraph(){
 		this.nodeSet = new FilteredNodeSet<ICompoundNode, ICompoundEdge>(new NodeSet<ICompoundNode, ICompoundEdge>(), new IFilterCriteria<ICompoundNode>(){
 
+			@Override
 			public boolean matched(ICompoundNode testObj) {
 				return !testObj.isRemoved();
 			}
@@ -71,6 +75,7 @@ public abstract class CommonChildCompoundGraph implements IChildCompoundGraph {
 		this.edgeSet = new FilteredEdgeSet<ICompoundNode, ICompoundEdge>(new DirectedEdgeSet<ICompoundNode, ICompoundEdge>(),
 				new IFilterCriteria<ICompoundEdge>(){
 
+					@Override
 					public boolean matched(ICompoundEdge testObj) {
 						return !testObj.isRemoved();
 					}
@@ -208,7 +213,6 @@ public abstract class CommonChildCompoundGraph implements IChildCompoundGraph {
 		ICompoundNodeFactory fact = new CompoundNodeFactory(this.getRoot());
 		return fact;
 	}
-
 
 	protected abstract void notifyCopyOperationComplete(ISubCompoundGraph originalSubgraph,
 			ISubCompoundGraph copiedSubgraph);

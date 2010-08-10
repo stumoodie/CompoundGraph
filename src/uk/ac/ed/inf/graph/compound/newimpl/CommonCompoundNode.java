@@ -8,6 +8,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
+import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.util.IFilterCriteria;
 import uk.ac.ed.inf.graph.util.IFilteredEdgeSet;
 import uk.ac.ed.inf.graph.util.impl.ConnectedNodeIterator;
@@ -20,6 +21,7 @@ import uk.ac.ed.inf.tree.PreOrderTreeIterator;
 public abstract class CommonCompoundNode implements ICompoundNode {
 	private static class EdgeExistanceCriteria implements IFilterCriteria<ICompoundEdge> {
 
+		@Override
 		public boolean matched(ICompoundEdge testObj) {
 			return !testObj.isRemoved();
 		}
@@ -36,6 +38,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 		}
 		
 		
+		@Override
 		public boolean hasNext() {
 			boolean retVal = this.inNodeIterator.hasNext();
 			if(retVal == false){
@@ -44,6 +47,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 			return retVal;
 		}
 
+		@Override
 		public ICompoundNode next() {
 			ICompoundNode retVal = null;
 			if(this.inNodeIterator.hasNext()){
@@ -55,6 +59,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 			return retVal;
 		}
 
+		@Override
 		public void remove() {
 			throw new UnsupportedOperationException("This iterator does not support removal");
 		}
@@ -73,6 +78,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 		}
 		
 		
+		@Override
 		public boolean hasNext() {
 			boolean retVal = this.inEdgeIterator.hasNext();
 			if(retVal == false){
@@ -81,6 +87,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 			return retVal;
 		}
 
+		@Override
 		public ICompoundEdge next() {
 			ICompoundEdge retVal = null;
 			if(this.inEdgeIterator.hasNext()){
@@ -92,6 +99,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 			return retVal;
 		}
 
+		@Override
 		public void remove() {
 			throw new UnsupportedOperationException("This iterator does not support removal");
 		}
@@ -102,12 +110,15 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 	private final IFilteredEdgeSet<ICompoundNode, ICompoundEdge> edgeInList;
 	private final IFilteredEdgeSet<ICompoundNode, ICompoundEdge> edgeOutList;
 	private boolean removed;
+	private final IElementAttribute attribute;
 
-	protected CommonCompoundNode(int idx){
+	protected CommonCompoundNode(int idx, IElementAttribute attribute){
 		this.index = idx;
 		this.edgeInList = new FilteredEdgeSet<ICompoundNode, ICompoundEdge>(new DirectedEdgeSet<ICompoundNode, ICompoundEdge>(), new EdgeExistanceCriteria());
 		this.edgeOutList = new FilteredEdgeSet<ICompoundNode, ICompoundEdge>(new DirectedEdgeSet<ICompoundNode, ICompoundEdge>(), new EdgeExistanceCriteria());
 		this.removed = false;
+		this.attribute = attribute;
+		this.attribute.setCurrentElement(this);
 	}
 	
 	@Override
@@ -283,8 +294,12 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 		return this.removed;
 	}
 
+	@Override
 	public void markRemoved(boolean setRemoved) {
 		this.removed = setRemoved;
+		if(!setRemoved){
+			this.getAttribute().setCurrentElement(this);
+		}
 	}
 
 	@Override
@@ -325,4 +340,43 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 		this.edgeInList.add(compoundEdge);
 	}
 
+
+	@Override
+	public IElementAttribute getAttribute() {
+		return this.attribute;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getGraph() == null) ? 0 : getGraph().hashCode());
+		result = prime * result + index;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof CommonCompoundNode)) {
+			return false;
+		}
+		CommonCompoundNode other = (CommonCompoundNode) obj;
+		if (getGraph() == null) {
+			if (other.getGraph() != null) {
+				return false;
+			}
+		} else if (!getGraph().equals(other.getGraph())) {
+			return false;
+		}
+		if (index != other.index) {
+			return false;
+		}
+		return true;
+	}
 }

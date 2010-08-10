@@ -7,7 +7,7 @@ import uk.ac.ed.inf.designbycontract.Postcondition;
 import uk.ac.ed.inf.designbycontract.Precondition;
 
 
-public abstract aspect ICompoundNodeDBC {
+public abstract aspect ICompoundNodeDBC extends ICompoundGraphElementDBC {
 	
 	pointcut addInEdge(ICompoundNode cn, ICompoundEdge inEdge) :
 		execution(public void ICompoundNode.addInEdge(ICompoundEdge))
@@ -18,9 +18,11 @@ public abstract aspect ICompoundNodeDBC {
 	private int previousInDegree;
 	private int previousDegree;
 	
-	before(ICompoundNode cn, final ICompoundEdge inEdge) : addInEdge(cn, inEdge) {
+	before(final ICompoundNode cn, final ICompoundEdge inEdge) : addInEdge(cn, inEdge) {
 		new Precondition(){{
 			assertion(inEdge != null, "inEdge cannot be null");
+			assertion(inEdge.getGraph().equals(cn.getGraph()), "same graph");
+			assertion(inEdge.getConnectedNodes().getInNode().equals(cn), "consistent in node");
 		}};
 		previousInDegree = cn.getInDegree();
 		previousDegree = cn.getDegree();
@@ -40,9 +42,11 @@ public abstract aspect ICompoundNodeDBC {
 	
 	private int previousOutDegree;
 
-	before(ICompoundNode cn, final ICompoundEdge outEdge) : addOutEdge(cn, outEdge) {
+	before(final ICompoundNode cn, final ICompoundEdge outEdge) : addOutEdge(cn, outEdge) {
 		new Precondition(){{
 			assertion(outEdge != null, "outEdge cannot be null");
+			assertion(outEdge.getGraph().equals(cn.getGraph()), "same graph");
+			assertion(outEdge.getConnectedNodes().getOutNode().equals(cn), "consistent out node");
 		}};
 		previousOutDegree = cn.getOutDegree();
 		previousDegree = cn.getDegree();
@@ -74,7 +78,6 @@ public abstract aspect ICompoundNodeDBC {
 		}};
 	}
 
-//	SortedSet<ICompoundEdge> getOutEdgesTo(ICompoundNode inNode);  
 	pointcut getOutEdgesTo(ICompoundNode cn, ICompoundNode inNode) :
 		execution(public Iterator<ICompoundEdge> getOutEdgesTo(ICompoundNode))
 		&& target(cn)
@@ -94,7 +97,6 @@ public abstract aspect ICompoundNodeDBC {
 	}
 
 	
-//	SortedSet<ICompoundEdge> getEdgesWith(ICompoundNode other);
 	pointcut getEdgesWith(ICompoundNode cn, ICompoundNode other) :
 		execution(public Iterator<ICompoundEdge> getEdgesWith(ICompoundNode))
 		&& target(cn)
@@ -114,22 +116,14 @@ public abstract aspect ICompoundNodeDBC {
 	}
 
 	
-	public abstract pointcut allMethods(ICompoundNode cn);
-	
-	after(final ICompoundNode cn) : allMethods(cn) {
+	after(final ICompoundGraphElement ce) : allMethods(ce) {
+		final ICompoundNode cn = (ICompoundNode)ce;
 		new ClassInvariant(){{
-			assertion(cn.getGraph() != null, "graph not null");
-			assertion(cn.getIndex() >= 0, "index is a whole number");
-			assertion(cn.getLevel() >= 0, "level is whole number");
 			assertion(cn.getOutDegree() >= 0, "out degree is a whole number");
 			assertion(cn.getInDegree() >= 0, "in degree is a whole number");
 			assertion(cn.getDegree() >= 0, "degree is a whole number");
-			assertion(cn.getParent() != null, "parent is not null");
-			assertion(cn.getChildCompoundGraph()!= null, "child graph is not null");
-			assertion(cn.getChildCompoundGraph().getRoot().equals(cn), "this is root of its child graph");
-			assertion(cn.getRoot() != null, "root is not null");
-			assertion(cn.isNode(), "is node");
-			assertion(!cn.isLink(), "is not edge");
+			assertion(cn.isNode(), "is a node");
+			assertion(!cn.isLink(), "is not an edge");
 		}};
 	}
 }

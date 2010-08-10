@@ -5,8 +5,6 @@ import uk.ac.ed.inf.designbycontract.Precondition;
 
 public abstract aspect IChildCompoundGraphDBC {
 	
-	public abstract pointcut theClass(IChildCompoundGraph obj);
-	
 	pointcut getEdge(IChildCompoundGraph cn, int idx) :
 		execution(public ICompoundEdge IChildCompoundGraph.getEdge(int))
 		&& target(cn) && args(idx) ;
@@ -28,9 +26,7 @@ public abstract aspect IChildCompoundGraphDBC {
 	}
 		
 	
-	pointcut allMethods(IChildCompoundGraph cn) :
-		execution(public void IChildCompoundGraph.*(..))
-		&& target(cn);
+	public abstract pointcut allMethods(IChildCompoundGraph cn);
 	
 	after(final IChildCompoundGraph cn) : allMethods(cn) {
 		new ClassInvariant(){{

@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import uk.ac.ed.inf.designbycontract.PreConditionException;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubgraphRemovalBuilder;
-import uk.ac.ed.inf.graph.compound.newimpl.CompoundSubgraphRemovalBuilder;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphTestFixture;
 

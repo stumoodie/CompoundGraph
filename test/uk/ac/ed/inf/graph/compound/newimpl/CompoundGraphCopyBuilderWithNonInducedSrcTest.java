@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import uk.ac.ed.inf.designbycontract.PreConditionException;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
-import uk.ac.ed.inf.graph.compound.newimpl.CompoundGraphCopyBuilder;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 
 @RunWith(JMock.class)

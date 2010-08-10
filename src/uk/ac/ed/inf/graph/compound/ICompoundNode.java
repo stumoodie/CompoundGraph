@@ -22,8 +22,6 @@ import uk.ac.ed.inf.graph.state.IRestorableNode;
 
 public interface ICompoundNode extends ICompoundGraphElement, IRestorableNode {
 	
-	int getIndex();
-	
 	int getInDegree();
 	
 	int getOutDegree();

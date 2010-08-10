@@ -6,8 +6,6 @@ import uk.ac.ed.inf.designbycontract.Precondition;
 
 public abstract aspect ICompoundEdgeFactoryDBC {
 	
-	public abstract pointcut theClass(ICompoundEdgeFactory obj);
-	
 	pointcut setPair(ICompoundEdgeFactory cn, CompoundNodePair pair) :
 		execution(public void ICompoundEdgeFactory.setPair(CompoundNodePair))
 		&& target(cn) && args(pair) ;
@@ -24,9 +22,17 @@ public abstract aspect ICompoundEdgeFactoryDBC {
 		}};
 	}
 	
-	pointcut allMethods(ICompoundEdgeFactory cn) :
-		execution(public void ICompoundEdgeFactory.*(..))
-		&& target(cn);
+	pointcut createEdge(ICompoundEdgeFactory cf) :
+		execution(public ICompoundEdge ICompoundEdgeFactory.createEdge()) &&
+		target(cf);
+	
+	before(final ICompoundEdgeFactory cf) : createEdge(cf) {
+		new Precondition(){{
+			assertion(cf.canCreateEdge(), "can create the edge");
+		}};
+	}
+	
+	public abstract pointcut allMethods(ICompoundEdgeFactory cn);
 	
 	after(final ICompoundEdgeFactory cn) : allMethods(cn) {
 		new ClassInvariant(){{

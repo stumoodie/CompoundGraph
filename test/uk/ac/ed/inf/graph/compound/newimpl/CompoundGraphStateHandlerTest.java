@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 
 import uk.ac.ed.inf.bitstring.BitStringBuffer;
 import uk.ac.ed.inf.bitstring.IBitString;
-import uk.ac.ed.inf.graph.compound.newimpl.CompoundGraphStateHandler;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphTestFixture;
 import uk.ac.ed.inf.graph.state.IGraphState;

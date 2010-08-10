@@ -14,6 +14,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphMoveBuilder;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
+import uk.ac.ed.inf.graph.compound.IElementAttributeMoveFactory;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
@@ -24,6 +25,7 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	private ISubCompoundGraphFactory subGraphFactory;
 	private final Map<ICompoundGraphElement, ICompoundGraphElement> oldNewEquivList;
 	private ISubCompoundGraphFactory removalSubGraphFactory;
+	private IElementAttributeMoveFactory elementAttributeFactory;
 
 	public CompoundGraphMoveBuilder(IChildCompoundGraph destn){
 		this.oldNewEquivList = new HashMap<ICompoundGraphElement, ICompoundGraphElement>();
@@ -58,11 +60,16 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	public boolean canMoveHere() {
 		ISubCompoundGraph subGraph = this.sourceSubCigraph;
 		boolean retVal = subGraph != null
+			&& this.elementAttributeFactory != null
 			&& subGraph.getSuperGraph().equals(this.destChildGraph.getSuperGraph())
 			&& subGraph.isInducedSubgraph()
 			&& subGraph.isConsistentSnapShot()
 			&& !subGraph.containsRoot();
 		if(retVal){
+			// check is destination is a child of any of the top nodes
+			// and that at least one of the top nodes will be moved to a new child graph
+			// and that the top nodes attributes are permitted to be moved.
+			this.elementAttributeFactory.setDestinationAttribute(this.destChildGraph.getRoot().getAttribute());
 			boolean isDestnChildOfTopNode = false;
 			int numTopElsWithDifferntParents = subGraph.numTopElements();
 			Iterator<ICompoundGraphElement> topNodeIter = subGraph.topElementIterator();
@@ -73,6 +80,8 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 					numTopElsWithDifferntParents--;
 				}
 				isDestnChildOfTopNode = topNode.isChild(destn);
+				this.elementAttributeFactory.setElementToMove(topNode.getAttribute());
+				this.elementAttributeFactory.createAttribute();
 			}
 			retVal = !isDestnChildOfTopNode && numTopElsWithDifferntParents > 0;
 		}
@@ -166,6 +175,8 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 		ICompoundEdge retVal = srcEdge;
 		ICompoundChildEdgeFactory edgefact = parent.getChildCompoundGraph().edgeFactory();
 		edgefact.setPair(new CompoundNodePair(outNode, inNode));
+		this.elementAttributeFactory.setElementToMove(srcEdge.getAttribute());
+		edgefact.setAttributeFactory(this.elementAttributeFactory);
 		retVal = edgefact.createEdge();
 		srcEdge.markRemoved(true);
 		this.removalSubGraphFactory.addElement(srcEdge);
@@ -175,6 +186,8 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	private ICompoundNode moveNode(ICompoundNode srcNode, ICompoundGraphElement destParentNode){
 		ICompoundNode newNode = srcNode; 
 		ICompoundNodeFactory fact = destParentNode.getChildCompoundGraph().nodeFactory();
+		elementAttributeFactory.setElementToMove(srcNode.getAttribute());
+		fact.setAttributeFactory(elementAttributeFactory);
 		newNode = fact.createNode();
 		srcNode.markRemoved(true);
 		this.removalSubGraphFactory.addElement(srcNode);
@@ -195,6 +208,16 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	@Override
 	public ISubCompoundGraph getRemovedComponents() {
 		return this.removalSubGraphFactory.createSubgraph();
+	}
+
+	@Override
+	public void setElementAttributeFactory(IElementAttributeMoveFactory elementAttributeFactory) {
+		this.elementAttributeFactory = elementAttributeFactory;
+	}
+
+	@Override
+	public IElementAttributeMoveFactory getElementAttributeFactory() {
+		return this.elementAttributeFactory;
 	}
 
 }

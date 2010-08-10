@@ -21,6 +21,12 @@ public interface ICompoundNodeFactory {
 
 	ICompoundGraphElement getParentNode();
 	
+	boolean canCreateNode();
+	
+	void setAttributeFactory(IElementAttributeFactory attribute);
+	
+	IElementAttributeFactory getAttributeFactory();
+	
 	ICompoundNode createNode();
 	
 }

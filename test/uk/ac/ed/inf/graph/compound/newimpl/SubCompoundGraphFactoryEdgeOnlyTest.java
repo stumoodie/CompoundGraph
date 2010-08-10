@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
-import uk.ac.ed.inf.graph.compound.newimpl.SubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 

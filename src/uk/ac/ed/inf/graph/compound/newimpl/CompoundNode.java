@@ -3,17 +3,19 @@ package uk.ac.ed.inf.graph.compound.newimpl;
 import uk.ac.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
+import uk.ac.ed.inf.graph.compound.IElementAttribute;
 
 public class CompoundNode extends CommonCompoundNode {
 	private final ICompoundGraphElement parentElement;
 	private final int level;
 	private final IChildCompoundGraph childGraph;
 	
-	public CompoundNode(ICompoundGraphElement parentElement, int index){
-		super(index);
+	public CompoundNode(ICompoundGraphElement parentElement, int index, IElementAttribute attribute){
+		super(index, attribute);
 		this.parentElement = parentElement;
 		this.level = calcTreeLevel();
 		this.childGraph = new ChildCompoundGraph(this);
+		attribute.setCurrentElement(this);
 	}
 	
 	@Override
@@ -68,6 +70,8 @@ public class CompoundNode extends CommonCompoundNode {
 		buf.append(this.getIndex());
 		buf.append(",parent=");
 		buf.append(this.getParent().getIndex());
+		buf.append(",attrib=");
+		buf.append(this.getAttribute());
 		buf.append(")");
 		return buf.toString();
 	}
