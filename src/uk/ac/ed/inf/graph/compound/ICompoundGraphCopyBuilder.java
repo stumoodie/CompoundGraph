@@ -20,30 +20,10 @@ public interface ICompoundGraphCopyBuilder {
 	/**
 	 * Tests whether the subGraph can be copied to this graph. To be true the subgraph must be an induced subgraph
 	 *  that is a consistent of the super graph. It must also be not null.
-	 * @param subGraph the subgraph to test, can be null. 
-	 * @return true if the subgraph is valid to copy from, false otherwise.
-	 * @deprecated use setSourceSubgraph() then canCopyHere()
-	 */
-	@Deprecated
-	boolean canCopyHere(ISubCompoundGraph subgraph);
-
-	/**
-	 * Tests whether the subGraph can be copied to this graph. To be true the subgraph must be an induced subgraph
-	 *  that is a consistent of the super graph. It must also be not null.
 	 * @return true if the subgraph is valid to copy from, false otherwise.
 	 */
 	boolean canCopyHere();
 
-	/**
-	 * Copies a subgraph into this graph. Note that the subgraph can be from a different graph or subgraph
-	 * of this graph, since the structure of the graph is copied not the nodes and edges instances
-	 * themselves. Note that the subgraph must be valid to be copied.
-	 * @param subGraph the subgraph to copy
-	 * @deprecated use <code>copyHere()</code> instead.
-	 */
-	@Deprecated
-	void copyHere(ISubCompoundGraph subgraph);
-	
 	/**
 	 * Retrieves the nodes and edges created in this graph by the last copy operation. The subgraph
 	 * is <b>not</b> guaranteed to be a consistent snapshot of this graph.   If not copy operation has

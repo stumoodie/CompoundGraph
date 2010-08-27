@@ -6,8 +6,4 @@ public interface IElementAttributeMoveFactory extends IElementAttributeFactory {
 	
 	IElementAttribute getElementToMove();
 
-	void setDestinationAttribute(IElementAttribute attribute);
-
-	IElementAttribute getDestinationAttribute();
-	
 }

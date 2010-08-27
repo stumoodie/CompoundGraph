@@ -104,6 +104,16 @@ public class CompoundNodeFactoryNonParentingAttributeTest {
 			public boolean canCreateAttribute() {
 				return false;
 			}
+
+			@Override
+			public void setDestinationAttribute(IElementAttribute attribute) {
+				
+			}
+
+			@Override
+			public IElementAttribute getDestinationAttribute() {
+				return null;
+			}
 		};
 		this.testInstance.setAttributeFactory(expectedAttributeFactory);
 	}

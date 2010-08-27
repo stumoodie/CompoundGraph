@@ -5,6 +5,7 @@ import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 
 public class ElementAttributeFactory implements	IElementAttributeFactory {
 	private String name;
+	private IElementAttribute destinationAttribute;
 	
 	public ElementAttributeFactory(){
 		name = null;
@@ -22,5 +23,15 @@ public class ElementAttributeFactory implements	IElementAttributeFactory {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public void setDestinationAttribute(IElementAttribute attribute) {
+		this.destinationAttribute = attribute;
+	}
+
+	@Override
+	public IElementAttribute getDestinationAttribute() {
+		return this.destinationAttribute;
 	}
 }

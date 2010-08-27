@@ -105,6 +105,16 @@ public class CompoundNodeFactoryTest {
 			public boolean canCreateAttribute() {
 				return true;
 			}
+
+			@Override
+			public void setDestinationAttribute(IElementAttribute attribute) {
+				
+			}
+
+			@Override
+			public IElementAttribute getDestinationAttribute() {
+				return null;
+			}
 		};
 		this.testInstance.setAttributeFactory(this.expectedAttribute);
 	}

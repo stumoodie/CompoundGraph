@@ -26,13 +26,7 @@ public interface ISubgraphRemovalBuilder {
 	/**
 	 * Removes the nodes and edges defined in the subgraph from this graph. The subgraph must be consistent with
 	 *  this graph and be a subgraph of this graph.
-	 * @param subgraph The subgraph to remove, cannot be null.
-	 * @throws IllegalArgumentException if <code>canRemoveSubgraph(subgraph) == false</code>.
-	 * @deprecated use setRemovalSubgraph() then removeSubgraph()
 	 */ 
-	@Deprecated
-	void removeSubgraph(ISubCompoundGraph subgraph);
-
 	void removeSubgraph();
 	
 	/**

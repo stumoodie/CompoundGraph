@@ -31,13 +31,6 @@ public class CompoundSubgraphRemovalBuilder implements ISubgraphRemovalBuilder {
 		return this.subCompoundGraph;
 	}
 
-	@Override
-	@Deprecated
-	public void removeSubgraph(ISubCompoundGraph subgraph) {
-		this.setRemovalSubgraph(subgraph);
-		this.removeSubgraph();
-	}
-
 	private void removeElement(ICompoundGraphElement element){
 		if(!element.isRemoved()){
 			element.markRemoved(true);
