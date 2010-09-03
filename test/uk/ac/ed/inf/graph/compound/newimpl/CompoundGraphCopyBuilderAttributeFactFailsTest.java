@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttributeCopyFactory;
 
 @RunWith(JMock.class)
 public class CompoundGraphCopyBuilderAttributeFactFailsTest {
@@ -28,8 +27,6 @@ public class CompoundGraphCopyBuilderAttributeFactFailsTest {
 	private ComplexGraphFixture destnFixture;
 	private ISubCompoundGraph mockSrcSubgraph;
 
-	private ElementAttributeCopyFactory elementAttributeFactory;
-	
 	@Before
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
@@ -54,9 +51,7 @@ public class CompoundGraphCopyBuilderAttributeFactFailsTest {
 		}});
 		
 		this.testInstance = new CompoundGraphCopyBuilder(this.destnFixture.getGraph().getRoot().getChildCompoundGraph());
-		this.elementAttributeFactory = new ElementAttributeCopyFactory();
-		this.elementAttributeFactory.setCanCreateFlag(false);
-		this.testInstance.setElementAttributeFactory(elementAttributeFactory);
+		this.testFixture.getAttribute(ComplexGraphFixture.NODE1_ID).setCanCreateFlag(false);
 		this.testInstance.setSourceSubgraph(this.mockSrcSubgraph);
 	}
 

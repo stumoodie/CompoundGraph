@@ -28,7 +28,7 @@ import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttributeMoveFactory;
+import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphTestFixture;
 
 @RunWith(JMock.class)
@@ -70,7 +70,6 @@ public class CompoundGraphMoveBuilderWithNonDestnSharingSubgraphTest {
 					testFixture.getNode(ComplexGraphFixture.NODE4_ID), testFixture.getNode(ComplexGraphFixture.NODE5_ID))))); will(returnValue(false));
 		}});
 		this.testInstance.setSourceSubgraph(mockSrcSubgraph);
-		this.testInstance.setElementAttributeFactory(new ElementAttributeMoveFactory());
 	}
 
 	@After
@@ -137,9 +136,11 @@ public class CompoundGraphMoveBuilderWithNonDestnSharingSubgraphTest {
 		this.mockery.checking(new Expectations(){{
 			allowing(mockNode).getChildCompoundGraph(); will(returnValue(mockNodeChildGraph));
 			allowing(mockNode).getGraph(); will(returnValue(testFixture.getGraph()));
+			allowing(mockNode).getAttribute(); will(returnValue(new ElementAttribute("mockNodeAtt")));
 			
 			allowing(mockEdge).getChildCompoundGraph(); will(returnValue(mockEdgeChildGraph));
 			allowing(mockEdge).getGraph(); will(returnValue(testFixture.getGraph()));
+			allowing(mockEdge).getAttribute(); will(returnValue(new ElementAttribute("mockNodeAtt")));
 		
 			exactly(1).of(testFixture.getNode(ComplexGraphFixture.NODE2_ID)).markRemoved(true);
 			exactly(1).of(testFixture.getNode(ComplexGraphFixture.NODE3_ID)).markRemoved(true);

@@ -6,4 +6,8 @@ public interface IElementAttribute {
 	
 	void setCurrentElement(ICompoundGraphElement newOwner);
 	
+	IElementAttributeFactory elementAttributeCopyFactory();
+	
+	IElementAttributeFactory elementAttributeMoveFactory();
+	
 }

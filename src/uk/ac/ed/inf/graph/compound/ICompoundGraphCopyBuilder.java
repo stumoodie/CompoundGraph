@@ -55,8 +55,8 @@ public interface ICompoundGraphCopyBuilder {
 	 */
 	void makeCopy();
 
-	void setElementAttributeFactory(IElementAttributeCopyFactory elementAttributeFactory);
-	
-	IElementAttributeCopyFactory getElementAttributeFactory();
+//	void setElementAttributeFactory(IElementAttributeCopyFactory elementAttributeFactory);
+//	
+//	IElementAttributeCopyFactory getElementAttributeFactory();
 	
 }

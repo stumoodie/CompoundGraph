@@ -2,10 +2,12 @@ package uk.ac.ed.inf.graph.compound.testfixture;
 
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
+import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 
 public class ElementAttribute implements IElementAttribute {
 	private final String name;
 	private ICompoundGraphElement currentElement;
+	private boolean canCreateFlag = true;
 	
 	public ElementAttribute(String name){
 		this.name = name;
@@ -61,5 +63,23 @@ public class ElementAttribute implements IElementAttribute {
 	@Override
 	public void setCurrentElement(ICompoundGraphElement newOwner) {
 		this.currentElement = newOwner;
+	}
+
+	@Override
+	public IElementAttributeFactory elementAttributeCopyFactory() {
+		ElementAttributeCopyFactory retVal = new ElementAttributeCopyFactory(this);
+		retVal.setCanCreateFlag(canCreateFlag);
+		return retVal;
+	}
+
+	@Override
+	public IElementAttributeFactory elementAttributeMoveFactory() {
+		ElementAttributeMoveFactory retVal = new ElementAttributeMoveFactory(this);
+		retVal.setCanCreateFlag(canCreateFlag);
+		return retVal;
+	}
+
+	public void setCanCreateFlag(boolean canCreate) {
+		this.canCreateFlag = canCreate;
 	}
 }

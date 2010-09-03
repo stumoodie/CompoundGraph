@@ -1,12 +1,17 @@
 package uk.ac.ed.inf.graph.compound.testfixture;
 
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
-import uk.ac.ed.inf.graph.compound.IElementAttributeMoveFactory;
+import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 
-public class ElementAttributeMoveFactory implements	IElementAttributeMoveFactory {
-	private IElementAttribute attribToMove;
+public class ElementAttributeMoveFactory implements	IElementAttributeFactory {
+	private final IElementAttribute attribToMove;
 	private IElementAttribute destinationAttribute;
 	private boolean canCreateFlag = true;
+	
+	
+	public ElementAttributeMoveFactory(IElementAttribute attribToMove){
+		this.attribToMove = attribToMove;
+	}
 	
 	@Override
 	public boolean canCreateAttribute() {
@@ -18,12 +23,6 @@ public class ElementAttributeMoveFactory implements	IElementAttributeMoveFactory
 		return this.attribToMove;
 	}
 
-	@Override
-	public void setElementToMove(IElementAttribute attributeToMove) {
-		this.attribToMove = attributeToMove;
-	}
-
-	@Override
 	public IElementAttribute getElementToMove() {
 		return this.attribToMove;
 	}

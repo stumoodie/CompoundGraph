@@ -1020,7 +1020,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 	
 	
 	public class GetRemoveElementAction implements Action {
-		private String elementId;
+		private final String elementId;
 		
 		public GetRemoveElementAction(String elementId){
 			this.elementId = elementId;
@@ -1227,7 +1227,11 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 		}
 	}
 
-
+	public ElementAttribute getAttribute(String elementId){
+		return this.elementAttributesMap.get(elementId);
+	}
+	
+	
 	@Override
 	public void setElementRemoved(String elementId, boolean markRemoved){
 		this.elementRemovalMap.put(elementId, true);

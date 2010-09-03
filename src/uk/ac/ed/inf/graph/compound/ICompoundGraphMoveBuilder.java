@@ -53,9 +53,9 @@ public interface ICompoundGraphMoveBuilder {
 	 */
 	void makeMove();
 
-	void setElementAttributeFactory(IElementAttributeMoveFactory elementAttributeFactory);
-	
-	IElementAttributeMoveFactory getElementAttributeFactory();
+//	void setElementAttributeFactory(IElementAttributeMoveFactory elementAttributeFactory);
+//	
+//	IElementAttributeMoveFactory getElementAttributeFactory();
 	
 	ISubCompoundGraph getRemovedComponents();
 }

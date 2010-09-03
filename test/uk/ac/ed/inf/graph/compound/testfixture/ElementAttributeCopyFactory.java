@@ -1,12 +1,16 @@
 package uk.ac.ed.inf.graph.compound.testfixture;
 
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
-import uk.ac.ed.inf.graph.compound.IElementAttributeCopyFactory;
+import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 
-public class ElementAttributeCopyFactory implements	IElementAttributeCopyFactory {
-	private IElementAttribute attribToCopy;
+public class ElementAttributeCopyFactory implements	IElementAttributeFactory {
+	private final IElementAttribute attribToCopy;
 	private IElementAttribute destinationAttribute;
 	private boolean canCreateFlag = true;
+	
+	public ElementAttributeCopyFactory(ElementAttribute attrbToCopy){
+		this.attribToCopy = attrbToCopy;
+	}
 	
 	@Override
 	public boolean canCreateAttribute() {
@@ -18,12 +22,6 @@ public class ElementAttributeCopyFactory implements	IElementAttributeCopyFactory
 		return new ElementAttribute(((ElementAttribute)this.attribToCopy));
 	}
 
-	@Override
-	public void setElementToCopy(IElementAttribute attributeToCopy) {
-		this.attribToCopy = attributeToCopy;
-	}
-
-	@Override
 	public IElementAttribute getElementToCopy() {
 		return this.attribToCopy;
 	}

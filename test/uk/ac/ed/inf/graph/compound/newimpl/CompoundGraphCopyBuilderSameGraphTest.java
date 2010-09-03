@@ -22,11 +22,11 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
-import uk.ac.ed.inf.graph.compound.IElementAttributeCopyFactory;
+import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttributeCopyFactory;
+import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
 
 @RunWith(JMock.class)
 public class CompoundGraphCopyBuilderSameGraphTest {
@@ -38,8 +38,6 @@ public class CompoundGraphCopyBuilderSameGraphTest {
 	private ComplexGraphFixture destnFixture;
 	private ISubCompoundGraph mockSrcSubgraph;
 
-	private IElementAttributeCopyFactory elementAttributeFactory;
-	
 	@Before
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
@@ -63,8 +61,6 @@ public class CompoundGraphCopyBuilderSameGraphTest {
 		}});
 		
 		this.testInstance = new CompoundGraphCopyBuilder(this.destnFixture.getGraph().getRoot().getChildCompoundGraph());
-		this.elementAttributeFactory = new ElementAttributeCopyFactory();
-		this.testInstance.setElementAttributeFactory(elementAttributeFactory);
 		this.testInstance.setSourceSubgraph(this.mockSrcSubgraph);
 	}
 
@@ -109,22 +105,24 @@ public class CompoundGraphCopyBuilderSameGraphTest {
 		this.mockery.checking(new Expectations(){{
 			allowing(mockNode).getChildCompoundGraph(); will(returnValue(mockChildGraph));
 			allowing(mockNode).getGraph(); will(returnValue(destnFixture.getGraph()));
+			allowing(mockNode).getAttribute(); will(returnValue(new ElementAttribute("mockNodeAtt")));
 			
 			allowing(mockEdge).getChildCompoundGraph(); will(returnValue(mockChildGraph));
 			allowing(mockEdge).getGraph(); will(returnValue(destnFixture.getGraph()));
+			allowing(mockEdge).getAttribute(); will(returnValue(new ElementAttribute("mockNodeAtt")));
 			
 			allowing(mockChildGraph).nodeFactory(); will(returnValue(mockNodeFact));
 			allowing(mockChildGraph).edgeFactory(); will(returnValue(mockEdgeFact));
 			allowing(mockChildGraph).getSuperGraph(); will(returnValue(destnFixture.getGraph()));
 
-			allowing(mockEdgeFact).setAttributeFactory(elementAttributeFactory);
+			allowing(mockEdgeFact).setAttributeFactory(with(any(IElementAttributeFactory.class)));
 			exactly(1).of(mockEdgeFact).setPair(with(any(CompoundNodePair.class)));
 			exactly(1).of(mockEdgeFact).createEdge();
 			
-			allowing(destnRootNodeFact).setAttributeFactory(elementAttributeFactory);
+			allowing(destnRootNodeFact).setAttributeFactory(with(any(IElementAttributeFactory.class)));
 			exactly(3).of(destnRootNodeFact).createNode(); will(returnValue(mockNode));
 
-			allowing(mockNodeFact).setAttributeFactory(elementAttributeFactory);
+			allowing(mockNodeFact).setAttributeFactory(with(any(IElementAttributeFactory.class)));
 			exactly(2).of(mockNodeFact).createNode(); will(returnValue(mockNode));
 			
 			exactly(7).of(destnSubgraphFactory).addElement(with(any(ICompoundGraphElement.class)));
@@ -132,7 +130,7 @@ public class CompoundGraphCopyBuilderSameGraphTest {
 			
 			allowing(mockDestnSubgraph).getSuperGraph(); will(returnValue(destnFixture.getGraph()));
 			
-			allowing(destnrootChildEdgeFactory).setAttributeFactory(elementAttributeFactory);
+			allowing(destnrootChildEdgeFactory).setAttributeFactory(with(any(IElementAttributeFactory.class)));
 			exactly(1).of(destnrootChildEdgeFactory).setPair(with(any(CompoundNodePair.class)));
 			exactly(1).of(destnrootChildEdgeFactory).createEdge(); will(returnValue(mockEdge));
 			
