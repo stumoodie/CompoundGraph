@@ -6,6 +6,8 @@ import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 public class ElementAttributeFactory implements	IElementAttributeFactory {
 	private String name;
 	private IElementAttribute destinationAttribute;
+	private IElementAttribute outAttribute;
+	private IElementAttribute inAttribute;
 	
 	public ElementAttributeFactory(){
 		name = null;
@@ -34,4 +36,26 @@ public class ElementAttributeFactory implements	IElementAttributeFactory {
 	public IElementAttribute getDestinationAttribute() {
 		return this.destinationAttribute;
 	}
+
+
+	@Override
+	public void setOutAttribute(IElementAttribute attribute) {
+		this.outAttribute = attribute;
+	}
+
+	@Override
+	public IElementAttribute getOutAttribute() {
+		return this.outAttribute;
+	}
+
+	@Override
+	public void setInAttribute(IElementAttribute attribute) {
+		this.inAttribute = attribute;
+	}
+
+	@Override
+	public IElementAttribute getInAttribute() {
+		return this.inAttribute;
+	}
+
 }

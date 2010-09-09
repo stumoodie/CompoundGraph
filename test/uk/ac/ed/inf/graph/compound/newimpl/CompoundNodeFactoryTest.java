@@ -115,6 +115,24 @@ public class CompoundNodeFactoryTest {
 			public IElementAttribute getDestinationAttribute() {
 				return null;
 			}
+
+			@Override
+			public void setOutAttribute(IElementAttribute attribute) {
+			}
+
+			@Override
+			public IElementAttribute getOutAttribute() {
+				return null;
+			}
+
+			@Override
+			public void setInAttribute(IElementAttribute attribute) {
+			}
+
+			@Override
+			public IElementAttribute getInAttribute() {
+				return null;
+			}
 		};
 		this.testInstance.setAttributeFactory(this.expectedAttribute);
 	}

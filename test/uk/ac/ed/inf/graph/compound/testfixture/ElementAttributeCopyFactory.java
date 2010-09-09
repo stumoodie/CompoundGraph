@@ -7,6 +7,8 @@ public class ElementAttributeCopyFactory implements	IElementAttributeFactory {
 	private final IElementAttribute attribToCopy;
 	private IElementAttribute destinationAttribute;
 	private boolean canCreateFlag = true;
+	private IElementAttribute inAttribute;
+	private IElementAttribute outAttribute;
 	
 	public ElementAttributeCopyFactory(ElementAttribute attrbToCopy){
 		this.attribToCopy = attrbToCopy;
@@ -42,6 +44,26 @@ public class ElementAttributeCopyFactory implements	IElementAttributeFactory {
 
 	public void setCanCreateFlag(boolean canCreateFlag) {
 		this.canCreateFlag = canCreateFlag;
+	}
+
+	@Override
+	public void setOutAttribute(IElementAttribute attribute) {
+		this.outAttribute = attribute;
+	}
+
+	@Override
+	public IElementAttribute getOutAttribute() {
+		return this.outAttribute;
+	}
+
+	@Override
+	public void setInAttribute(IElementAttribute attribute) {
+		this.inAttribute = attribute;
+	}
+
+	@Override
+	public IElementAttribute getInAttribute() {
+		return this.inAttribute;
 	}
 
 }

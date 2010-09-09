@@ -117,6 +117,8 @@ public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 //		this.attributeCopyFactory.setElementToCopy(srcEdge.getAttribute());
 		IElementAttributeFactory attributeCopyFactory = srcEdge.getAttribute().elementAttributeCopyFactory();
 		attributeCopyFactory.setDestinationAttribute(parent.getAttribute());
+		attributeCopyFactory.setOutAttribute(outNode.getAttribute());
+		attributeCopyFactory.setInAttribute(inNode.getAttribute());
 		edgefact.setAttributeFactory(attributeCopyFactory);
 		edgefact.setPair(new CompoundNodePair(outNode, inNode));
 		return edgefact.createEdge();

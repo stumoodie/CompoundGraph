@@ -165,6 +165,8 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 		edgefact.setPair(new CompoundNodePair(outNode, inNode));
 		IElementAttributeFactory elementAttributeFactory = srcEdge.getAttribute().elementAttributeMoveFactory();
 		elementAttributeFactory.setDestinationAttribute(parent.getAttribute());
+		elementAttributeFactory.setInAttribute(inNode.getAttribute());
+		elementAttributeFactory.setOutAttribute(outNode.getAttribute());
 //		this.elementAttributeFactory.setElementToMove(srcEdge.getAttribute());
 		edgefact.setAttributeFactory(elementAttributeFactory);
 		retVal = edgefact.createEdge();

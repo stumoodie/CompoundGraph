@@ -25,12 +25,20 @@ public abstract class CommonEdgeFactory implements ICompoundEdgeFactory {
 	
 	@Override
 	public boolean canCreateEdge() {
-		return this.isValidNodePair(this.pair) && this.edgeAttribute != null
-			&& this.edgeAttribute.canCreateAttribute();
+		boolean retVal = false;
+		if(this.isValidNodePair(this.pair) && this.edgeAttribute != null){
+			this.edgeAttribute.setInAttribute(this.pair.getInNode().getAttribute());
+			this.edgeAttribute.setOutAttribute(this.pair.getOutNode().getAttribute());
+			retVal = this.edgeAttribute.canCreateAttribute();
+		}
+		return retVal; 
 	}
 
 	@Override
 	public ICompoundEdge createEdge() {
+		this.edgeAttribute.setDestinationAttribute(getParent().getAttribute());
+		this.edgeAttribute.setOutAttribute(pair.getOutNode().getAttribute());
+		this.edgeAttribute.setInAttribute(pair.getInNode().getAttribute());
 		IElementAttribute edgeAttribute = this.edgeAttribute.createAttribute();
 		ICompoundEdge retVal = new CompoundEdge(getParent(), CompoundGraph.getIndexCounter(this.getGraph()).nextIndex(),
 				edgeAttribute, this.pair.getOutNode(), this.pair.getInNode());

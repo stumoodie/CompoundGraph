@@ -29,5 +29,12 @@ public interface IElementAttributeFactory {
 	 * @throws IllegalStateException if <code>canCreateAttribute() == false</code>. 
 	 */
 	IElementAttribute createAttribute();
+	
+	void setOutAttribute(IElementAttribute attribute);
+	
+	IElementAttribute getOutAttribute();
 
+	void setInAttribute(IElementAttribute attribute);
+	
+	IElementAttribute getInAttribute();
 }
