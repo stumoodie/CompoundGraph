@@ -23,12 +23,18 @@ public class CompoundChildEdgeFactory extends CommonEdgeFactory implements IComp
 		return getParent().getGraph();
 	}
 
+//	@Override
+//	public boolean isValidNodePair(CompoundNodePair nodePair){
+//		boolean retVal = super.isValidNodePair(nodePair);
+//		if(retVal){
+//			retVal = this.getGraph().getElementTree().getLowestCommonAncestor(nodePair.getOutNode(), nodePair.getInNode()).equals(getParent());
+//		}
+//		return retVal;
+//	}
+
 	@Override
-	public boolean isValidNodePair(CompoundNodePair nodePair){
-		boolean retVal = super.isValidNodePair(nodePair);
-		if(retVal){
-			retVal = this.getGraph().getElementTree().getLowestCommonAncestor(nodePair.getOutNode(), nodePair.getInNode()).equals(getParent());
-		}
-		return retVal;
+	protected boolean isParentLowestCommonAncestor(CompoundNodePair nodePair) {
+		return nodePair != null
+			&& getGraph().getElementTree().getLowestCommonAncestor(nodePair.getOutNode(), nodePair.getInNode()).equals(parent);
 	}
 }

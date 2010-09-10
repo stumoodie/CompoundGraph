@@ -1168,6 +1168,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 					allowing(elementTree).getLowestCommonAncestor(getNode3(), getNode5()); will(returnValue(getEdge1()));
 					allowing(elementTree).getLowestCommonAncestor(getNode5(), getNode3()); will(returnValue(getEdge1()));
 					allowing(elementTree).getLowestCommonAncestor(getNode2(), getNode3()); will(returnValue(getRootNode()));
+					allowing(elementTree).getLowestCommonAncestor(getNode1(), getNode3()); will(returnValue(getRootNode()));
 				}});
 				return true;
 			}

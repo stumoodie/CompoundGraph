@@ -28,4 +28,9 @@ public class CompoundEdgeFactory extends CommonEdgeFactory implements ICompoundE
 		return this.graph;
 	}
 
+	@Override
+	protected boolean isParentLowestCommonAncestor(CompoundNodePair nodePair) {
+		return nodePair != null;
+	}
+
 }

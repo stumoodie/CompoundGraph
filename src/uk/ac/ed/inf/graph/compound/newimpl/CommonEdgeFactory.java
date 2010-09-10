@@ -53,9 +53,15 @@ public abstract class CommonEdgeFactory implements ICompoundEdgeFactory {
 
 	@Override
 	public boolean isValidNodePair(CompoundNodePair nodePair) {
-		return nodePair != null && nodePair.getGraph().equals(this.getGraph());
+		return nodePair != null
+			&& nodePair.getGraph().equals(this.getGraph())
+			&& isParentLowestCommonAncestor(nodePair)
+			&& !nodePair.getOutNode().isAncestor(nodePair.getInNode())
+			&& !nodePair.getInNode().isAncestor(nodePair.getOutNode());
 	}
 
+	protected abstract boolean isParentLowestCommonAncestor(CompoundNodePair nodePair);
+	
 	@Override
 	public void setPair(CompoundNodePair nodePair) {
 		this.pair = nodePair;

@@ -165,7 +165,7 @@ public class CompoundChildEdgeFactoryTest {
 
 	@Test(expected=PreConditionException.class)
 	public void testSetPairWrongLCN() {
-		CompoundNodePair altExpectedPair = this.testFixture.getEdge(ComplexGraphFixture.EDGE4_ID).getConnectedNodes();
+		CompoundNodePair altExpectedPair = new CompoundNodePair(this.testFixture.getNode(ComplexGraphFixture.NODE1_ID), this.testFixture.getNode(ComplexGraphFixture.NODE3_ID));
 		this.testInstance.setPair(altExpectedPair);
 	}
 
