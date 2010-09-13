@@ -217,7 +217,7 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 
 			@Override
 			public IRestorableGraphElement next() {
-				return (IRestorableGraphElement)iter.next();
+				return iter.next();
 			}
 
 			@Override
@@ -231,5 +231,17 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 	@Override
 	public ISubgraphRemovalBuilder newSubgraphRemovalBuilder() {
 		return new CompoundSubgraphRemovalBuilder(this);
+	}
+	
+	@Override
+	public String toString(){
+		StringBuilder buf = new StringBuilder(this.getClass().getSimpleName());
+		buf.append("(");
+		buf.append("numNodes=");
+		buf.append(numNodes());
+		buf.append(",numEdges=");
+		buf.append(numEdges());
+		buf.append(")");
+		return buf.toString();
 	}
 }

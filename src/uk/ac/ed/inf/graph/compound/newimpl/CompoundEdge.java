@@ -245,6 +245,8 @@ public class CompoundEdge implements ICompoundEdge {
 		buf.append(this.getIndex());
 		buf.append(",parent=");
 		buf.append(this.getParent().getIndex());
+		buf.append(",pair=");
+		buf.append(this.getConnectedNodes());
 		buf.append(",attrib=");
 		buf.append(this.getAttribute());
 		buf.append(")");
