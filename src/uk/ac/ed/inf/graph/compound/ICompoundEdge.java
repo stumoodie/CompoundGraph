@@ -15,16 +15,43 @@ limitations under the License.
 */
 package uk.ac.ed.inf.graph.compound;
 
-import uk.ac.ed.inf.graph.directed.IDirectedEdge;
+import uk.ac.ed.inf.graph.state.IRestorableEdge;
 
 
-public interface ICompoundEdge<
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
-		E extends ICompoundEdge<N, E>
-> extends IDirectedEdge<N, E> {
+public interface ICompoundEdge extends ICompoundGraphElement, IRestorableEdge {
 
-	ICompoundGraph<N, E> getGraph();
-
-	IChildCompoundGraph<N, E> getOwningChildGraph();
+	int getIndex();
 	
+	CompoundNodePair getConnectedNodes();
+
+	/**
+	 * Tests if this directed edge has these ends. Ignores the directions of the ends.
+	 * @param ends The ends to be tested.
+	 * @return true if the edge contains the ends, false otherwise. 
+	 */
+	boolean hasDirectedEnds(ICompoundNode outNode, ICompoundNode inNode);
+	
+	
+	/**
+	 * Is this a self edge, i.e. both ends are the same node. 
+	 * @return <code>true</code> if removed.
+	 */
+	boolean isSelfEdge();
+	
+	/**
+	 * Tests if this edge has these ends. Ignores the directions of the ends.
+	 * @param ends The ends to be tested.
+	 * @return true if the edge contains the ends, false otherwise. 
+	 */
+	boolean hasEnds(ICompoundNode thisNode, ICompoundNode thatNode);
+	
+//	/**
+//	 * Test if the edge has been removed from the graph.
+//	 * @return <code>true</code> if removed, false otherwise.
+//	 */
+//	boolean isRemoved();
+
+	boolean hasEnds(CompoundNodePair ends);
+
+	boolean hasDirectedEnds(CompoundNodePair ends);
 }

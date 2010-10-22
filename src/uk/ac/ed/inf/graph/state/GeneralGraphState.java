@@ -16,34 +16,22 @@ limitations under the License.
 package uk.ac.ed.inf.graph.state;
 
 import uk.ac.ed.inf.bitstring.IBitString;
-import uk.ac.ed.inf.graph.basic.IBasicEdge;
-import uk.ac.ed.inf.graph.basic.IBasicGraph;
-import uk.ac.ed.inf.graph.basic.IBasicNode;
 
-public class GeneralGraphState<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-> implements IGraphState<N, E> {
+public class GeneralGraphState implements IGraphState {
 	
-	private final IBasicGraph<N, E> graph;
+	private final IRestorableGraph graph;
 	private final IBitString liveNodeStore;
-	private final IBitString liveEdgeStore;
 	
-	public GeneralGraphState(IBasicGraph<N, E> graphToSave, IBitString nodeStates, IBitString edgeStates){
+	public GeneralGraphState(IRestorableGraph graphToSave, IBitString nodeStates){
 		this.graph = graphToSave;
 		this.liveNodeStore = nodeStates;
-		this.liveEdgeStore = edgeStates;
 	}
 	
-	public IBasicGraph<N, E> getGraph() {
+	public IRestorableGraph getGraph() {
 		return this.graph;
 	}
 
-	public IBitString getNodeStates(){
+	public IBitString getElementStates(){
 		return this.liveNodeStore;
-	}
-	
-	public IBitString getEdgeStates(){
-		return this.liveEdgeStore;
 	}
 }

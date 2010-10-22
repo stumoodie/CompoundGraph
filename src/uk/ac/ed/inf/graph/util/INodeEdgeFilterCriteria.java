@@ -15,12 +15,12 @@ limitations under the License.
 */
 package uk.ac.ed.inf.graph.util;
 
-import uk.ac.ed.inf.graph.basic.IBasicEdge;
-import uk.ac.ed.inf.graph.basic.IBasicNode;
+import uk.ac.ed.inf.graph.compound.ICompoundEdge;
+import uk.ac.ed.inf.graph.compound.ICompoundNode;
 
 public interface INodeEdgeFilterCriteria<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
+		N extends ICompoundNode,
+		E extends ICompoundEdge
 > {
 
 	boolean matchedNode(N testNode);

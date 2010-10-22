@@ -15,7 +15,7 @@ limitations under the License.
 */
 package uk.ac.ed.inf.graph.compound;
 
-import uk.ac.ed.inf.graph.directed.IDirectedEdgeFactory;
+
 
 /**
  * Factory that creates an edge within a particular child graph. It may work out the LCA node that the
@@ -23,19 +23,18 @@ import uk.ac.ed.inf.graph.directed.IDirectedEdgeFactory;
  *  
  * @author smoodie
  *
- * @param <N> the node
- * @param <E> the edge
- */
-public interface ICompoundEdgeFactory<
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
-		E extends ICompoundEdge<N, E>
-> extends IDirectedEdgeFactory<N, E> {
+  */
+public interface ICompoundEdgeFactory {
 
+	void setAttributeFactory(IElementAttributeFactory attributeFactory);
+	
+	IElementAttributeFactory getAttributeFactory();
+	
 	/**
 	 * Get the compound graph that owns this factory.
 	 * @return the graph, which cannot be null.
 	 */
-	ICompoundGraph<N, E> getGraph();
+	ICompoundGraph getGraph();
 	
 	/**
 	 * Tests if the edge can be created based on the node pair.
@@ -48,7 +47,7 @@ public interface ICompoundEdgeFactory<
 	 * @return The child graph, cannot be null.
 	 * @throws IllegalStateException if <code>getPair() == null</code>. 
 	 */
-	IChildCompoundGraph<N, E> getOwningChildGraph();
+	ICompoundGraphElement getParent();
 	
 	/**
 	 * Creates a new directed edge from <code>outNode</code> to <code>inNode</code> which is
@@ -56,5 +55,17 @@ public interface ICompoundEdgeFactory<
 	 * @return The newly created edge.
 	 * @throw IllegalArgumentException if <code>canCreateEdge() == false</code>.  
 	 */
-	E createEdge();
+	ICompoundEdge createEdge();
+	
+	boolean isValidNodePair(CompoundNodePair pair);
+
+	/**
+	 * Sets the nodes to be used to create the edge.
+	 * @param outNode outNode, cannot be null.
+	 * @param inNode inNode, cannot be null.
+	 * @throws IllegalArgumentException if <code>isValidNodePair(outNode, inNode) == false</code>.
+	 */
+	void setPair(CompoundNodePair pair);
+
+	CompoundNodePair getCurrentNodePair();
 }

@@ -17,12 +17,13 @@ package uk.ac.ed.inf.graph.util;
 
 import java.util.Set;
 
-import uk.ac.ed.inf.graph.basic.IEdge;
-import uk.ac.ed.inf.graph.basic.INode;
+import uk.ac.ed.inf.graph.compound.ICompoundEdge;
+import uk.ac.ed.inf.graph.compound.ICompoundNode;
+
 
 public interface INodeSet<
-		N extends INode,
-		E extends IEdge
+		N extends ICompoundNode,
+		E extends ICompoundEdge
 > extends Set<N> {
 	
 	N get(int nodeIdx);

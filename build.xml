@@ -4,11 +4,16 @@
 	<property environment="env" />
 	<property name="junit.output.dir" value="junit" />
 	<property name="debuglevel" value="source,lines,vars" />
-	<property name="target" value="1.5" />
-	<property name="source" value="1.5" />
+	<property name="target" value="1.6" />
+	<property name="source" value="1.6" />
 	<property name="build.dir" value="./ant-build" />
+	<property name="build.dir.src" value="${build.dir}/src"/>
+	<property name="build.dir.tests" value="${build.dir}/test"/>
 	<property name="docs.build.dir" value="./doc"/>
 	<property name="src.dir" value="./src" />
+	<property name="test.dir" value="./test" />
+	<property name="integrationTest.dir" value="./integrationTest" />
+	<property name="libs.dir" value="./lib" />
 	<property name="jar.dir" value="./jars" />
 	<property name="jar.name.bin" value="CompoundGraph.jar" />
 	<property name="jar.name.src" value="CompoundGraph-src.jar" />
@@ -16,21 +21,22 @@
 
 
 	<path id="CompoundGraph.classpath">
-		<pathelement location="lib/junit4.4/junit-4.4.jar" />
-		<pathelement location="lib/apache-log4j-1.2.15/log4j-1.2.15.jar" />
-		<pathelement location="lib/jmock-2.5.1/jmock-2.5.1.jar" />
-		<pathelement location="lib/jmock-2.5.1/jmock-junit4-2.5.1.jar" />
-		<pathelement location="lib/jmock-2.5.1/jmock-legacy-2.5.1.jar" />
-		<pathelement location="lib/jmock-2.5.1/hamcrest-core-1.1.jar" />
-		<pathelement location="lib/jmock-2.5.1/hamcrest-library-1.1.jar" />
-		<pathelement location="lib/jmock-2.5.1/objenesis-1.0.jar" />
-		<pathelement location="lib/jdave-parent-1.1-rc1/lib/asm-3.0.jar" />
-		<pathelement location="lib/jmock-2.5.1/cglib-nodep-2.1_3.jar" />
+		<pathelement location="${libs.dir}/junit-4.8.2/junit-4.8.2.jar" />
+		<pathelement location="${libs.dir}/apache-log4j-1.2.15/log4j-1.2.15.jar" />
+		<pathelement location="${libs.dir}/jmock-2.5.1/jmock-2.5.1.jar" />
+		<pathelement location="${libs.dir}/jmock-2.5.1/jmock-junit4-2.5.1.jar" />
+		<pathelement location="${libs.dir}/jmock-2.5.1/jmock-legacy-2.5.1.jar" />
+		<pathelement location="${libs.dir}/jmock-2.5.1/hamcrest-core-1.1.jar" />
+		<pathelement location="${libs.dir}/jmock-2.5.1/hamcrest-library-1.1.jar" />
+		<pathelement location="${libs.dir}/jmock-2.5.1/objenesis-1.0.jar" />
+		<pathelement location="${libs.dir}/jmock-2.5.1/cglib-nodep-2.1_3.jar" />
+		<pathelement location="${libs.dir}/aspectj-1.6.9/aspectjrt.jar" />
 	</path>
 
 	<path id="test.classpath">
 		<path refid="CompoundGraph.classpath" />
-		<pathelement location="${build.dir}" />
+		<pathelement location="${build.dir.src}" />
+		<pathelement location="${build.dir.tests}" />
 	</path>
 
 
@@ -38,11 +44,13 @@
 
 	<target name="init">
 		<mkdir dir="${build.dir}" />
-		<!--copy includeemptydirs="false" todir="${build.dir}">
-			<fileset dir="src" excludes="**/*.launch, **/*.java" />
+		<mkdir dir="${build.dir.src}" />
+		<mkdir dir="${build.dir.tests}" />
+		<!-- copy includeemptydirs="false" todir="${build.dir}">
+			<fileset dir="src" excludes="**/*.launch, **/*.java, **/*.ajc" />
 		</copy>
 		<copy includeemptydirs="false" todir="${build.dir}">
-			<fileset dir="test" excludes="**/*.launch, **/*.java" />
+			<fileset dir="test" excludes="**/*.launch, **/*.java, **/*.ajc" />
 		</copy-->
 	</target>
 
@@ -52,64 +60,50 @@
 
 	<target depends="clean" name="cleanall" />
 
-	<target depends="build-subprojects,build-project" name="build" />
-
-	<target name="build-subprojects" />
+	<target depends="build-project" name="build" />
 
 	<target depends="init,build-src,build-test, build-integration-test" name="build-project" />
 
+	  <taskdef
+	      resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties">
+	    <classpath>
+	      <pathelement location="${lib.dir}/aspectj-1.6.9/aspectjtools.jar"/>
+	    </classpath>
+	  </taskdef>
+
 	<target depends="init" name="build-src">
 		<echo message="${ant.project.name}: ${ant.file}" />
-		<javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir}" source="${source}" nowarn="false" target="${target}"
-				verbose="false">
-			<src path="src" />
+		<iajc debug="true" debuglevel="${debuglevel}" destdir="${build.dir.src}" source="${source}"
+			nowarn="false" target="${target}" verbose="true">
+			<src path="${src.dir}" />
 			<classpath refid="CompoundGraph.classpath" />
-			<compilerarg value="-Xlint" />
-		</javac>
+			<!--compilerarg value="-Xlint" /-->
+		</iajc>
 		<copy todir="${build.dir}">
 			<fileset dir="${build.dir}" />
 		</copy>
 	</target>
 
-	<target depends="init" name="build-test">
+	<target depends="init,build-src" name="build-test">
 		<echo message="${ant.project.name}: ${ant.file}" />
-		<javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir}" source="${source}" nowarn="false" target="${target}">
-			<src path="test" />
+		<javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir.tests}" source="${source}" nowarn="false" target="${target}">
+			<src path="${test.dir}" />
 			<classpath refid="test.classpath" />
 			<compilerarg value="-Xlint" />
 		</javac>
 	</target>
 	
-	<target depends="init" name="build-integration-test">
+	<target depends="init,build-src" name="build-integration-test">
 			<echo message="${ant.project.name}: ${ant.file}" />
-			<javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir}" source="${source}" nowarn="false" target="${target}">
-				<src path="integrationTest" />
+			<javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir.tests}" source="${source}" nowarn="false" target="${target}">
+				<src path="${integrationTest.dir}" />
 				<classpath refid="test.classpath" />
 				<compilerarg value="-Xlint" />
 			</javac>
 		</target>
 
-
-
-	<target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects" />
-
-	<target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
-		<copy todir="${ant.library.dir}">
-			<fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar" />
-		</copy>
-		<unzip dest="${ant.library.dir}">
-			<patternset includes="jdtCompilerAdapter.jar" />
-			<fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar" />
-		</unzip>
-	</target>
-
-	<target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
-		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter" />
-		<antcall target="build" />
-	</target>
-
 	<target name="jar-bin" depends="build-src,init-jardirs">
-		<jar destfile="${jar.dir}/${jar.name.bin}" basedir="${build.dir}">
+		<jar destfile="${jar.dir}/${jar.name.bin}" basedir="${build.dir.src}">
 		</jar>
 	</target>
 
@@ -126,32 +120,32 @@
 		</javadoc>
 	</target>
 
-	<target name="tests">
-		<delete dir="${build.dir}/test/logs" />
-		<mkdir dir="${build.dir}/test/logs" />
+	<target name="tests" depends="build-test,build-integration-test">
+		<delete dir="${build.dir.tests}/logs" />
+		<mkdir dir="${build.dir.tests}/logs" />
 		<!-- <echo>running with classpath ${toString:test.classpath}</echo>-->
 		<!--run test cases. All test class names  should end in 'Test' to avoid
 				inclusion of inner classes. -->
-		<junit printsummary="yes" haltonfailure="no" fork="true">
+		<junit printsummary="yes" haltonfailure="no" fork="true" maxmemory="512m">
 			<classpath>
 				<path refid="test.classpath" />
 			</classpath>
-			<batchtest todir="${build.dir}/test/logs">
+			<batchtest todir="${build.dir.tests}/logs">
 				<formatter type="xml" />
-				<fileset dir="${build.dir}">
+				<fileset dir="${build.dir.tests}">
 					<include name="**/*Test.class" />
 				</fileset>
 			</batchtest>
 		</junit>
 
 		<!-- clean report directory -->
-		<delete dir="${build.dir}/test/junitReports" />
-		<mkdir dir="${build.dir}/test/junitReports" />
+		<delete dir="${build.dir.tests}/junitReports" />
+		<mkdir dir="${build.dir.tests}/junitReports" />
 
 		<!-- generate report -->
-		<junitreport todir="${build.dir}/test/junitReports">
-			<fileset dir="${build.dir}/test/logs" includes="**/*.xml" />
-			<report todir="${build.dir}/test/junitReports" />
+		<junitreport todir="${build.dir.tests}/junitReports">
+			<fileset dir="${build.dir.tests}/logs" includes="**/*.xml" />
+			<report todir="${build.dir.tests}/junitReports" />
 		</junitreport>
 	</target>
 

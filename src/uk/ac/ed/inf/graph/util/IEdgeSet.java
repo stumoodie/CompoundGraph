@@ -15,11 +15,13 @@ limitations under the License.
 */
 package uk.ac.ed.inf.graph.util;
 
+import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 
-import uk.ac.ed.inf.graph.basic.IEdge;
-import uk.ac.ed.inf.graph.basic.INode;
+import uk.ac.ed.inf.graph.compound.ICompoundEdge;
+import uk.ac.ed.inf.graph.compound.ICompoundNode;
+
 
 /**
  * A set designed to provide convenient access to edges. This interface will typically be implemented and used
@@ -33,8 +35,8 @@ import uk.ac.ed.inf.graph.basic.INode;
  * @param <E> The edge class to be used. It must implement <code>IEdge</code>.
  */
 public interface IEdgeSet<
-		N extends INode,
-		E extends IEdge
+		N extends ICompoundNode,
+		E extends ICompoundEdge
 > extends Set<E> {
 
 	/**
@@ -76,7 +78,7 @@ public interface IEdgeSet<
 	 * @throws NullPointerException of node is null.
 	 * @throws IllegalArgumentException if <code>hasEdgesWith(node) == false</code>.  
 	 */
-	SortedSet<E> getEdgesWith(N thisNode, N otherNode);
+	Iterator<E> getEdgesWith(N thisNode, N otherNode);
 	
 	/**
 	 * Does an edge with this index exist in the set. 

@@ -22,11 +22,11 @@ import uk.ac.ed.inf.graph.util.IFilterCriteria;
 
 public final class FilteredIterator<F> implements Iterator<F> {
 	
-	private final Iterator<F> nodeListIterator;
+	private final Iterator<? extends F> nodeListIterator;
 	private final LookAheadManager lookAheadManager;
 	private final IFilterCriteria<F> criteria;
 	
-	public FilteredIterator(Iterator<F> nodeListIterator, IFilterCriteria<F> criteria){
+	public FilteredIterator(Iterator<? extends F> nodeListIterator, IFilterCriteria<F> criteria){
 		if(nodeListIterator == null) throw new IllegalArgumentException("nodeListIterator cannot be null");
 		this.nodeListIterator = nodeListIterator;
 		this.lookAheadManager = new LookAheadManager();

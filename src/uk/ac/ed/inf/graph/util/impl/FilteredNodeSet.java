@@ -20,15 +20,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import uk.ac.ed.inf.graph.basic.IBasicEdge;
-import uk.ac.ed.inf.graph.basic.IBasicNode;
+import uk.ac.ed.inf.graph.compound.ICompoundEdge;
+import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.util.IFilterCriteria;
 import uk.ac.ed.inf.graph.util.IFilteredNodeSet;
 import uk.ac.ed.inf.graph.util.INodeSet;
 
 public class FilteredNodeSet<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
+		N extends ICompoundNode,
+		E extends ICompoundEdge
 > implements IFilteredNodeSet<N, E> {
 	
 	private final INodeSet<N, E> nodeSet;
@@ -86,7 +86,7 @@ public class FilteredNodeSet<
 	public boolean contains(Object o) {
 		boolean retVal = false;
 		if(this.nodeSet.contains(o)){
-			if(o instanceof IBasicNode){
+			if(o instanceof ICompoundNode){
 				N node = (N)o;
 				if(this.criteria.matched(node)){
 					retVal = true;
@@ -101,7 +101,7 @@ public class FilteredNodeSet<
 		boolean retVal = true;
 		if(this.nodeSet.containsAll(c)){
 			for(Object o : c){
-				if(o instanceof IBasicNode){
+				if(o instanceof ICompoundNode){
 					N node = (N)o;
 					if(!this.criteria.matched(node)){
 						retVal = false;

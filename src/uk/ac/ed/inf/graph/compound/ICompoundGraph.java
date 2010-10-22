@@ -15,18 +15,12 @@ limitations under the License.
 */
 package uk.ac.ed.inf.graph.compound;
 
-import uk.ac.ed.inf.graph.directed.IDirectedGraph;
+import uk.ac.ed.inf.graph.state.IRestorableGraph;
 
 
-public interface ICompoundGraph<
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
-		E extends ICompoundEdge<N, E>
-> extends IDirectedGraph<N, E> {
-
-	/**
-	 * Get the root node of this graph.
-	 * @return The root node, which cannot be null.
-	 */
-	N getRootNode();
-
+public interface ICompoundGraph extends IImmutableCompoundGraph, IModifiableCompoundGraph, IRestorableGraph {
+	
+	@Override
+	IRootCompoundNode getRoot();
+	
 }

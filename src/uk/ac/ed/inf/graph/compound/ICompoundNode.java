@@ -15,22 +15,117 @@ limitations under the License.
 */
 package uk.ac.ed.inf.graph.compound;
 
-import uk.ac.ed.inf.graph.directed.IDirectedNode;
-import uk.ac.ed.inf.tree.ITreeNode;
+import java.util.Iterator;
+
+import uk.ac.ed.inf.graph.state.IRestorableNode;
 
 
-public interface ICompoundNode<
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>> & ITreeNode<N>,
-		E extends ICompoundEdge<N, E>
-> extends IDirectedNode<N, E>, ITreeNode<N> {
+public interface ICompoundNode extends ICompoundGraphElement, IRestorableNode {
+	
+	int getInDegree();
+	
+	int getOutDegree();
+	
 	/**
-	 * Get subgraph of this compound node. Note that this node is the root-node of the
-	 * sub-Cigraph.
+	 * Has at least one edge coming into this one from outNode 
+	 * @param outNode
 	 * @return
 	 */
-	IChildCompoundGraph<N, E> getChildCompoundGraph();
+	boolean hasInEdgeFrom(ICompoundNode outNode);
 	
-	boolean isDescendent(N testNode);
+	/**
+	 * Gets the set of out edges to which this node is the in node and
+	 * <code>outNode</code> is the out node.
+	 * @param outNode the out node to the edge
+	 * @return a set of edges with this node as in node and <code>outNode</code> as out node.
+	 */
+	Iterator<ICompoundEdge> getInEdgesFrom(ICompoundNode outNode);  
+	
+	/**
+	 * Has at least one edge going out from this node to inNode.
+	 * @param inNode the in node to search for, which can be null.
+	 * @return true if this node is the out node and <code>inNode</code> is the in node to an directed edge incident to this node. 
+	 */
+	boolean hasOutEdgeTo(ICompoundNode inNode);
+	
+	/**
+	 * Gets the set of out edges to which this node is the out node and
+	 * <code>inNode</code> is the in node.
+	 * @param inNode the in node to the edge
+	 * @return a set of edges with this node as out node and <code>inNode</code> as in node.
+	 */
+	Iterator<ICompoundEdge> getOutEdgesTo(ICompoundNode inNode);  
 
-    boolean isAncestor(N testNode);
+	/**
+	 * Gets all edges connecting this node
+	 * @return
+	 */
+	Iterator<ICompoundEdge> getInEdgeIterator();
+	
+	/**
+	 * Gets all edges going out from this node. 
+	 * @return
+	 */
+	Iterator<ICompoundEdge> getOutEdgeIterator();
+
+	/**
+	 * Gets the incident nodes which are the in nodes to the out edge.
+	 * @return an iterator over all the resulting adjacent out edge nodes.
+	 */
+	Iterator<ICompoundNode> outEdgeIncidentNodesIterator();
+	
+	/**
+	 * Gets the incident nodes which are out nodes to the in edge.
+	 * @return an iterator for the resulting adjacent in edge nodes.
+	 */
+	Iterator<ICompoundNode> inEdgeIncidentNodesIterator();
+
+	
+	/**
+	 * Tests whether this node shares one or more edges with another node, irrespective of the 
+	 * direction of that edge. 
+	 * @param other The other node to test. Can be null.
+	 * @return True if and edge is shared, false otherwise.
+	 */
+	boolean hasEdgeWith(ICompoundNode other);
+	
+	/**
+	 * Gets the edges shared with the other node. 
+	 * @param other The other node to test. Cannot be null.
+	 * @return A set of edges sorted by edge index, which 
+	 * 
+	 */
+	Iterator<ICompoundEdge> getEdgesWith(ICompoundNode other);
+	
+	/**
+	 * Get the degree of the this node. That is the number of edges associated with it. Note that in graph theory
+	 * self edges (edges that start and finish on the same node) add 2 to the degree of a node.  
+	 * @return The degree of the node.
+	 */
+	int getDegree();
+	
+	/**
+	 * Provides an iterator that lists all edges associated with this node. In a directed graph
+	 * this iterator ignores the direction of the edge.
+	 * @return the edge iterator.
+	 */
+	Iterator<ICompoundEdge> edgeIterator();
+
+	/**
+	 * Provides an iterator that lists all nodes connected to this node via another edge. When self-edges
+	 * are encountered a reference to this node will be returned. The iterator may return the same node more than once
+	 * if this node has multiple edges to it.
+	 * @return the node iterator.
+	 */
+	Iterator<ICompoundNode> connectedNodeIterator();
+
+	boolean containsEdge(ICompoundEdge edge);
+
+	boolean containsInEdge(ICompoundEdge edge);
+
+	boolean containsOutEdge(ICompoundEdge edge);
+
+	void addOutEdge(ICompoundEdge compoundEdge);
+
+	void addInEdge(ICompoundEdge compoundEdge);
 }

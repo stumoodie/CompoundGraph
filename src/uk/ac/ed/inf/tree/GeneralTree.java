@@ -30,21 +30,25 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 	}
 	
 	/* (non-Javadoc)
-	 * @see uk.ac.ed.inf.graph.impl.ITree#getRootNode()
+	 * @see uk.ed.inf.graph.impl.ITree#getRootNode()
 	 */
 	public T getRootNode(){
 		return this.rootNode;
 	}
 	
 	/* (non-Javadoc)
-	 * @see uk.ac.ed.inf.graph.impl.ITree#containsNode(T)
+	 * @see uk.ed.inf.graph.impl.ITree#containsNode(T)
 	 */
 	public boolean containsNode(T testNode){
-		return this.containsNode(testNode.getIndex());
+		boolean retVal = false;
+		if(testNode != null && this.rootNode.equals(testNode.getRoot())){
+			retVal = this.containsNode(testNode.getIndex());
+		}
+		return retVal;
 	}
 	
 	/* (non-Javadoc)
-	 * @see uk.ac.ed.inf.graph.impl.ITree#constainsNode(int)
+	 * @see uk.ed.inf.graph.impl.ITree#constainsNode(int)
 	 */
 	public boolean containsNode(int testIndex){
 		Iterator<T> iter = this.levelOrderIterator();
@@ -59,7 +63,7 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 	}
 	
 	/* (non-Javadoc)
-	 * @see uk.ac.ed.inf.graph.impl.ITree#get(int)
+	 * @see uk.ed.inf.graph.impl.ITree#get(int)
 	 */
 	public T get(int testIndex){
 		Iterator<T> iter = this.levelOrderIterator();
@@ -75,7 +79,7 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 	
 	public T getLowestCommonAncestor(final T thisNode, final T thatNode){
 		if(!thisNode.getRoot().equals(this.rootNode) || !thatNode.getRoot().equals(this.rootNode))
-			throw new IllegalArgumentException("Noth nodes must belong to the same this tree");
+			throw new IllegalArgumentException("Both nodes must belong to the same this tree");
 		
 		this.lcaCalc.findLowestCommonAncestor(thisNode, thatNode);
 		return this.lcaCalc.getLCANode();

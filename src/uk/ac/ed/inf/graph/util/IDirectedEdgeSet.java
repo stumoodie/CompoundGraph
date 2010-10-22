@@ -15,8 +15,9 @@ limitations under the License.
 */
 package uk.ac.ed.inf.graph.util;
 
-import uk.ac.ed.inf.graph.directed.IDirectedEdge;
-import uk.ac.ed.inf.graph.directed.IDirectedNode;
+import uk.ac.ed.inf.graph.compound.ICompoundEdge;
+import uk.ac.ed.inf.graph.compound.ICompoundNode;
+
 
 /**
  * A set designed to provide convenient access to directed edges. This interface will typically be implemented and used
@@ -30,8 +31,8 @@ import uk.ac.ed.inf.graph.directed.IDirectedNode;
  * @param <E> The edge class to be used. It must implement <code>IEdge</code>.
  */
 public interface IDirectedEdgeSet<
-		N extends IDirectedNode<N, ? extends IDirectedEdge<N, ?>>,
-		E extends IDirectedEdge<N, E>
+		N extends ICompoundNode,
+		E extends ICompoundEdge
 > extends IEdgeSet<N, E> {
 
 //	/**

@@ -24,7 +24,7 @@ public class AncestorTreeIterator<T extends ITreeNode<T>> implements Iterator<T>
 	private final T rootNode;
 	
 	public AncestorTreeIterator(T startNode){
-		this.currNode = startNode;
+		this.currNode = startNode.getParent();
 		this.rootNode = startNode.getRoot();
 	}
 	

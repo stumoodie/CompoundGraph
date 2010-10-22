@@ -15,36 +15,48 @@ limitations under the License.
 */
 package uk.ac.ed.inf.graph.compound;
 
-public interface ICompoundGraphCopyBuilder<
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
-		E extends ICompoundEdge<N, E>
-> {
+public interface ICompoundGraphCopyBuilder {
 
-	ISubCompoundGraph<N, E> getSourceSubgraph();
+	/**
+	 * Tests whether the subGraph can be copied to this graph. To be true the subgraph must be an induced subgraph
+	 *  that is a consistent of the super graph. It must also be not null.
+	 * @return true if the subgraph is valid to copy from, false otherwise.
+	 */
+	boolean canCopyHere();
+
+	/**
+	 * Retrieves the nodes and edges created in this graph by the last copy operation. The subgraph
+	 * is <b>not</b> guaranteed to be a consistent snapshot of this graph.   If not copy operation has
+	 * been performed then an empty subgraph will be returned.
+	 * @return the subgraph of copied components, or an empty subgraph if no copy operation has been performed. 
+	 */
+	ISubCompoundGraph getCopiedComponents();
 	
-	IChildCompoundGraph<N, E> getDestinationChildGraph();
+	/**
+	 * Gets the subgraph that was the source for the last copy.
+	 * @return
+	 */
+	ISubCompoundGraph getSourceSubgraph();
+	
+	/**
+	 * Gets the child graph that is the destination for the copy  
+	 * @return the destination child graph which cannot be null
+	 */
+	IChildCompoundGraph getDestinationChildGraph();
 	
 	/**
 	 * Sets the subgraph which is to be copied.
 	 * @param sourceSubCompoundGraph
 	 */
-	void setSourceSubgraph(ISubCompoundGraph<? extends N, ? extends E> sourceSubCompoundGraph);
-
-	/**
-	 * Sets the child compound graph that is to be copied to.
-	 * @param childCompoundGraph
-	 */
-	void setDestinatChildCompoundGraph(IChildCompoundGraph<? extends N, ? extends E> childCompoundGraph);
+	void setSourceSubgraph(ISubCompoundGraph sourceSubCompoundGraph);
 
 	/**
 	 * Make a copy of subgraph into the destination graph
 	 */
 	void makeCopy();
 
-	/**
-	 * Gets the copied nodes and edges that were created in the destination graph as a
-	 * subgraph of the destination graph.
-	 * @return The subgraph of copied nodes, which will be empty of no nodes are copied.
-	 */
-	ISubCompoundGraph<N, E> getCopiedComponents();
+//	void setElementAttributeFactory(IElementAttributeCopyFactory elementAttributeFactory);
+//	
+//	IElementAttributeCopyFactory getElementAttributeFactory();
+	
 }

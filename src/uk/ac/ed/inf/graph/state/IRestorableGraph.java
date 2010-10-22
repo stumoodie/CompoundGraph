@@ -15,24 +15,24 @@ limitations under the License.
 */
 package uk.ac.ed.inf.graph.state;
 
-import uk.ac.ed.inf.graph.basic.IBasicEdge;
-import uk.ac.ed.inf.graph.basic.IBasicNode;
+import java.util.Iterator;
 
-public interface IRestorableGraph<
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
-> {
+
+
+public interface IRestorableGraph {
 	
 	/**
 	 * Get the current state of the graph as a momento.
 	 * @return the current graph state, will not be null. 
 	 */
-	IGraphState<N, E> getCurrentState();
+	IGraphState getCurrentState();
 	
 	/**
 	 * Restores the graph state to the state stored by the <code>previousState</code>
 	 * object.
 	 * @param previousState The previous state to be restored.
 	 */
-	void restoreState(IGraphState<N, E> previousState);
+	void restoreState(IGraphState previousState);
+
+	Iterator<IRestorableGraphElement> restorableElementIterator();
 }

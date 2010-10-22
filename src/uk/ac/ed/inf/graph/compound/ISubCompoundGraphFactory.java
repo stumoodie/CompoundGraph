@@ -15,19 +15,22 @@ limitations under the License.
 */
 package uk.ac.ed.inf.graph.compound;
 
-import uk.ac.ed.inf.graph.basic.IBasicSubgraphFactory;
+import java.util.Iterator;
 
-public interface ISubCompoundGraphFactory<
-		N extends ICompoundNode<N, ? extends ICompoundEdge<N, ?>>,
-		E extends ICompoundEdge<N, E>
-> extends IBasicSubgraphFactory<N, E> {
+public interface ISubCompoundGraphFactory {
 
-	ICompoundGraph<N, E> getGraph();
+	ICompoundGraph getGraph();
 
-	ISubCompoundGraph<N, E> createSubgraph();
+	ISubCompoundGraph createSubgraph();
 	
-	ISubCompoundGraph<N, E> createInducedSubgraph();
+	ISubCompoundGraph createInducedSubgraph();
 
-	ISubCompoundGraph<N, E> createPermissiveInducedSubgraph();
+	ISubCompoundGraph createPermissiveInducedSubgraph();
 
+	void addElement(ICompoundGraphElement element);
+	
+	int numElements();
+	
+	Iterator<ICompoundGraphElement> elementIterator();
+	
 }

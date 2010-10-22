@@ -17,18 +17,17 @@ package uk.ac.ed.inf.graph.util.impl;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import uk.ac.ed.inf.graph.basic.IBasicEdge;
-import uk.ac.ed.inf.graph.basic.IBasicNode;
-import uk.ac.ed.inf.graph.basic.IBasicPair;
+import uk.ac.ed.inf.graph.compound.CompoundNodePair;
+import uk.ac.ed.inf.graph.compound.ICompoundEdge;
+import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.util.IEdgeSet;
 
 public class EdgeSet <
-		N extends IBasicNode<N, ? extends IBasicEdge<N, ?>>,
-		E extends IBasicEdge<N, E>
+		N extends ICompoundNode,
+		E extends ICompoundEdge
 > implements IEdgeSet<N, E> {
 	
 	private final SortedSet<E> edgeSet;
@@ -41,13 +40,13 @@ public class EdgeSet <
 		return this.edgeSet.iterator();
 	}
 
-	public SortedSet<E> getEdgesWith(N thisNode, N other) {
+	public Iterator<E> getEdgesWith(N thisNode, N other) {
 		return this.findConnectingEdge(thisNode, other);
 	}
 
 	public boolean hasEdgesWith(N thisNode, N other) {
-		Set<E> edges = findConnectingEdge(thisNode, other);
-		return !edges.isEmpty();
+		Iterator<E> edges = findConnectingEdge(thisNode, other);
+		return edges.hasNext();
 	}
 
 	public boolean contains(int edgeIdx){
@@ -75,7 +74,7 @@ public class EdgeSet <
 	private SortedSet<E> findEdges(N thisNode, N thatNode){
 		final SortedSet<E> retVal = new TreeSet<E>();
 		for(E edge : this.edgeSet){
-			IBasicPair<N, E> ends = edge.getConnectedNodes();
+			CompoundNodePair ends = edge.getConnectedNodes();
 			if(ends.hasEnds(thisNode, thatNode)){
 				retVal.add(edge);
 			}
@@ -115,15 +114,15 @@ public class EdgeSet <
 		return this.edgeSet.size();
 	}
 	
-	private SortedSet<E> findConnectingEdge(N thisNode, N otherNode){
+	private Iterator<E> findConnectingEdge(N thisNode, N otherNode){
 		final SortedSet<E> retVal = new TreeSet<E>();
 		for(E edge : this.edgeSet){
-			IBasicPair<N, E> pair = edge.getConnectedNodes();
+			CompoundNodePair pair = edge.getConnectedNodes();
 			if(pair.containsNode(otherNode) && pair.getOtherNode(thisNode).equals(otherNode)){
 				retVal.add(edge);
 			}
 		}
-		return retVal;
+		return retVal.iterator();
 	}
 
 	public boolean addAll(Collection<? extends E> c) {
