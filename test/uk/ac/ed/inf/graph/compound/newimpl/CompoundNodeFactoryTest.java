@@ -33,6 +33,8 @@ import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
+import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
+import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.INodeConstructor;
@@ -160,8 +162,11 @@ public class CompoundNodeFactoryTest {
 	
 	@Test
 	public final void testCreateNode() {
+		final ISubCompoundGraphFactory mockFact = testFixture.getGraph().subgraphFactory();
 		mockery.checking(new Expectations(){{
 			one(testInstance.getParentNode().getChildCompoundGraph()).addNode(with(any(ICompoundNode.class)));
+			one(mockFact).addElement(with(any(ICompoundNode.class)));
+			one(testFixture.getGraph()).notifyGraphStructureChange(with(any(IGraphStructureChangeAction.class)));
 		}});
 		ICompoundNode newNode = this.testInstance.createNode();
 		assertEquals("expected parent", this.testFixture.getNode1(), newNode.getParent());

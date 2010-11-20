@@ -15,8 +15,11 @@ limitations under the License.
 */
 package uk.ac.ed.inf.graph.compound.newimpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
@@ -26,6 +29,8 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
+import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
+import uk.ac.ed.inf.graph.compound.IGraphStructureChangeListener;
 import uk.ac.ed.inf.graph.compound.IRootCompoundNode;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.ISubgraphRemovalBuilder;
@@ -46,12 +51,14 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 	private final IRootCompoundNode rootNode;
 	private final IGraphStateHandler stateHandler;
 	private static Map<ICompoundGraph, IndexCounter> counterLookup = new HashMap<ICompoundGraph, IndexCounter>();
+	private final List<IGraphStructureChangeListener> graphStructureListeners;
 
 //	private ICompoundGraphServices services;
 
 	public CompoundGraph(IElementAttribute rootAttribute){
 		this.stateHandler = new CompoundGraphStateHandler(this);
 		this.rootNode = new RootCompoundNode(this, ROOT_NODE_IDX, rootAttribute);
+		this.graphStructureListeners = new LinkedList<IGraphStructureChangeListener>();
 	}
 	
 	public static IndexCounter getIndexCounter(ICompoundGraph graph){
@@ -243,5 +250,27 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 		buf.append(numEdges());
 		buf.append(")");
 		return buf.toString();
+	}
+
+	@Override
+	public void addGraphStructureChangeListener(IGraphStructureChangeListener listener) {
+		this.graphStructureListeners.add(listener);
+	}
+
+	@Override
+	public void removeGraphStructureChangeListener(IGraphStructureChangeListener listener) {
+		this.graphStructureListeners.remove(listener);
+	}
+
+	@Override
+	public List<IGraphStructureChangeListener> getGraphStructureChangeListeners() {
+		return new ArrayList<IGraphStructureChangeListener>(this.graphStructureListeners);
+	}
+
+	@Override
+	public void notifyGraphStructureChange(IGraphStructureChangeAction graphStructureChangeAction) {
+		for(IGraphStructureChangeListener l : this.graphStructureListeners){
+			l.graphStructureChange(graphStructureChangeAction);
+		}
 	}
 }

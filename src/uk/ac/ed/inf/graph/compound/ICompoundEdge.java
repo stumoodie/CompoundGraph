@@ -20,6 +20,7 @@ import uk.ac.ed.inf.graph.state.IRestorableEdge;
 
 public interface ICompoundEdge extends ICompoundGraphElement, IRestorableEdge {
 
+	@Override
 	int getIndex();
 	
 	CompoundNodePair getConnectedNodes();

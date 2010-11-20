@@ -15,6 +15,8 @@ limitations under the License.
 */
 package uk.ac.ed.inf.graph.compound;
 
+import java.util.List;
+
 
 
 public interface IModifiableCompoundGraph {
@@ -42,5 +44,34 @@ public interface IModifiableCompoundGraph {
 	 */
 	ISubCompoundGraphFactory subgraphFactory();
 
+	/**
+	 * Returns a new instance of the removal builder.
+	 * @return the removal builder, which cannot be null.
+	 */
 	ISubgraphRemovalBuilder newSubgraphRemovalBuilder();
+
+	/**
+	 * Add a listener to listen for structural changes to the graph. 
+	 * @param listener the listener, which should not be null
+	 */
+	void addGraphStructureChangeListener(IGraphStructureChangeListener listener);
+	
+	/**
+	 * Removes listener to listen for structural changes to the graph. If the listener is not held by this graph then it does nothing. 
+	 * @param listener the listener to remove, which should not be null
+	 */
+	void removeGraphStructureChangeListener(IGraphStructureChangeListener listener);
+	
+	/**
+	 * Lists the listeners in use by this graph.
+	 * @return the list of listeners, which can be empty if none exist.
+	 */
+	List<IGraphStructureChangeListener> getGraphStructureChangeListeners();
+
+	/**
+	 * Notify the graph that the graphs structure has changed. Clients of the Compound Graph library
+	 * should not use this method, nor have any need to. 
+	 * @param action the action describing what has changed. 
+	 */
+	void notifyGraphStructureChange(IGraphStructureChangeAction action);
 }

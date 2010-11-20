@@ -93,8 +93,16 @@ public interface IImmutableCompoundGraph {
 	 */
 	Iterator<ICompoundEdge> edgeIterator();
 
+	/**
+	 * get the number elements in the graph
+	 * @return the number of elements
+	 */
 	int numElements();
 	
+	/**
+	 * Iterates over all the elements in the graph.
+	 * @return the iterator, which will not be null.
+	 */
 	Iterator<ICompoundGraphElement> elementIterator();
 
 }

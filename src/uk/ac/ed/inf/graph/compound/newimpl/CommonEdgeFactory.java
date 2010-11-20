@@ -3,8 +3,12 @@ package uk.ac.ed.inf.graph.compound.newimpl;
 import uk.ac.ed.inf.graph.compound.CompoundNodePair;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundEdgeFactory;
+import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
+import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
+import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
+import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
 public abstract class CommonEdgeFactory implements ICompoundEdgeFactory {
 	private CompoundNodePair pair;
@@ -27,6 +31,7 @@ public abstract class CommonEdgeFactory implements ICompoundEdgeFactory {
 	public boolean canCreateEdge() {
 		boolean retVal = false;
 		if(this.isValidNodePair(this.pair) && this.edgeAttribute != null){
+			this.edgeAttribute.setDestinationAttribute(getParent().getAttribute());
 			this.edgeAttribute.setInAttribute(this.pair.getInNode().getAttribute());
 			this.edgeAttribute.setOutAttribute(this.pair.getOutNode().getAttribute());
 			retVal = this.edgeAttribute.canCreateAttribute();
@@ -34,6 +39,30 @@ public abstract class CommonEdgeFactory implements ICompoundEdgeFactory {
 		return retVal; 
 	}
 
+	private void notifyEdgeCreated(ICompoundEdge retVal){
+		final ISubCompoundGraphFactory subgraphFact = this.getGraph().subgraphFactory();
+		subgraphFact.addElement(retVal);
+		ICompoundGraph graph = this.getGraph();
+		graph.notifyGraphStructureChange(new IGraphStructureChangeAction(){
+
+			@Override
+			public GraphStructureChangeType getChangeType() {
+				return GraphStructureChangeType.ELEMENT_ADDED;
+			}
+
+			@Override
+			public ISubCompoundGraph originalSubgraph() {
+				return null;
+			}
+
+			@Override
+			public ISubCompoundGraph changedSubgraph() {
+				return subgraphFact.createSubgraph();
+			}
+		});
+
+	}
+	
 	@Override
 	public ICompoundEdge createEdge() {
 		this.edgeAttribute.setDestinationAttribute(getParent().getAttribute());
@@ -43,6 +72,7 @@ public abstract class CommonEdgeFactory implements ICompoundEdgeFactory {
 		ICompoundEdge retVal = new CompoundEdge(getParent(), CompoundGraph.getIndexCounter(this.getGraph()).nextIndex(),
 				edgeAttribute, this.pair.getOutNode(), this.pair.getInNode());
 		getParent().getChildCompoundGraph().addEdge(retVal);
+		notifyEdgeCreated(retVal);
 		return retVal;
 	}
 

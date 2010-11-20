@@ -6,6 +6,9 @@ import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
+import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
+import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
+import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
 public class CompoundNodeFactory implements ICompoundNodeFactory {
 	private final ICompoundGraphElement parent;
@@ -15,6 +18,30 @@ public class CompoundNodeFactory implements ICompoundNodeFactory {
 		this.parent = parent;
 	}
 	
+	private void notifyNodeCreated(ICompoundNode retVal){
+		final ISubCompoundGraphFactory subgraphFact = this.getGraph().subgraphFactory();
+		subgraphFact.addElement(retVal);
+		ICompoundGraph graph = this.getGraph();
+		graph.notifyGraphStructureChange(new IGraphStructureChangeAction(){
+
+			@Override
+			public GraphStructureChangeType getChangeType() {
+				return GraphStructureChangeType.ELEMENT_ADDED;
+			}
+
+			@Override
+			public ISubCompoundGraph originalSubgraph() {
+				return null;
+			}
+
+			@Override
+			public ISubCompoundGraph changedSubgraph() {
+				return subgraphFact.createSubgraph();
+			}
+		});
+
+	}
+	
 	@Override
 	public ICompoundNode createNode() {
 		int nodeIndex = CompoundGraph.getIndexCounter(this.getGraph()).nextIndex();
@@ -22,6 +49,7 @@ public class CompoundNodeFactory implements ICompoundNodeFactory {
 		IElementAttribute newAttribute = this.attributeFactory.createAttribute();
 		CompoundNode retVal = new CompoundNode(parent, nodeIndex, newAttribute);
 		parent.getChildCompoundGraph().addNode(retVal);
+		notifyNodeCreated(retVal);
 		return retVal;
 	}
 

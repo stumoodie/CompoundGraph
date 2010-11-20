@@ -6,14 +6,13 @@ import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
+import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
-import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.ISubgraphRemovalBuilder;
 
 public class CompoundSubgraphRemovalBuilder implements ISubgraphRemovalBuilder {
 	private final ICompoundGraph owningGraph;
 	private ISubCompoundGraph subCompoundGraph;
-	private ISubCompoundGraphFactory selnFactory;
 	
 	protected CompoundSubgraphRemovalBuilder(ICompoundGraph owningGraph){
 		this.owningGraph = owningGraph;
@@ -34,7 +33,6 @@ public class CompoundSubgraphRemovalBuilder implements ISubgraphRemovalBuilder {
 	private void removeElement(ICompoundGraphElement element){
 		if(!element.isRemoved()){
 			element.markRemoved(true);
-			selnFactory.addElement(element);
 		}
 	}
 
@@ -51,7 +49,6 @@ public class CompoundSubgraphRemovalBuilder implements ISubgraphRemovalBuilder {
 
 	@Override
 	public void removeSubgraph() {
-		selnFactory = this.owningGraph.subgraphFactory();
 		Iterator<ICompoundGraphElement> elementIterator = this.subCompoundGraph.elementIterator();
 		while(elementIterator.hasNext()){
 			ICompoundGraphElement element = elementIterator.next();
@@ -65,6 +62,23 @@ public class CompoundSubgraphRemovalBuilder implements ISubgraphRemovalBuilder {
 			}
 			removeElement(element);
 		}
+		this.owningGraph.notifyGraphStructureChange(new IGraphStructureChangeAction(){
+
+			@Override
+			public GraphStructureChangeType getChangeType() {
+				return GraphStructureChangeType.SUBGRAPH_REMOVED;
+			}
+
+			@Override
+			public ISubCompoundGraph originalSubgraph() {
+				return subCompoundGraph;
+			}
+
+			@Override
+			public ISubCompoundGraph changedSubgraph() {
+				return null;
+			}
+		});
 	}
 	
 }

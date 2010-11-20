@@ -10,11 +10,13 @@ import uk.ac.ed.inf.graph.compound.CompoundNodePair;
 import uk.ac.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
+import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphMoveBuilder;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
+import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 
@@ -22,21 +24,20 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	private final Logger logger = Logger.getLogger(this.getClass());
 	private ISubCompoundGraph sourceSubCigraph;
 	private final IChildCompoundGraph destChildGraph;
-	private ISubCompoundGraphFactory subGraphFactory;
+	private ISubCompoundGraphFactory movedDestnElementsSubgraphFactory;
 	private final Map<ICompoundGraphElement, ICompoundGraphElement> oldNewEquivList;
 	private ISubCompoundGraphFactory removalSubGraphFactory;
-//	private IElementAttributeMoveFactory elementAttributeFactory;
 
 	public CompoundGraphMoveBuilder(IChildCompoundGraph destn){
 		this.oldNewEquivList = new HashMap<ICompoundGraphElement, ICompoundGraphElement>();
 		this.destChildGraph = destn;
-		this.subGraphFactory = this.destChildGraph.getSuperGraph().subgraphFactory();
+		this.movedDestnElementsSubgraphFactory = this.destChildGraph.getSuperGraph().subgraphFactory();
 		this.removalSubGraphFactory = this.destChildGraph.getSuperGraph().subgraphFactory();
 	}
 	
 	@Override
 	public ISubCompoundGraph getMovedComponents() {
-		return this.subGraphFactory.createSubgraph();
+		return this.movedDestnElementsSubgraphFactory.createSubgraph();
 	}
 
 	@Override
@@ -94,10 +95,28 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	@Override
 	public void makeMove() {
 		this.oldNewEquivList.clear();
-		this.subGraphFactory = this.destChildGraph.getSuperGraph().subgraphFactory();
+		this.movedDestnElementsSubgraphFactory = this.destChildGraph.getSuperGraph().subgraphFactory();
 		moveElements();
 		// avoid holding onto additional unneeded memory
 		this.oldNewEquivList.clear();
+		ICompoundGraph graph = this.destChildGraph.getSuperGraph();
+		graph.notifyGraphStructureChange(new IGraphStructureChangeAction(){
+
+			@Override
+			public GraphStructureChangeType getChangeType() {
+				return GraphStructureChangeType.SUBGRAPH_MOVED;
+			}
+
+			@Override
+			public ISubCompoundGraph originalSubgraph() {
+				return removalSubGraphFactory.createSubgraph();
+			}
+
+			@Override
+			public ISubCompoundGraph changedSubgraph() {
+				return movedDestnElementsSubgraphFactory.createSubgraph();
+			}
+		});
 	}
 
 	private void moveElements(){
@@ -141,7 +160,7 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 				logger.trace("Moving src=" + srcElement + ", tgt=" + newElement);
 			}
 			this.oldNewEquivList.put(srcElement, newElement);
-			this.subGraphFactory.addElement(newElement);
+			this.movedDestnElementsSubgraphFactory.addElement(newElement);
 		}
 	}
 

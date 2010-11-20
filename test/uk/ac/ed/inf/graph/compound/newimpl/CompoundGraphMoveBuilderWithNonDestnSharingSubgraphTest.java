@@ -25,6 +25,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphMoveBuilder;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
+import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
@@ -175,6 +176,7 @@ public class CompoundGraphMoveBuilderWithNonDestnSharingSubgraphTest {
 			exactly(1).of(mockNodeEdgeFactory).setPair(with(equal(new CompoundNodePair(mockNode, mockNode))));	
 			exactly(1).of(mockNodeEdgeFactory).createEdge(); will(returnValue(mockEdge));	
 			
+			one(testFixture.getGraph()).notifyGraphStructureChange(with(any(IGraphStructureChangeAction.class)));
 		}});
 		this.testInstance.makeMove();
 		this.mockery.assertIsSatisfied();

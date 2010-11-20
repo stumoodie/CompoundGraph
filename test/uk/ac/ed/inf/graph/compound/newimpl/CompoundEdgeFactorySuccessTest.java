@@ -33,6 +33,8 @@ import uk.ac.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
+import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
+import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.ElementAttributeFactory;
 
@@ -88,10 +90,14 @@ public class CompoundEdgeFactorySuccessTest {
 		final IChildCompoundGraph edge1ChildGraph = this.testFixture.getEdge(ComplexGraphFixture.EDGE1_ID).getChildCompoundGraph();
 		final ICompoundNode node3 = this.testFixture.getNode3();
 		final ICompoundNode node5 = this.testFixture.getNode5();
+		final ISubCompoundGraphFactory mockFact = testFixture.getGraph().subgraphFactory();
 		mockery.checking(new Expectations(){{
 			exactly(1).of(node3).addOutEdge(with(any(ICompoundEdge.class)));
 			exactly(1).of(node5).addInEdge(with(any(ICompoundEdge.class)));
 			exactly(1).of(edge1ChildGraph).addEdge(with(any(ICompoundEdge.class)));
+
+			one(mockFact).addElement(with(any(ICompoundEdge.class)));
+			one(testFixture.getGraph()).notifyGraphStructureChange(with(any(IGraphStructureChangeAction.class)));
 		}});
 		ICompoundEdge generatedEdge = testInstance.createEdge();
 		assertNotNull("expected edge" , generatedEdge) ;
