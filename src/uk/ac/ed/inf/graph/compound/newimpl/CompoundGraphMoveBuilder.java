@@ -73,7 +73,7 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 				if(topNode.getParent().equals(destn)){
 					numTopElsWithDifferntParents--;
 				}
-				isDestnChildOfTopNode = topNode.isChild(destn);
+				isDestnChildOfTopNode = topNode.isDescendent(destn);
 				IElementAttributeFactory elementAttributeFactory = topNode.getAttribute().elementAttributeMoveFactory();
 //				this.elementAttributeFactory.setElementToMove(topNode.getAttribute());
 				elementAttributeFactory.setDestinationAttribute(this.destChildGraph.getRoot().getAttribute());

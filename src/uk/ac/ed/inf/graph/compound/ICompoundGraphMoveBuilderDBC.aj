@@ -7,7 +7,7 @@ import uk.ac.ed.inf.designbycontract.Precondition;
 public abstract aspect ICompoundGraphMoveBuilderDBC {
 	
 	public pointcut makeMove(ICompoundGraphMoveBuilder cb) : 
-		call(public void ICompoundGraphMoveBuilder.makeMove())
+		execution(public void ICompoundGraphMoveBuilder.makeMove())
 		&& target(cb);
 	
 	before(final ICompoundGraphMoveBuilder cb) : makeMove(cb) {
@@ -24,7 +24,7 @@ public abstract aspect ICompoundGraphMoveBuilderDBC {
 	}
 	
 	public pointcut canMoveHere(ICompoundGraphMoveBuilder cb) :
-		call(public boolean ICompoundGraphMoveBuilder.canMoveHere())
+		execution(public boolean ICompoundGraphMoveBuilder.canMoveHere())
 		&& target(cb);
 	
 	
