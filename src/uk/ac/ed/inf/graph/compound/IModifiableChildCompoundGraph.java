@@ -15,6 +15,8 @@ limitations under the License.
 */
 package uk.ac.ed.inf.graph.compound;
 
+import java.util.Iterator;
+
 
 public interface IModifiableChildCompoundGraph {
 
@@ -46,4 +48,6 @@ public interface IModifiableChildCompoundGraph {
 	void addNode(ICompoundNode node);
 
 	void addEdge(ICompoundEdge edge);
+
+	Iterator<ICompoundGraphElement> unfilteredElementIterator();
 }

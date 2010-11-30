@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import uk.ac.ed.inf.designbycontract.PreConditionException;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
+import uk.ac.ed.inf.graph.compound.ICompoundGraphElementFactory;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 
@@ -27,6 +28,7 @@ public class CompoundGraphCopyBuilderWithInconsistentSrcTest {
 	private ComplexGraphFixture testFixture;
 	private ComplexGraphFixture destnFixture;
 	private ISubCompoundGraph mockSrcSubgraph;
+	private ICompoundGraphElementFactory mockElementFactory;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -36,6 +38,7 @@ public class CompoundGraphCopyBuilderWithInconsistentSrcTest {
 		this.testFixture.buildFixture();
 		// src graph
 		this.mockSrcSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSrcSubgraph");
+		this.mockElementFactory = this.mockery.mock(ICompoundGraphElementFactory.class, "mockElementFactory");
 
 		// dstn graph
 		this.destnFixture = new ComplexGraphFixture(mockery, "destn");
@@ -50,7 +53,7 @@ public class CompoundGraphCopyBuilderWithInconsistentSrcTest {
 			allowing(mockSrcSubgraph).containsRoot(); will(returnValue(false));
 		}});
 		
-		this.testInstance = new CompoundGraphCopyBuilder(this.destnFixture.getGraph().getRoot().getChildCompoundGraph());
+		this.testInstance = new CompoundGraphCopyBuilder(this.destnFixture.getGraph().getRoot().getChildCompoundGraph(), this.mockElementFactory);
 		this.testInstance.setSourceSubgraph(mockSrcSubgraph);
 	}
 

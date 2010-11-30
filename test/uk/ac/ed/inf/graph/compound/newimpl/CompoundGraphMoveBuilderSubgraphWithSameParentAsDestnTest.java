@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import uk.ac.ed.inf.designbycontract.PreConditionException;
+import uk.ac.ed.inf.graph.compound.ICompoundGraphElementFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphMoveBuilder;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
@@ -24,13 +25,16 @@ public class CompoundGraphMoveBuilderSubgraphWithSameParentAsDestnTest {
 	private ICompoundGraphMoveBuilder testInstance;
 	private IGraphTestFixture testFixture;
 	private ISubCompoundGraph mockSrcSubgraph;
+	private ICompoundGraphElementFactory mockElementFactory;
 	
 	@Before
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		this.testFixture.buildFixture();
-		this.testInstance = new CompoundGraphMoveBuilder(this.testFixture.getNode(ComplexGraphFixture.NODE2_ID).getChildCompoundGraph());
+		this.mockElementFactory = this.mockery.mock(ICompoundGraphElementFactory.class, "mockElementFactory");
+		this.testInstance = new CompoundGraphMoveBuilder(this.testFixture.getNode(ComplexGraphFixture.NODE2_ID).getChildCompoundGraph(),
+				this.mockElementFactory);
 		this.mockSrcSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSrcSubgraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockSrcSubgraph).getSuperGraph(); will(returnValue(testFixture.getGraph()));

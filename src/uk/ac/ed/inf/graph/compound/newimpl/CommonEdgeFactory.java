@@ -69,7 +69,7 @@ public abstract class CommonEdgeFactory implements ICompoundEdgeFactory {
 		this.edgeAttribute.setOutAttribute(pair.getOutNode().getAttribute());
 		this.edgeAttribute.setInAttribute(pair.getInNode().getAttribute());
 		IElementAttribute edgeAttribute = this.edgeAttribute.createAttribute();
-		ICompoundEdge retVal = new CompoundEdge(getParent(), CompoundGraph.getIndexCounter(this.getGraph()).nextIndex(),
+		ICompoundEdge retVal = new CompoundEdge(getParent(), this.getGraph().getIndexCounter().nextIndex(),
 				edgeAttribute, this.pair.getOutNode(), this.pair.getInNode());
 		getParent().getChildCompoundGraph().addEdge(retVal);
 		notifyEdgeCreated(retVal);

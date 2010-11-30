@@ -17,6 +17,8 @@ package uk.ac.ed.inf.graph.compound;
 
 import java.util.List;
 
+import uk.ac.ed.inf.graph.util.IndexCounter;
+
 
 
 public interface IModifiableCompoundGraph {
@@ -74,4 +76,6 @@ public interface IModifiableCompoundGraph {
 	 * @param action the action describing what has changed. 
 	 */
 	void notifyGraphStructureChange(IGraphStructureChangeAction action);
+
+	IndexCounter getIndexCounter();
 }

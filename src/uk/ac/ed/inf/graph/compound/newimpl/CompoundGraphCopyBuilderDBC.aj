@@ -4,6 +4,7 @@ import uk.ac.ed.inf.designbycontract.Precondition;
 import uk.ac.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphCopyBuilderDBC;
+import uk.ac.ed.inf.graph.compound.ICompoundGraphElementFactory;
 
 public aspect CompoundGraphCopyBuilderDBC extends ICompoundGraphCopyBuilderDBC {
 
@@ -11,13 +12,13 @@ public aspect CompoundGraphCopyBuilderDBC extends ICompoundGraphCopyBuilderDBC {
 		execution(public void CompoundGraphCopyBuilder.*(*))
 		&& target(obj);
 
-	pointcut constructor(IChildCompoundGraph root) :
-		execution(public CompoundGraphCopyBuilder.new(IChildCompoundGraph))
-		&& args(root);
+	pointcut constructor(IChildCompoundGraph root, ICompoundGraphElementFactory elementFactory) :
+		execution(public CompoundGraphCopyBuilder.new(IChildCompoundGraph, ICompoundGraphElementFactory))
+		&& args(root, elementFactory);
 	
-	before(final IChildCompoundGraph root) : constructor(root) {
+	before(final IChildCompoundGraph root, final ICompoundGraphElementFactory elementFactory) : constructor(root, elementFactory) {
 		new Precondition(){{
-			assertion(root != null, "parameters not null");
+			assertion(root != null && elementFactory != null, "parameters not null");
 		}};
 	}
 }

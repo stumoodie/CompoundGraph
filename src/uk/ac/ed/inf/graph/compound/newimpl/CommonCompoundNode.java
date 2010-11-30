@@ -106,7 +106,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 		
 	}
 
-	private int index;
+	private final int index;
 	private final IFilteredEdgeSet<ICompoundNode, ICompoundEdge> edgeInList;
 	private final IFilteredEdgeSet<ICompoundNode, ICompoundEdge> edgeOutList;
 	private boolean removed;
@@ -279,6 +279,11 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 		return retVal;
 	}
 
+	@Override
+	public boolean isLowestCommonAncestor(ICompoundGraphElement thisNode, ICompoundGraphElement thatNode){
+		return this.getRoot().getGraph().getElementTree().getLowestCommonAncestor(thisNode, thatNode).equals(this);
+	}
+	
 	@Override
 	public Iterator<ICompoundGraphElement> levelOrderIterator() {
 		return new LevelOrderTreeIterator<ICompoundGraphElement>(this);

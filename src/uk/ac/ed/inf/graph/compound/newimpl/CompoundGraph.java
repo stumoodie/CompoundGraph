@@ -16,11 +16,9 @@ limitations under the License.
 package uk.ac.ed.inf.graph.compound.newimpl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundEdgeFactory;
@@ -50,7 +48,7 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 //    private final Logger logger = Logger.getLogger(this.getClass());
 	private final IRootCompoundNode rootNode;
 	private final IGraphStateHandler stateHandler;
-	private static Map<ICompoundGraph, IndexCounter> counterLookup = new HashMap<ICompoundGraph, IndexCounter>();
+	private final IndexCounter indexCounter;
 	private final List<IGraphStructureChangeListener> graphStructureListeners;
 
 //	private ICompoundGraphServices services;
@@ -59,15 +57,12 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 		this.stateHandler = new CompoundGraphStateHandler(this);
 		this.rootNode = new RootCompoundNode(this, ROOT_NODE_IDX, rootAttribute);
 		this.graphStructureListeners = new LinkedList<IGraphStructureChangeListener>();
+		this.indexCounter = new IndexCounter();
 	}
 	
-	public static IndexCounter getIndexCounter(ICompoundGraph graph){
-		IndexCounter retVal = counterLookup.get(graph);
-		if(retVal == null){
-			retVal = new IndexCounter(ROOT_NODE_IDX);
-			counterLookup.put(graph, retVal);
-		}
-		return retVal;
+	@Override
+	public IndexCounter getIndexCounter(){
+		return this.indexCounter;
 	}
 	
 	

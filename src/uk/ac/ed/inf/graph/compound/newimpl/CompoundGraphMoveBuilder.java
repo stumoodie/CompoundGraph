@@ -8,13 +8,13 @@ import org.apache.log4j.Logger;
 
 import uk.ac.ed.inf.graph.compound.CompoundNodePair;
 import uk.ac.ed.inf.graph.compound.IChildCompoundGraph;
-import uk.ac.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
+import uk.ac.ed.inf.graph.compound.ICompoundGraphElementFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphMoveBuilder;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
-import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
+import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
@@ -27,12 +27,14 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	private ISubCompoundGraphFactory movedDestnElementsSubgraphFactory;
 	private final Map<ICompoundGraphElement, ICompoundGraphElement> oldNewEquivList;
 	private ISubCompoundGraphFactory removalSubGraphFactory;
+	private final ICompoundGraphElementFactory elementFactory;
 
-	public CompoundGraphMoveBuilder(IChildCompoundGraph destn){
+	public CompoundGraphMoveBuilder(IChildCompoundGraph destn, ICompoundGraphElementFactory elementFactory){
 		this.oldNewEquivList = new HashMap<ICompoundGraphElement, ICompoundGraphElement>();
 		this.destChildGraph = destn;
 		this.movedDestnElementsSubgraphFactory = this.destChildGraph.getSuperGraph().subgraphFactory();
 		this.removalSubGraphFactory = this.destChildGraph.getSuperGraph().subgraphFactory();
+		this.elementFactory = elementFactory;
 	}
 	
 	@Override
@@ -179,29 +181,45 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 	}
 
 	private ICompoundEdge moveEdge(ICompoundEdge srcEdge, ICompoundGraphElement parent, ICompoundNode outNode, ICompoundNode inNode) {
-		ICompoundEdge retVal = srcEdge;
-		ICompoundChildEdgeFactory edgefact = parent.getChildCompoundGraph().edgeFactory();
-		edgefact.setPair(new CompoundNodePair(outNode, inNode));
+//		ICompoundEdge retVal = srcEdge;
+//		ICompoundChildEdgeFactory edgefact = parent.getChildCompoundGraph().edgeFactory();
+//		edgefact.setPair(new CompoundNodePair(outNode, inNode));
 		IElementAttributeFactory elementAttributeFactory = srcEdge.getAttribute().elementAttributeMoveFactory();
 		elementAttributeFactory.setDestinationAttribute(parent.getAttribute());
 		elementAttributeFactory.setInAttribute(inNode.getAttribute());
 		elementAttributeFactory.setOutAttribute(outNode.getAttribute());
 //		this.elementAttributeFactory.setElementToMove(srcEdge.getAttribute());
-		edgefact.setAttributeFactory(elementAttributeFactory);
-		retVal = edgefact.createEdge();
+		int nodeIndex = parent.getGraph().getIndexCounter().nextIndex();
+		IElementAttribute newAttribute = elementAttributeFactory.createAttribute();
+		this.elementFactory.setParent(parent);
+		this.elementFactory.setIndex(nodeIndex);
+		this.elementFactory.setAttribute(newAttribute);
+		ICompoundEdge newEdge = this.elementFactory.createEdge(outNode, inNode);
+//		CompoundEdge newEdge = new CompoundEdge(parent, nodeIndex, newAttribute, outNode, inNode);
+		parent.getChildCompoundGraph().addEdge(newEdge);
+//		edgefact.setAttributeFactory(elementAttributeFactory);
+//		retVal = edgefact.createEdge();
 		srcEdge.markRemoved(true);
 		this.removalSubGraphFactory.addElement(srcEdge);
-		return retVal;
+		return newEdge;
 	}
 
 	private ICompoundNode moveNode(ICompoundNode srcNode, ICompoundGraphElement destParentNode){
-		ICompoundNode newNode = srcNode; 
-		ICompoundNodeFactory fact = destParentNode.getChildCompoundGraph().nodeFactory();
+//		ICompoundNode newNode = srcNode; 
+//		ICompoundNodeFactory fact = destParentNode.getChildCompoundGraph().nodeFactory();
 		IElementAttributeFactory elementAttributeFactory = srcNode.getAttribute().elementAttributeMoveFactory();
 		elementAttributeFactory.setDestinationAttribute(destParentNode.getAttribute());
 //		elementAttributeFactory.setElementToMove(srcNode.getAttribute());
-		fact.setAttributeFactory(elementAttributeFactory);
-		newNode = fact.createNode();
+		int nodeIndex = destParentNode.getGraph().getIndexCounter().nextIndex();
+		IElementAttribute newAttribute = elementAttributeFactory.createAttribute();
+		this.elementFactory.setParent(destParentNode);
+		this.elementFactory.setIndex(nodeIndex);
+		this.elementFactory.setAttribute(newAttribute);
+		ICompoundNode newNode = this.elementFactory.createNode();
+//		CompoundNode newNode = new CompoundNode(destParentNode, nodeIndex, newAttribute);
+		destParentNode.getChildCompoundGraph().addNode(newNode);
+//		fact.setAttributeFactory(elementAttributeFactory);
+//		newNode = fact.createNode();
 		srcNode.markRemoved(true);
 		this.removalSubGraphFactory.addElement(srcNode);
 		return newNode;

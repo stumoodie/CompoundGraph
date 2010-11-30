@@ -33,6 +33,7 @@ import uk.ac.ed.inf.designbycontract.PreConditionException;
 import uk.ac.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundEdgeFactory;
+import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
@@ -234,16 +235,22 @@ public class ChildCompoundGraphTest {
 		iterTest.testIterator(this.testInstance.nodeIterator());
 	}
 
+//	@Test
+//	public final void testUnfilteredNodeIterator() {
+//		IteratorTestUtility<ICompoundNode> iterTest = new IteratorTestUtility<ICompoundNode>(this.testFixture.getNode3(), this.testFixture.getNode5());
+//		iterTest.testIterator(this.testInstance.unfilteredNodeIterator());
+//	}
+//
+//	@Test
+//	public void testUnfilteredEdgeIterator(){
+//		IteratorTestUtility<ICompoundEdge> iterTest = new IteratorTestUtility<ICompoundEdge>(this.testFixture.getEdge2());
+//		iterTest.testIterator(this.testInstance.unfilteredEdgeIterator());
+//	}
+	
 	@Test
-	public final void testUnfilteredNodeIterator() {
-		IteratorTestUtility<ICompoundNode> iterTest = new IteratorTestUtility<ICompoundNode>(this.testFixture.getNode3(), this.testFixture.getNode5());
-		iterTest.testIterator(this.testInstance.unfilteredNodeIterator());
-	}
-
-	@Test
-	public void testUnfilteredEdgeIterator(){
-		IteratorTestUtility<ICompoundEdge> iterTest = new IteratorTestUtility<ICompoundEdge>(this.testFixture.getEdge2());
-		iterTest.testIterator(this.testInstance.unfilteredEdgeIterator());
+	public void testUnfilteredEelementIterator(){
+		IteratorTestUtility<ICompoundGraphElement> iterTest = new IteratorTestUtility<ICompoundGraphElement>(this.testFixture.getEdge2(), this.testFixture.getNode3(), this.testFixture.getNode5());
+		iterTest.testIterator(this.testInstance.unfilteredElementIterator());
 	}
 	
 	@Test

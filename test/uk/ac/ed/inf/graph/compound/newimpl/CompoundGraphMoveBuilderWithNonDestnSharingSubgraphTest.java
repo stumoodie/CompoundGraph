@@ -16,15 +16,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import uk.ac.ed.inf.designbycontract.PreConditionException;
-import uk.ac.ed.inf.graph.compound.CompoundNodePair;
 import uk.ac.ed.inf.graph.compound.IChildCompoundGraph;
-import uk.ac.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
+import uk.ac.ed.inf.graph.compound.ICompoundGraphElementFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphMoveBuilder;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
-import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
-import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
+import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
@@ -39,13 +37,15 @@ public class CompoundGraphMoveBuilderWithNonDestnSharingSubgraphTest {
 	private ICompoundGraphMoveBuilder testInstance;
 	private IGraphTestFixture testFixture;
 	private ISubCompoundGraph mockSrcSubgraph;
+	private ICompoundGraphElementFactory mockElementFactory;
 	
 	@Before
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		this.testFixture.buildFixture();
-		this.testInstance = new CompoundGraphMoveBuilder(this.testFixture.getNode(ComplexGraphFixture.NODE6_ID).getChildCompoundGraph());
+		this.mockElementFactory = this.mockery.mock(ICompoundGraphElementFactory.class, "mockElementFactory");
+		this.testInstance = new CompoundGraphMoveBuilder(this.testFixture.getNode(ComplexGraphFixture.NODE6_ID).getChildCompoundGraph(), mockElementFactory);
 		this.mockSrcSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSrcSubgraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockSrcSubgraph).getSuperGraph(); will(returnValue(testFixture.getGraph()));
@@ -82,7 +82,7 @@ public class CompoundGraphMoveBuilderWithNonDestnSharingSubgraphTest {
 
 	@Test(expected=PreConditionException.class)
 	public void testCompoundGraphMoveBuilder() {
-		new CompoundGraphMoveBuilder(null);
+		new CompoundGraphMoveBuilder(null, null);
 	}
 
 	@Test
@@ -115,8 +115,9 @@ public class CompoundGraphMoveBuilderWithNonDestnSharingSubgraphTest {
 	@Test
 	public void testMakeMove() {
 		final ICompoundNode destnNode = this.testFixture.getNode(ComplexGraphFixture.NODE6_ID);
-		final ICompoundNodeFactory destnNodeNodeFact = destnNode.getChildCompoundGraph().nodeFactory();
-		final ICompoundChildEdgeFactory destnNodeEdgeFactory = destnNode.getChildCompoundGraph().edgeFactory();
+		final IChildCompoundGraph destnChildNode = destnNode.getChildCompoundGraph();
+//		final ICompoundNodeFactory destnNodeNodeFact = destnNode.getChildCompoundGraph().nodeFactory();
+//		final ICompoundChildEdgeFactory destnNodeEdgeFactory = destnNode.getChildCompoundGraph().edgeFactory();
 		
 		final ISubCompoundGraphFactory movedNodesSubgraphFactory = this.testFixture.getGraph().subgraphFactory();
 //		final ISubCompoundGraphFactory removedNodesSubgraphFactory = this.testFixture.getGraph().subgraphFactory();
@@ -124,11 +125,11 @@ public class CompoundGraphMoveBuilderWithNonDestnSharingSubgraphTest {
 		final ICompoundNode mockNode = this.mockery.mock(ICompoundNode.class, "mockNode");
 		final IChildCompoundGraph mockNodeChildGraph = this.mockery.mock(IChildCompoundGraph.class, "mockNodeChildGraph");
 //		final ICompoundNodeFactory mockNodeNodeFactory = this.mockery.mock(ICompoundNodeFactory.class, "mockNodeNodeFactory");
-		final ICompoundChildEdgeFactory mockNodeEdgeFactory = this.mockery.mock(ICompoundChildEdgeFactory.class, "mockNodeEdgeFactory");
+//		final ICompoundChildEdgeFactory mockNodeEdgeFactory = this.mockery.mock(ICompoundChildEdgeFactory.class, "mockNodeEdgeFactory");
 		
 		final ICompoundEdge mockEdge = this.mockery.mock(ICompoundEdge.class, "mockEdge");
 		final IChildCompoundGraph mockEdgeChildGraph = this.mockery.mock(IChildCompoundGraph.class, "mockEdgeChildGraph");
-		final ICompoundNodeFactory mockEdgeNodeFactory = this.mockery.mock(ICompoundNodeFactory.class, "mockEdgeNodeFactory");
+//		final ICompoundNodeFactory mockEdgeNodeFactory = this.mockery.mock(ICompoundNodeFactory.class, "mockEdgeNodeFactory");
 //		final ICompoundChildEdgeFactory mockEdgeEdgeFactory = this.mockery.mock(ICompoundChildEdgeFactory.class, "mockEdgeEdgeFactory");
 
 //		final ICompoundChildEdgeFactory destnrootChildEdgeFactory = testFixture.getGraph().getRoot().getChildCompoundGraph().edgeFactory();
@@ -157,24 +158,40 @@ public class CompoundGraphMoveBuilderWithNonDestnSharingSubgraphTest {
 			allowing(mockDestnSubgraph).getSuperGraph(); will(returnValue(testFixture.getGraph()));
 		}});
 		this.mockery.checking(new Expectations(){{
-			exactly(3).of(destnNodeNodeFact).setAttributeFactory(with(any(IElementAttributeFactory.class)));
-			exactly(3).of(destnNodeNodeFact).createNode(); will(returnValue(mockNode));
+//			exactly(3).of(destnNodeNodeFact).setAttributeFactory(with(any(IElementAttributeFactory.class)));
+//			exactly(3).of(destnNodeNodeFact).createNode(); will(returnValue(mockNode));
+//			
+//			exactly(2).of(destnNodeEdgeFactory).setAttributeFactory(with(any(IElementAttributeFactory.class)));
+//			exactly(2).of(destnNodeEdgeFactory).setPair(with(equal(new CompoundNodePair(mockNode, mockNode))));
+//			exactly(2).of(destnNodeEdgeFactory).createEdge(); will(returnValue(mockEdge));
 			
-			exactly(2).of(destnNodeEdgeFactory).setAttributeFactory(with(any(IElementAttributeFactory.class)));
-			exactly(2).of(destnNodeEdgeFactory).setPair(with(equal(new CompoundNodePair(mockNode, mockNode))));
-			exactly(2).of(destnNodeEdgeFactory).createEdge(); will(returnValue(mockEdge));
-			
-			exactly(1).of(mockEdgeChildGraph).nodeFactory(); will(returnValue(mockEdgeNodeFactory));
+//			exactly(1).of(mockEdgeChildGraph).nodeFactory(); will(returnValue(mockEdgeNodeFactory));
 
-			exactly(1).of(mockEdgeNodeFactory).setAttributeFactory(with(any(IElementAttributeFactory.class)));
+//			exactly(1).of(mockEdgeNodeFactory).setAttributeFactory(with(any(IElementAttributeFactory.class)));
+//			
+//			exactly(1).of(mockEdgeNodeFactory).createNode(); will(returnValue(mockNode));	
+//			
+//			exactly(1).of(mockNodeChildGraph).edgeFactory(); will(returnValue(mockNodeEdgeFactory));
+//
+//			exactly(1).of(mockNodeEdgeFactory).setAttributeFactory(with(any(IElementAttributeFactory.class)));
+//			exactly(1).of(mockNodeEdgeFactory).setPair(with(equal(new CompoundNodePair(mockNode, mockNode))));	
+//			exactly(1).of(mockNodeEdgeFactory).createEdge(); will(returnValue(mockEdge));	
 			
-			exactly(1).of(mockEdgeNodeFactory).createNode(); will(returnValue(mockNode));	
+			exactly(5).of(mockElementFactory).setParent(with(destnNode));
+			exactly(1).of(mockElementFactory).setParent(with(mockEdge));
+			exactly(1).of(mockElementFactory).setParent(with(mockNode));
+			exactly(7).of(mockElementFactory).setIndex(with(any(Integer.class)));
+			exactly(7).of(mockElementFactory).setAttribute(with(any(IElementAttribute.class)));
+			exactly(4).of(mockElementFactory).createNode(); will(returnValue(mockNode));
+			exactly(3).of(mockElementFactory).createEdge(with(mockNode), with(mockNode)); will(returnValue(mockEdge));
 			
-			exactly(1).of(mockNodeChildGraph).edgeFactory(); will(returnValue(mockNodeEdgeFactory));
+			exactly(3).of(destnChildNode).addNode(with(any(ICompoundNode.class)));
+			
+			exactly(2).of(destnChildNode).addEdge(with(any(ICompoundEdge.class)));
+			
+			exactly(1).of(mockNodeChildGraph).addEdge(mockEdge);
 
-			exactly(1).of(mockNodeEdgeFactory).setAttributeFactory(with(any(IElementAttributeFactory.class)));
-			exactly(1).of(mockNodeEdgeFactory).setPair(with(equal(new CompoundNodePair(mockNode, mockNode))));	
-			exactly(1).of(mockNodeEdgeFactory).createEdge(); will(returnValue(mockEdge));	
+			exactly(1).of(mockEdgeChildGraph).addNode(mockNode);
 			
 			one(testFixture.getGraph()).notifyGraphStructureChange(with(any(IGraphStructureChangeAction.class)));
 		}});

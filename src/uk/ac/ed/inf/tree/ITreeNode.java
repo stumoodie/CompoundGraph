@@ -68,6 +68,8 @@ public interface ITreeNode<T extends ITreeNode<T>> {
 	 */
 	boolean isChild(T childNode);
 	
+	boolean isLowestCommonAncestor(T thisNode, T thatNode);
+	
 	/**
 	 * Iterator over the immediate children of this node.
 	 * @return An iterator to this nodes children.

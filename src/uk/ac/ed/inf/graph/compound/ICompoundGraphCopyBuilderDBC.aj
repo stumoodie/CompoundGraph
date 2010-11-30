@@ -7,7 +7,7 @@ import uk.ac.ed.inf.designbycontract.Precondition;
 public abstract aspect ICompoundGraphCopyBuilderDBC {
 	
 	public pointcut makeCopy(ICompoundGraphCopyBuilder cb) : 
-		call(public void ICompoundGraphCopyBuilder.makeCopy())
+		execution(public void ICompoundGraphCopyBuilder.makeCopy())
 		&& target(cb);
 	
 	before(final ICompoundGraphCopyBuilder cb) : makeCopy(cb) {
@@ -24,7 +24,7 @@ public abstract aspect ICompoundGraphCopyBuilderDBC {
 	}
 	
 	public pointcut canCopyHere(ICompoundGraphCopyBuilder cb) :
-		call(public boolean ICompoundGraphCopyBuilder.canCopyHere())
+		execution(public boolean ICompoundGraphCopyBuilder.canCopyHere())
 		&& target(cb);
 	
 	

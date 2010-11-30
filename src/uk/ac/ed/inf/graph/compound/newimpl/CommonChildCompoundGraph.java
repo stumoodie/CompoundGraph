@@ -23,9 +23,9 @@ public abstract class CommonChildCompoundGraph implements IChildCompoundGraph {
 		private final Iterator<? extends ICompoundGraphElement> inNodeIterator;
 		private final Iterator<? extends ICompoundGraphElement> outNodeIterator;
 		
-		public CombinedElementIterator(){
-			this.inNodeIterator = edgeSet.iterator();
-			this.outNodeIterator = nodeSet.iterator();
+		public CombinedElementIterator(Iterator<ICompoundNode> nodeIter, Iterator<ICompoundEdge> edgeIter){
+			this.inNodeIterator = edgeIter;
+			this.outNodeIterator = nodeIter;
 		}
 		
 		
@@ -62,6 +62,7 @@ public abstract class CommonChildCompoundGraph implements IChildCompoundGraph {
 //    private final Logger logger = Logger.getLogger(this.getClass());
 	private final FilteredEdgeSet<ICompoundNode, ICompoundEdge> edgeSet;
 	private final FilteredNodeSet<ICompoundNode, ICompoundEdge> nodeSet;
+	private final CompoundGraphElementFactory elementFactory = new CompoundGraphElementFactory();
 	
 	protected CommonChildCompoundGraph(){
 		this.nodeSet = new FilteredNodeSet<ICompoundNode, ICompoundEdge>(new NodeSet<ICompoundNode, ICompoundEdge>(), new IFilterCriteria<ICompoundNode>(){
@@ -139,17 +140,24 @@ public abstract class CommonChildCompoundGraph implements IChildCompoundGraph {
 		return this.edgeSet.iterator();
 	}
 
-	protected final Iterator<ICompoundEdge> unfilteredEdgeIterator() {
-		return this.edgeSet.getUnfilteredEdgeSet().iterator();
-	}
-	
-	protected final Iterator<ICompoundNode> unfilteredNodeIterator() {
-		return this.nodeSet.getUnfilteredNodeSet().iterator();
+//	@Override
+//	public final Iterator<ICompoundEdge> unfilteredEdgeIterator() {
+//		return this.edgeSet.getUnfilteredEdgeSet().iterator();
+//	}
+//	
+//	@Override
+//	public final Iterator<ICompoundNode> unfilteredNodeIterator() {
+//		return this.nodeSet.getUnfilteredNodeSet().iterator();
+//	}
+
+	@Override
+	public final Iterator<ICompoundGraphElement> unfilteredElementIterator() {
+		return new CombinedElementIterator(this.nodeSet.getUnfilteredNodeSet().iterator(), this.edgeSet.getUnfilteredEdgeSet().iterator());
 	}
 
 	@Override
 	public Iterator<ICompoundGraphElement> elementIterator() {
-		return new CombinedElementIterator();
+		return new CombinedElementIterator(this.nodeSet.iterator(), this.edgeSet.iterator());
 	}
 
 	@Override
@@ -200,12 +208,12 @@ public abstract class CommonChildCompoundGraph implements IChildCompoundGraph {
 
 	@Override
 	public ICompoundGraphCopyBuilder newCopyBuilder(){
-		return new CompoundGraphCopyBuilder(this);
+		return new CompoundGraphCopyBuilder(this, this.elementFactory);
 	}
 	
 	@Override
 	public ICompoundGraphMoveBuilder newMoveBuilder(){
-		return new CompoundGraphMoveBuilder(this);
+		return new CompoundGraphMoveBuilder(this, this.elementFactory);
 	}
 	
 	@Override

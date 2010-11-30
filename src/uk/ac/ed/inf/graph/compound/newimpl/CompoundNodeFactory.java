@@ -44,8 +44,8 @@ public class CompoundNodeFactory implements ICompoundNodeFactory {
 	
 	@Override
 	public ICompoundNode createNode() {
-		int nodeIndex = CompoundGraph.getIndexCounter(this.getGraph()).nextIndex();
 		attributeFactory.setDestinationAttribute(this.parent.getAttribute());
+		int nodeIndex = this.getGraph().getIndexCounter().nextIndex();
 		IElementAttribute newAttribute = this.attributeFactory.createAttribute();
 		CompoundNode retVal = new CompoundNode(parent, nodeIndex, newAttribute);
 		parent.getChildCompoundGraph().addNode(retVal);

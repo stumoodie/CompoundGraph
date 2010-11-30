@@ -30,10 +30,12 @@ public class LevelOrderTreeIterator <T extends ITreeNode<T>> implements Iterator
 		queue.add(rootNode);
 	}
 	
+	@Override
 	public boolean hasNext() {
 		return !queue.isEmpty();
 	}
 
+	@Override
 	public T next() {
 		T retVal = queue.remove();
 		readChildren(retVal);
@@ -47,6 +49,7 @@ public class LevelOrderTreeIterator <T extends ITreeNode<T>> implements Iterator
 		}
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException("removal not supported by this iterator");
 	}

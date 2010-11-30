@@ -6,13 +6,13 @@ import java.util.Map;
 
 import uk.ac.ed.inf.graph.compound.CompoundNodePair;
 import uk.ac.ed.inf.graph.compound.IChildCompoundGraph;
-import uk.ac.ed.inf.graph.compound.ICompoundChildEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphCopyBuilder;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
+import uk.ac.ed.inf.graph.compound.ICompoundGraphElementFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
-import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
+import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
@@ -25,11 +25,13 @@ public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 	private final Map<ICompoundGraphElement, ICompoundGraphElement> oldNewEquivList;
 	private ISubCompoundGraph copiedComponents;
 //	private IElementAttributeCopyFactory attributeCopyFactory;
+	private final ICompoundGraphElementFactory elementFactory;
 
-	public CompoundGraphCopyBuilder(IChildCompoundGraph dest){
+	public CompoundGraphCopyBuilder(IChildCompoundGraph dest, ICompoundGraphElementFactory elementFactory){
 		this.oldNewEquivList = new HashMap<ICompoundGraphElement, ICompoundGraphElement>();
 		this.copiedComponents = null; 
 		this.destChildGraph = dest;
+		this.elementFactory = elementFactory;
 	}
 	
 	@Override
@@ -133,25 +135,42 @@ public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 	}
 
 	private ICompoundEdge copyEdge(ICompoundEdge srcEdge, ICompoundGraphElement parent, ICompoundNode outNode, ICompoundNode inNode) {
-		ICompoundChildEdgeFactory edgefact = parent.getChildCompoundGraph().edgeFactory();
+//		ICompoundChildEdgeFactory edgefact = parent.getChildCompoundGraph().edgeFactory();
 //		this.attributeCopyFactory.setElementToCopy(srcEdge.getAttribute());
 		IElementAttributeFactory attributeCopyFactory = srcEdge.getAttribute().elementAttributeCopyFactory();
 		attributeCopyFactory.setDestinationAttribute(parent.getAttribute());
 		attributeCopyFactory.setOutAttribute(outNode.getAttribute());
 		attributeCopyFactory.setInAttribute(inNode.getAttribute());
-		edgefact.setAttributeFactory(attributeCopyFactory);
-		edgefact.setPair(new CompoundNodePair(outNode, inNode));
-		return edgefact.createEdge();
+		IElementAttribute edgeAttribute = attributeCopyFactory.createAttribute();
+		int index = parent.getGraph().getIndexCounter().nextIndex();
+		this.elementFactory.setParent(parent);
+		this.elementFactory.setIndex(index);
+		this.elementFactory.setAttribute(edgeAttribute);
+		ICompoundEdge retVal = this.elementFactory.createEdge(outNode, inNode);
+//		ICompoundEdge retVal = new CompoundEdge(parent, index, edgeAttribute, outNode, inNode);
+		parent.getChildCompoundGraph().addEdge(retVal);
+		return retVal;
+//		edgefact.setAttributeFactory(attributeCopyFactory);
+//		edgefact.setPair(new CompoundNodePair(outNode, inNode));
+//		return edgefact.createEdge();
 	}
 
 	private ICompoundNode copyNode(ICompoundNode srcNode, ICompoundGraphElement destParentNode){
-		ICompoundNodeFactory fact = destParentNode.getChildCompoundGraph().nodeFactory();
+//		ICompoundNodeFactory fact = destParentNode.getChildCompoundGraph().nodeFactory();
 		IElementAttributeFactory attributeCopyFactory = srcNode.getAttribute().elementAttributeCopyFactory();
 		attributeCopyFactory.setDestinationAttribute(destParentNode.getAttribute());
 //		this.attributeCopyFactory.setElementToCopy(srcNode.getAttribute());
-		fact.setAttributeFactory(attributeCopyFactory);
-		ICompoundNode newNode = fact.createNode();
-		return newNode;
+//		fact.setAttributeFactory(attributeCopyFactory);
+//		ICompoundNode newNode = fact.createNode();
+		int nodeIndex = destParentNode.getGraph().getIndexCounter().nextIndex();
+		IElementAttribute newAttribute = attributeCopyFactory.createAttribute();
+		this.elementFactory.setIndex(nodeIndex);
+		this.elementFactory.setParent(destParentNode);
+		this.elementFactory.setAttribute(newAttribute);
+		ICompoundNode retVal = this.elementFactory.createNode();
+//		CompoundNode retVal = new CompoundNode(destParentNode, nodeIndex, newAttribute);
+		destParentNode.getChildCompoundGraph().addNode(retVal);
+		return retVal;
 	}
 
 	@Override

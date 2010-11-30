@@ -187,6 +187,11 @@ public class CompoundEdge implements ICompoundEdge {
 	}
 
 	@Override
+	public boolean isLowestCommonAncestor(ICompoundGraphElement thisNode, ICompoundGraphElement thatNode){
+		return this.getRoot().getGraph().getElementTree().getLowestCommonAncestor(thisNode, thatNode).equals(this);
+	}
+
+	@Override
 	public boolean isParent(ICompoundGraphElement parentNode) {
 		boolean retVal = false;
 		if(parentNode != null){
