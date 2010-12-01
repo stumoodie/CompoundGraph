@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
+import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.ISubgraphRemovalBuilder;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphTestFixture;
@@ -62,14 +63,18 @@ public class CompoundSubgraphRemovalBuilderWithSubgraphTest {
 
 	@Test
 	public void testRemoveSubgraph() {
-//		final ISubCompoundGraphFactory mocksubgraphFactory = this.testFixture.getGraph().subgraphFactory();
+		final ISubCompoundGraphFactory mocksubgraphFactory = this.testFixture.getGraph().subgraphFactory();
 		this.mockery.checking(new Expectations(){{
 			one(testFixture.getNode(ComplexGraphFixture.NODE2_ID)).markRemoved(true); will(testFixture.setRemovalState(ComplexGraphFixture.NODE2_ID));
 			one(testFixture.getEdge(ComplexGraphFixture.EDGE3_ID)).markRemoved(true); will(testFixture.setRemovalState(ComplexGraphFixture.EDGE3_ID));
 			one(testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)).markRemoved(true); will(testFixture.setRemovalState(ComplexGraphFixture.EDGE4_ID));
 			
-//			exactly(3).of(mocksubgraphFactory).addElement(with(any(ICompoundGraphElement.class)));
+			exactly(1).of(mocksubgraphFactory).addElement(with(testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)));
+			exactly(1).of(mocksubgraphFactory).addElement(with(testFixture.getEdge(ComplexGraphFixture.EDGE3_ID)));
+			exactly(1).of(mocksubgraphFactory).addElement(with(testFixture.getNode(ComplexGraphFixture.NODE2_ID)));
 
+			ignoring(mocksubgraphFactory).createSubgraph();
+			
 			one(testFixture.getGraph()).notifyGraphStructureChange(with(any(IGraphStructureChangeAction.class)));
 		}});
 		this.testInstance.removeSubgraph();

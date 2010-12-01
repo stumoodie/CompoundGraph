@@ -8,11 +8,13 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
+import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.ISubgraphRemovalBuilder;
 
 public class CompoundSubgraphRemovalBuilder implements ISubgraphRemovalBuilder {
 	private final ICompoundGraph owningGraph;
 	private ISubCompoundGraph subCompoundGraph;
+	private ISubCompoundGraph removalSubGraph;
 	
 	protected CompoundSubgraphRemovalBuilder(ICompoundGraph owningGraph){
 		this.owningGraph = owningGraph;
@@ -30,9 +32,10 @@ public class CompoundSubgraphRemovalBuilder implements ISubgraphRemovalBuilder {
 		return this.subCompoundGraph;
 	}
 
-	private void removeElement(ICompoundGraphElement element){
+	private void removeElement(ICompoundGraphElement element, ISubCompoundGraphFactory subCompoundGraphFactory){
 		if(!element.isRemoved()){
 			element.markRemoved(true);
+			subCompoundGraphFactory.addElement(element);
 		}
 	}
 
@@ -49,6 +52,7 @@ public class CompoundSubgraphRemovalBuilder implements ISubgraphRemovalBuilder {
 
 	@Override
 	public void removeSubgraph() {
+		ISubCompoundGraphFactory removalGraphFactory = this.owningGraph.subgraphFactory();
 		Iterator<ICompoundGraphElement> elementIterator = this.subCompoundGraph.elementIterator();
 		while(elementIterator.hasNext()){
 			ICompoundGraphElement element = elementIterator.next();
@@ -57,11 +61,12 @@ public class CompoundSubgraphRemovalBuilder implements ISubgraphRemovalBuilder {
 				Iterator<ICompoundEdge> iter = node.edgeIterator();
 				while(iter.hasNext()){
 					ICompoundEdge edge = iter.next();
-					removeElement(edge);
+					removeElement(edge, removalGraphFactory);
 				}
 			}
-			removeElement(element);
+			removeElement(element, removalGraphFactory);
 		}
+		this.removalSubGraph = removalGraphFactory.createSubgraph();
 		this.owningGraph.notifyGraphStructureChange(new IGraphStructureChangeAction(){
 
 			@Override
@@ -71,7 +76,7 @@ public class CompoundSubgraphRemovalBuilder implements ISubgraphRemovalBuilder {
 
 			@Override
 			public ISubCompoundGraph originalSubgraph() {
-				return subCompoundGraph;
+				return removalSubGraph;
 			}
 
 			@Override

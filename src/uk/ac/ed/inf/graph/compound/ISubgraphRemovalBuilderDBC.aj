@@ -38,7 +38,6 @@ public abstract aspect ISubgraphRemovalBuilderDBC {
 	after(final ISubgraphRemovalBuilder rb) : allMethods(rb){
 		new ClassInvariant(){{
 			assertion(rb.getGraph() != null, "graph always defined");
-			assertion(implies(rb.canRemoveSubgraph(), rb.getRemovalSubgraph().isConsistentSnapShot()), "can remove implied subgraph is consistent");
 		}};
 	}
 }
