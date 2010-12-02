@@ -7,6 +7,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 
 public aspect ChildCompoundGraphDBC extends IChildCompoundGraphDBC {
 
+	@Override
 	public pointcut allMethods(IChildCompoundGraph object) :
 		target(object) &&
 		(execution(public void ChildCompoundGraph.*(..)) ||

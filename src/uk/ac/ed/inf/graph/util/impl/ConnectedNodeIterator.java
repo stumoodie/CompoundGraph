@@ -31,10 +31,12 @@ public class ConnectedNodeIterator implements Iterator<ICompoundNode> {
 		this.currNode = currNode;
 	}
 
+	@Override
 	public boolean hasNext() {
 		return edgeIterator.hasNext();
 	}
 
+	@Override
 	public ICompoundNode next() {
 		ICompoundEdge edge = this.edgeIterator.next();
 		CompoundNodePair nodePair = edge.getConnectedNodes();
@@ -42,6 +44,7 @@ public class ConnectedNodeIterator implements Iterator<ICompoundNode> {
 		return retVal;
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException(
 				"Removal not supported by this iterator");

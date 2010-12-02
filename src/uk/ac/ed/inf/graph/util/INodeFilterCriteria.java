@@ -24,6 +24,7 @@ public interface INodeFilterCriteria<
 		E extends ICompoundEdge
 >  extends IFilterCriteria<N> {
 
+	@Override
 	boolean matched(N testNode);
 	
 }

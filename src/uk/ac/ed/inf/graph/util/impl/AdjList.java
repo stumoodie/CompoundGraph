@@ -38,15 +38,18 @@ public final class AdjList implements IAdjacencyDataStructure {
 		}
 	}
 	
+	@Override
 	public void addNode(int nodeIdx){
 		ensureCapacity(nodeIdx+1);
 		this.adjList.set(nodeIdx, new ArrayList<AdjUnit>());
 	}
 	
+	@Override
 	public boolean containsNode(int nodeIdx){
 		return nodeIdx < this.adjList.size() && this.adjList.get(nodeIdx) != null;
 	}
 	
+	@Override
 	public void addEdge(int edgeIdx, int thisNodeIdx, int thatNodeIdx){
 		if(!containsNode(thisNodeIdx) || !containsNode(thatNodeIdx)) throw new IllegalArgumentException("nodes must already exist");
 		List<AdjUnit> node1Adj = this.adjList.get(thisNodeIdx);
@@ -58,6 +61,7 @@ public final class AdjList implements IAdjacencyDataStructure {
 		Collections.sort(node2Adj, comparitor);
 	}
 	
+	@Override
 	public boolean isConnected(int thisNodeIdx, int thatNodeIdx){
 		boolean retVal = false;
 		if(containsNode(thisNodeIdx) && containsNode(thatNodeIdx)){
@@ -68,6 +72,7 @@ public final class AdjList implements IAdjacencyDataStructure {
 		return retVal;
 	}
 	
+	@Override
 	public int getEdge(int thisNodeIdx, int thatNodeIdx){
 		if(!containsNode(thisNodeIdx) || !containsNode(thatNodeIdx)) throw new IllegalArgumentException("nodes must already exist");
 		List<AdjUnit> nodeAdj = this.adjList.get(thisNodeIdx);
@@ -104,6 +109,7 @@ public final class AdjList implements IAdjacencyDataStructure {
 	
 	public static class AdjUnitComparitor implements Comparator<Object> {
 
+		@Override
 		public int compare(Object o1, Object o2) {
 			Integer idx1 = getNodeIdx(o1);
 			Integer idx2 = getNodeIdx(o2);

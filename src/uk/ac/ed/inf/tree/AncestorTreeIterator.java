@@ -28,10 +28,12 @@ public class AncestorTreeIterator<T extends ITreeNode<T>> implements Iterator<T>
 		this.rootNode = startNode.getRoot();
 	}
 	
+	@Override
 	public boolean hasNext() {
 		return !visitedRoot;
 	}
 
+	@Override
 	public T next() {
 		T retVal = this.currNode;
 		this.currNode = currNode.getParent();
@@ -44,6 +46,7 @@ public class AncestorTreeIterator<T extends ITreeNode<T>> implements Iterator<T>
 		return retVal;
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException("removal not supported by this iterator");
 	}

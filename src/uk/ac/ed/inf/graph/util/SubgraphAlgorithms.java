@@ -35,6 +35,7 @@ public final class SubgraphAlgorithms implements ISubgraphAlgorithms {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.ISubgraphAlgorithms#getSubgraph()
 	 */
+	@Override
 	public ISubCompoundGraph getSubgraph(){
 		return this.basicSubgraph;
 	}
@@ -42,6 +43,7 @@ public final class SubgraphAlgorithms implements ISubgraphAlgorithms {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.ISubgraphAlgorithms#isInducedSubgraph()
 	 */
+	@Override
 	public boolean isInducedSubgraph(){
 		boolean retVal = true;
 		Iterator<ICompoundNode> graphNodeIter = this.basicSubgraph.getSuperGraph().nodeIterator();

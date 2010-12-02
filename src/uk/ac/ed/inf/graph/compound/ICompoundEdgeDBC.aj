@@ -6,6 +6,7 @@ public abstract aspect ICompoundEdgeDBC extends ICompoundGraphElementDBC {
 
 //	public abstract pointcut allMethodsICompoundEdge(ICompoundEdge cn);
 	
+	@Override
 	after(final ICompoundGraphElement ce) : allMethods(ce) {
 		final ICompoundEdge cn = (ICompoundEdge)ce;
 		new ClassInvariant(){{

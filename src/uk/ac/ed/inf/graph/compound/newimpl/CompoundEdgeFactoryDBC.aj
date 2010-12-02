@@ -7,6 +7,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 
 public aspect CompoundEdgeFactoryDBC extends ICompoundEdgeFactoryDBC {
 
+	@Override
 	public pointcut allMethods(ICompoundEdgeFactory object) :
 		target(object)
 		&& (execution(public void CompoundEdgeFactory.*(..)) ||

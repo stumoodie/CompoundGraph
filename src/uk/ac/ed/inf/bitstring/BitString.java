@@ -43,6 +43,7 @@ public class BitString implements IBitString {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.IBitString#and(uk.ed.inf.graph.impl.BitString)
 	 */
+	@Override
 	public IBitString and(BitString set) {
 		BitString retVal = new BitString(this);
 		retVal.bitVector.and(set.bitVector);
@@ -52,6 +53,7 @@ public class BitString implements IBitString {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.IBitString#andNot(uk.ed.inf.graph.impl.BitString)
 	 */
+	@Override
 	public IBitString andNot(BitString set) {
 		BitString retVal = new BitString(this);
 		retVal.bitVector.andNot(set.bitVector);
@@ -61,6 +63,7 @@ public class BitString implements IBitString {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.IBitString#cardinality()
 	 */
+	@Override
 	public int cardinality() {
 		return bitVector.cardinality();
 	}
@@ -69,6 +72,7 @@ public class BitString implements IBitString {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.IBitString#get(int, int)
 	 */
+	@Override
 	public IBitString get(int fromIndex, int toIndex) {
 		return new BitString(bitVector.get(fromIndex, toIndex));
 	}
@@ -76,6 +80,7 @@ public class BitString implements IBitString {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.IBitString#get(int)
 	 */
+	@Override
 	public boolean get(int bitIndex) {
 		return bitVector.get(bitIndex);
 	}
@@ -92,6 +97,7 @@ public class BitString implements IBitString {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.IBitString#intersects(uk.ed.inf.graph.impl.BitString)
 	 */
+	@Override
 	public boolean intersects(BitString set) {
 		return bitVector.intersects(set.bitVector);
 	}
@@ -99,6 +105,7 @@ public class BitString implements IBitString {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.IBitString#isEmpty()
 	 */
+	@Override
 	public boolean isEmpty() {
 		return bitVector.isEmpty();
 	}
@@ -106,6 +113,7 @@ public class BitString implements IBitString {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.IBitString#length()
 	 */
+	@Override
 	public int length() {
 		return bitVector.length();
 	}
@@ -127,6 +135,7 @@ public class BitString implements IBitString {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.IBitString#or(uk.ed.inf.graph.impl.BitString)
 	 */
+	@Override
 	public IBitString or(BitString set) {
 		BitString retVal = new BitString(this);
 		retVal.bitVector.or(set.bitVector);
@@ -136,6 +145,7 @@ public class BitString implements IBitString {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.IBitString#size()
 	 */
+	@Override
 	public int size() {
 		return bitVector.size();
 	}
@@ -151,6 +161,7 @@ public class BitString implements IBitString {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.IBitString#xor(uk.ed.inf.graph.impl.BitString)
 	 */
+	@Override
 	public IBitString xor(BitString set) {
 		BitString retVal = new BitString(this);
 		retVal.bitVector.xor(set.bitVector);
@@ -158,6 +169,7 @@ public class BitString implements IBitString {
 	}
 
 
+	@Override
 	public boolean[] toArray() {
 		boolean retVal[] = new boolean[this.length()];
 		for(int i = 0; i < this.length(); i++){
@@ -166,6 +178,7 @@ public class BitString implements IBitString {
 		return retVal;
 	}
 
+	@Override
 	public boolean[] toArray(boolean[] a) {
 		boolean retVal[] = a; 
 		if(retVal.length < this.length()){

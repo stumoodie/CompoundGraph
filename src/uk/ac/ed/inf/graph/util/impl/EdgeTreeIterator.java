@@ -45,10 +45,12 @@ public class EdgeTreeIterator implements Iterator<ICompoundEdge> {
 		readBranchFromTopNode();
 	}
 	
+	@Override
 	public boolean hasNext() {
 		return !this.lookAhead.isEmpty();
 	}
 
+	@Override
 	public ICompoundEdge next() {
 		ICompoundEdge retVal = this.lookAhead.remove();
 		if(this.lookAhead.isEmpty()){
@@ -73,6 +75,7 @@ public class EdgeTreeIterator implements Iterator<ICompoundEdge> {
 		}
 	}
 	
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException("This Iterator does not support removal");
 	}

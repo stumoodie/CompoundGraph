@@ -26,6 +26,7 @@ public class AppendingIterator<T> implements Iterator<T> {
 		this.secondIter = secondIter;
 	}
 	
+	@Override
 	public boolean hasNext() {
 		if(!this.currIter.hasNext()){
 			if(this.secondIter != null){
@@ -36,6 +37,7 @@ public class AppendingIterator<T> implements Iterator<T> {
 		return this.currIter.hasNext();
 	}
 
+	@Override
 	public T next() {
 		if(!this.currIter.hasNext()){
 			if(this.secondIter != null){
@@ -46,6 +48,7 @@ public class AppendingIterator<T> implements Iterator<T> {
 		return this.currIter.next();
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException("Removal not supported by this iterator");
 	}

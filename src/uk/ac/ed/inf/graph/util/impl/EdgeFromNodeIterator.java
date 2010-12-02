@@ -49,10 +49,12 @@ public class EdgeFromNodeIterator <N extends ICompoundNode, E extends ICompoundE
 		readUntilNewEdgeFound();
 	}
 	
+	@Override
 	public boolean hasNext() {
 		return !this.lookAhead.isEmpty();
 	}
 
+	@Override
 	public E next() {
 		E retVal = this.lookAhead.remove();
 		if(this.lookAhead.isEmpty()){
@@ -80,6 +82,7 @@ public class EdgeFromNodeIterator <N extends ICompoundNode, E extends ICompoundE
 		}
 	}
 	
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException("This Iterator does not support removal");
 	}
@@ -94,10 +97,12 @@ public class EdgeFromNodeIterator <N extends ICompoundNode, E extends ICompoundE
 	
 	private class DefaultNodeEdgeFilter implements INodeEdgeFilterCriteria<N, E> {
 
+		@Override
 		public boolean matchedEdge(E testEdge) {
 			return true;
 		}
 
+		@Override
 		public boolean matchedNode(N testNode) {
 			return true;
 		}

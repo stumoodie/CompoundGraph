@@ -32,6 +32,7 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.ITree#getRootNode()
 	 */
+	@Override
 	public T getRootNode(){
 		return this.rootNode;
 	}
@@ -39,6 +40,7 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.ITree#containsNode(T)
 	 */
+	@Override
 	public boolean containsNode(T testNode){
 		boolean retVal = false;
 		if(testNode != null && this.rootNode.equals(testNode.getRoot())){
@@ -50,6 +52,7 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.ITree#constainsNode(int)
 	 */
+	@Override
 	public boolean containsNode(int testIndex){
 		Iterator<T> iter = this.levelOrderIterator();
 		boolean retVal = false;
@@ -65,6 +68,7 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 	/* (non-Javadoc)
 	 * @see uk.ed.inf.graph.impl.ITree#get(int)
 	 */
+	@Override
 	public T get(int testIndex){
 		Iterator<T> iter = this.levelOrderIterator();
 		T retVal = null;
@@ -77,6 +81,7 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 		return retVal;
 	}
 	
+	@Override
 	public T getLowestCommonAncestor(final T thisNode, final T thatNode){
 		if(!thisNode.getRoot().equals(this.rootNode) || !thatNode.getRoot().equals(this.rootNode))
 			throw new IllegalArgumentException("Both nodes must belong to the same this tree");
@@ -85,10 +90,12 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 		return this.lcaCalc.getLCANode();
 	}
 	
+	@Override
 	public Iterator<T> levelOrderIterator(){
 		return new LevelOrderTreeIterator<T>(this.rootNode);
 	}
 	
+	@Override
 	public Iterator<T> preOrderIterator(){
 		return new PreOrderTreeIterator<T>(this.rootNode);
 	}
@@ -101,6 +108,7 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 	 * @return <code>true</code> if <code>testNode</code> is an descendant of <code>startNode</code>,
 	 *  <code>false</code> otherwise.
 	 */
+	@Override
 	public boolean isDescendant(T startNode, T testNode){
 		boolean retVal = false;
 		Iterator<T> iter = new LevelOrderTreeIterator<T>(startNode);
@@ -114,6 +122,7 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 		return retVal;
 	}
 	
+	@Override
 	public int size(){
 		Iterator<T> iter = this.levelOrderIterator();
 		int cnt = 0;
@@ -124,6 +133,7 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 		return cnt;
 	}
 
+	@Override
 	public boolean isAncestor(T startNode, T testNode) {
 		boolean retVal = false;
 		Iterator<T> iter = new AncestorTreeIterator<T>(startNode);
@@ -136,6 +146,7 @@ public final class GeneralTree<T extends ITreeNode<T>> implements ITree<T> {
 		return retVal;
 	}
 
+	@Override
 	public ITreeWalker<T> levelOrderTreeWalker(ITreeNodeAction<T> visitorAction) {
 		return new LevelOrderTreeWalker<T>(this.rootNode, visitorAction);
 	}

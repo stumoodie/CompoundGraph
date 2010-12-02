@@ -116,6 +116,7 @@ public abstract aspect ICompoundNodeDBC extends ICompoundGraphElementDBC {
 	}
 
 	
+	@Override
 	after(final ICompoundGraphElement ce) : allMethods(ce) {
 		final ICompoundNode cn = (ICompoundNode)ce;
 		new ClassInvariant(){{

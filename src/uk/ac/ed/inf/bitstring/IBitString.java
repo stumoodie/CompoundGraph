@@ -25,13 +25,9 @@ public interface IBitString {
 
 	int cardinality();
 
-	boolean equals(Object obj);
-
 	IBitString get(int fromIndex, int toIndex);
 
 	boolean get(int bitIndex);
-
-	int hashCode();
 
 	boolean intersects(BitString set);
 
@@ -42,8 +38,6 @@ public interface IBitString {
 	IBitString or(BitString set);
 
 	int size();
-
-	String toString();
 
 	IBitString xor(BitString set);
 

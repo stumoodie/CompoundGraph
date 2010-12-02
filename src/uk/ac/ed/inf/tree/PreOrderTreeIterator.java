@@ -29,10 +29,12 @@ public class PreOrderTreeIterator <T extends ITreeNode<T>> implements Iterator<T
 		nodeStack.push(rootNode);
 	}
 	
+	@Override
 	public boolean hasNext() {
 		return !nodeStack.isEmpty();
 	}
 
+	@Override
 	public T next() {
 		T retVal = nodeStack.pop();
 		readChildren(retVal);
@@ -46,6 +48,7 @@ public class PreOrderTreeIterator <T extends ITreeNode<T>> implements Iterator<T
 		}
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException("removal not supported by this iterator");
 	}

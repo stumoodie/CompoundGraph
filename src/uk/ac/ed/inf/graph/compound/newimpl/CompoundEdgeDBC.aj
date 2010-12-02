@@ -8,6 +8,7 @@ import uk.ac.ed.inf.graph.compound.IElementAttribute;
 
 public aspect CompoundEdgeDBC extends ICompoundEdgeDBC {
 
+	@Override
 	public pointcut allMethods(ICompoundGraphElement edge) :
 		execution(public void CompoundEdge.*(*))
 		&& target(edge);

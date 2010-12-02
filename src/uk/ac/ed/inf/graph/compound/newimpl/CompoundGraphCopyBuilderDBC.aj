@@ -8,6 +8,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphElementFactory;
 
 public aspect CompoundGraphCopyBuilderDBC extends ICompoundGraphCopyBuilderDBC {
 
+	@Override
 	public pointcut allMethods(ICompoundGraphCopyBuilder obj) :
 		execution(public void CompoundGraphCopyBuilder.*(*))
 		&& target(obj);

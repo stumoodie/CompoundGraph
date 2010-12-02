@@ -42,18 +42,22 @@ public class FilteredEdgeSet <
 		this.criteria = criteria;
 	}
 
+	@Override
 	public IEdgeSet<N, E> getUnfilteredEdgeSet(){
 		return this.edgeSet;
 	}
 	
+	@Override
 	public boolean add(E edge) {
 		return this.edgeSet.add(edge);
 	}
 
+	@Override
 	public boolean addAll(Collection<? extends E> c) {
 		return this.edgeSet.addAll(c);
 	}
 
+	@Override
 	public void clear() {
 		this.edgeSet.clear();
 	}
@@ -73,6 +77,7 @@ public class FilteredEdgeSet <
 		return edgeSet.toString();
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public boolean contains(Object o) {
 		boolean retVal = false;
@@ -86,6 +91,7 @@ public class FilteredEdgeSet <
 		return retVal;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public boolean containsAll(Collection<?> c) {
 		boolean retVal = true;
@@ -107,26 +113,32 @@ public class FilteredEdgeSet <
 		return retVal;
 	}
 
+	@Override
 	public boolean isEmpty() {
 		return this.edgeSet.isEmpty() || this.size() == 0;
 	}
 
+	@Override
 	public Iterator<E> iterator() {
 		return new FilteredIterator<E>(this.edgeSet.iterator(), this.criteria);
 	}
 
+	@Override
 	public boolean remove(Object o) {
 		throw new UnsupportedOperationException("Removal not supported by this collection");
 	}
 
+	@Override
 	public boolean removeAll(Collection<?> c) {
 		throw new UnsupportedOperationException("Removal not supported by this collection");
 	}
 
+	@Override
 	public boolean retainAll(Collection<?> c) {
 		throw new UnsupportedOperationException("Modification that may require removal not supported by this collection");
 	}
 
+	@Override
 	public int size() {
 		int count = 0;
 		for(E edge : this.edgeSet){
@@ -142,10 +154,12 @@ public class FilteredEdgeSet <
 		return count;
 	}
 
+	@Override
 	public Object[] toArray() {
 		return createFilteredList().toArray();
 	}
 
+	@Override
 	public <T> T[] toArray(T[] a) {
 		return createFilteredList().toArray(a);
 	}
@@ -160,6 +174,7 @@ public class FilteredEdgeSet <
 		return retVal;
 	}
 
+	@Override
 	public E get(int edgeIdx) {
 		E retVal = this.edgeSet.get(edgeIdx);
 		if(retVal == null || !this.criteria.matched(retVal)){
@@ -168,6 +183,7 @@ public class FilteredEdgeSet <
 		return retVal;
 	}
 
+	@Override
 	public Iterator<E> getEdgesWith(N thisNode, N otherNode) {
 		Iterator<E> iter = this.edgeSet.getEdgesWith(thisNode, otherNode);
 		List<E> retVal = new LinkedList<E>();
@@ -186,6 +202,7 @@ public class FilteredEdgeSet <
 		return retVal.iterator();
 	}
 
+	@Override
 	public boolean hasEdgesWith(N thisNode, N otherNode) {
 		boolean retVal = this.edgeSet.hasEdgesWith(thisNode, otherNode);
 		if(retVal){
@@ -205,6 +222,7 @@ public class FilteredEdgeSet <
 		return retVal;
 	}
 
+	@Override
 	public boolean contains(N thisNode, N thatNode) {
 		boolean retVal = this.edgeSet.contains(thisNode, thatNode);
 		if(retVal == true){
@@ -222,6 +240,7 @@ public class FilteredEdgeSet <
 		return retVal;
 	}
 
+	@Override
 	public SortedSet<E> get(N thisNode, N thatNode) {
 		SortedSet<E> edges = this.edgeSet.get(thisNode, thatNode);
 		Iterator<E> iter = edges.iterator();
@@ -237,6 +256,7 @@ public class FilteredEdgeSet <
 		return edges;
 	}
 
+	@Override
 	public boolean contains(int edgeIdx) {
 		boolean retVal = this.edgeSet.contains(edgeIdx);
 		if(retVal){

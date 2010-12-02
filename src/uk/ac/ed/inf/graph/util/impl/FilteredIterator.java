@@ -33,11 +33,13 @@ public final class FilteredIterator<F> implements Iterator<F> {
 		this.criteria = criteria;
 	}
 	
+	@Override
 	public boolean hasNext() {
 		this.lookAheadManager.readLookAhead();
 		return this.lookAheadManager.isLookAheadSet();
 	}
 
+	@Override
 	public F next() {
 		this.lookAheadManager.readLookAhead();
 		F retVal = null;
@@ -51,6 +53,7 @@ public final class FilteredIterator<F> implements Iterator<F> {
 		return retVal;
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException("This iterator does not support removal");
 	}

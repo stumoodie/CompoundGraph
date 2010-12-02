@@ -41,6 +41,7 @@ public class DirectedAdjList implements IAdjacencyDataStructure {
 	/* (non-Javadoc)
 	 * @see uk.ac.ed.inf.graph.compound.impl.IAdjList#addNode(int)
 	 */
+	@Override
 	public void addNode(int nodeIdx){
 		ensureCapacity(nodeIdx+1);
 		this.adjList.set(nodeIdx, new ArrayList<AdjUnit>());
@@ -49,6 +50,7 @@ public class DirectedAdjList implements IAdjacencyDataStructure {
 	/* (non-Javadoc)
 	 * @see uk.ac.ed.inf.graph.compound.impl.IAdjList#containsNode(int)
 	 */
+	@Override
 	public boolean containsNode(int nodeIdx){
 		return nodeIdx < this.adjList.size() && this.adjList.get(nodeIdx) != null;
 	}
@@ -56,6 +58,7 @@ public class DirectedAdjList implements IAdjacencyDataStructure {
 	/* (non-Javadoc)
 	 * @see uk.ac.ed.inf.graph.compound.impl.IAdjList#addEdge(int, int, int)
 	 */
+	@Override
 	public void addEdge(int edgeIdx, int inNodeIdx, int outNodeIdx){
 		if(!containsNode(inNodeIdx) || !containsNode(outNodeIdx)) throw new IllegalArgumentException("nodes must already exist");
 		List<AdjUnit> node1Adj = this.adjList.get(inNodeIdx);
@@ -67,6 +70,7 @@ public class DirectedAdjList implements IAdjacencyDataStructure {
 	/* (non-Javadoc)
 	 * @see uk.ac.ed.inf.graph.compound.impl.IAdjList#isConnected(int, int)
 	 */
+	@Override
 	public boolean isConnected(int inNodeIdx, int outNodeIdx){
 		boolean retVal = false;
 		if(containsNode(inNodeIdx) && containsNode(outNodeIdx)){
@@ -80,6 +84,7 @@ public class DirectedAdjList implements IAdjacencyDataStructure {
 	/* (non-Javadoc)
 	 * @see uk.ac.ed.inf.graph.compound.impl.IAdjList#getEdge(int, int)
 	 */
+	@Override
 	public int getEdge(int inNodeIdx, int outNodeIdx){
 		if(!containsNode(inNodeIdx) || !containsNode(outNodeIdx)) throw new IllegalArgumentException("nodes must already exist");
 		List<AdjUnit> nodeAdj = this.adjList.get(inNodeIdx);
@@ -116,6 +121,7 @@ public class DirectedAdjList implements IAdjacencyDataStructure {
 	
 	public static class AdjUnitComparitor implements Comparator<Object> {
 
+		@Override
 		public int compare(Object o1, Object o2) {
 			Integer idx1 = getNodeIdx(o1);
 			Integer idx2 = getNodeIdx(o2);

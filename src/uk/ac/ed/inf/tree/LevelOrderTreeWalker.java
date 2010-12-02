@@ -29,6 +29,7 @@ class LevelOrderTreeWalker<T extends ITreeNode<T>> implements ITreeWalker<T> {
 	/* (non-Javadoc)
 	 * @see uk.ac.ed.inf.tree.ITreeVisitor#getStarttNode()
 	 */
+	@Override
 	public T getStartNode(){
 		return this.rootNode;
 	}
@@ -36,6 +37,7 @@ class LevelOrderTreeWalker<T extends ITreeNode<T>> implements ITreeWalker<T> {
 	/* (non-Javadoc)
 	 * @see uk.ac.ed.inf.tree.ITreeVisitor#getVisitor()
 	 */
+	@Override
 	public ITreeNodeAction<T> getAction(){
 		return this.visitor;
 	}
@@ -43,6 +45,7 @@ class LevelOrderTreeWalker<T extends ITreeNode<T>> implements ITreeWalker<T> {
 	/* (non-Javadoc)
 	 * @see uk.ac.ed.inf.tree.ITreeVisitor#visitTree()
 	 */
+	@Override
 	public void visitTree(){
 		Iterator<T> iter = new LevelOrderTreeIterator<T>(this.rootNode);
 		while(iter.hasNext() && visitor.canContinue()){

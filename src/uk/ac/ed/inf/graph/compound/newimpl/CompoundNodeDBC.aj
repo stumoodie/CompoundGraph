@@ -7,6 +7,7 @@ import uk.ac.ed.inf.graph.compound.IElementAttribute;
 
 public aspect CompoundNodeDBC extends ICompoundNodeDBC {
 
+	@Override
 	public pointcut allMethods(ICompoundGraphElement cn) :
 		(execution(public void CompoundNode.*(..))
 		|| execution(public void CommonCompoundNode.*(..)))

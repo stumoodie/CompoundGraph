@@ -44,10 +44,12 @@ public class NodeTreeIterator implements Iterator<ICompoundNode> {
 		readBranchFromTopNode();
 	}
 	
+	@Override
 	public boolean hasNext() {
 		return !this.lookAhead.isEmpty();
 	}
 
+	@Override
 	public ICompoundNode next() {
 		ICompoundNode retVal = this.lookAhead.remove();
 		if(this.lookAhead.isEmpty()){
@@ -72,6 +74,7 @@ public class NodeTreeIterator implements Iterator<ICompoundNode> {
 		}
 	}
 	
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException("This Iterator does not support removal");
 	}

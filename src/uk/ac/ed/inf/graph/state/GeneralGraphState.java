@@ -27,10 +27,12 @@ public class GeneralGraphState implements IGraphState {
 		this.liveNodeStore = nodeStates;
 	}
 	
+	@Override
 	public IRestorableGraph getGraph() {
 		return this.graph;
 	}
 
+	@Override
 	public IBitString getElementStates(){
 		return this.liveNodeStore;
 	}

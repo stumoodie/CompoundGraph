@@ -39,14 +39,17 @@ public class FilteredNodeSet<
 		this.criteria = criteria;
 	}
 
+	@Override
 	public boolean add(N o) {
 		return this.nodeSet.add(o);
 	}
 
+	@Override
 	public boolean addAll(Collection<? extends N> c) {
 		return this.nodeSet.addAll(c);
 	}
 
+	@Override
 	public void clear() {
 		this.nodeSet.clear();
 	}
@@ -56,6 +59,7 @@ public class FilteredNodeSet<
 		return nodeSet.equals(o);
 	}
 
+	@Override
 	public N get(int nodeIdx) {
 		return nodeSet.get(nodeIdx);
 	}
@@ -65,14 +69,17 @@ public class FilteredNodeSet<
 		return nodeSet.hashCode();
 	}
 
+	@Override
 	public boolean remove(Object o) {
 		throw new UnsupportedOperationException("Removal not supported by this collection");
 	}
 
+	@Override
 	public boolean removeAll(Collection<?> c) {
 		throw new UnsupportedOperationException("Removal not supported by this collection");
 	}
 
+	@Override
 	public boolean retainAll(Collection<?> c) {
 		throw new UnsupportedOperationException("Modification that may lead to removals is not supported by this collection");
 	}
@@ -82,6 +89,7 @@ public class FilteredNodeSet<
 		return nodeSet.toString();
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public boolean contains(Object o) {
 		boolean retVal = false;
@@ -96,6 +104,7 @@ public class FilteredNodeSet<
 		return retVal;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public boolean containsAll(Collection<?> c) {
 		boolean retVal = true;
@@ -117,14 +126,17 @@ public class FilteredNodeSet<
 		return retVal;
 	}
 
+	@Override
 	public boolean isEmpty() {
 		return this.nodeSet.isEmpty() || this.size() == 0;
 	}
 
+	@Override
 	public Iterator<N> iterator() {
 		return new FilteredIterator<N>(this.nodeSet.iterator(), this.criteria);
 	}
 
+	@Override
 	public int size() {
 		int count = 0;
 		for(N node : this.nodeSet){
@@ -135,10 +147,12 @@ public class FilteredNodeSet<
 		return count;
 	}
 
+	@Override
 	public Object[] toArray() {
 		return createFilteredList().toArray();
 	}
 
+	@Override
 	public <T> T[] toArray(T[] a) {
 		return createFilteredList().toArray(a);
 	}
@@ -153,6 +167,7 @@ public class FilteredNodeSet<
 		return retVal;
 	}
 
+	@Override
 	public boolean contains(int nodeIdx) {
 		boolean retVal = false;
 		if(this.nodeSet.contains(nodeIdx)){
@@ -164,6 +179,7 @@ public class FilteredNodeSet<
 		return retVal;
 	}
 
+	@Override
 	public INodeSet<N, E> getUnfilteredNodeSet() {
 		return this.nodeSet;
 	}

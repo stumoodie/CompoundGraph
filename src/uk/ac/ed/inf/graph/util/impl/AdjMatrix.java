@@ -33,6 +33,7 @@ public final class AdjMatrix implements IAdjacencyDataStructure {
 	}
 
 	
+	@Override
 	public void addNode(int idx){
 		int newCap = idx + 1;
 		this.adjMat.ensureCapacity(newCap);
@@ -43,18 +44,21 @@ public final class AdjMatrix implements IAdjacencyDataStructure {
 		}
 	}
 	
+	@Override
 	public void addEdge(int one, int two, int edgeIdx){
 		ArrayList<Integer> row = this.adjMat.get(one);
 		row.ensureCapacity(two+1);
 		row.add(two, edgeIdx);
 	}
 	
+	@Override
 	public int getEdge(int one, int two){
 		ArrayList<Integer> row = this.adjMat.get(one);
 		row.ensureCapacity(two+1);
 		return row.get(two);
 	}
 	
+	@Override
 	public boolean isConnected(int one, int two){
 		ArrayList<Integer> row = this.adjMat.get(one);
 		row.ensureCapacity(two+1);
@@ -62,6 +66,7 @@ public final class AdjMatrix implements IAdjacencyDataStructure {
 	}
 
 
+	@Override
 	public boolean containsNode(int nodeIdx) {
 		return nodeIdx < this.adjMat.size();
 	}

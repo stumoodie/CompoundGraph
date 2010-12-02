@@ -36,19 +36,23 @@ public class EdgeSet <
 		this.edgeSet = new TreeSet<E>();
 	}
 	
+	@Override
 	public Iterator<E> iterator() {
 		return this.edgeSet.iterator();
 	}
 
+	@Override
 	public Iterator<E> getEdgesWith(N thisNode, N other) {
 		return this.findConnectingEdge(thisNode, other);
 	}
 
+	@Override
 	public boolean hasEdgesWith(N thisNode, N other) {
 		Iterator<E> edges = findConnectingEdge(thisNode, other);
 		return edges.hasNext();
 	}
 
+	@Override
 	public boolean contains(int edgeIdx){
 		return this.get(edgeIdx) != null;
 	}
@@ -57,12 +61,14 @@ public class EdgeSet <
 		return this.edgeSet.contains(edge);
 	}
 	
+	@Override
 	public boolean contains(N thisNode, N thatNode){
 		boolean retVal = !findEdges(thisNode, thatNode).isEmpty();
 		
 		return retVal;
 	}
 	
+	@Override
 	public SortedSet<E> get(N thisNode, N thatNode){
 		SortedSet<E> retVal = findEdges(thisNode, thatNode);
 		if(retVal.isEmpty()){
@@ -82,6 +88,7 @@ public class EdgeSet <
 		return retVal;
 	}
 	
+	@Override
 	public E get(int edgeIdx){
 		E retVal = null;
 		// assume is sorted
@@ -106,10 +113,12 @@ public class EdgeSet <
 		}
 	}
 
+	@Override
 	public boolean add(E edge){
 		return this.edgeSet.add(edge);
 	}
 	
+	@Override
 	public int size(){
 		return this.edgeSet.size();
 	}
@@ -125,42 +134,52 @@ public class EdgeSet <
 		return retVal.iterator();
 	}
 
+	@Override
 	public boolean addAll(Collection<? extends E> c) {
 		return this.edgeSet.addAll(c);
 	}
 
+	@Override
 	public void clear() {
 		this.edgeSet.clear();
 	}
 
+	@Override
 	public boolean contains(Object o) {
 		return this.edgeSet.contains(o);
 	}
 
+	@Override
 	public boolean containsAll(Collection<?> c) {
 		return this.edgeSet.containsAll(c);
 	}
 
+	@Override
 	public boolean isEmpty() {
 		return this.edgeSet.isEmpty();
 	}
 
+	@Override
 	public boolean remove(Object o) {
 		return this.edgeSet.remove(o);
 	}
 
+	@Override
 	public boolean removeAll(Collection<?> c) {
 		return this.edgeSet.removeAll(c);
 	}
 
+	@Override
 	public boolean retainAll(Collection<?> c) {
 		return this.edgeSet.retainAll(c);
 	}
 
+	@Override
 	public Object[] toArray() {
 		return this.edgeSet.toArray();
 	}
 
+	@Override
 	public <T> T[] toArray(T[] a) {
 		return this.edgeSet.toArray(a);
 	}

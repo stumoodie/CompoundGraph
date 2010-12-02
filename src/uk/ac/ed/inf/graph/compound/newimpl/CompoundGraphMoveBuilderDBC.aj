@@ -8,6 +8,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphMoveBuilderDBC;
 
 public aspect CompoundGraphMoveBuilderDBC extends ICompoundGraphMoveBuilderDBC {
 
+	@Override
 	public pointcut allMethods(ICompoundGraphMoveBuilder obj) :
 		execution(public void CompoundGraphMoveBuilder.*(*))
 		&& target(obj);
