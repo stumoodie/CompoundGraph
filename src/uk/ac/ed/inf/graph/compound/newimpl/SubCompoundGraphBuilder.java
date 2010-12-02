@@ -1,8 +1,11 @@
 package uk.ac.ed.inf.graph.compound.newimpl;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
@@ -16,7 +19,7 @@ import uk.ac.ed.inf.graph.compound.ISubCompoundGraphBuilder;
 
 public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 	private final Logger logger = Logger.getLogger(this.getClass());
-	private ICompoundGraph graph;
+	private final ICompoundGraph graph;
 	private final Set<ICompoundGraphElement> topElements;
 	private ISubCompoundGraph currentSubgraph;
 	private final Set<ICompoundGraphElement> visited;
@@ -41,7 +44,7 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 				// this iterator will return the root node as the first node, so
 				// their is no
 				// need to deal with this explicitly.
-				Iterator<ICompoundGraphElement> iter = element.levelOrderIterator();
+				Iterator<ICompoundGraphElement> iter = new UnfilteredElementLevelOrderIterator(element);
 //				boolean isRoot = true;
 				while (iter.hasNext()) {
 					ICompoundGraphElement childElement = iter.next();
@@ -51,7 +54,7 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 					}
 					if (childElement.isNode()) {
 						ICompoundNode node = (ICompoundNode) childElement;
-						Iterator<ICompoundEdge> edgeIter = node.edgeIterator();
+						Iterator<ICompoundEdge> edgeIter = node.unfilteredEdgeIterator();
 						while (edgeIter.hasNext()) {
 							ICompoundEdge incidentEdge = edgeIter.next();
 							// check the edge is new and that it is incident to another node in this subgraph
@@ -110,10 +113,23 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 	@Override
 	public void expandChildNodes() {
 		this.visited.clear();
-		Set<ICompoundGraphElement> initialElements = new HashSet<ICompoundGraphElement>(this.topElements);
+		SortedSet<ICompoundGraphElement> initialElements = new TreeSet<ICompoundGraphElement>(new Comparator<ICompoundGraphElement>(){
+			@Override
+			public int compare(ICompoundGraphElement thisOne, ICompoundGraphElement thatOne) {
+				int retVal = thisOne.getLevel() < thatOne.getLevel() ? -1 : (thisOne.getLevel() > thatOne.getLevel() ? 1 : 0);
+				if(retVal == 0){
+					retVal = thisOne.getIndex() < thatOne.getIndex() ? -1 : (thisOne.getIndex() > thatOne.getIndex() ? 1 : 0);
+				}
+				return retVal;
+			}
+		});
+		initialElements.addAll(topElements);
 		Iterator<ICompoundGraphElement> elementIter = initialElements.iterator();
 		while (elementIter.hasNext()) {
 			ICompoundGraphElement element = elementIter.next();
+			if(logger.isTraceEnabled()){
+				logger.trace("Expanding element: " + element);
+			}
 			expandElement(element);
 		}
 	}
@@ -122,7 +138,7 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 		// this iterator will return the root node as the first node, so
 		// their is no
 		// need to deal with this explicitly.
-		Iterator<ICompoundGraphElement> iter = element.levelOrderIterator();
+		Iterator<ICompoundGraphElement> iter = new UnfilteredElementLevelOrderIterator(element);
 		boolean isRoot = true;
 		boolean skip = false;
 		while (iter.hasNext() && !skip) {
@@ -142,6 +158,9 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 					isRoot = false;
 				} else {
 					this.topElements.remove(childElement);
+					if(logger.isTraceEnabled()){
+						logger.trace("Removing element: " + childElement);
+					}
 				}
 				// add node to allNode list
 				visited.add(childElement);
@@ -181,6 +200,11 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 				// remove if not incident 
 				if(!visited.contains(pair.getOutNode()) || !visited.contains(pair.getInNode())){
 					this.topElements.remove(topEl);
+					Iterator<ICompoundGraphElement> iter = new UnfilteredElementLevelOrderIterator(topEl);
+					while(iter.hasNext()){
+						ICompoundGraphElement nonIncidentEdgeChild = iter.next(); 
+						this.visited.remove(nonIncidentEdgeChild);
+					}
 				}		
 			}
 		}

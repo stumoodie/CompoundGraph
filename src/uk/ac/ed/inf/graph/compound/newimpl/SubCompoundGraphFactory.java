@@ -32,8 +32,8 @@ public class SubCompoundGraphFactory implements ISubCompoundGraphFactory {
 		
 		// because we are creating an induced graph we ignore any edges that are selected since if they are
 		// not incident to the selected nodes they will result in a non-induced graph.
-		builder.removeNonIncidentEdges();
 		builder.expandChildNodes();
+		builder.removeNonIncidentEdges();
 		builder.addIncidentEdges();
 		builder.buildSubgraph();
 		ISubCompoundGraph retVal = builder.getSubgraph();

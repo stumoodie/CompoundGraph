@@ -75,5 +75,4 @@ public class CompoundNode extends CommonCompoundNode {
 		buf.append(")");
 		return buf.toString();
 	}
-
 }

@@ -66,15 +66,17 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 		
 	}
 
-	private class CombinedEdgeIterator implements Iterator<ICompoundEdge> {
+	private static class CombinedEdgeIterator implements Iterator<ICompoundEdge> {
 		private final Iterator<ICompoundEdge> inEdgeIterator;
 		private final Iterator<ICompoundEdge> outEdgeIterator;
 		
-		public CombinedEdgeIterator(){
-			final SortedSet<ICompoundEdge> inEdgesCopy = new TreeSet<ICompoundEdge>(edgeInList);
-			final SortedSet<ICompoundEdge> outEdgesCopy = new TreeSet<ICompoundEdge>(edgeOutList);
-			this.inEdgeIterator = inEdgesCopy.iterator();
-			this.outEdgeIterator = outEdgesCopy.iterator();
+		public CombinedEdgeIterator(Iterator<ICompoundEdge> inEdgeIterator, Iterator<ICompoundEdge> outEdgeIterator){
+//			final SortedSet<ICompoundEdge> inEdgesCopy = new TreeSet<ICompoundEdge>(edgeInList);
+//			final SortedSet<ICompoundEdge> outEdgesCopy = new TreeSet<ICompoundEdge>(edgeOutList);
+//			this.inEdgeIterator = inEdgesCopy.iterator();
+//			this.outEdgeIterator = outEdgesCopy.iterator();
+			this.inEdgeIterator = inEdgeIterator;
+			this.outEdgeIterator = outEdgeIterator;
 		}
 		
 		
@@ -128,7 +130,13 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 
 	@Override
 	public Iterator<ICompoundEdge> edgeIterator() {
-		return new CombinedEdgeIterator();
+		return new CombinedEdgeIterator(this.edgeInList.iterator(), this.edgeOutList.iterator());
+	}
+
+
+	@Override
+	public Iterator<ICompoundEdge> unfilteredEdgeIterator() {
+		return new CombinedEdgeIterator(this.edgeInList.getUnfilteredEdgeSet().iterator(), this.edgeOutList.getUnfilteredEdgeSet().iterator());
 	}
 
 	@Override

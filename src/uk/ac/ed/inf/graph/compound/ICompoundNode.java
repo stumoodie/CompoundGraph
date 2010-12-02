@@ -128,4 +128,6 @@ public interface ICompoundNode extends ICompoundGraphElement, IRestorableNode {
 	void addOutEdge(ICompoundEdge compoundEdge);
 
 	void addInEdge(ICompoundEdge compoundEdge);
+
+	Iterator<ICompoundEdge> unfilteredEdgeIterator();
 }

@@ -176,8 +176,13 @@ public class ElementTreeStructure {
 
 	public int numElements() {
 		int numElements = 0;
-		for(ITree<ICompoundGraphElement> el : this.topElements){
-			numElements += el.size();
+//		for(ITree<ICompoundGraphElement> el : this.topElements){
+//			numElements += el.size();
+//		}
+		Iterator<ICompoundGraphElement> elIter = this.elementIterator();
+		while(elIter.hasNext()){
+			elIter.next();
+			numElements++;
 		}
 		return numElements;
 	}
