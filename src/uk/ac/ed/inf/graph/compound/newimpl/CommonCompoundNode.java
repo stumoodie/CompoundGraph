@@ -7,6 +7,7 @@ import java.util.TreeSet;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
+import uk.ac.ed.inf.graph.compound.ICompoundGraphElementVisitor;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.util.IFilterCriteria;
@@ -248,7 +249,7 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 	}
 
 	@Override
-	public boolean isLink() {
+	public boolean isEdge() {
 		return false;
 	}
 
@@ -391,5 +392,10 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public void visit(ICompoundGraphElementVisitor visitor){
+		visitor.visitNode(this);
 	}
 }

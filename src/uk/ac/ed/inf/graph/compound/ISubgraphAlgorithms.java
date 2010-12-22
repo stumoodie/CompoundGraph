@@ -18,7 +18,7 @@ package uk.ac.ed.inf.graph.compound;
 
 public interface ISubgraphAlgorithms {
 
-	ISubCompoundGraph getSubgraph();
+	ISubGraph getSubgraph();
 
 	boolean isInducedSubgraph();
 

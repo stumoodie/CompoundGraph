@@ -30,7 +30,7 @@ public class ElementTreeStructure {
 	private final IElementTreeFilter EDGE_FILTER = new IElementTreeFilter(){
 		@Override
 		public boolean matched(ICompoundGraphElement element) {
-			return element.isLink();
+			return element.isEdge();
 		}
 	};
 	private final List<ITree<ICompoundGraphElement>> topElements;

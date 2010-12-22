@@ -20,15 +20,14 @@ import java.util.Iterator;
 import uk.ac.ed.inf.graph.compound.CompoundNodePair;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
-import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
+import uk.ac.ed.inf.graph.compound.ISubGraph;
 import uk.ac.ed.inf.graph.compound.ISubgraphAlgorithms;
 
 
 public final class SubgraphAlgorithms implements ISubgraphAlgorithms {
+	private final ISubGraph basicSubgraph;
 	
-	private final ISubCompoundGraph basicSubgraph;
-	
-	public SubgraphAlgorithms(ISubCompoundGraph subgraph){
+	public SubgraphAlgorithms(ISubGraph subgraph){
 		this.basicSubgraph = subgraph;
 	}
 	
@@ -36,7 +35,7 @@ public final class SubgraphAlgorithms implements ISubgraphAlgorithms {
 	 * @see uk.ed.inf.graph.impl.ISubgraphAlgorithms#getSubgraph()
 	 */
 	@Override
-	public ISubCompoundGraph getSubgraph(){
+	public ISubGraph getSubgraph(){
 		return this.basicSubgraph;
 	}
 	

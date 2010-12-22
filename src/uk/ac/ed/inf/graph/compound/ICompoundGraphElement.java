@@ -26,7 +26,9 @@ public interface ICompoundGraphElement extends IRestorableGraphElement, Comparab
 	 */
 	ICompoundGraph getGraph();
 	
-	boolean isLink();
+	boolean isEdge();
 	
 	boolean isNode();
+	
+	void visit(ICompoundGraphElementVisitor visitor);
 }

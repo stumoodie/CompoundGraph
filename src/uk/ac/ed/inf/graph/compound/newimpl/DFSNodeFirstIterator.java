@@ -41,10 +41,10 @@ public class DFSNodeFirstIterator implements Iterator<ICompoundGraphElement> {
 			@Override
 			public int compare(ICompoundGraphElement o1, ICompoundGraphElement o2) {
 				int retVal = 0;
-				if(o1.isNode() && o2.isLink()){
+				if(o1.isNode() && o2.isEdge()){
 					retVal = 1;
 				}
-				else if(o1.isLink() && o2.isNode()){
+				else if(o1.isEdge() && o2.isNode()){
 					retVal = -1;
 				}
 				if(retVal == 0){

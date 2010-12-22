@@ -20,7 +20,7 @@ import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 
 @RunWith(JMock.class)
-public class CompoundGraphCopyBuilderWithNonInducedSrcTest {
+public class CompoundGraphCopyBuilderWithOrphanedEdgeSrcTest {
 
 	private Mockery mockery;
 
@@ -48,7 +48,7 @@ public class CompoundGraphCopyBuilderWithNonInducedSrcTest {
 			allowing(mockSrcSubgraph).getSuperGraph(); will(returnValue(testFixture.getGraph()));
 			allowing(mockSrcSubgraph).elementIterator(); will(returnIterator(testFixture.getNode1(), testFixture.getNode2(), testFixture.getEdge2(), testFixture.getNode3(), testFixture.getNode4(), testFixture.getNode5()));
 			allowing(mockSrcSubgraph).edgeLastElementIterator(); will(returnIterator(testFixture.getNode1(), testFixture.getNode2(), testFixture.getNode3(), testFixture.getNode4(), testFixture.getNode5(), testFixture.getEdge2()));
-			allowing(mockSrcSubgraph).isInducedSubgraph(); will(returnValue(false));
+			allowing(mockSrcSubgraph).hasOrphanedEdges(); will(returnValue(true));
 			allowing(mockSrcSubgraph).isConsistentSnapShot(); will(returnValue(true));
 			allowing(mockSrcSubgraph).containsRoot(); will(returnValue(false));
 		}});

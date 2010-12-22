@@ -334,7 +334,7 @@ public class CompoundNodeTest {
 
 	@Test
 	public void testIsLink() {
-		assertFalse("not link", this.testInstance.isLink());
+		assertFalse("not link", this.testInstance.isEdge());
 	}
 
 	@Test

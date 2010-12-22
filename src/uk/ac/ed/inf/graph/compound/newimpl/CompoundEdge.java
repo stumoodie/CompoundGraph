@@ -7,6 +7,7 @@ import uk.ac.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
+import uk.ac.ed.inf.graph.compound.ICompoundGraphElementVisitor;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.tree.AncestorTreeIterator;
@@ -121,7 +122,7 @@ public class CompoundEdge implements ICompoundEdge {
 	}
 
 	@Override
-	public boolean isLink() {
+	public boolean isEdge() {
 		return true;
 	}
 
@@ -210,7 +211,12 @@ public class CompoundEdge implements ICompoundEdge {
 		return new PreOrderTreeIterator<ICompoundGraphElement>(this);
 	}
 
+	@Override
+	public void visit(ICompoundGraphElementVisitor visitor){
+		visitor.visitEdge(this);
+	}
 
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

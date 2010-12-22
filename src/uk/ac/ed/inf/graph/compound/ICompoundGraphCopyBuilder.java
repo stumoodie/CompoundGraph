@@ -54,9 +54,5 @@ public interface ICompoundGraphCopyBuilder {
 	 * Make a copy of subgraph into the destination graph
 	 */
 	void makeCopy();
-
-//	void setElementAttributeFactory(IElementAttributeCopyFactory elementAttributeFactory);
-//	
-//	IElementAttributeCopyFactory getElementAttributeFactory();
 	
 }

@@ -124,7 +124,7 @@ public abstract aspect ICompoundNodeDBC extends ICompoundGraphElementDBC {
 			assertion(cn.getInDegree() >= 0, "in degree is a whole number");
 			assertion(cn.getDegree() >= 0, "degree is a whole number");
 			assertion(cn.isNode(), "is a node");
-			assertion(!cn.isLink(), "is not an edge");
+			assertion(!cn.isEdge(), "is not an edge");
 		}};
 	}
 }

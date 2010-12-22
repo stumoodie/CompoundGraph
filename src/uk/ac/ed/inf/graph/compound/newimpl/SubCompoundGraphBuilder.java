@@ -90,7 +90,7 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 
 	private void pruneUnselectedNonIncidentEdges() {
 		for(ICompoundGraphElement topEl : new HashSet<ICompoundGraphElement>(this.topElements)){
-			if(topEl.isLink()){
+			if(topEl.isEdge()){
 				ICompoundEdge topEdge = (ICompoundEdge)topEl;
 				CompoundNodePair pair = topEdge.getConnectedNodes();
 				// remove if not incident and not part of the original selection: this preserves only non-incident edges if they were in the original selection 
@@ -185,7 +185,7 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 		
 		for(ICompoundGraphElement element : elementList){
 			this.topElements.add(element);
-			if(element.isLink()){
+			if(element.isEdge()){
 				this.originalEdgeSelection.add(element);
 			}
 		}
@@ -194,7 +194,7 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 	@Override
 	public void removeNonIncidentEdges() {
 		for(ICompoundGraphElement topEl : new HashSet<ICompoundGraphElement>(this.topElements)){
-			if(topEl.isLink()){
+			if(topEl.isEdge()){
 				ICompoundEdge topEdge = (ICompoundEdge)topEl;
 				CompoundNodePair pair = topEdge.getConnectedNodes();
 				// remove if not incident 

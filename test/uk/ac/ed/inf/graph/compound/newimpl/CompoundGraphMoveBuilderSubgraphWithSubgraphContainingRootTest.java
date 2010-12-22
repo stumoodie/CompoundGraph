@@ -43,7 +43,7 @@ public class CompoundGraphMoveBuilderSubgraphWithSubgraphContainingRootTest {
 			allowing(mockSrcSubgraph).numTopElements(); will(returnValue(NUM_TOP_ELEMENTS));
 			allowing(mockSrcSubgraph).elementIterator(); will(returnIterator(testFixture.getNode(ComplexGraphFixture.NODE1_ID), testFixture.getNode(ComplexGraphFixture.NODE2_ID), testFixture.getEdge(ComplexGraphFixture.EDGE3_ID), testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)));
 			allowing(mockSrcSubgraph).edgeLastElementIterator(); will(returnIterator(testFixture.getNode(ComplexGraphFixture.NODE1_ID), testFixture.getNode(ComplexGraphFixture.NODE2_ID), testFixture.getEdge(ComplexGraphFixture.EDGE3_ID), testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)));
-			allowing(mockSrcSubgraph).isInducedSubgraph(); will(returnValue(true));
+			allowing(mockSrcSubgraph).hasOrphanedEdges(); will(returnValue(false));
 			allowing(mockSrcSubgraph).isConsistentSnapShot(); will(returnValue(false));
 			allowing(mockSrcSubgraph).containsRoot(); will(returnValue(false));
 //			allowing(mockSrcSubgraph).containsElement(with(isOneOf(testFixture.getNode(ComplexGraphFixture.NODE1_ID), testFixture.getNode(ComplexGraphFixture.NODE2_ID), testFixture.getEdge(ComplexGraphFixture.EDGE2_ID), testFixture.getNode(ComplexGraphFixture.NODE3_ID), testFixture.getNode(ComplexGraphFixture.NODE4_ID), testFixture.getNode(ComplexGraphFixture.NODE5_ID)))); will(returnValue(true));

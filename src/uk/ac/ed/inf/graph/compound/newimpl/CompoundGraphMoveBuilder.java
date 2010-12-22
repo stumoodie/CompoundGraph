@@ -58,7 +58,7 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 		boolean retVal = subGraph != null
 //			&& this.elementAttributeFactory != null
 			&& subGraph.getSuperGraph().equals(this.destChildGraph.getSuperGraph())
-			&& subGraph.isInducedSubgraph()
+			&& !subGraph.hasOrphanedEdges()
 			&& subGraph.isConsistentSnapShot()
 			&& !subGraph.containsRoot();
 		if(retVal){

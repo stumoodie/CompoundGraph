@@ -6,6 +6,7 @@ import uk.ac.ed.inf.graph.compound.CompoundNodePair;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
+import uk.ac.ed.inf.graph.compound.ICompoundGraphElementVisitor;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubgraphAlgorithms;
@@ -186,6 +187,19 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 	}
 
 	@Override
+	public boolean hasOrphanedEdges(){
+		Iterator<ICompoundEdge> iter = this.topElements.edgeIterator();
+		boolean retVal = false;
+		while(iter.hasNext() && !retVal){
+			ICompoundEdge edge = iter.next();
+			CompoundNodePair pair = edge.getConnectedNodes();
+			retVal = !(this.containsNode(pair.getOutNode())
+					&& this.containsNode(pair.getInNode()));
+		}
+		return retVal;
+	}
+	
+	@Override
 	public Iterator<ICompoundNode> nodeIterator() {
 		return this.topElements.nodeIterator();
 	}
@@ -227,6 +241,21 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 	@Override
 	public int getNumTopEdges() {
 		return this.topElements.numTopEdges();
+	}
+
+	@Override
+	public void visitAll(ICompoundGraphElementVisitor visitor) {
+		Iterator<ICompoundGraphElement> iter = this.elementIterator();
+		while(iter.hasNext()){
+			ICompoundGraphElement el = iter.next();
+			if(el.isNode()){
+				visitor.visitNode((ICompoundNode)el);
+			}
+			else{
+				visitor.visitEdge((ICompoundEdge)el);
+			}
+				
+		}
 	}
 
 }

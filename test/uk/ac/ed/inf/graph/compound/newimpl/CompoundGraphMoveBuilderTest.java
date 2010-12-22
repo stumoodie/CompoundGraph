@@ -45,7 +45,7 @@ public class CompoundGraphMoveBuilderTest {
 		this.mockery.checking(new Expectations(){{
 			allowing(mockSubgraph).getSuperGraph(); will(returnValue(testFixture.getGraph()));
 			allowing(mockSubgraph).isConsistentSnapShot(); will(returnValue(true));
-			allowing(mockSubgraph).isInducedSubgraph(); will(returnValue(true));
+			allowing(mockSubgraph).hasOrphanedEdges(); will(returnValue(false));
 		}});
 	}
 

@@ -52,7 +52,7 @@ public class CompoundGraphCopyBuilder implements ICompoundGraphCopyBuilder {
 	@Override
 	public boolean canCopyHere() {
 		ISubCompoundGraph subGraph = this.sourceSubgraph;
-		boolean retVal = subGraph != null && subGraph.isInducedSubgraph()
+		boolean retVal = subGraph != null && !subGraph.hasOrphanedEdges()
 			&& subGraph.isConsistentSnapShot() && !subGraph.containsRoot();
 //			&& this.attributeCopyFactory != null;
 		if(retVal){

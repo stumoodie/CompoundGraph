@@ -38,7 +38,7 @@ public class CompoundGraphMoveBuilderSubgraphWithInconsistentSubgraphTest {
 		this.mockSrcSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSrcSubgraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockSrcSubgraph).getSuperGraph(); will(returnValue(testFixture.getGraph()));
-			allowing(mockSrcSubgraph).isInducedSubgraph(); will(returnValue(true));
+			allowing(mockSrcSubgraph).hasOrphanedEdges(); will(returnValue(false));
 			allowing(mockSrcSubgraph).isConsistentSnapShot(); will(returnValue(true));
 			allowing(mockSrcSubgraph).containsRoot(); will(returnValue(true));
 //			allowing(mockSrcSubgraph).containsElement(with(isOneOf(testFixture.getNode(ComplexGraphFixture.NODE1_ID), testFixture.getNode(ComplexGraphFixture.NODE2_ID), testFixture.getEdge(ComplexGraphFixture.EDGE2_ID), testFixture.getNode(ComplexGraphFixture.NODE3_ID), testFixture.getNode(ComplexGraphFixture.NODE4_ID), testFixture.getNode(ComplexGraphFixture.NODE5_ID)))); will(returnValue(true));

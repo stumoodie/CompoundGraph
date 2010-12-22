@@ -47,7 +47,7 @@ public class CompoundGraphMoveBuilderWithIncidentNodeAsChildTest {
 			allowing(mockSrcSubgraph).numTopElements(); will(returnValue(NUM_TOP_ELEMENTS));
 			allowing(mockSrcSubgraph).elementIterator(); will(returnIterator(testFixture.getNode(ComplexGraphFixture.NODE1_ID), testFixture.getNode(ComplexGraphFixture.NODE2_ID), testFixture.getEdge(ComplexGraphFixture.EDGE3_ID)));
 			allowing(mockSrcSubgraph).edgeLastElementIterator(); will(returnIterator(testFixture.getNode(ComplexGraphFixture.NODE1_ID), testFixture.getNode(ComplexGraphFixture.NODE2_ID), testFixture.getEdge(ComplexGraphFixture.EDGE3_ID)));
-			allowing(mockSrcSubgraph).isInducedSubgraph(); will(returnValue(true));
+			allowing(mockSrcSubgraph).hasOrphanedEdges(); will(returnValue(false));
 			allowing(mockSrcSubgraph).isConsistentSnapShot(); will(returnValue(true));
 			allowing(mockSrcSubgraph).containsRoot(); will(returnValue(false));
 			allowing(mockSrcSubgraph).containsNode(with(isOneOf(testFixture.getNode(ComplexGraphFixture.NODE1_ID), testFixture.getNode(ComplexGraphFixture.NODE2_ID)))); will(returnValue(true));

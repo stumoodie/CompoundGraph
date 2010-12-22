@@ -32,7 +32,7 @@ public abstract aspect ICompoundGraphCopyBuilderDBC {
 		new Postcondition(){{
 			assertion(implies(retVal, cb.getSourceSubgraph() != null
 					&& cb.getSourceSubgraph().isConsistentSnapShot()
-					&& cb.getSourceSubgraph().isInducedSubgraph()), "can copy implies valid source");
+					&& !cb.getSourceSubgraph().hasOrphanedEdges()), "can copy implies valid source");
 			assertion(implies(retVal, cb.getDestinationChildGraph() != null), "can copy implies destn set");
 		}};
 	}

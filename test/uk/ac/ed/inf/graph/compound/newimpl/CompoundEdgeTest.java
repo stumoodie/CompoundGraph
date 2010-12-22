@@ -221,7 +221,7 @@ public class CompoundEdgeTest {
 
 	@Test
 	public void testIsLink() {
-		assertTrue("is edge", this.testInstance.isLink());
+		assertTrue("is edge", this.testInstance.isEdge());
 	}
 
 	@Test

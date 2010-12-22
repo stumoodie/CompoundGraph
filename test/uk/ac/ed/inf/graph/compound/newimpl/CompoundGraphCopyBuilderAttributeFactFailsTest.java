@@ -48,7 +48,7 @@ public class CompoundGraphCopyBuilderAttributeFactFailsTest {
 			allowing(mockSrcSubgraph).topElementIterator(); will(returnIterator(testFixture.getNode1(), testFixture.getEdge2(), testFixture.getNode3(), testFixture.getNode5()));
 			allowing(mockSrcSubgraph).elementIterator(); will(returnIterator(testFixture.getNode1(), testFixture.getNode2(), testFixture.getEdge3(), testFixture.getEdge2(), testFixture.getNode3(), testFixture.getNode4(), testFixture.getNode5()));
 			allowing(mockSrcSubgraph).edgeLastElementIterator(); will(returnIterator(testFixture.getNode1(), testFixture.getNode2(), testFixture.getEdge3(), testFixture.getNode3(), testFixture.getNode5(), testFixture.getEdge2(), testFixture.getNode4()));
-			allowing(mockSrcSubgraph).isInducedSubgraph(); will(returnValue(true));
+			allowing(mockSrcSubgraph).hasOrphanedEdges(); will(returnValue(false));
 			allowing(mockSrcSubgraph).isConsistentSnapShot(); will(returnValue(true));
 			allowing(mockSrcSubgraph).containsRoot(); will(returnValue(false));
 		}});

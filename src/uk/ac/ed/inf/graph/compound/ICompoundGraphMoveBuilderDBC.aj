@@ -32,7 +32,7 @@ public abstract aspect ICompoundGraphMoveBuilderDBC {
 		new Postcondition(){{
 			assertion(implies(retVal, cb.getSourceSubgraph() != null
 					&& cb.getSourceSubgraph().isConsistentSnapShot()
-					&& cb.getSourceSubgraph().isInducedSubgraph()), "can move implies valid source");
+					&& !cb.getSourceSubgraph().hasOrphanedEdges()), "can move implies valid source");
 			assertion(implies(retVal, cb.getDestinationChildGraph() != null), "can move implies destn set");
 		}};
 	}

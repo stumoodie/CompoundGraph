@@ -31,6 +31,7 @@ import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeListener;
 import uk.ac.ed.inf.graph.compound.IRootCompoundNode;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
+import uk.ac.ed.inf.graph.compound.ISubGraphFactory;
 import uk.ac.ed.inf.graph.compound.ISubgraphRemovalBuilder;
 import uk.ac.ed.inf.graph.state.IGraphState;
 import uk.ac.ed.inf.graph.state.IGraphStateHandler;
@@ -111,7 +112,7 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 		Iterator<ICompoundGraphElement> iter = this.getElementTree().levelOrderIterator();
 		while(iter.hasNext() && !retVal){
 			ICompoundGraphElement node = iter.next();
-			retVal = node.isLink() && (node.getIndex() == edgeIdx);
+			retVal = node.isEdge() && (node.getIndex() == edgeIdx);
 		}
 		return retVal;
 	}
@@ -267,5 +268,10 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 		for(IGraphStructureChangeListener l : this.graphStructureListeners){
 			l.graphStructureChange(graphStructureChangeAction);
 		}
+	}
+
+	@Override
+	public ISubGraphFactory newSimpleSubgraphFactory() {
+		return new SubgraphFactory(this);
 	}
 }

@@ -19,7 +19,7 @@ import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphTestFixture;
 
 @RunWith(JMock.class)
-public class CompoundGraphMoveBuilderSubgraphWithNonInducedSungraphTest {
+public class CompoundGraphMoveBuilderSubgraphWithOrphanedEdgesTest {
 	private static final int NUM_TOP_ELEMENTS = 2;
 	private Mockery mockery;
 	private ICompoundGraphMoveBuilder testInstance;
@@ -42,7 +42,7 @@ public class CompoundGraphMoveBuilderSubgraphWithNonInducedSungraphTest {
 			allowing(mockSrcSubgraph).numTopElements(); will(returnValue(NUM_TOP_ELEMENTS));
 			allowing(mockSrcSubgraph).elementIterator(); will(returnIterator(testFixture.getNode(ComplexGraphFixture.NODE1_ID), testFixture.getNode(ComplexGraphFixture.NODE2_ID), testFixture.getEdge(ComplexGraphFixture.EDGE3_ID), testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)));
 			allowing(mockSrcSubgraph).edgeLastElementIterator(); will(returnIterator(testFixture.getNode(ComplexGraphFixture.NODE1_ID), testFixture.getNode(ComplexGraphFixture.NODE2_ID), testFixture.getEdge(ComplexGraphFixture.EDGE3_ID), testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)));
-			allowing(mockSrcSubgraph).isInducedSubgraph(); will(returnValue(false));
+			allowing(mockSrcSubgraph).hasOrphanedEdges(); will(returnValue(true));
 			allowing(mockSrcSubgraph).isConsistentSnapShot(); will(returnValue(true));
 			allowing(mockSrcSubgraph).containsRoot(); will(returnValue(false));
 //			allowing(mockSrcSubgraph).containsElement(with(isOneOf(testFixture.getNode(ComplexGraphFixture.NODE1_ID), testFixture.getNode(ComplexGraphFixture.NODE2_ID), testFixture.getEdge(ComplexGraphFixture.EDGE2_ID), testFixture.getNode(ComplexGraphFixture.NODE3_ID), testFixture.getNode(ComplexGraphFixture.NODE4_ID), testFixture.getNode(ComplexGraphFixture.NODE5_ID)))); will(returnValue(true));
