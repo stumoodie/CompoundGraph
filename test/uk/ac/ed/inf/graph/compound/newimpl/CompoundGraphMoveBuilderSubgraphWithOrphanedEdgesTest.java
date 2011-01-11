@@ -33,6 +33,10 @@ public class CompoundGraphMoveBuilderSubgraphWithOrphanedEdgesTest {
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		this.testFixture.buildFixture();
 		this.mockElementFactory = this.mockery.mock(ICompoundGraphElementFactory.class, "mockElementFactory");
+		final ISubCompoundGraph mockDestnSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockDestnSubgraph");
+		this.mockery.checking(new Expectations(){{
+			allowing(testFixture.getGraph().subgraphFactory()).createSubgraph(); will(returnValue(mockDestnSubgraph));
+		}});
 		this.testInstance = new CompoundGraphMoveBuilder(this.testFixture.getNode(ComplexGraphFixture.NODE6_ID).getChildCompoundGraph(),
 				this.mockElementFactory);
 		this.mockSrcSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSrcSubgraph");

@@ -12,6 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import uk.ac.ed.inf.graph.compound.ICompoundEdge;
+import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
@@ -39,6 +41,7 @@ public class CompoundSubgraphRemovalBuilderWithSubgraphTest {
 			allowing(mockSubgraph).getSuperGraph(); will(returnValue(testFixture.getGraph()));
 			allowing(mockSubgraph).containsRoot(); will(returnValue(false));
 			allowing(mockSubgraph).isConsistentSnapShot(); will(returnValue(true));
+			allowing(mockSubgraph).isInducedSubgraph(); will(returnValue(true));
 			allowing(mockSubgraph).elementIterator(); will(returnValue(testFixture.getNode(ComplexGraphFixture.NODE2_ID).levelOrderIterator()));
 		}});
 		this.testInstance.setRemovalSubgraph(mockSubgraph);
@@ -64,16 +67,22 @@ public class CompoundSubgraphRemovalBuilderWithSubgraphTest {
 	@Test
 	public void testRemoveSubgraph() {
 		final ISubCompoundGraphFactory mocksubgraphFactory = this.testFixture.getGraph().subgraphFactory();
+		final ISubCompoundGraph mockSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockRemovalSubgraph");
+		final ICompoundEdge edge4 = testFixture.getEdge(ComplexGraphFixture.EDGE4_ID);
+		final ICompoundEdge edge3 = testFixture.getEdge(ComplexGraphFixture.EDGE3_ID);
+		final ICompoundNode node2 = testFixture.getNode(ComplexGraphFixture.NODE2_ID);
 		this.mockery.checking(new Expectations(){{
-			one(testFixture.getNode(ComplexGraphFixture.NODE2_ID)).markRemoved(true); will(testFixture.setRemovalState(ComplexGraphFixture.NODE2_ID));
-			one(testFixture.getEdge(ComplexGraphFixture.EDGE3_ID)).markRemoved(true); will(testFixture.setRemovalState(ComplexGraphFixture.EDGE3_ID));
-			one(testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)).markRemoved(true); will(testFixture.setRemovalState(ComplexGraphFixture.EDGE4_ID));
+			one(node2).markRemoved(true); will(testFixture.setRemovalState(ComplexGraphFixture.NODE2_ID));
+			one(edge3).markRemoved(true); will(testFixture.setRemovalState(ComplexGraphFixture.EDGE3_ID));
+			one(edge4).markRemoved(true); will(testFixture.setRemovalState(ComplexGraphFixture.EDGE4_ID));
 			
-			exactly(1).of(mocksubgraphFactory).addElement(with(testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)));
-			exactly(1).of(mocksubgraphFactory).addElement(with(testFixture.getEdge(ComplexGraphFixture.EDGE3_ID)));
-			exactly(1).of(mocksubgraphFactory).addElement(with(testFixture.getNode(ComplexGraphFixture.NODE2_ID)));
+			exactly(1).of(mocksubgraphFactory).addElement(with(edge4));
+			exactly(3).of(mocksubgraphFactory).addElement(with(edge3));
+			exactly(1).of(mocksubgraphFactory).addElement(with(node2));
 
-			ignoring(mocksubgraphFactory).createSubgraph();
+			allowing(mockSubgraph).elementIterator(); will(returnIterator(node2, edge3, edge4));
+			
+			allowing(mocksubgraphFactory).createSubgraph(); will(returnValue(mockSubgraph));
 			
 			one(testFixture.getGraph()).notifyGraphStructureChange(with(any(IGraphStructureChangeAction.class)));
 		}});

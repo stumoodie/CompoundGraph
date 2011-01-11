@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.jmock.Sequence;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
@@ -26,6 +27,8 @@ public class CompoundGraphMoveBuilderSubgraphWithSubgraphContainingRootTest {
 	private IGraphTestFixture testFixture;
 	private ISubCompoundGraph mockSrcSubgraph;
 	private ICompoundGraphElementFactory mockElementFactory;
+	private ISubCompoundGraph mockDestnSubgraph;
+	private Sequence subgraphSeq;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -34,6 +37,11 @@ public class CompoundGraphMoveBuilderSubgraphWithSubgraphContainingRootTest {
 		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE3_ID, true);
 		this.testFixture.buildFixture();
 		this.mockElementFactory = this.mockery.mock(ICompoundGraphElementFactory.class, "mockElementFactory");
+		mockDestnSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockDestnSubgraph");
+		subgraphSeq = this.mockery.sequence("subgraphSeq");
+		this.mockery.checking(new Expectations(){{
+			oneOf(testFixture.getGraph().subgraphFactory()).createSubgraph(); will(returnValue(mockDestnSubgraph)); inSequence(subgraphSeq);
+		}});
 		this.testInstance = new CompoundGraphMoveBuilder(this.testFixture.getNode(ComplexGraphFixture.NODE6_ID).getChildCompoundGraph(),
 				this.mockElementFactory);
 		this.mockSrcSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSrcSubgraph");

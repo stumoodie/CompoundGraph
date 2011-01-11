@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import uk.ac.ed.inf.graph.compound.CompoundNodePair;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
@@ -15,28 +16,30 @@ import uk.ac.ed.inf.tree.GeneralTree;
 import uk.ac.ed.inf.tree.ITree;
 
 public class ElementTreeStructure {
+	private final List<ITree<ICompoundGraphElement>> topElements;
+	private final Set<Integer> storedElements;
 	private final IElementTreeFilter DEFAULT_FILTER = new IElementTreeFilter(){
 		@Override
 		public boolean matched(ICompoundGraphElement element) {
-			return true;
+			return storedElements.contains(element.getIndex());
 		}
 	};
 	private final IElementTreeFilter NODE_FILTER = new IElementTreeFilter(){
 		@Override
 		public boolean matched(ICompoundGraphElement element) {
-			return element.isNode();
+			return element.isNode() && storedElements.contains(element.getIndex());
 		}
 	};
 	private final IElementTreeFilter EDGE_FILTER = new IElementTreeFilter(){
 		@Override
 		public boolean matched(ICompoundGraphElement element) {
-			return element.isEdge();
+			return element.isEdge() && storedElements.contains(element.getIndex());
 		}
 	};
-	private final List<ITree<ICompoundGraphElement>> topElements;
 	
 	public ElementTreeStructure() {
 		this.topElements = new LinkedList<ITree<ICompoundGraphElement>>();
+		this.storedElements = new TreeSet<Integer>();
 	}
 	
 	public boolean containsElement(ICompoundGraphElement ... elements){
@@ -77,16 +80,43 @@ public class ElementTreeStructure {
 	
 	public void addTopElement(ICompoundGraphElement element){
 		//precondition is that this not is not already contained
-		this.topElements.add(new GeneralTree<ICompoundGraphElement>(element));
+		ITree<ICompoundGraphElement> topTree = new GeneralTree<ICompoundGraphElement>(element); 
+		this.topElements.add(topTree);
+		// now store the elements that exist at this point
+		// Any that are deleted here will be ignored.
+		Iterator<ICompoundGraphElement> iter = topTree.levelOrderIterator();
+		while(iter.hasNext()){
+			ICompoundGraphElement el = iter.next();
+			this.storedElements.add(el.getIndex());
+		}
+//		this.addElement(element);
 	}
+	
+//	public void addElement(ICompoundGraphElement element){
+//		this.storedElements.add(element.getIndex());
+//	}
 	
 	private boolean containsElement(IElementTreeFilter filter, Integer ... elementIdxs){
 		boolean retVal = false;
+//		List<Integer> elementList = new LinkedList<Integer>(Arrays.asList(elementIdxs));
+//		elementList.retainAll(storedElements);
+//		Iterator<ITree<ICompoundGraphElement>> iter =  this.topElements.iterator();
+//		while(iter.hasNext() && !retVal){
+//			ITree<ICompoundGraphElement> topTree = iter.next();
+//			Iterator<ICompoundGraphElement> treeIter = topTree.levelOrderIterator();
+//			while(treeIter.hasNext()){
+//				ICompoundGraphElement treeElement = treeIter.next();
+//				if(filter.matched(treeElement) && elementList.contains(treeElement.getIndex())){
+//					retVal = true;
+//				}
+//			}
+//		}
 		List<Integer> elementList = Arrays.asList(elementIdxs);
+//		elementList.retainAll(storedElements);
 		Iterator<ITree<ICompoundGraphElement>> iter =  this.topElements.iterator();
 		while(iter.hasNext() && !retVal){
 			ITree<ICompoundGraphElement> topTree = iter.next();
-			Iterator<ICompoundGraphElement> treeIter = topTree.levelOrderIterator();
+			Iterator<ICompoundGraphElement> treeIter = new UnfilteredElementLevelOrderIterator(topTree.getRootNode());
 			while(treeIter.hasNext()){
 				ICompoundGraphElement treeElement = treeIter.next();
 				if(filter.matched(treeElement) && elementList.contains(treeElement.getIndex())){
@@ -131,17 +161,22 @@ public class ElementTreeStructure {
 		Iterator<ITree<ICompoundGraphElement>> iter = this.topElements.iterator();
 		while(iter.hasNext() && retVal == null){
 			ITree<ICompoundGraphElement> tree = iter.next();
-			retVal = tree.get(elementIdx);
+			Iterator<ICompoundGraphElement> elementIter = new UnfilteredElementLevelOrderIterator(tree.getRootNode());
+			while(elementIter.hasNext() && retVal == null){
+				ICompoundGraphElement el = elementIter.next();
+				if((el.getIndex() == elementIdx)){
+					retVal = el;
+				}
+			}
 		}
 		return retVal;
 	}
 
 	public ICompoundNode getNode(int nodeIdx) {
 		ICompoundNode retVal = null;
-		Iterator<ITree<ICompoundGraphElement>> iter = this.topElements.iterator();
-		while(iter.hasNext() && retVal == null){
-			ITree<ICompoundGraphElement> tree = iter.next();
-			retVal = (ICompoundNode)tree.get(nodeIdx);
+		ICompoundGraphElement el = getElement(nodeIdx);
+		if(el != null && el.isNode()){
+			retVal = (ICompoundNode)el;
 		}
 		return retVal;
 	}
@@ -201,41 +236,57 @@ public class ElementTreeStructure {
 
 	public ICompoundEdge getEdge(int edgeIdx) {
 		ICompoundEdge retVal = null;
-		Iterator<ITree<ICompoundGraphElement>> iter = this.topElements.iterator();
-		while(iter.hasNext() && retVal == null){
-			ITree<ICompoundGraphElement> tree = iter.next();
-			retVal = (ICompoundEdge)tree.get(edgeIdx);
+		ICompoundGraphElement el = getElement(edgeIdx);
+		if(el != null && el.isEdge()){
+			retVal = (ICompoundEdge)el;
 		}
 		return retVal;
 	}
 	
-	public void addAll(Set<ICompoundGraphElement> topElements) {
-		for(ICompoundGraphElement element : topElements){
-			this.addTopElement(element);
-		}
-	}
-
 	public boolean isEmpty() {
 		return this.topElements.isEmpty();
 	}
 
+	public boolean containsDirectedConnection(CompoundNodePair testPair) {
+		boolean retVal = false;
+		if(testPair != null){
+			Iterator<ITree<ICompoundGraphElement>> elementTreeIter = this.topElements.iterator();
+			while(elementTreeIter.hasNext() && !retVal){
+				ITree<ICompoundGraphElement> elementTree = elementTreeIter.next();
+				Iterator<ICompoundGraphElement> iter = new UnfilteredElementLevelOrderIterator(elementTree.getRootNode());
+				while(iter.hasNext() && ! retVal){
+					ICompoundGraphElement element = iter.next();
+					if(element instanceof ICompoundEdge){
+						ICompoundEdge edge = (ICompoundEdge)element;
+						retVal = storedElements.contains(edge.getIndex()) && edge.hasDirectedEnds(testPair);
+					}
+				}
+			}
+		}
+		return retVal;
+	}
+	
 	public boolean containsConnection(CompoundNodePair testPair) {
 		boolean retVal = false;
 		if(testPair != null){
 			Iterator<ITree<ICompoundGraphElement>> elementTreeIter = this.topElements.iterator();
 			while(elementTreeIter.hasNext() && !retVal){
 				ITree<ICompoundGraphElement> elementTree = elementTreeIter.next();
-				Iterator<ICompoundGraphElement> iter = elementTree.levelOrderIterator();
+				Iterator<ICompoundGraphElement> iter = new UnfilteredElementLevelOrderIterator(elementTree.getRootNode());
 				while(iter.hasNext() && ! retVal){
 					ICompoundGraphElement element = iter.next();
 					if(element instanceof ICompoundEdge){
 						ICompoundEdge edge = (ICompoundEdge)element;
-						retVal = edge.hasEnds(testPair);
+						retVal = storedElements.contains(edge.getIndex()) && edge.hasEnds(testPair);
 					}
 				}
 			}
 		}
 		return retVal;
+	}
+
+	public Iterator<ICompoundGraphElement> edgeLastElementIterator() {
+		return new DFSNodeFirstIterator(this.topElementIterator(), DEFAULT_FILTER);
 	}
 	
 }

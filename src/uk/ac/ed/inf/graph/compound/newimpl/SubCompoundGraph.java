@@ -18,7 +18,7 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 	private Boolean isInducedSubgraphFlag = null;
 	private final ICompoundGraph graph;
 
-	public SubCompoundGraph(ICompoundGraph graph){
+	SubCompoundGraph(ICompoundGraph graph){
 		this.graph = graph;
 		this.topElements = new ElementTreeStructure();
 	}
@@ -52,12 +52,9 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 		// check if directed edge is present then if nodes are in subgraph
 		if(outNode != null && inNode != null
 				&& outNode.getGraph().equals(this.graph)
-				&& inNode.getGraph().equals(this.graph)
-				&& outNode.hasOutEdgeTo(inNode)){
-			Iterator<ICompoundEdge> testEdge = outNode.getOutEdgesTo(inNode);
-			while(testEdge.hasNext() && !retVal){
-				retVal = this.topElements.containsEdges(testEdge.next());
-			}
+				&& inNode.getGraph().equals(this.graph)){
+			CompoundNodePair ends = new CompoundNodePair(outNode, inNode);
+			retVal = this.containsDirectedEdge(ends);
 		}
 		return retVal;
 	}
@@ -65,12 +62,7 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 	@Override
 	public boolean containsDirectedEdge(CompoundNodePair ends) {
 		boolean retVal = false;
-		if(ends != null){
-			ICompoundNode outNode = ends.getOutNode();
-			ICompoundNode inNode = ends.getInNode();
-			// check that both nodes exist in this subgraph
-			retVal = containsDirectedEdge(outNode, inNode);
-		}
+		retVal = ends != null && ends.getGraph().equals(this.graph) && this.topElements.containsDirectedConnection(ends);
 		return retVal;
 	}
 
@@ -231,12 +223,16 @@ public class SubCompoundGraph implements ISubCompoundGraph {
 
 	@Override
 	public Iterator<ICompoundGraphElement> edgeLastElementIterator() {
-		return new DFSNodeFirstIterator(this.topElements.topElementIterator());
+		return this.topElements.edgeLastElementIterator();
 	}
 
-	public void addTopElement(ICompoundGraphElement element) {
+	void addTopElement(ICompoundGraphElement element) {
 		this.topElements.addTopElement(element);
 	}
+	
+//	void addElement(ICompoundGraphElement element){
+//		this.topElements.addElement(element);
+//	}
 
 	@Override
 	public int getNumTopEdges() {

@@ -290,7 +290,8 @@ public abstract class CommonCompoundNode implements ICompoundNode {
 
 	@Override
 	public boolean isLowestCommonAncestor(ICompoundGraphElement thisNode, ICompoundGraphElement thatNode){
-		return this.getRoot().getGraph().getElementTree().getLowestCommonAncestor(thisNode, thatNode).equals(this);
+		return thisNode != null && thatNode != null && thisNode.getGraph().equals(this.getGraph()) && thatNode.getGraph().equals(this.getGraph())
+			&& this.getRoot().getGraph().getElementTree().getLowestCommonAncestor(thisNode, thatNode).equals(this);
 	}
 	
 	@Override

@@ -25,7 +25,7 @@ public class ElementAttribute implements IElementAttribute {
 	public String toString(){
 		StringBuilder buf = new StringBuilder(this.getClass().getSimpleName());
 		buf.append("(");
-		buf.append("rootNode");
+		buf.append(this.name);
 		buf.append(")");
 		return buf.toString();
 	}

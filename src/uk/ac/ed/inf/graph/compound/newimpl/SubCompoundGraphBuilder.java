@@ -44,8 +44,8 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 				// this iterator will return the root node as the first node, so
 				// their is no
 				// need to deal with this explicitly.
-				Iterator<ICompoundGraphElement> iter = new UnfilteredElementLevelOrderIterator(element);
-//				boolean isRoot = true;
+//				Iterator<ICompoundGraphElement> iter = new ElementLevelOrderIterator(element);
+				Iterator<ICompoundGraphElement> iter = element.levelOrderIterator();
 				while (iter.hasNext()) {
 					ICompoundGraphElement childElement = iter.next();
 					// if this node has already been visited, then so must its children and so there is no point in continuing
@@ -54,7 +54,7 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 					}
 					if (childElement.isNode()) {
 						ICompoundNode node = (ICompoundNode) childElement;
-						Iterator<ICompoundEdge> edgeIter = node.unfilteredEdgeIterator();
+						Iterator<ICompoundEdge> edgeIter = node.edgeIterator();
 						while (edgeIter.hasNext()) {
 							ICompoundEdge incidentEdge = edgeIter.next();
 							// check the edge is new and that it is incident to another node in this subgraph
@@ -66,12 +66,6 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 									logger.trace("Added edge to missingList: " + incidentEdge);
 								}
 							}
-//							// prune children from top node list
-//							if (isRoot) {
-//								isRoot = false;
-//							} else {
-//								this.topNodeList.remove(childElement);
-//							}
 						}
 					}
 					// record element as having been visited
@@ -107,6 +101,9 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 		for(ICompoundGraphElement element : this.topElements){
 			subGraph.addTopElement(element);
 		}
+//		for(ICompoundGraphElement element : this.visited){
+//			subGraph.addElement(element);
+//		}
 		this.currentSubgraph = subGraph;
 	}
 
@@ -138,7 +135,8 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 		// this iterator will return the root node as the first node, so
 		// their is no
 		// need to deal with this explicitly.
-		Iterator<ICompoundGraphElement> iter = new UnfilteredElementLevelOrderIterator(element);
+//		Iterator<ICompoundGraphElement> iter = new ElementLevelOrderIterator(element);
+		Iterator<ICompoundGraphElement> iter = element.levelOrderIterator();
 		boolean isRoot = true;
 		boolean skip = false;
 		while (iter.hasNext() && !skip) {
@@ -200,7 +198,7 @@ public class SubCompoundGraphBuilder implements ISubCompoundGraphBuilder {
 				// remove if not incident 
 				if(!visited.contains(pair.getOutNode()) || !visited.contains(pair.getInNode())){
 					this.topElements.remove(topEl);
-					Iterator<ICompoundGraphElement> iter = new UnfilteredElementLevelOrderIterator(topEl);
+					Iterator<ICompoundGraphElement> iter = topEl.levelOrderIterator();
 					while(iter.hasNext()){
 						ICompoundGraphElement nonIncidentEdgeChild = iter.next(); 
 						this.visited.remove(nonIncidentEdgeChild);

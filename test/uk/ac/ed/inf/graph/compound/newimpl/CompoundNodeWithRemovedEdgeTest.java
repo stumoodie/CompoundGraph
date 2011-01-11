@@ -30,7 +30,7 @@ public class CompoundNodeWithRemovedEdgeTest {
 	private static final int EXPECTED_IN_DEGREE = 1;
 	private static final int EXPECTED_OUT_DEGREE = 0;
 
-	private Mockery mockery = new JUnit4Mockery();
+	private final Mockery mockery = new JUnit4Mockery();
 	
 	private ComplexGraphFixture testFixture;
 	private ICompoundNode testInstance;

@@ -201,7 +201,12 @@ public class SubGraphWithRemovedNodesTest {
 
 	@Test
 	public void testIsInducedSubgraph() {
-		assertFalse("is not induced subgraph", this.testInstance.isInducedSubgraph());
+		assertTrue("is induced subgraph", this.testInstance.isInducedSubgraph());
+	}
+
+	@Test
+	public void testHasOrphanedEdges() {
+		assertTrue("has orphaned edges", this.testInstance.hasOrphanedEdges());
 	}
 
 	@Test

@@ -11,12 +11,17 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 
 public class DFSNodeFirstIterator implements Iterator<ICompoundGraphElement> {
 	private final Deque<ICompoundGraphElement> stack;
+	private final IElementTreeFilter filter;
 	
-	public DFSNodeFirstIterator(Iterator<ICompoundGraphElement> topElements){
+	public DFSNodeFirstIterator(Iterator<ICompoundGraphElement> topElements, IElementTreeFilter filter){
+		this.filter = filter;
 		this.stack = new LinkedList<ICompoundGraphElement>();
 		SortedSet<ICompoundGraphElement> cache = createSortedCache();
 		while(topElements.hasNext()){
-			cache.add(topElements.next());
+			ICompoundGraphElement el = topElements.next();
+			if(filter.matched(el)){
+				cache.add(el);
+			}
 		}
 		for(ICompoundGraphElement topElement : cache){
 			stack.push(topElement);
@@ -59,10 +64,13 @@ public class DFSNodeFirstIterator implements Iterator<ICompoundGraphElement> {
 
 	private void populate(ICompoundGraphElement parent) {
 		// strategy is to sort the elements here do that the nodes in the child graph are DF traversed before the links 
-		Iterator<ICompoundGraphElement> iter = parent.getChildCompoundGraph().elementIterator();
+		Iterator<ICompoundGraphElement> iter = parent.getChildCompoundGraph().unfilteredElementIterator();
 		SortedSet<ICompoundGraphElement> cache = createSortedCache();
 		while(iter.hasNext()){
-			cache.add(iter.next());
+			ICompoundGraphElement el = iter.next();
+			if(filter.matched(el)){
+				cache.add(el);
+			}
 		}
 		for(ICompoundGraphElement element : cache){
 			this.stack.push(element);

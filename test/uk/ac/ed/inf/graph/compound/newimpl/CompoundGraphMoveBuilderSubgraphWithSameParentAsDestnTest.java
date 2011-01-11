@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.jmock.Sequence;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
@@ -26,6 +27,8 @@ public class CompoundGraphMoveBuilderSubgraphWithSameParentAsDestnTest {
 	private IGraphTestFixture testFixture;
 	private ISubCompoundGraph mockSrcSubgraph;
 	private ICompoundGraphElementFactory mockElementFactory;
+	private ISubCompoundGraph mockDestnSubgraph;
+	private Sequence subgraphSeq;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -33,6 +36,11 @@ public class CompoundGraphMoveBuilderSubgraphWithSameParentAsDestnTest {
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		this.testFixture.buildFixture();
 		this.mockElementFactory = this.mockery.mock(ICompoundGraphElementFactory.class, "mockElementFactory");
+		mockDestnSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockDestnSubgraph");
+		subgraphSeq = this.mockery.sequence("subgraphSeq");
+		this.mockery.checking(new Expectations(){{
+			oneOf(testFixture.getGraph().subgraphFactory()).createSubgraph(); will(returnValue(mockDestnSubgraph)); inSequence(subgraphSeq);
+		}});
 		this.testInstance = new CompoundGraphMoveBuilder(this.testFixture.getNode(ComplexGraphFixture.NODE2_ID).getChildCompoundGraph(),
 				this.mockElementFactory);
 		this.mockSrcSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSrcSubgraph");
@@ -45,8 +53,6 @@ public class CompoundGraphMoveBuilderSubgraphWithSameParentAsDestnTest {
 			allowing(mockSrcSubgraph).hasOrphanedEdges(); will(returnValue(false));
 			allowing(mockSrcSubgraph).isConsistentSnapShot(); will(returnValue(true));
 			allowing(mockSrcSubgraph).containsRoot(); will(returnValue(false));
-//			allowing(mockSrcSubgraph).containsElement(with(isOneOf(testFixture.getNode(ComplexGraphFixture.NODE1_ID), testFixture.getNode(ComplexGraphFixture.NODE2_ID), testFixture.getEdge(ComplexGraphFixture.EDGE2_ID), testFixture.getNode(ComplexGraphFixture.NODE3_ID), testFixture.getNode(ComplexGraphFixture.NODE4_ID), testFixture.getNode(ComplexGraphFixture.NODE5_ID)))); will(returnValue(true));
-//			allowing(mockSrcSubgraph).containsElement(with(not(isOneOf(testFixture.getNode(ComplexGraphFixture.NODE1_ID), testFixture.getNode(ComplexGraphFixture.NODE2_ID), testFixture.getEdge(ComplexGraphFixture.EDGE2_ID), testFixture.getNode(ComplexGraphFixture.NODE3_ID), testFixture.getNode(ComplexGraphFixture.NODE4_ID), testFixture.getNode(ComplexGraphFixture.NODE5_ID))))); will(returnValue(true));
 		}});
 		this.testInstance.setSourceSubgraph(mockSrcSubgraph);
 	}

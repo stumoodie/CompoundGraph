@@ -18,7 +18,6 @@ import uk.ac.ed.inf.designbycontract.PreConditionException;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElementFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphMoveBuilder;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
-import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphTestFixture;
 
@@ -39,9 +38,12 @@ public class CompoundGraphMoveBuilderTest {
 		this.destnFixture = new ComplexGraphFixture(mockery, "destn_");
 		this.destnFixture.buildFixture();
 		this.mockElementFactory = this.mockery.mock(ICompoundGraphElementFactory.class, "mockElementFactory");
+		this.mockSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSubgraph");
+		this.mockery.checking(new Expectations(){{
+			allowing(destnFixture.getGraph().subgraphFactory()).createSubgraph(); will(returnValue(mockSubgraph));
+		}});
 		this.testInstance = new CompoundGraphMoveBuilder(this.destnFixture.getGraph().getRoot().getChildCompoundGraph(),
 				this.mockElementFactory);
-		this.mockSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSubgraph");
 		this.mockery.checking(new Expectations(){{
 			allowing(mockSubgraph).getSuperGraph(); will(returnValue(testFixture.getGraph()));
 			allowing(mockSubgraph).isConsistentSnapShot(); will(returnValue(true));
@@ -64,10 +66,6 @@ public class CompoundGraphMoveBuilderTest {
 
 	@Test
 	public void testGetMovedComponents() {
-		final ISubCompoundGraphFactory destn_subgraphFactory = this.destnFixture.getGraph().subgraphFactory();
-		this.mockery.checking(new Expectations(){{
-			exactly(1).of(destn_subgraphFactory).createSubgraph(); will(returnValue(mockSubgraph));
-		}});
 		assertNotNull("moved components", this.testInstance.getMovedComponents());
 	}
 
@@ -99,10 +97,6 @@ public class CompoundGraphMoveBuilderTest {
 
 	@Test
 	public void testGetRemovedComponents() {
-		final ISubCompoundGraphFactory destn_subgraphFactory = this.destnFixture.getGraph().subgraphFactory();
-		this.mockery.checking(new Expectations(){{
-			exactly(1).of(destn_subgraphFactory).createSubgraph(); will(returnValue(mockSubgraph));
-		}});
 		assertNotNull("removed components", this.testInstance.getRemovedComponents());
 	}
 

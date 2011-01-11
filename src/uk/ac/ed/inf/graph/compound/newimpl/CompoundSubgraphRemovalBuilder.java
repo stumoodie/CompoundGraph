@@ -23,7 +23,9 @@ public class CompoundSubgraphRemovalBuilder implements ISubgraphRemovalBuilder {
 	
 	@Override
 	public boolean canRemoveSubgraph() {
-		return subCompoundGraph != null && subCompoundGraph.getSuperGraph().equals(this.owningGraph) && !subCompoundGraph.containsRoot() && subCompoundGraph.isConsistentSnapShot();
+		return subCompoundGraph != null && subCompoundGraph.getSuperGraph().equals(this.owningGraph)
+		&& !subCompoundGraph.containsRoot() && subCompoundGraph.isConsistentSnapShot()
+		&& subCompoundGraph.isInducedSubgraph();
 	}
 
 
@@ -34,7 +36,6 @@ public class CompoundSubgraphRemovalBuilder implements ISubgraphRemovalBuilder {
 
 	private void removeElement(ICompoundGraphElement element, ISubCompoundGraphFactory subCompoundGraphFactory){
 		if(!element.isRemoved()){
-			element.markRemoved(true);
 			subCompoundGraphFactory.addElement(element);
 		}
 	}
@@ -67,6 +68,12 @@ public class CompoundSubgraphRemovalBuilder implements ISubgraphRemovalBuilder {
 			removeElement(element, removalGraphFactory);
 		}
 		this.removalSubGraph = removalGraphFactory.createSubgraph();
+		// once have subgraph - can now remove the nodes
+		Iterator<ICompoundGraphElement> elementIter = removalSubGraph.elementIterator();
+		while(elementIter.hasNext()){
+			ICompoundGraphElement element = elementIter.next();
+			element.markRemoved(true);
+		}
 		this.owningGraph.notifyGraphStructureChange(new IGraphStructureChangeAction(){
 
 			@Override

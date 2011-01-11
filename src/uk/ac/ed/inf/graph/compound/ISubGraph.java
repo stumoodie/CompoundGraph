@@ -12,6 +12,11 @@ public interface ISubGraph {
 
 	ICompoundGraphElement getElement(int idx);
 	
+	/**
+	 * Tests if a subgraph is induced. That is that all the edges incident to the nodes in the subgraph are included in the subgraph. In addition
+	 * the graph must not contain any dangling or orphaned edges.   
+	 * @return
+	 */
 	boolean isInducedSubgraph();
 	
 	boolean isConsistentSnapShot();

@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.isOneOf;
 import static org.hamcrest.Matchers.not;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -36,21 +35,14 @@ import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.util.IndexCounter;
 import uk.ac.ed.inf.tree.ITree;
 
-public class ComplexGraphFixture implements IGraphTestFixture {
-	public static Action returnIteratorWithDeletion(Collection<? extends ICompoundGraphElement> collection) {
-		return new ReturnIteratorWithRemovalAction(collection);
-	}
-	    
-	public static <T extends ICompoundGraphElement> Action returnIteratorWithRemoval(T ... items) {
-		return new ReturnIteratorWithRemovalAction(items);
-	}
-	
-	 	
-	public static <T extends ICompoundGraphElement> org.hamcrest.Matcher<T> isOneOfWithRemoval(T... elements) {
-		return IsIn.isOneOf(elements);
-	}
+/**
+ * This graph has the standard graph structure, but with the follwoing elements marked as removed:
+ * node2, edge3, edge4, edge2, node4.
+ * @author smoodie
+ *
+ */
 
-	
+public class ComplexGraphWithDeletionsFixture implements IGraphTestFixture {
 	public static final String GRAPH_ID = "graph";
 	public static final String NODE1_ID = "node1";
 	public static final String NODE2_ID = "node2";
@@ -116,9 +108,9 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 						allowing(node1ChildGraph).getRoot(); will(returnValue(getNode1()));
 						allowing(node1ChildGraph).getSuperGraph(); will(returnValue(getGraph()));
-						allowing(node1ChildGraph).numNodes(); will(returnValue(1));
-						allowing(node1ChildGraph).numEdges(); will(returnValue(1));
-						allowing(node1ChildGraph).numElements(); will(returnValue(2));
+						allowing(node1ChildGraph).numNodes(); will(returnValue(0));
+						allowing(node1ChildGraph).numEdges(); will(returnValue(0));
+						allowing(node1ChildGraph).numElements(); will(returnValue(0));
 						allowing(node1ChildGraph).containsEdge(with(any(Integer.class))); will(returnValue(false));
 						allowing(node1ChildGraph).containsEdge(with(any(ICompoundEdge.class))); will(returnValue(false));
 					}});
@@ -133,11 +125,9 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 				@Override
 				public boolean buildChildGraph(final IChildCompoundGraph node1ChildGraph) {
 					mockery.checking(new Expectations(){{
-						allowing(node1ChildGraph).containsNode(with(equalTo(getNode2()))); will(returnValue(true));
-						allowing(node1ChildGraph).containsNode(with(not(getNode2()))); will(returnValue(false));
-						allowing(node1ChildGraph).containsNode(with(equalTo(NODE2_IDX))); will(returnValue(true));
-						allowing(node1ChildGraph).containsNode(with(not(NODE2_IDX))); will(returnValue(false));
-						allowing(node1ChildGraph).elementIterator(); will(returnIteratorWithRemoval(getNode2()));
+						allowing(node1ChildGraph).containsNode(with(any(ICompoundNode.class))); will(returnValue(false));
+						allowing(node1ChildGraph).containsNode(with(any(Integer.class))); will(returnValue(false));
+						allowing(node1ChildGraph).elementIterator(); will(returnIterator());
 						allowing(node1ChildGraph).unfilteredElementIterator(); will(returnIterator(getNode2()));
 					}});
 					return true;
@@ -147,28 +137,26 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 				@Override
 				public boolean buildNode(final ICompoundNode node1) {
 					mockery.checking(new Expectations(){{
-						allowing(node1).childIterator(); will(returnIteratorWithRemoval(getNode2()));
-						allowing(node1).levelOrderIterator(); will(returnIteratorWithRemoval(node1, getNode2(), getEdge3()));
-						allowing(node1).hasEdgeWith(with(isOneOfWithRemoval(getNode6()))); will(returnValue(true));
-						allowing(node1).hasEdgeWith(with(not(isOneOfWithRemoval(getNode6())))); will(returnValue(false));
-						allowing(node1).hasOutEdgeTo(with(isOneOfWithRemoval(getNode6()))); will(returnValue(true));
-						allowing(node1).hasOutEdgeTo(with(not(isOneOfWithRemoval(getNode6())))); will(returnValue(false));
+						allowing(node1).childIterator(); will(returnIterator());
+						allowing(node1).levelOrderIterator(); will(returnIterator(node1));
+						allowing(node1).hasEdgeWith(with(isOneOf(getNode6()))); will(returnValue(true));
+						allowing(node1).hasEdgeWith(with(not(isOneOf(getNode6())))); will(returnValue(false));
+						allowing(node1).hasOutEdgeTo(with(isOneOf(getNode6()))); will(returnValue(true));
+						allowing(node1).hasOutEdgeTo(with(not(isOneOf(getNode6())))); will(returnValue(false));
 						allowing(node1).hasInEdgeFrom(with(any(ICompoundNode.class))); will(returnValue(false));
-						allowing(node1).getEdgesWith(with(isOneOfWithRemoval(getNode6()))); will(returnIteratorWithRemoval(getEdge1()));
-						allowing(node1).getEdgesWith(with(not(isOneOfWithRemoval(getNode6())))); will(throwException(new PreConditionException("mock exception")));
-						allowing(node1).getOutEdgesTo(with(isOneOfWithRemoval(getNode6()))); will(returnIteratorWithRemoval(getEdge1()));
-						allowing(node1).getOutEdgesTo(with(not(isOneOfWithRemoval(getNode6())))); will(throwException(new PreConditionException("mock exception")));
+						allowing(node1).getEdgesWith(with(isOneOf(getNode6()))); will(returnIterator(getEdge1()));
+						allowing(node1).getEdgesWith(with(not(isOneOf(getNode6())))); will(throwException(new PreConditionException("mock exception")));
+						allowing(node1).getOutEdgesTo(with(isOneOf(getNode6()))); will(returnIterator(getEdge1()));
+						allowing(node1).getOutEdgesTo(with(not(isOneOf(getNode6())))); will(throwException(new PreConditionException("mock exception")));
 						allowing(node1).getInEdgesFrom(with(any(ICompoundNode.class))); will(throwException(new PreConditionException("mock exception")));
-						allowing(node1).connectedNodeIterator(); will(returnIteratorWithRemoval(getNode6()));
-						allowing(node1).edgeIterator(); will(returnIteratorWithRemoval(getEdge1()));
+						allowing(node1).connectedNodeIterator(); will(returnIterator(getNode6()));
+						allowing(node1).edgeIterator(); will(returnIterator(getEdge1()));
 						allowing(node1).unfilteredEdgeIterator(); will(returnIterator(getEdge1()));
-						allowing(node1).getInEdgeIterator(); will(returnIteratorWithRemoval(new ICompoundEdge[0]));
-						allowing(node1).getOutEdgeIterator(); will(returnIteratorWithRemoval(getEdge1()));
-						allowing(node1).isChild(with(isOneOfWithRemoval(getNode2()))); will(returnValue(true));
-						allowing(node1).isChild(with(not(isOneOfWithRemoval(getNode2())))); will(returnValue(false));
-						allowing(node1).isDescendent(with(isOneOfWithRemoval(getNode2(), getEdge3()))); will(returnValue(true));
-						allowing(node1).isDescendent(with(not(isOneOfWithRemoval(getNode2(), getEdge3())))); will(returnValue(false));
-						allowing(node1).compareTo(with(isOneOfWithRemoval(getNode2(), getNode3(), getNode4(), getNode5(), getNode6(), getEdge1(), getEdge2(), getEdge3(), getEdge4()))); will(returnValue(-1));
+						allowing(node1).getInEdgeIterator(); will(returnIterator(new ICompoundEdge[0]));
+						allowing(node1).getOutEdgeIterator(); will(returnIterator(getEdge1()));
+						allowing(node1).isChild(with(any(ICompoundGraphElement.class))); will(returnValue(false));
+						allowing(node1).isDescendent(with(any(ICompoundGraphElement.class))); will(returnValue(false));
+						allowing(node1).compareTo(with(isOneOf(getNode2(), getNode3(), getNode4(), getNode5(), getNode6(), getEdge1(), getEdge2(), getEdge3(), getEdge4()))); will(returnValue(-1));
 						allowing(node1).compareTo(with(node1)); will(returnValue(0));
 						allowing(node1).compareTo(with(getRootNode())); will(returnValue(1));
 					}});
@@ -199,7 +187,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 				@Override
 				public boolean buildChildGraph(final IChildCompoundGraph node2ChildGraph) {
 					mockery.checking(new Expectations(){{
-						allowing(node2ChildGraph).elementIterator(); will(returnIteratorWithRemoval(getEdge3()));
+						allowing(node2ChildGraph).elementIterator(); will(returnIterator());
 						allowing(node2ChildGraph).unfilteredElementIterator(); will(returnIterator(getEdge3()));
 					}});
 					return true;
@@ -208,27 +196,22 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 				@Override
 				public boolean buildNode(final ICompoundNode node2) {
 					mockery.checking(new Expectations(){{
-						allowing(node2).childIterator(); will(returnIteratorWithRemoval(getEdge3()));
-						allowing(node2).isChild(with(isOneOfWithRemoval(getEdge3()))); will(returnValue(true));
-						allowing(node2).isChild(with(not(isOneOfWithRemoval(getEdge3())))); will(returnValue(false));
-						allowing(node2).isDescendent(with(isOneOfWithRemoval(getEdge3()))); will(returnValue(true));
-						allowing(node2).isDescendent(with(not(isOneOfWithRemoval(getEdge3())))); will(returnValue(false));
-						allowing(node2).levelOrderIterator(); will(returnIteratorWithRemoval(node2, getEdge3()));
-						allowing(node2).getEdgesWith(with(getNode3())); will(returnIteratorWithRemoval(getEdge4()));
-						allowing(node2).getEdgesWith(with(node2)); will(returnIteratorWithRemoval(getEdge3(), getEdge3()));
-						allowing(node2).getOutEdgesTo(with(getNode3())); will(returnIteratorWithRemoval(getEdge4()));
-						allowing(node2).getOutEdgesTo(with(node2)); will(returnIteratorWithRemoval(getEdge3()));
-						allowing(node2).hasOutEdgeTo(with(isOneOfWithRemoval(getNode3(), getNode2()))); will(returnValue(true));
-						allowing(node2).hasOutEdgeTo(with(not(isOneOfWithRemoval(getNode3(), getNode2())))); will(returnValue(false));
-						allowing(node2).getInEdgesFrom(with(node2)); will(returnIteratorWithRemoval(getEdge3()));
-						allowing(node2).hasInEdgeFrom(with(isOneOfWithRemoval(getNode2()))); will(returnValue(true));
-						allowing(node2).hasInEdgeFrom(with(not(isOneOfWithRemoval(getNode2())))); will(returnValue(false));
-						allowing(node2).edgeIterator(); will(returnIteratorWithRemoval(getEdge4(), getEdge3(), getEdge3()));
+						allowing(node2).childIterator(); will(returnIterator());
+						allowing(node2).isChild(with(any(ICompoundGraphElement.class))); will(returnValue(false));
+						allowing(node2).isDescendent(with(any(ICompoundGraphElement.class))); will(returnValue(false));
+						allowing(node2).levelOrderIterator(); will(returnIterator());
+						allowing(node2).getEdgesWith(with(getNode3())); will(returnIterator());
+						allowing(node2).getEdgesWith(with(node2)); will(returnIterator());
+						allowing(node2).getOutEdgesTo(with(getNode3())); will(returnIterator());
+						allowing(node2).getOutEdgesTo(with(node2)); will(returnIterator());
+						allowing(node2).hasOutEdgeTo(with(any(ICompoundNode.class))); will(returnValue(false));
+						allowing(node2).getInEdgesFrom(with(node2)); will(returnIterator());
+						allowing(node2).hasInEdgeFrom(with(any(ICompoundNode.class))); will(returnValue(false));
+						allowing(node2).edgeIterator(); will(returnIterator());
 						allowing(node2).unfilteredEdgeIterator(); will(returnIterator(getEdge4(), getEdge3(), getEdge3()));
-						allowing(node2).compareTo(with(isOneOfWithRemoval(getRootNode(), getNode1()))); will(returnValue(1));
-						allowing(node2).compareTo(with(isOneOfWithRemoval(getNode3(), getNode4(), getNode5(), getNode6(), getEdge1(), getEdge2(), getEdge3(), getEdge4()))); will(returnValue(-1));
+						allowing(node2).compareTo(with(isOneOf(getRootNode(), getNode1()))); will(returnValue(1));
+						allowing(node2).compareTo(with(isOneOf(getNode3(), getNode4(), getNode5(), getNode6(), getEdge1(), getEdge2(), getEdge3(), getEdge4()))); will(returnValue(-1));
 						allowing(node2).compareTo(with(node2)); will(returnValue(0));
-						allowing(node2).connectedNodeIterator(); will(returnIteratorWithRemoval(getNode3(), node2, node2));
 					}});
 					return true;
 				}
@@ -246,9 +229,9 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node2ChildGraph).getRoot(); will(returnValue(node2));
 						allowing(node2ChildGraph).getSuperGraph(); will(returnValue(getGraph()));
 						allowing(node2ChildGraph).numNodes(); will(returnValue(0));
-						allowing(node2ChildGraph).numEdges(); will(returnValue(1));
-						allowing(node2ChildGraph).numElements(); will(returnValue(1));
-						allowing(node2ChildGraph).numEdges(); will(returnValue(1));
+						allowing(node2ChildGraph).numEdges(); will(returnValue(0));
+						allowing(node2ChildGraph).numElements(); will(returnValue(0));
+						allowing(node2ChildGraph).numEdges(); will(returnValue(0));
 						allowing(node2ChildGraph).containsEdge(with(any(Integer.class))); will(returnValue(false));
 						allowing(node2ChildGraph).containsEdge(with(any(ICompoundEdge.class))); will(returnValue(false));
 					}});
@@ -265,14 +248,15 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node2).getIndex(); will(returnValue(NODE2_IDX));
 						allowing(node2).getParent(); will(returnValue(getNode1()));
 						allowing(node2).getRoot(); will(returnValue(getRootNode()));
-						allowing(node2).getDegree(); will(returnValue(3));
-						allowing(node2).getInDegree(); will(returnValue(1));
-						allowing(node2).getOutDegree(); will(returnValue(2));
+						allowing(node2).getDegree(); will(returnValue(0));
+						allowing(node2).getInDegree(); will(returnValue(0));
+						allowing(node2).getOutDegree(); will(returnValue(0));
 						allowing(node2).isRemoved();  will(getRemovalState(NODE2_ID));;
 						allowing(node2).getGraph(); will(returnValue(getGraph()));
 						allowing(node2).isEdge(); will(returnValue(false));
 						allowing(node2).isNode(); will(returnValue(true));
 						allowing(node2).getAttribute(); will(returnValue(elementAttribute));
+						allowing(node2).connectedNodeIterator(); will(returnIterator());
 					}});
 					elementAttribute.setCurrentElement(node2);
 					return node2;
@@ -305,29 +289,25 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 					mockery.checking(new Expectations(){{
 					}});
 					mockery.checking(new Expectations(){{
-						allowing(node3).getOutEdgeIterator(); will(returnIteratorWithRemoval(getEdge2()));
-						allowing(node3).levelOrderIterator(); will(returnIteratorWithRemoval(node3));
-						allowing(node3).getInEdgeIterator(); will(returnIteratorWithRemoval(getEdge4()));
-						allowing(node3).getOutEdgesTo(with(isOneOfWithRemoval(getNode5()))); will(returnIteratorWithRemoval(getEdge2()));
-						allowing(node3).getOutEdgesTo(with(not(isOneOfWithRemoval(getNode5())))); will(returnIteratorWithRemoval());
-						allowing(node3).getInEdgesFrom(with(isOneOfWithRemoval(getNode2()))); will(returnIteratorWithRemoval(getEdge4()));
-						allowing(node3).connectedNodeIterator(); will(returnIteratorWithRemoval(getNode2(), getNode5()));
-						allowing(node3).getEdgesWith(with(getNode2())); will(returnIteratorWithRemoval(getEdge4()));
-						allowing(node3).getEdgesWith(with(getNode5())); will(returnIteratorWithRemoval(getEdge2()));
-						allowing(node3).edgeIterator(); will(returnIteratorWithRemoval(getEdge2(), getEdge4()));
+						allowing(node3).getOutEdgeIterator(); will(returnIterator());
+						allowing(node3).levelOrderIterator(); will(returnIterator(node3));
+						allowing(node3).getInEdgeIterator(); will(returnIterator());
+						allowing(node3).getOutEdgesTo(with(isOneOf(getNode5()))); will(returnIterator());
+						allowing(node3).getOutEdgesTo(with(not(isOneOf(getNode5())))); will(returnIterator());
+						allowing(node3).getInEdgesFrom(with(any(ICompoundNode.class))); will(returnIterator());
+						allowing(node3).connectedNodeIterator(); will(returnIterator());
+						allowing(node3).getEdgesWith(with(getNode2())); will(returnIterator());
+						allowing(node3).getEdgesWith(with(getNode5())); will(returnIterator());
+						allowing(node3).edgeIterator(); will(returnIterator());
 						allowing(node3).unfilteredEdgeIterator(); will(returnIterator(getEdge2(), getEdge4()));
-						allowing(node3).hasEdgeWith(with(isOneOfWithRemoval(getNode2(), getNode5()))); will(returnValue(true));
-						allowing(node3).hasEdgeWith(with(not(isOneOfWithRemoval(getNode2(), getNode5())))); will(returnValue(false));
-						allowing(node3).hasOutEdgeTo(with(isOneOfWithRemoval(getNode5()))); will(returnValue(true));
-						allowing(node3).hasOutEdgeTo(with(not(isOneOfWithRemoval(getNode5())))); will(returnValue(false));
-						allowing(node3).hasInEdgeFrom(with(isOneOfWithRemoval(getNode2()))); will(returnValue(true));
-						allowing(node3).hasInEdgeFrom(with(not(isOneOfWithRemoval(getNode2())))); will(returnValue(false));
+						allowing(node3).hasEdgeWith(with(any(ICompoundNode.class))); will(returnValue(false));
+						allowing(node3).hasOutEdgeTo(with(any(ICompoundNode.class))); will(returnValue(false));
+						allowing(node3).hasInEdgeFrom(with(any(ICompoundNode.class))); will(returnValue(false));
 						allowing(node3).isChild(with(any(ICompoundGraphElement.class))); will(returnValue(false));
 						allowing(node3).isDescendent(with(any(ICompoundGraphElement.class))); will(returnValue(false));
-						allowing(node3).compareTo(with(isOneOfWithRemoval(getRootNode(), getNode1(), getNode2()))); will(returnValue(1));
-						allowing(node3).compareTo(with(isOneOfWithRemoval(getNode4(), getNode5(), getNode6(), getEdge1(), getEdge2(), getEdge3(), getEdge4()))); will(returnValue(-1));
+						allowing(node3).compareTo(with(isOneOf(getRootNode(), getNode1(), getNode2()))); will(returnValue(1));
+						allowing(node3).compareTo(with(isOneOf(getNode4(), getNode5(), getNode6(), getEdge1(), getEdge2(), getEdge3(), getEdge4()))); will(returnValue(-1));
 						allowing(node3).compareTo(with(node3)); will(returnValue(0));
-						allowing(node3).connectedNodeIterator(); will(returnIteratorWithRemoval(getNode2(), getNode5()));
 					}});
 					return true;
 				}
@@ -352,7 +332,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node3ChildGraph).containsNode(with(any(ICompoundNode.class))); will(returnValue(false));
 						allowing(node3ChildGraph).containsEdge(with(any(Integer.class))); will(returnValue(false));
 						allowing(node3ChildGraph).containsEdge(with(any(ICompoundEdge.class))); will(returnValue(false));
-						allowing(node3ChildGraph).elementIterator(); will(returnIteratorWithRemoval(new ICompoundGraphElement[0]));
+						allowing(node3ChildGraph).elementIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 						allowing(node3ChildGraph).unfilteredElementIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 					}});
 					return node3ChildGraph;
@@ -368,17 +348,18 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node3).getIndex(); will(returnValue(NODE3_IDX));
 						allowing(node3).getParent(); will(returnValue(getEdge1()));
 						allowing(node3).getRoot(); will(returnValue(getRootNode()));
-						allowing(node3).childIterator(); will(returnIteratorWithRemoval(new ICompoundGraphElement[0]));
+						allowing(node3).childIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 						allowing(node3).isRemoved();  will(getRemovalState(NODE3_ID));;
-						allowing(node3).getDegree(); will(returnValue(2));
-						allowing(node3).getInDegree(); will(returnValue(1));
-						allowing(node3).getOutDegree(); will(returnValue(1));
+						allowing(node3).getDegree(); will(returnValue(0));
+						allowing(node3).getInDegree(); will(returnValue(0));
+						allowing(node3).getOutDegree(); will(returnValue(0));
 						allowing(node3).getAttribute(); will(returnValue(elementAttribute));
 						allowing(node3).isEdge(); will(returnValue(false));
 						allowing(node3).isNode(); will(returnValue(true));
+						allowing(node3).connectedNodeIterator(); will(returnIterator());
 //						allowing(node3).markRemoved(with(isOneOf(true, false)));
-						allowing(node3).isAncestor(with(isOneOfWithRemoval(getEdge1(), getRootNode()))); will(returnValue(true));
-						allowing(node3).isAncestor(with(not(isOneOfWithRemoval(getEdge1(), getRootNode())))); will(returnValue(false));
+						allowing(node3).isAncestor(with(isOneOf(getEdge1(), getRootNode()))); will(returnValue(true));
+						allowing(node3).isAncestor(with(not(isOneOf(getEdge1(), getRootNode())))); will(returnValue(false));
 					}});
 					elementAttribute.setCurrentElement(node3);
 					return node3;
@@ -410,8 +391,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 				@Override
 				public boolean buildNode(final ICompoundNode node4) {
 					mockery.checking(new Expectations(){{
-						allowing(node4).compareTo(with(isOneOfWithRemoval(getRootNode(), getNode1(), getNode2(), getNode3()))); will(returnValue(1));
-						allowing(node4).compareTo(with(isOneOfWithRemoval(getNode5(), getNode6(), getEdge1(), getEdge2(), getEdge3(), getEdge4()))); will(returnValue(-1));
+						allowing(node4).compareTo(with(isOneOf(getRootNode(), getNode1(), getNode2(), getNode3()))); will(returnValue(1));
+						allowing(node4).compareTo(with(isOneOf(getNode5(), getNode6(), getEdge1(), getEdge2(), getEdge3(), getEdge4()))); will(returnValue(-1));
 						allowing(node4).compareTo(with(node4)); will(returnValue(0));
 					}});
 					return true;
@@ -435,7 +416,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node4ChildGraph).numElements(); will(returnValue(0));
 						allowing(node4ChildGraph).containsEdge(with(any(Integer.class))); will(returnValue(false));
 						allowing(node4ChildGraph).containsEdge(with(any(ICompoundEdge.class))); will(returnValue(false));
-						allowing(node4ChildGraph).elementIterator(); will(returnIteratorWithRemoval(new ICompoundGraphElement[0]));
+						allowing(node4ChildGraph).elementIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 						allowing(node4ChildGraph).unfilteredElementIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 					}});
 					return node4ChildGraph;
@@ -450,18 +431,18 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node4).getIndex(); will(returnValue(NODE4_IDX));
 						allowing(node4).getParent(); will(returnValue(getEdge2()));
 						allowing(node4).getRoot(); will(returnValue(getRootNode()));
-						allowing(node4).childIterator(); will(returnIteratorWithRemoval(new ICompoundGraphElement[0]));
-						allowing(node4).levelOrderIterator(); will(returnIteratorWithRemoval(node4));
+						allowing(node4).childIterator(); will(returnIterator(new ICompoundGraphElement[0]));
+						allowing(node4).levelOrderIterator(); will(returnIterator(node4));
 						allowing(node4).isRemoved();  will(getRemovalState(NODE4_ID));;
 						allowing(node4).getGraph(); will(returnValue(getGraph()));
 						allowing(node4).isEdge(); will(returnValue(false));
 						allowing(node4).isNode(); will(returnValue(true));
 						allowing(node4).hasEdgeWith(with(any(ICompoundNode.class))); will(returnValue(false));
-						allowing(node4).connectedNodeIterator(); will(returnIteratorWithRemoval(new ICompoundNode[0]));
-						allowing(node4).edgeIterator(); will(returnIteratorWithRemoval());
+						allowing(node4).connectedNodeIterator(); will(returnIterator(new ICompoundNode[0]));
+						allowing(node4).edgeIterator(); will(returnIterator());
 						allowing(node4).unfilteredEdgeIterator(); will(returnIterator());
-						allowing(node4).getInEdgeIterator(); will(returnIteratorWithRemoval(new ICompoundEdge[0]));
-						allowing(node4).getOutEdgeIterator(); will(returnIteratorWithRemoval(new ICompoundEdge[0]));
+						allowing(node4).getInEdgeIterator(); will(returnIterator(new ICompoundEdge[0]));
+						allowing(node4).getOutEdgeIterator(); will(returnIterator(new ICompoundEdge[0]));
 						allowing(node4).getAttribute(); will(returnValue(elementAttribute));
 					}});
 					elementAttribute.setCurrentElement(node4);
@@ -494,21 +475,19 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 				@Override
 				public boolean buildNode(final ICompoundNode node5) {
 					mockery.checking(new Expectations(){{
-						allowing(node5).compareTo(with(isOneOfWithRemoval(getRootNode(), getNode1(), getNode2(), getNode3(), getNode4()))); will(returnValue(1));
-						allowing(node5).compareTo(with(isOneOfWithRemoval(getNode6(), getEdge1(), getEdge2(), getEdge3(), getEdge4()))); will(returnValue(-1));
-						allowing(node5).hasEdgeWith(getNode3()); will(returnValue(true));
-						allowing(node5).hasEdgeWith(with(not(getNode3()))); will(returnValue(false));
-						allowing(node5).getEdgesWith(getNode3()); will(returnIteratorWithRemoval(getEdge2()));
-						allowing(node5).getEdgesWith(with(not(isOneOfWithRemoval(getNode3())))); will(returnIteratorWithRemoval());
-						allowing(node5).getInEdgesFrom(with(isOneOfWithRemoval(getNode3()))); will(returnIteratorWithRemoval( getEdge2() ));
-						allowing(node5).getInEdgesFrom(with(not(isOneOfWithRemoval(getNode3())))); will(returnIteratorWithRemoval());
-						allowing(node5).connectedNodeIterator(); will(returnIteratorWithRemoval(getNode3()));
-						allowing(node5).edgeIterator(); will(returnIteratorWithRemoval(getEdge2()));
+						allowing(node5).compareTo(with(isOneOf(getRootNode(), getNode1(), getNode2(), getNode3(), getNode4()))); will(returnValue(1));
+						allowing(node5).compareTo(with(isOneOf(getNode6(), getEdge1(), getEdge2(), getEdge3(), getEdge4()))); will(returnValue(-1));
+						allowing(node5).hasEdgeWith(with(any(ICompoundNode.class))); will(returnValue(false));
+						allowing(node5).getEdgesWith(getNode3()); will(returnIterator());
+						allowing(node5).getEdgesWith(with(not(isOneOf(getNode3())))); will(returnIterator());
+						allowing(node5).getInEdgesFrom(with(isOneOf(getNode3()))); will(returnIterator());
+						allowing(node5).getInEdgesFrom(with(not(isOneOf(getNode3())))); will(returnIterator());
+						allowing(node5).connectedNodeIterator(); will(returnIterator());
+						allowing(node5).edgeIterator(); will(returnIterator());
 						allowing(node5).unfilteredEdgeIterator(); will(returnIterator(getEdge2()));
 						allowing(node5).isChild(with(any(ICompoundGraphElement.class))); will(returnValue(false));
 						allowing(node5).isDescendent(with(any(ICompoundGraphElement.class))); will(returnValue(false));
-						allowing(node5).childIterator(); with(returnIteratorWithRemoval());
-						allowing(node5).levelOrderIterator(); with(returnIterator(node5));
+						allowing(node5).childIterator(); with(returnIterator());
 					}});
 					return true;
 				}
@@ -531,7 +510,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node5ChildGraph).numElements(); will(returnValue(0));
 						allowing(node5ChildGraph).containsDirectedEdge(with(any(ICompoundNode.class)), with(any(ICompoundNode.class))); will(returnValue(false));
 						allowing(node5ChildGraph).containsConnection(with(any(ICompoundNode.class)), with(any(ICompoundNode.class))); will(returnValue(false));
-						allowing(node5ChildGraph).elementIterator(); will(returnIteratorWithRemoval(new ICompoundGraphElement[0]));
+						allowing(node5ChildGraph).elementIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 						allowing(node5ChildGraph).unfilteredElementIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 					}});
 					return node5ChildGraph;
@@ -546,18 +525,18 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node5).getIndex(); will(returnValue(NODE5_IDX));
 						allowing(node5).getParent(); will(returnValue(getEdge1()));
 						allowing(node5).getRoot(); will(returnValue(getRootNode()));
-						allowing(node5).childIterator(); will(returnIteratorWithRemoval(new ICompoundGraphElement[0]));
+						allowing(node5).childIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 						allowing(node5).isRemoved();  will(getRemovalState(NODE5_ID));;
-						allowing(node5).isAncestor(with(isOneOfWithRemoval(getEdge1(), getRootNode()))); will(returnValue(true));
-						allowing(node5).isAncestor(with(not(isOneOfWithRemoval(getEdge1(), getRootNode())))); will(returnValue(false));
+						allowing(node5).isAncestor(with(isOneOf(getEdge1(), getRootNode()))); will(returnValue(true));
+						allowing(node5).isAncestor(with(not(isOneOf(getEdge1(), getRootNode())))); will(returnValue(false));
 						allowing(node5).getGraph(); will(returnValue(getGraph()));
 						allowing(node5).isEdge(); will(returnValue(false));
 						allowing(node5).isNode(); will(returnValue(true));
 						allowing(node5).compareTo(node5); will(returnValue(0));
-						allowing(node5).compareTo(with(isOneOfWithRemoval(getRootNode(), getNode1(), getNode2(), getNode3()))); will(returnValue(1));
-						allowing(node5).compareTo(with(isOneOfWithRemoval(getEdge1(), getEdge3()))); will(returnValue(-1));
+						allowing(node5).compareTo(with(isOneOf(getRootNode(), getNode1(), getNode2(), getNode3()))); will(returnValue(1));
+						allowing(node5).compareTo(with(isOneOf(getEdge1(), getEdge3()))); will(returnValue(-1));
 						allowing(node5).hasOutEdgeTo(with(any(ICompoundNode.class))); will(returnValue(false));
-						allowing(node5).getOutEdgesTo(with(any(ICompoundNode.class))); will(returnIteratorWithRemoval());
+						allowing(node5).getOutEdgesTo(with(any(ICompoundNode.class))); will(returnIterator());
 						allowing(node5).getAttribute(); will(returnValue(elementAttribute));
 					}});
 					elementAttribute.setCurrentElement(node5);
@@ -590,19 +569,19 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 				@Override
 				public boolean buildNode(final ICompoundNode node6) {
 					mockery.checking(new Expectations(){{
-						allowing(node6).compareTo(with(isOneOfWithRemoval(getNode3(), getNode4(), getNode5()))); will(returnValue(1));
-						allowing(node6).compareTo(with(isOneOfWithRemoval(getEdge1(), getEdge2(), getEdge4()))); will(returnValue(-1));
+						allowing(node6).compareTo(with(isOneOf(getNode3(), getNode4(), getNode5()))); will(returnValue(1));
+						allowing(node6).compareTo(with(isOneOf(getEdge1(), getEdge2(), getEdge4()))); will(returnValue(-1));
 						allowing(node6).hasEdgeWith(getNode1()); will(returnValue(true));
 						allowing(node6).hasEdgeWith(with(not(getNode1()))); will(returnValue(false));
-						allowing(node6).getEdgesWith(getNode1()); will(returnIteratorWithRemoval(getEdge1()));
-						allowing(node6).getEdgesWith(with(not(getNode1()))); will(returnIteratorWithRemoval(new ICompoundEdge[0]));
-						allowing(node6).getInEdgesFrom(with(isOneOfWithRemoval(getNode1()))); will(returnIteratorWithRemoval( getEdge1() ));
+						allowing(node6).getEdgesWith(getNode1()); will(returnIterator(getEdge1()));
+						allowing(node6).getEdgesWith(with(not(getNode1()))); will(returnIterator(new ICompoundEdge[0]));
+						allowing(node6).getInEdgesFrom(with(isOneOf(getNode1()))); will(returnIterator( getEdge1() ));
 						allowing(node6).hasOutEdgeTo(with(any(ICompoundNode.class))); will(returnValue(false));
-						allowing(node6).connectedNodeIterator(); will(returnIteratorWithRemoval(getNode1()));
-						allowing(node6).edgeIterator(); will(returnIteratorWithRemoval(getEdge1()));
+						allowing(node6).connectedNodeIterator(); will(returnIterator(getNode1()));
+						allowing(node6).edgeIterator(); will(returnIterator(getEdge1()));
 						allowing(node6).unfilteredEdgeIterator(); will(returnIterator(getEdge1()));
-						allowing(node6).levelOrderIterator(); will(returnIteratorWithRemoval(node6));
-						allowing(node6).childIterator(); with(returnIteratorWithRemoval());
+						allowing(node6).levelOrderIterator(); will(returnIterator(node6));
+						allowing(node6).childIterator(); with(returnIterator());
 					}});
 					return true;
 				}
@@ -625,7 +604,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node6ChildGraph).numElements(); will(returnValue(0));
 						allowing(node6ChildGraph).containsDirectedEdge(with(any(ICompoundNode.class)), with(any(ICompoundNode.class))); will(returnValue(false));
 						allowing(node6ChildGraph).containsConnection(with(any(ICompoundNode.class)), with(any(ICompoundNode.class))); will(returnValue(false));
-						allowing(node6ChildGraph).elementIterator(); will(returnIteratorWithRemoval(new ICompoundGraphElement[0]));
+						allowing(node6ChildGraph).elementIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 						allowing(node6ChildGraph).unfilteredElementIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 					}});
 					return node6ChildGraph;
@@ -640,7 +619,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node6).getIndex(); will(returnValue(NODE6_IDX));
 						allowing(node6).getParent(); will(returnValue(getRootNode()));
 						allowing(node6).getRoot(); will(returnValue(getRootNode()));
-						allowing(node6).childIterator(); will(returnIteratorWithRemoval(new ICompoundGraphElement[0]));
+						allowing(node6).childIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 						allowing(node6).isRemoved();  will(getRemovalState(NODE6_ID));;
 //						allowing(node6).addInEdge(with(any(ICompoundEdge.class)));
 //						allowing(node6).addOutEdge(with(any(ICompoundEdge.class)));
@@ -648,8 +627,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(node6).isEdge(); will(returnValue(false));
 						allowing(node6).isNode(); will(returnValue(true));
 						allowing(node6).compareTo(node6); will(returnValue(0));
-						allowing(node6).compareTo(with(isOneOfWithRemoval(getRootNode(), getNode1(), getNode2()))); will(returnValue(1));
-						allowing(node6).compareTo(with(isOneOfWithRemoval(getEdge3()))); will(returnValue(-1));
+						allowing(node6).compareTo(with(isOneOf(getRootNode(), getNode1(), getNode2()))); will(returnValue(1));
+						allowing(node6).compareTo(with(isOneOf(getEdge3()))); will(returnValue(-1));
 						allowing(node6).getAttribute(); will(returnValue(elementAttribute));
 					}});
 					elementAttribute.setCurrentElement(node6);
@@ -690,22 +669,17 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 				@Override
 				public boolean buildChildGraph(final IChildCompoundGraph edge1ChildGraph) {
 					mockery.checking(new Expectations(){{
-						allowing(edge1ChildGraph).containsNode(with(isOneOfWithRemoval(getNode3(), getNode5()))); will(returnValue(true));
-						allowing(edge1ChildGraph).containsNode(with(not(isOneOfWithRemoval(getNode3(), getNode5())))); will(returnValue(false));
+						allowing(edge1ChildGraph).containsNode(with(isOneOf(getNode3(), getNode5()))); will(returnValue(true));
+						allowing(edge1ChildGraph).containsNode(with(not(isOneOf(getNode3(), getNode5())))); will(returnValue(false));
 						allowing(edge1ChildGraph).containsEdge(getEdge2()); will(returnValue(true));
 						allowing(edge1ChildGraph).containsEdge(with(not(getEdge2()))); will(returnValue(false));
-						allowing(edge1ChildGraph).containsEdge(with(EDGE2_IDX)); will(returnValue(true));
-						allowing(edge1ChildGraph).containsEdge(with(not(EDGE2_IDX))); will(returnValue(false));
+						allowing(edge1ChildGraph).containsEdge(with(any(Integer.class))); will(returnValue(false));
 						allowing(edge1ChildGraph).containsNode(with(isOneOf(NODE3_IDX, NODE5_IDX))); will(returnValue(true));
 						allowing(edge1ChildGraph).containsNode(with(not(isOneOf(NODE3_IDX, NODE5_IDX)))); will(returnValue(false));
-						allowing(edge1ChildGraph).containsDirectedEdge(with(getNode3()), with(getNode5())); will(returnValue(true));
-						allowing(edge1ChildGraph).containsDirectedEdge(with(not(getNode3())), with(not(getNode5()))); will(returnValue(false));
-						allowing(edge1ChildGraph).containsConnection(with(getNode3()), with(getNode5())); will(returnValue(true));
-						allowing(edge1ChildGraph).containsConnection(with(getNode5()), with(getNode3())); will(returnValue(true));
-						allowing(edge1ChildGraph).containsConnection(with(not(getNode3())), with(not(getNode5()))); will(returnValue(false));
-						allowing(edge1ChildGraph).elementIterator(); will(returnIteratorWithRemoval(getNode3(), getEdge2(), getNode5()));
-//						allowing(edge1ChildGraph).addEdge(with(any(ICompoundEdge.class)));
-						allowing(edge1ChildGraph).nodeIterator(); will(returnIteratorWithRemoval(getNode3(), getNode5()));
+						allowing(edge1ChildGraph).containsDirectedEdge(with(any(ICompoundNode.class)), with(any(ICompoundNode.class))); will(returnValue(false));
+						allowing(edge1ChildGraph).containsConnection(with(any(ICompoundNode.class)), with(any(ICompoundNode.class))); will(returnValue(false));
+						allowing(edge1ChildGraph).elementIterator(); will(returnIterator(getNode3(), getNode5()));
+						allowing(edge1ChildGraph).nodeIterator(); will(returnIterator(getNode3(), getNode5()));
 						allowing(edge1ChildGraph).unfilteredElementIterator(); will(returnIterator(getNode3(), getEdge2(), getNode5()));
 					}});
 					return true;
@@ -713,14 +687,11 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 				@Override
 				public boolean buildEdge(final ICompoundEdge edge1) {
-					final CompoundNodePair edge1Ends = new CompoundNodePair(getNode1(), getNode6());
 					mockery.checking(new Expectations(){{
-						allowing(edge1).compareTo(with(isOneOfWithRemoval(getRootNode(), getNode1(), getNode2(), getNode3(), getNode4(), getNode5()))); will(returnValue(1));
-						allowing(edge1).compareTo(with(isOneOfWithRemoval(getEdge2(), getEdge3(), getEdge4()))); will(returnValue(-1));
-						allowing(edge1).childIterator(); will(returnIteratorWithRemoval(getNode3(), getEdge2(), getNode5()));
-						allowing(edge1).levelOrderIterator(); will(returnIteratorWithRemoval(edge1, getNode3(), getEdge2(), getNode5(), getNode4()));
-						allowing(edge1).hasDirectedEnds(with(isOneOf(edge1Ends))); will(returnValue(true)); 
-						allowing(edge1).hasDirectedEnds(with(not(isOneOf(edge1Ends)))); will(returnValue(false));
+						allowing(edge1).compareTo(with(isOneOf(getRootNode(), getNode1(), getNode2(), getNode3(), getNode4(), getNode5()))); will(returnValue(1));
+						allowing(edge1).compareTo(with(isOneOf(getEdge2(), getEdge3(), getEdge4()))); will(returnValue(-1));
+						allowing(edge1).childIterator(); will(returnIterator(getNode3(), getNode5()));
+						allowing(edge1).levelOrderIterator(); will(returnIterator(edge1, getNode3(), getNode5()));
 					}});
 					return true;
 				}
@@ -744,8 +715,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(edge1ChildGraph).getRoot(); will(returnValue(edge1));
 						allowing(edge1ChildGraph).getSuperGraph(); will(returnValue(getGraph()));
 						allowing(edge1ChildGraph).numNodes(); will(returnValue(2));
-						allowing(edge1ChildGraph).numEdges(); will(returnValue(1));
-						allowing(edge1ChildGraph).numElements(); will(returnValue(3));
+						allowing(edge1ChildGraph).numEdges(); will(returnValue(0));
+						allowing(edge1ChildGraph).numElements(); will(returnValue(2));
 					}});
 					return edge1ChildGraph;
 				}
@@ -797,28 +768,23 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 				@Override
 				public boolean buildChildGraph(final IChildCompoundGraph edge2ChildGraph) {
 					mockery.checking(new Expectations(){{
-						allowing(edge2ChildGraph).elementIterator(); will(returnIteratorWithRemoval(getNode4()));
+						allowing(edge2ChildGraph).elementIterator(); will(returnIterator());
 						allowing(edge2ChildGraph).unfilteredElementIterator(); will(returnIterator(getNode4()));
-						allowing(edge2ChildGraph).nodeIterator(); will(returnIteratorWithRemoval(getNode4()));
+						allowing(edge2ChildGraph).nodeIterator(); will(returnIterator());
 					}});
 					return true;
 				}
 
 				@Override
 				public boolean buildEdge(final ICompoundEdge edge2) {
-					final CompoundNodePair edge2Ends = new CompoundNodePair(getNode3(), getNode5());
 					mockery.checking(new Expectations(){{
-						allowing(edge2).childIterator(); will(returnIteratorWithRemoval(getNode4()));
-						allowing(edge2).levelOrderIterator(); will(returnIteratorWithRemoval(edge2, getNode4()));
-						allowing(edge2).compareTo(with(isOneOfWithRemoval(getRootNode(), getNode1(), getNode2(), getNode3(), getNode4(), getNode5(), getEdge1()))); will(returnValue(1));
+						allowing(edge2).childIterator(); will(returnIterator());
+						allowing(edge2).levelOrderIterator(); will(returnIterator());
+						allowing(edge2).compareTo(with(isOneOf(getRootNode(), getNode1(), getNode2(), getNode3(), getNode4(), getNode5(), getEdge1()))); will(returnValue(1));
 						allowing(edge2).compareTo(edge2); will(returnValue(0));
-						allowing(edge2).compareTo(with(isOneOfWithRemoval(getEdge3(), getEdge4()))); will(returnValue(-1));
-						allowing(edge2).isChild(with(isOneOfWithRemoval(getNode4()))); will(returnValue(true));
-						allowing(edge2).isChild(with(not(isOneOfWithRemoval(getNode4())))); will(returnValue(false));
-						allowing(edge2).isDescendent(with(isOneOfWithRemoval(getNode4()))); will(returnValue(true));
-						allowing(edge2).isDescendent(with(not(isOneOfWithRemoval(getNode4())))); will(returnValue(false));
-						allowing(edge2).hasDirectedEnds(with(isOneOf(edge2Ends))); will(returnValue(true)); 
-						allowing(edge2).hasDirectedEnds(with(not(isOneOf(edge2Ends)))); will(returnValue(false));
+						allowing(edge2).compareTo(with(isOneOf(getEdge3(), getEdge4()))); will(returnValue(-1));
+						allowing(edge2).isChild(with(any(ICompoundGraphElement.class))); will(returnValue(false));
+						allowing(edge2).isDescendent(with(any(ICompoundGraphElement.class))); will(returnValue(false));
 					}});
 					return true;
 				}
@@ -841,9 +807,9 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 						allowing(edge2ChildGraph).getRoot(); will(returnValue(edge2));
 						allowing(edge2ChildGraph).getSuperGraph(); will(returnValue(getGraph()));
-						allowing(edge2ChildGraph).numNodes(); will(returnValue(1));
+						allowing(edge2ChildGraph).numNodes(); will(returnValue(0));
 						allowing(edge2ChildGraph).numEdges(); will(returnValue(0));
-						allowing(edge2ChildGraph).numElements(); will(returnValue(1));
+						allowing(edge2ChildGraph).numElements(); will(returnValue(0));
 						allowing(edge2ChildGraph).containsEdge(with(any(Integer.class))); will(returnValue(false));
 						allowing(edge2ChildGraph).containsEdge(with(any(ICompoundEdge.class))); will(returnValue(false));
 					}});
@@ -895,13 +861,10 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 				@Override
 				public boolean buildEdge(final ICompoundEdge edge3) {
-					final CompoundNodePair edge3Ends = new CompoundNodePair(getNode2(), getNode2());
 					mockery.checking(new Expectations(){{
-						allowing(edge3).compareTo(with(isOneOfWithRemoval(getRootNode(), getNode1(), getNode2(), getNode3(), getNode4(), getNode5(), getEdge1(), getEdge2()))); will(returnValue(1));
-						allowing(edge3).compareTo(with(isOneOfWithRemoval(getEdge4()))); will(returnValue(-1));
-						allowing(edge3).childIterator(); with(returnIteratorWithRemoval());
-						allowing(edge3).hasDirectedEnds(with(isOneOf(edge3Ends))); will(returnValue(true));
-						allowing(edge3).hasDirectedEnds(with(not(isOneOf(edge3Ends)))); will(returnValue(false));
+						allowing(edge3).compareTo(with(isOneOf(getRootNode(), getNode1(), getNode2(), getNode3(), getNode4(), getNode5(), getEdge1(), getEdge2()))); will(returnValue(1));
+						allowing(edge3).compareTo(with(isOneOf(getEdge4()))); will(returnValue(-1));
+						allowing(edge3).childIterator(); with(returnIterator());
 					}});
 					return false;
 				}
@@ -929,7 +892,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(edge3ChildGraph).numElements(); will(returnValue(0));
 						allowing(edge3ChildGraph).containsEdge(with(any(Integer.class))); will(returnValue(false));
 						allowing(edge3ChildGraph).containsEdge(with(any(ICompoundEdge.class))); will(returnValue(false));
-						allowing(edge3ChildGraph).elementIterator(); will(returnIteratorWithRemoval());
+						allowing(edge3ChildGraph).elementIterator(); will(returnIterator());
 						allowing(edge3ChildGraph).unfilteredElementIterator(); will(returnIterator());
 					}});
 					return edge3ChildGraph;
@@ -946,8 +909,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(edge3).getIndex(); will(returnValue(EDGE3_IDX));
 						allowing(edge3).getParent(); will(returnValue(getNode2()));
 						allowing(edge3).getRoot(); will(returnValue(getRootNode()));
-						allowing(edge3).childIterator(); will(returnIteratorWithRemoval(new ICompoundGraphElement[0]));
-						allowing(edge3).levelOrderIterator(); will(returnIteratorWithRemoval(edge3));
+						allowing(edge3).childIterator(); will(returnIterator(new ICompoundGraphElement[0]));
+						allowing(edge3).levelOrderIterator(); will(returnIterator(edge3));
 						allowing(edge3).isRemoved(); will(getRemovalState(EDGE3_ID));
 						allowing(edge3).isEdge(); will(returnValue(true));
 						allowing(edge3).isNode(); will(returnValue(false));
@@ -985,14 +948,11 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 				@Override
 				public boolean buildEdge(final ICompoundEdge edge4) {
-					final CompoundNodePair edge4Ends = new CompoundNodePair(getNode2(), getNode3());
 					mockery.checking(new Expectations(){{
 						allowing(edge4).isChild(with(any(ICompoundGraphElement.class))); will(returnValue(false));
 						allowing(edge4).isDescendent(with(any(ICompoundGraphElement.class))); will(returnValue(false));
-						allowing(edge4).compareTo(with(not(isOneOfWithRemoval(edge4)))); will(returnValue(1));
+						allowing(edge4).compareTo(with(not(isOneOf(edge4)))); will(returnValue(1));
 						allowing(edge4).compareTo(with(edge4)); will(returnValue(0));
-						allowing(edge4).hasDirectedEnds(with(isOneOf(edge4Ends))); will(returnValue(true)); 
-						allowing(edge4).hasDirectedEnds(with(not(isOneOf(edge4Ends)))); will(returnValue(false));
 					}});
 					return true;
 				}
@@ -1020,7 +980,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(edge4ChildGraph).numElements(); will(returnValue(0));
 						allowing(edge4ChildGraph).containsEdge(with(any(Integer.class))); will(returnValue(false));
 						allowing(edge4ChildGraph).containsEdge(with(any(ICompoundEdge.class))); will(returnValue(false));
-						allowing(edge4ChildGraph).elementIterator(); will(returnIteratorWithRemoval(new ICompoundGraphElement[0]));
+						allowing(edge4ChildGraph).elementIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 						allowing(edge4ChildGraph).unfilteredElementIterator(); will(returnIterator(new ICompoundGraphElement[0]));
 					}});
 					return edge4ChildGraph;
@@ -1036,8 +996,8 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 						allowing(edge4).getIndex(); will(returnValue(EDGE4_IDX));
 						allowing(edge4).getParent(); will(returnValue(getRootNode()));
 						allowing(edge4).getRoot(); will(returnValue(getRootNode()));
-						allowing(edge4).childIterator(); will(returnIteratorWithRemoval(new ICompoundGraphElement[0]));
-						allowing(edge4).levelOrderIterator(); will(returnIteratorWithRemoval(edge4));
+						allowing(edge4).childIterator(); will(returnIterator(new ICompoundGraphElement[0]));
+						allowing(edge4).levelOrderIterator(); will(returnIterator(edge4));
 						allowing(edge4).isRemoved(); will(getRemovalState(EDGE4_ID));
 						allowing(edge4).getGraph(); will(returnValue(getGraph()));
 						allowing(edge4).compareTo(with(not(edge4))); will(returnValue(-1));
@@ -1119,8 +1079,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 	}
 	
 	
-	
-	public ComplexGraphFixture(final Mockery mockery, String prefix){
+	public ComplexGraphWithDeletionsFixture(final Mockery mockery, String prefix){
 		this.mockery = mockery;
 		this.prefix = prefix;
 		this.builderMap = new HashMap<String, IGraphObjectBuilder>();
@@ -1144,7 +1103,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 					allowing(rootNode).isRemoved(); will(returnValue(false));
 					allowing(rootNode).isEdge(); will(returnValue(false));
 					allowing(rootNode).isNode(); will(returnValue(true));
-					allowing(rootNode).connectedNodeIterator(); will(returnIteratorWithRemoval(new ICompoundNode[0]));
+					allowing(rootNode).connectedNodeIterator(); will(returnIterator(new ICompoundNode[0]));
 					allowing(rootNode).getAttribute(); will(returnValue(elementAttribute));
 				}});
 				elementAttribute.setCurrentElement(rootNode);
@@ -1209,7 +1168,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 			@Override
 			public boolean buildRootNode(final IRootCompoundNode rootNode) {
 				mockery.checking(new Expectations(){{
-					allowing(rootNode).childIterator(); will(returnIteratorWithRemoval(getNode1(), getNode6(), getEdge1(), getEdge4()));
+					allowing(rootNode).childIterator(); will(returnIterator(getNode1(), getNode6(), getEdge1(), getEdge4()));
 					allowing(rootNode).compareTo(with(rootNode)); will(returnValue(0));
 					allowing(rootNode).compareTo(with(not(rootNode))); will(returnValue(-1));
 				}});
@@ -1227,23 +1186,23 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 				final ITree<ICompoundGraphElement> elementTree = graph.getElementTree();
 				final IndexCounter indexCounter = new IndexCounter(LAST_IDX);
 				mockery.checking(new Expectations(){{
-					allowing(graph).nodeIterator(); will(returnIteratorWithRemoval(rootNode, getNode1(), getNode6(), getNode5(), getNode2(), getNode3(), getNode4()));
+					allowing(graph).nodeIterator(); will(returnIterator(rootNode, getNode1(), getNode6(), getNode5(), getNode2(), getNode3(), getNode4()));
 					allowing(graph).restorableElementIterator(); will(returnIterator(rootNode, getNode1(), getNode6(), getNode5(), getNode2(), getNode3(), getNode4(), getEdge1(), getEdge2(), getEdge3(), getEdge4()));
 					allowing(graph).getIndexCounter(); will(returnValue(indexCounter));
 					
-					allowing(elementTree).isAncestor(with(getEdge2()), with(isOneOfWithRemoval(getEdge1(), getRootNode()))); will(returnValue(true));
-					allowing(elementTree).isAncestor(with(equalTo(getEdge2())), with(not(isOneOfWithRemoval(getEdge1(), getRootNode())))); will(returnValue(false));
-					allowing(elementTree).isDescendant(with(getEdge2()), with(isOneOfWithRemoval(getNode4()))); will(returnValue(true));
-					allowing(elementTree).isDescendant(with(getEdge2()), with(not(isOneOfWithRemoval(getNode4())))); will(returnValue(false));
+					allowing(elementTree).isAncestor(with(getEdge2()), with(isOneOf(getEdge1(), getRootNode()))); will(returnValue(true));
+					allowing(elementTree).isAncestor(with(equalTo(getEdge2())), with(not(isOneOf(getEdge1(), getRootNode())))); will(returnValue(false));
+					allowing(elementTree).isDescendant(with(getEdge2()), with(isOneOf(getNode4()))); will(returnValue(true));
+					allowing(elementTree).isDescendant(with(getEdge2()), with(not(isOneOf(getNode4())))); will(returnValue(false));
 					
 					allowing(elementTree).isAncestor(getNode3(), getEdge1()); will(returnValue(true));
 					allowing(elementTree).isAncestor(getNode1(), getRootNode()); will(returnValue(true));
 					allowing(elementTree).isAncestor(with(equalTo(getNode1())), with(not(getRootNode()))); will(returnValue(false));
-					allowing(elementTree).isDescendant(with(getNode1()), with(isOneOfWithRemoval(getNode2(), getEdge3()))); will(returnValue(true));
-					allowing(elementTree).isDescendant(with(getNode1()), with(not(isOneOfWithRemoval(getNode2(), getEdge3())))); will(returnValue(false));
+					allowing(elementTree).isDescendant(with(getNode1()), with(isOneOf(getNode2(), getEdge3()))); will(returnValue(true));
+					allowing(elementTree).isDescendant(with(getNode1()), with(not(isOneOf(getNode2(), getEdge3())))); will(returnValue(false));
 
-					allowing(elementTree).isDescendant(with(getNode2()), with(isOneOfWithRemoval(getEdge3()))); will(returnValue(true));
-					allowing(elementTree).isDescendant(with(getNode2()), with(not(isOneOfWithRemoval(getEdge3())))); will(returnValue(false));
+					allowing(elementTree).isDescendant(with(getNode2()), with(isOneOf(getEdge3()))); will(returnValue(true));
+					allowing(elementTree).isDescendant(with(getNode2()), with(not(isOneOf(getEdge3())))); will(returnValue(false));
 					
 					allowing(elementTree).getLowestCommonAncestor(getNode3(), getNode5()); will(returnValue(getEdge1()));
 					allowing(elementTree).getLowestCommonAncestor(getNode5(), getNode3()); will(returnValue(getEdge1()));
@@ -1261,7 +1220,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 			@Override
 			public boolean buildChildGraph(final IRootChildCompoundGraph rootChildGraph) {
 				mockery.checking(new Expectations(){{
-					allowing(rootChildGraph).elementIterator(); will(returnIteratorWithRemoval(getEdge4(), getNode1(), getEdge1(), getNode6()));
+					allowing(rootChildGraph).elementIterator(); will(returnIterator(getEdge4(), getNode1(), getEdge1(), getNode6()));
 					allowing(rootChildGraph).unfilteredElementIterator(); will(returnIterator(getEdge4(), getNode1(), getEdge1(), getNode6()));
 				}});
 				return true;
@@ -1284,7 +1243,17 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 		this.builderMap.put(graphBuilder.getElementId(), graphBuilder);
 		for(IGraphObjectBuilder element : this.builders){
 			this.builderMap.put(element.getElementId(), element);
-			this.elementRemovalMap.put(element.getElementId(), false);
+			String elementId = element.getElementId(); 
+			if(elementId.equals(NODE2_ID)
+					|| elementId.equals(EDGE3_ID)
+					|| elementId.equals(EDGE3_ID)
+					|| elementId.equals(EDGE4_ID)
+					|| elementId.equals(NODE4_ID)){
+				this.elementRemovalMap.put(elementId, true);
+			}
+			else{
+				this.elementRemovalMap.put(elementId, false);
+			}
 		}
 		SortedSet<String> sortedDepSet = new TreeSet<String>(new Comparator<String>() {
 
@@ -1314,15 +1283,15 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 	}
 	
 	
-	@Override
-	public void setElementRemoved(String elementId, boolean markRemoved){
-		this.elementRemovalMap.put(elementId, markRemoved);
-	}
+//	@Override
+//	public void setElementRemoved(String elementId, boolean markRemoved){
+//		this.elementRemovalMap.put(elementId, true);
+//	}
 	
-	@Override
-	public boolean isRemoved(String elementId){
-		return this.elementRemovalMap.get(elementId);
-	}
+//	@Override
+//	public boolean isRemoved(String elementId){
+//		return this.elementRemovalMap.get(elementId);
+//	}
 	
 	@Override
 	public void redefineNode(String nodeId, INodeConstructor newConstructor){
@@ -1354,43 +1323,43 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 	}
 
 	public ICompoundNode getNode1() {
-		return ((INodeBuilder)this.builderMap.get(NODE1_ID)).getCompoundNode();
+		return ((INodeBuilder)this.builderMap.get(NODE1_ID)).getCompoundGraphElement();
 	}
 
 	public ICompoundNode getNode2() {
-		return ((INodeBuilder)this.builderMap.get(NODE2_ID)).getCompoundNode();
+		return ((INodeBuilder)this.builderMap.get(NODE2_ID)).getCompoundGraphElement();
 	}
 
 	public ICompoundNode getNode3() {
-		return ((INodeBuilder)this.builderMap.get(NODE3_ID)).getCompoundNode();
+		return ((INodeBuilder)this.builderMap.get(NODE3_ID)).getCompoundGraphElement();
 	}
 
 	public ICompoundNode getNode4() {
-		return ((INodeBuilder)this.builderMap.get(NODE4_ID)).getCompoundNode();
+		return ((INodeBuilder)this.builderMap.get(NODE4_ID)).getCompoundGraphElement();
 	}
 
 	public ICompoundNode getNode5() {
-		return ((INodeBuilder)this.builderMap.get(NODE5_ID)).getCompoundNode();
+		return ((INodeBuilder)this.builderMap.get(NODE5_ID)).getCompoundGraphElement();
 	}
 
 	public ICompoundNode getNode6() {
-		return ((INodeBuilder)this.builderMap.get(NODE6_ID)).getCompoundNode();
+		return ((INodeBuilder)this.builderMap.get(NODE6_ID)).getCompoundGraphElement();
 	}
 
 	public ICompoundEdge getEdge1() {
-		return ((IEdgeBuilder)this.builderMap.get(EDGE1_ID)).getCompoundEdge();
+		return ((IEdgeBuilder)this.builderMap.get(EDGE1_ID)).getCompoundGraphElement();
 	}
 
 	public ICompoundEdge getEdge2() {
-		return ((IEdgeBuilder)this.builderMap.get(EDGE2_ID)).getCompoundEdge();
+		return ((IEdgeBuilder)this.builderMap.get(EDGE2_ID)).getCompoundGraphElement();
 	}
 
 	public ICompoundEdge getEdge3() {
-		return ((IEdgeBuilder)this.builderMap.get(EDGE3_ID)).getCompoundEdge();
+		return ((IEdgeBuilder)this.builderMap.get(EDGE3_ID)).getCompoundGraphElement();
 	}
 
 	public ICompoundEdge getEdge4() {
-		return ((IEdgeBuilder)this.builderMap.get(EDGE4_ID)).getCompoundEdge();
+		return ((IEdgeBuilder)this.builderMap.get(EDGE4_ID)).getCompoundGraphElement();
 	}
 
 	@Override
@@ -1417,12 +1386,12 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 
 	@Override
 	public ICompoundEdge getEdge(String edgeId) {
-		return ((IEdgeBuilder)this.builderMap.get(edgeId)).getCompoundEdge();
+		return ((IEdgeBuilder)this.builderMap.get(edgeId)).getCompoundGraphElement();
 	}
 
 	@Override
 	public ICompoundNode getNode(String nodeId) {
-		return ((INodeBuilder)this.builderMap.get(nodeId)).getCompoundNode();
+		return ((INodeBuilder)this.builderMap.get(nodeId)).getCompoundGraphElement();
 	}
 
 }

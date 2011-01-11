@@ -17,7 +17,6 @@ package uk.ac.ed.inf.graph.util;
 
 import java.util.Iterator;
 
-import uk.ac.ed.inf.graph.compound.CompoundNodePair;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ISubGraph;
@@ -67,15 +66,16 @@ public final class SubgraphAlgorithms implements ISubgraphAlgorithms {
 				}
 			}
 		}
-		Iterator<ICompoundEdge> edgeIter = this.basicSubgraph.edgeIterator();
-		while(edgeIter.hasNext()){
-			ICompoundEdge edge = edgeIter.next();
-			CompoundNodePair pair = edge.getConnectedNodes();
-			if(!this.basicSubgraph.containsNode(pair.getOutNode()) || !this.basicSubgraph.containsNode(pair.getInNode())){
-				retVal = false;
-				break;
-			}
-		}
+		// ignore this - this checked for dangling ends which we now ignore.
+//		Iterator<ICompoundEdge> edgeIter = this.basicSubgraph.edgeIterator();
+//		while(edgeIter.hasNext()){
+//			ICompoundEdge edge = edgeIter.next();
+//			CompoundNodePair pair = edge.getConnectedNodes();
+//			if(!this.basicSubgraph.containsNode(pair.getOutNode()) || !this.basicSubgraph.containsNode(pair.getInNode())){
+//				retVal = false;
+//				break;
+//			}
+//		}
 		return retVal;
 	}
 

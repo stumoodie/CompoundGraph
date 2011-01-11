@@ -8,13 +8,12 @@ import uk.ac.ed.inf.graph.compound.ISubCompoundGraphDBC;
 
 public aspect SubCompoundGraphDBC extends ISubCompoundGraphDBC {
 
-	@Override
 	public pointcut allMethods(ISubCompoundGraph object) :
 		execution(public void SubCompoundGraph.*(*))
 		&& target(object);
 
 	pointcut constructor(ICompoundGraph root) :
-		execution(public SubCompoundGraph.new(ICompoundGraph))
+		execution(SubCompoundGraph.new(ICompoundGraph))
 		&& args(root);
 	
 	before(final ICompoundGraph root) : constructor(root) {
@@ -24,13 +23,14 @@ public aspect SubCompoundGraphDBC extends ISubCompoundGraphDBC {
 	}
 	
 	pointcut addTopElement(SubCompoundGraph sg, ICompoundGraphElement element) :
-		execution(public void addTopElement(ICompoundGraphElement))
+		execution(void addTopElement(ICompoundGraphElement))
 		&& args(element)
 		&& target(sg);
 	
 	before(SubCompoundGraph sg, final ICompoundGraphElement element) : addTopElement(sg, element) {
 		new Precondition(){{
 			assertion(element != null, "parameter not null");
+			assertion(element.isRemoved() == false, "top element is not removed");
 		}};
 	}
 }

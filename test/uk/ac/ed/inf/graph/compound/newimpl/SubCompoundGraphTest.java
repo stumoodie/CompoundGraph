@@ -253,7 +253,12 @@ public class SubCompoundGraphTest {
 
 	@Test
 	public void testIsInducedSubgraph() {
-		assertFalse("not induced subgraph", this.testInstance.isInducedSubgraph());
+		assertTrue("induced subgraph", this.testInstance.isInducedSubgraph());
+	}
+
+	@Test
+	public void testIsOrphanedEdges() {
+		assertTrue("has orphaned edges", this.testInstance.hasOrphanedEdges());
 	}
 
 	@Test

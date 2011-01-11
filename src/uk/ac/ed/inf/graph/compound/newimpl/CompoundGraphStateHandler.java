@@ -51,10 +51,11 @@ public class CompoundGraphStateHandler implements IGraphStateHandler {
 			throw new IllegalArgumentException ( "The state must belong to the same Graph.") ;
 		}
 		// mark all nodes and edges as removed
-		Iterator<IRestorableGraphElement> elementIterator = this.graph.restorableElementIterator();
-		while ( elementIterator.hasNext()){
-			elementIterator.next().markRemoved(true) ;
-		}
+//		Iterator<IRestorableGraphElement> elementIterator = this.graph.restorableElementIterator();
+//		while ( elementIterator.hasNext()){
+//			IRestorableGraphElement el = elementIterator.next(); 
+//			el.markRemoved(true) ;
+//		}
 		
 		// then mark those in bit list as restored.
 		this.elementStatus = previousState.getElementStates();

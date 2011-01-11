@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.jmock.Sequence;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
@@ -36,6 +37,8 @@ public class CompoundGraphMoveBuilderWithPartiallySharingDestinationSubgraphTest
 	private IGraphTestFixture testFixture;
 	private ISubCompoundGraph mockSrcSubgraph;
 	private ICompoundGraphElementFactory mockElementFactory;
+	private ISubCompoundGraph mockDestnSubgraph;
+	private Sequence subgraphSeq;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -43,6 +46,11 @@ public class CompoundGraphMoveBuilderWithPartiallySharingDestinationSubgraphTest
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		this.testFixture.buildFixture();
 		this.mockElementFactory = this.mockery.mock(ICompoundGraphElementFactory.class, "mockElementFactory");
+		mockDestnSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockDestnSubgraph");
+		subgraphSeq = this.mockery.sequence("subgraphSeq");
+		this.mockery.checking(new Expectations(){{
+			oneOf(testFixture.getGraph().subgraphFactory()).createSubgraph(); will(returnValue(mockDestnSubgraph)); inSequence(subgraphSeq);
+		}});
 		this.testInstance = new CompoundGraphMoveBuilder(this.testFixture.getGraph().getRoot().getChildCompoundGraph(),
 				this.mockElementFactory);
 		this.mockSrcSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockSrcSubgraph");
@@ -74,6 +82,7 @@ public class CompoundGraphMoveBuilderWithPartiallySharingDestinationSubgraphTest
 		this.mockery = null;
 		this.testFixture = null;
 		this.testInstance = null;
+		this.subgraphSeq = null;
 	}
 
 	@Test(expected=PreConditionException.class)
@@ -83,14 +92,14 @@ public class CompoundGraphMoveBuilderWithPartiallySharingDestinationSubgraphTest
 
 	@Test
 	public void testGetMovedComponents() {
-		final ISubCompoundGraphFactory destn_subgraphFactory = this.testFixture.getGraph().subgraphFactory();
-		final ISubCompoundGraph mockMovedSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockMovedSubgraph");
-		this.mockery.checking(new Expectations(){{
-			exactly(1).of(destn_subgraphFactory).createSubgraph(); will(returnValue(mockMovedSubgraph));
-		}});
+//		final ISubCompoundGraphFactory destn_subgraphFactory = this.testFixture.getGraph().subgraphFactory();
+//		final ISubCompoundGraph mockMovedSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockMovedSubgraph");
+//		this.mockery.checking(new Expectations(){{
+//			exactly(1).of(destn_subgraphFactory).createSubgraph(); will(returnValue(mockMovedSubgraph));
+//		}});
 		ISubCompoundGraph actualResult = this.testInstance.getMovedComponents();
 		assertNotNull("moved components", actualResult);
-		assertEquals("expected subgraph", mockMovedSubgraph, actualResult);
+//		assertEquals("expected subgraph", mockMovedSubgraph, actualResult);
 	}
 
 	@Test
@@ -124,8 +133,14 @@ public class CompoundGraphMoveBuilderWithPartiallySharingDestinationSubgraphTest
 		final IChildCompoundGraph mockEdgeChildGraph = this.mockery.mock(IChildCompoundGraph.class, "mockEdgeChildGraph");
 //		final ICompoundNodeFactory mockEdgeNodeFactory = this.mockery.mock(ICompoundNodeFactory.class, "mockEdgeNodeFactory");
 
-		final ISubCompoundGraph mockDestnSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockDestnSubgraph");
-		
+//		final ISubCompoundGraph mockDestnSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockDestnSubgraph");
+		final ISubCompoundGraph mockRemovalSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockRemovalSubgraph");
+		final ICompoundNode node3 = testFixture.getNode(ComplexGraphFixture.NODE3_ID);
+		final ICompoundNode node4 = testFixture.getNode(ComplexGraphFixture.NODE4_ID);
+		final ICompoundNode node5 = testFixture.getNode(ComplexGraphFixture.NODE5_ID);
+		final ICompoundEdge edge2 = testFixture.getEdge(ComplexGraphFixture.EDGE2_ID);
+		final ICompoundEdge edge4 = testFixture.getEdge(ComplexGraphFixture.EDGE4_ID);
+
 		this.mockery.checking(new Expectations(){{
 			allowing(mockNode).getChildCompoundGraph(); will(returnValue(mockNodeChildGraph));
 			allowing(mockNode).getGraph(); will(returnValue(testFixture.getGraph()));
@@ -135,18 +150,20 @@ public class CompoundGraphMoveBuilderWithPartiallySharingDestinationSubgraphTest
 			allowing(mockEdge).getGraph(); will(returnValue(testFixture.getGraph()));
 			allowing(mockEdge).getAttribute(); will(returnValue(new ElementAttribute("mockEdgeAtt")));
 		
-			exactly(1).of(testFixture.getNode(ComplexGraphFixture.NODE3_ID)).markRemoved(true);
-			exactly(1).of(testFixture.getNode(ComplexGraphFixture.NODE4_ID)).markRemoved(true);
-			exactly(1).of(testFixture.getNode(ComplexGraphFixture.NODE5_ID)).markRemoved(true);
-			exactly(1).of(testFixture.getEdge(ComplexGraphFixture.EDGE2_ID)).markRemoved(true);
-			exactly(1).of(testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)).markRemoved(true);
+			exactly(1).of(node3).markRemoved(true);
+			exactly(1).of(node4).markRemoved(true);
+			exactly(1).of(node5).markRemoved(true);
+			exactly(1).of(edge2).markRemoved(true);
+			exactly(1).of(edge4).markRemoved(true);
 			
 			exactly(13).of(movedNodesSubgraphFactory).addElement(with(any(ICompoundGraphElement.class)));
-			exactly(2).of(movedNodesSubgraphFactory).createSubgraph(); will(returnValue(mockDestnSubgraph));
+//			oneOf(movedNodesSubgraphFactory).createSubgraph(); will(returnValue(mockDestnSubgraph)); inSequence(subgraphSeq);
+			oneOf(movedNodesSubgraphFactory).createSubgraph(); will(returnValue(mockRemovalSubgraph)); inSequence(subgraphSeq);
+			oneOf(movedNodesSubgraphFactory).createSubgraph(); will(returnValue(mockDestnSubgraph)); inSequence(subgraphSeq);
 			
 			allowing(mockDestnSubgraph).getSuperGraph(); will(returnValue(testFixture.getGraph()));
-		}});
-		this.mockery.checking(new Expectations(){{
+//		}});
+//		this.mockery.checking(new Expectations(){{
 //			exactly(2).of(destnNodeNodeFact).setAttributeFactory(with(any(IElementAttributeFactory.class)));	
 //			exactly(2).of(destnNodeNodeFact).createNode(); will(returnValue(mockNode));
 //			
@@ -177,6 +194,8 @@ public class CompoundGraphMoveBuilderWithPartiallySharingDestinationSubgraphTest
 
 			exactly(1).of(mockEdgeChildGraph).addNode(mockNode);
 
+			allowing(mockRemovalSubgraph).elementIterator(); will(returnIterator(node3, node4, node5, edge2, edge4));
+			
 			one(testFixture.getGraph()).notifyGraphStructureChange(with(any(IGraphStructureChangeAction.class)));
 		}});
 		this.testInstance.makeMove();
@@ -195,7 +214,7 @@ public class CompoundGraphMoveBuilderWithPartiallySharingDestinationSubgraphTest
 		final ISubCompoundGraphFactory subgraphFactory = this.testFixture.getGraph().subgraphFactory();
 		final ISubCompoundGraph mockRemovedSubgraph = this.mockery.mock(ISubCompoundGraph.class, "mockRemovedSubgraph");
 		this.mockery.checking(new Expectations(){{
-			exactly(1).of(subgraphFactory).createSubgraph(); will(returnValue(mockRemovedSubgraph));
+			oneOf(subgraphFactory).createSubgraph(); will(returnValue(mockRemovedSubgraph)); inSequence(subgraphSeq);
 		}});
 		ISubCompoundGraph actualResult = this.testInstance.getRemovedComponents();
 		assertNotNull("removed components", actualResult);

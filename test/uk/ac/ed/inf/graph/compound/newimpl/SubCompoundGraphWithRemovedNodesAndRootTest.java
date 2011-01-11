@@ -35,14 +35,15 @@ public class SubCompoundGraphWithRemovedNodesAndRootTest {
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(this.mockery, "");
-		this.testFixture.setElementRemoved(ComplexGraphFixture.NODE2_ID, true);
-		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE2_ID, true);
-		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE3_ID, true);
-		this.testFixture.setElementRemoved(ComplexGraphFixture.NODE4_ID, true);
 		this.testFixture.buildFixture();
 
 		this.testInstance = new SubCompoundGraph(this.testFixture.getGraph());
 		this.testInstance.addTopElement(this.testFixture.getRootNode());
+		this.testFixture.setElementRemoved(ComplexGraphFixture.NODE2_ID, true);
+		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE2_ID, true);
+		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE3_ID, true);
+		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE4_ID, true);
+		this.testFixture.setElementRemoved(ComplexGraphFixture.NODE4_ID, true);
 	}
 
 	@After

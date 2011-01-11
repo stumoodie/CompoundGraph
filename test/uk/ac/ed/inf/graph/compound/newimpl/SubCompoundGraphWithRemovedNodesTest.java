@@ -35,15 +35,15 @@ public class SubCompoundGraphWithRemovedNodesTest {
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(this.mockery, "");
-		this.testFixture.setElementRemoved(ComplexGraphFixture.NODE2_ID, true);
-		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE3_ID, true);
-		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE2_ID, true);
-		this.testFixture.setElementRemoved(ComplexGraphFixture.NODE4_ID, true);
 		this.testFixture.buildFixture();
 
 		this.testInstance = new SubCompoundGraph(this.testFixture.getGraph());
 		this.testInstance.addTopElement(this.testFixture.getNode1());
 		this.testInstance.addTopElement(this.testFixture.getEdge2());
+		this.testFixture.setElementRemoved(ComplexGraphFixture.NODE2_ID, true);
+		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE3_ID, true);
+		this.testFixture.setElementRemoved(ComplexGraphFixture.EDGE2_ID, true);
+		this.testFixture.setElementRemoved(ComplexGraphFixture.NODE4_ID, true);
 	}
 
 	@After
@@ -75,8 +75,8 @@ public class SubCompoundGraphWithRemovedNodesTest {
 		assertTrue("directed edge exists", this.testInstance.containsDirectedEdge(testPair.getOutNode(), testPair.getInNode()));
 		testPair = this.testFixture.getEdge3().getConnectedNodes();
 		assertTrue("directed edge exists", this.testInstance.containsDirectedEdge(testPair.getOutNode(), testPair.getInNode()));
-		CompoundNodePair reversedPair = this.testFixture.getEdge2().getConnectedNodes().reversedNodes();
-		assertFalse("reversed directed edge not exists", this.testInstance.containsDirectedEdge(reversedPair.getOutNode(), testPair.getInNode()));
+		CompoundNodePair reversedPair = this.testFixture.getEdge2().getConnectedNodes();
+		assertFalse("reversed directed edge not exists", this.testInstance.containsDirectedEdge(reversedPair.getInNode(), reversedPair.getOutNode()));
 		CompoundNodePair testOutsidePair = this.testFixture.getEdge1().getConnectedNodes();
 		assertFalse("no edge exists", this.testInstance.containsDirectedEdge(testOutsidePair.getOutNode(), testOutsidePair.getInNode()));
 	}
@@ -216,7 +216,12 @@ public class SubCompoundGraphWithRemovedNodesTest {
 
 	@Test
 	public void testIsInducedSubgraph() {
-		assertFalse("is not induced subgraph", this.testInstance.isInducedSubgraph());
+		assertTrue("is induced subgraph", this.testInstance.isInducedSubgraph());
+	}
+
+	@Test
+	public void testHasOrphanedEdges() {
+		assertTrue("has orphaned edges", this.testInstance.hasOrphanedEdges());
 	}
 
 	@Test

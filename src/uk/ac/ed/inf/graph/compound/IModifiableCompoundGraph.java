@@ -46,11 +46,11 @@ public interface IModifiableCompoundGraph {
 	 */
 	ISubCompoundGraphFactory subgraphFactory();
 
-	/**
-	 * Gets a new instance of a subgraph factory used to create a subgraph of this graph.
-	 * @return a new instance of the subgraph factory.
-	 */
-	ISubGraphFactory newSimpleSubgraphFactory();
+//	/**
+//	 * Gets a new instance of a subgraph factory used to create a subgraph of this graph.
+//	 * @return a new instance of the subgraph factory.
+//	 */
+//	ISubGraphFactory newSimpleSubgraphFactory();
 
 	/**
 	 * Returns a new instance of the removal builder.
