@@ -14,8 +14,6 @@ import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElementVisitor;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
-import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphTestFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 
@@ -37,7 +35,7 @@ public class RemovedCompoundNodeIntegrationTest {
 //	private ICompoundEdge mockOtherGraphEdge;
 //	private ICompoundNode mockOtherGraphNode;
 //	private IGraphTestFixture otherTestFixture;
-	private ElementAttribute expectedAttribute;
+//	private ElementAttribute expectedAttribute;
 	private ICompoundEdge edge4;
 	private ICompoundEdge edge3;
 	private ICompoundNode node3;
@@ -45,7 +43,7 @@ public class RemovedCompoundNodeIntegrationTest {
 
 	@Before
 	public void setUp() throws Exception {
-		this.expectedAttribute = new ElementAttribute(ComplexGraphFixture.NODE2_ID);
+//		this.expectedAttribute = new ElementAttribute(ComplexGraphFixture.NODE2_ID);
 		this.testFixture = new IntegrationTestGraphFixture();
 		this.testFixture.buildFixture();
 		this.testInstance = this.testFixture.getNode(IntegrationTestGraphFixture.NODE2_ID);

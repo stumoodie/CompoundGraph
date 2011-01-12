@@ -50,8 +50,6 @@ public abstract aspect ISubCompoundGraphFactoryDBC {
 		target(fact) &&
 		args(element);
 	
-	private static int previousNum = 0;
-		
 	before(final ISubCompoundGraphFactory fact, final ICompoundGraphElement element) : addElement(fact, element) {
 		new Precondition(){{
 			assertion(element != null, "element not null");
