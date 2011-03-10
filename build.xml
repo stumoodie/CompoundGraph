@@ -8,6 +8,7 @@
 	<property name="source" value="1.6" />
 	<property name="build.dir" value="./ant-build" />
 	<property name="build.dir.src" value="${build.dir}/src"/>
+    <property name="build.dir.src.noaspects" value="${build.dir}/srcNoAspects"/>
 	<property name="build.dir.tests" value="${build.dir}/test"/>
 	<property name="docs.build.dir" value="./doc"/>
 	<property name="src.dir" value="./src" />
@@ -16,6 +17,7 @@
 	<property name="libs.dir" value="./lib" />
 	<property name="jar.dir" value="./jars" />
 	<property name="jar.name.bin" value="CompoundGraph.jar" />
+    <property name="jar.name.bin.noaspects" value="CompoundGraph-noaspects.jar" />
 	<property name="jar.name.src" value="CompoundGraph-src.jar" />
 	<property name="jar.name.doc" value="CompoundGraph-docs.jar" />
 
@@ -40,25 +42,18 @@
 	</path>
 
 
-	<target name="buildAll" depends="cleanall,build-project,api-docs,jarAll" />
+	<target name="buildAll" description="builds all code and docs and jars them up" depends="build-project,api-docs,jarAll" />
 
 	<target name="init">
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${build.dir.src}" />
+        <mkdir dir="${build.dir.src.noaspects}" />
 		<mkdir dir="${build.dir.tests}" />
-		<!-- copy includeemptydirs="false" todir="${build.dir}">
-			<fileset dir="src" excludes="**/*.launch, **/*.java, **/*.ajc" />
-		</copy>
-		<copy includeemptydirs="false" todir="${build.dir}">
-			<fileset dir="test" excludes="**/*.launch, **/*.java, **/*.ajc" />
-		</copy-->
 	</target>
 
 	<target name="clean">
 		<delete dir="${build.dir}" />
 	</target>
-
-	<target depends="clean" name="cleanall" />
 
 	<target depends="build-project" name="build" />
 
@@ -74,9 +69,9 @@
     <target name="buildSrcNoAspect" description="src build with no aspects task" depends="init">
         <!-- <echo>running with classpath ${toString:classpath}</echo>-->
         <javac classpathref="CompoundGraph.classpath" srcdir="${src.dir}" source="${source}" target="${target}"
-            debug="true" debuglevel="lines,vars,source" destdir="${build.dir.src}">
+            debug="true" debuglevel="lines,vars,source" destdir="${build.dir.src.noaspects}" includeantruntime="false">
         </javac>
-        <copy todir="${build.dir.src}">
+        <copy todir="${build.dir.src.noaspects}">
             <fileset dir="${src.dir}">
                 <exclude name="**/*.java" />
                 <exclude name="**/*.class" />
@@ -117,8 +112,8 @@
 			</javac>
 		</target>
 
-    <target name="jar-bin-noaspects" depends="buildSrcNoAspect,init-jardirs">
-        <jar destfile="${jar.dir}/${jar.name.bin}" basedir="${build.dir.src}">
+    <target name="jar-bin-noaspects" description="builds a jar for distribution without aspectJ DBC code" depends="buildSrcNoAspect,init-jardirs">
+        <jar destfile="${jar.dir}/${jar.name.bin.noaspects}" basedir="${build.dir.src.noaspects}">
         </jar>
     </target>
 
@@ -162,7 +157,7 @@
 		</junitreport>
 	</target>
 
-	<target name="jarAll" depends="jar-bin, jar-src, jar-docs"/>
+	<target name="jarAll" description="creates all jar files for distribution" depends="jar-bin, jar-bin-noaspects, jar-src, jar-docs"/>
 	
 	<target name="jar-docs" depends="api-docs">
 		<mkdir dir="${jar.dir}" />
