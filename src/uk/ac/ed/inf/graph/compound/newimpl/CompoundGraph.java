@@ -27,6 +27,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
+import uk.ac.ed.inf.graph.compound.IGraphRestoreStateAction;
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeListener;
 import uk.ac.ed.inf.graph.compound.IRootCompoundNode;
@@ -269,8 +270,10 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 		}
 	}
 
-//	@Override
-//	public ISubGraphFactory newSimpleSubgraphFactory() {
-//		return new SubgraphFactory(this);
-//	}
+	@Override
+	public void notifyGraphRestoreChange(IGraphRestoreStateAction e) {
+		for(IGraphStructureChangeListener l : this.graphStructureListeners){
+			l.notifyRestoreCompleted(e);
+		}
+	}
 }

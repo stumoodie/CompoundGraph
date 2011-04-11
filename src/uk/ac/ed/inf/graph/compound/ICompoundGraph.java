@@ -23,4 +23,6 @@ public interface ICompoundGraph extends IImmutableCompoundGraph, IModifiableComp
 	@Override
 	IRootCompoundNode getRoot();
 
+	void notifyGraphRestoreChange(IGraphRestoreStateAction e);
+
 }

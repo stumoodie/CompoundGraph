@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import uk.ac.ed.inf.bitstring.BitStringBuffer;
 import uk.ac.ed.inf.bitstring.IBitString;
+import uk.ac.ed.inf.graph.compound.IGraphRestoreStateAction;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphTestFixture;
 import uk.ac.ed.inf.graph.state.IGraphState;
@@ -90,6 +91,8 @@ public class CompoundGraphStateHandlerTest {
 		final Sequence edge3Sequence = this.mockery.sequence("edge3Sequence"); 
 		final Sequence edge4Sequence = this.mockery.sequence("edge4Sequence"); 
 		this.mockery.checking(new Expectations(){{
+			one(testFixture.getGraph()).notifyGraphRestoreChange(with(any(IGraphRestoreStateAction.class)));
+			
 //			one(testFixture.getRootNode()).markRemoved(true); inSequence(rootNodeSequence);
 			one(testFixture.getRootNode()).markRemoved(false); inSequence(rootNodeSequence);
 //			one(testFixture.getNode(ComplexGraphFixture.NODE1_ID)).markRemoved(true); inSequence(node1Sequence);
@@ -112,6 +115,8 @@ public class CompoundGraphStateHandlerTest {
 			one(testFixture.getEdge(ComplexGraphFixture.EDGE3_ID)).markRemoved(false); inSequence(edge3Sequence);
 //			one(testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)).markRemoved(true); inSequence(edge4Sequence);
 			one(testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)).markRemoved(false); inSequence(edge4Sequence);
+			
+			ignoring(testFixture.getGraph().subgraphFactory());
 		}});
 		this.testInstance.restoreState(mockState);
 		this.mockery.assertIsSatisfied();
