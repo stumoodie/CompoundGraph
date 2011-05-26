@@ -1,0 +1,5 @@
+Java library that supports the representation, traversal, editing and 
+manipulation of Directed Compound Graphs. The library can descibe graphs 
+with compound nodes *and* compound edges. Nodes can be coloured and edges
+can have weights. The graph also can save and restore its state so can
+support undo/redo operations.
