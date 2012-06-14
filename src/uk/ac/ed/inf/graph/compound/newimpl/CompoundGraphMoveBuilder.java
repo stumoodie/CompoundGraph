@@ -21,6 +21,8 @@ package uk.ac.ed.inf.graph.compound.newimpl;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -121,7 +123,8 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 		this.oldNewEquivList.clear();
 		this.movedDestnElementsSubgraphFactory = this.destChildGraph.getSuperGraph().subgraphFactory();
 		moveElements();
-		moveLinkedEdges();
+		addDanglingIncidentEdges();
+//		moveLinkedEdges();
 		// avoid holding onto additional unneeded memory
 		this.oldNewEquivList.clear();
 		ICompoundGraph graph = this.destChildGraph.getSuperGraph();
@@ -149,6 +152,68 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 				return movedComponentsSubgraph;
 			}
 		});
+	}
+
+	private void addDanglingIncidentEdges() {
+		ElementTreeStructure incidentDanglingEdges = new ElementTreeStructure();
+		Iterator<ICompoundNode> nodeIter = this.sourceSubCigraph.nodeIterator();
+		Set<Integer> visited = new HashSet<Integer>();
+		while (nodeIter.hasNext()) {
+			ICompoundNode srcNode = nodeIter.next();
+			Iterator<ICompoundEdge> edgeIter = srcNode.edgeIterator();
+			while (edgeIter.hasNext()) {
+				ICompoundEdge srcEdge = edgeIter.next();
+				if (!visited.contains(srcEdge.getIndex())) {
+					visited.add(srcEdge.getIndex());
+					CompoundNodePair ends = srcEdge.getConnectedNodes();
+					if(!this.oldNewEquivList.containsKey(ends.getOutNode()) || !this.oldNewEquivList.containsKey(ends.getInNode())){
+						incidentDanglingEdges.addTopElement(srcEdge);
+					}
+				}
+			}
+		}
+		Iterator<ICompoundGraphElement> elIter = incidentDanglingEdges.edgeLastElementIterator();
+		while (elIter.hasNext()) {
+			ICompoundGraphElement srcElement = elIter.next();
+			ICompoundGraphElement newElement = null;
+			ICompoundGraphElement equivParent = this.oldNewEquivList.get(srcElement.getParent());
+			if(srcElement instanceof ICompoundNode){
+				if(logger.isTraceEnabled()){
+					logger.trace("Creating node src=" + srcElement + ", parent=" + equivParent);
+				}
+				if(!srcElement.getParent().equals(equivParent)){
+					newElement = moveNode((ICompoundNode)srcElement, equivParent);
+				}
+				else{
+					newElement = srcElement;
+				}
+			}
+			else{
+				ICompoundEdge srcEdge = (ICompoundEdge)srcElement;
+				CompoundNodePair ends = srcEdge.getConnectedNodes();
+				ICompoundNode newInNode = (ICompoundNode)this.oldNewEquivList.get(ends.getInNode());
+				ICompoundNode newOutNode = (ICompoundNode)this.oldNewEquivList.get(ends.getOutNode());
+				if(newInNode == null){
+					newInNode = ends.getInNode();
+				}
+				else if(newOutNode == null){
+					newOutNode = ends.getOutNode();
+				}
+				ICompoundGraph ciGraph = this.destChildGraph.getSuperGraph();
+				ICompoundGraphElement lca = ciGraph.getElementTree().getLowestCommonAncestor(newInNode, newOutNode);
+				if (lca == null) {
+					throw new IllegalStateException("The graph and subgraph are inconsistent: an lca for a copied edge could not be found");
+				}
+				if(!(newInNode.equals(ends.getInNode()) && newOutNode.equals(ends.getOutNode()) && equivParent.equals(srcElement.getParent()))){
+					newElement = moveEdge((ICompoundEdge)srcElement, lca, newOutNode, newInNode);
+				}
+				else{
+					newElement = srcElement;
+				}
+			}
+			this.oldNewEquivList.put(srcElement, newElement);
+			this.movedDestnElementsSubgraphFactory.addElement(newElement);
+		}
 	}
 
 	private void moveElements(){
@@ -196,43 +261,43 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 		}
 	}
 
-	private void moveLinkedEdges(){
-		Iterator<ICompoundNode> nodeIter = this.sourceSubCigraph.nodeIterator();
-		Set<Integer> visited = new HashSet<Integer>();
-		while (nodeIter.hasNext()) {
-			ICompoundNode srcNode = nodeIter.next();
-			Iterator<ICompoundEdge> edgeIter = srcNode.edgeIterator();
-			while (edgeIter.hasNext()) {
-				boolean foundLinkedNode = true;
-				ICompoundEdge srcEdge = edgeIter.next();
-				if (!visited.contains(srcEdge.getIndex())) {
-					visited.add(srcEdge.getIndex());
-					CompoundNodePair ends = srcEdge.getConnectedNodes();
-					ICompoundNode newInNode = (ICompoundNode)this.oldNewEquivList.get(ends.getInNode());
-					ICompoundNode newOutNode = (ICompoundNode)this.oldNewEquivList.get(ends.getOutNode());
-					if(newInNode == null){
-						newInNode = ends.getInNode();
-					}
-					else if(newOutNode == null){
-						newOutNode = ends.getOutNode();
-					}
-					else{
-						foundLinkedNode = false;
-					}
-					if(foundLinkedNode){
-						ICompoundGraph ciGraph = this.destChildGraph.getSuperGraph();
-						ICompoundGraphElement lca = ciGraph.getElementTree().getLowestCommonAncestor(newInNode, newOutNode);
-						if (lca == null) {
-							throw new IllegalStateException("The graph and subgraph are inconsistent: an lca for a copied edge could not be found");
-						}
-						ICompoundEdge newEdge = moveEdge(srcEdge, lca, newOutNode, newInNode);
-						this.removalSubGraphFactory.addElement(srcEdge);
-						this.movedDestnElementsSubgraphFactory.addElement(newEdge);
-					}
-				}
-			}
-		}
-	}
+//	private void moveLinkedEdges(){
+//		Iterator<ICompoundNode> nodeIter = this.sourceSubCigraph.nodeIterator();
+//		Set<Integer> visited = new HashSet<Integer>();
+//		while (nodeIter.hasNext()) {
+//			ICompoundNode srcNode = nodeIter.next();
+//			Iterator<ICompoundEdge> edgeIter = srcNode.edgeIterator();
+//			while (edgeIter.hasNext()) {
+//				boolean foundLinkedNode = true;
+//				ICompoundEdge srcEdge = edgeIter.next();
+//				if (!visited.contains(srcEdge.getIndex())) {
+//					visited.add(srcEdge.getIndex());
+//					CompoundNodePair ends = srcEdge.getConnectedNodes();
+//					ICompoundNode newInNode = (ICompoundNode)this.oldNewEquivList.get(ends.getInNode());
+//					ICompoundNode newOutNode = (ICompoundNode)this.oldNewEquivList.get(ends.getOutNode());
+//					if(newInNode == null){
+//						newInNode = ends.getInNode();
+//					}
+//					else if(newOutNode == null){
+//						newOutNode = ends.getOutNode();
+//					}
+//					else{
+//						foundLinkedNode = false;
+//					}
+//					if(foundLinkedNode){
+//						ICompoundGraph ciGraph = this.destChildGraph.getSuperGraph();
+//						ICompoundGraphElement lca = ciGraph.getElementTree().getLowestCommonAncestor(newInNode, newOutNode);
+//						if (lca == null) {
+//							throw new IllegalStateException("The graph and subgraph are inconsistent: an lca for a copied edge could not be found");
+//						}
+//						ICompoundEdge newEdge = moveEdge(srcEdge, lca, newOutNode, newInNode);
+//						this.removalSubGraphFactory.addElement(srcEdge);
+//						this.movedDestnElementsSubgraphFactory.addElement(newEdge);
+//					}
+//				}
+//			}
+//		}
+//	}
 
 	private void initRootNodeEquivalent() {
 		Iterator<ICompoundGraphElement> topElements = this.sourceSubCigraph.topElementIterator();

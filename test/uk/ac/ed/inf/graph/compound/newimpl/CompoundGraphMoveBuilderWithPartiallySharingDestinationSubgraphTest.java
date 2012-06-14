@@ -180,8 +180,8 @@ public class CompoundGraphMoveBuilderWithPartiallySharingDestinationSubgraphTest
 			exactly(1).of(edge2).markRemoved(true);
 			exactly(1).of(edge4).markRemoved(true);
 			
-			exactly(13).of(movedNodesSubgraphFactory).addElement(with(any(ICompoundGraphElement.class)));
-			exactly(1).of(movedNodesSubgraphFactory).addElement(mockEdge);
+			exactly(18).of(movedNodesSubgraphFactory).addElement(with(any(ICompoundGraphElement.class)));
+//			exactly(1).of(movedNodesSubgraphFactory).addElement(mockEdge);
 //			oneOf(movedNodesSubgraphFactory).createSubgraph(); will(returnValue(mockDestnSubgraph)); inSequence(subgraphSeq);
 			oneOf(movedNodesSubgraphFactory).createSubgraph(); will(returnValue(mockRemovalSubgraph)); inSequence(subgraphSeq);
 			oneOf(movedNodesSubgraphFactory).createSubgraph(); will(returnValue(mockDestnSubgraph)); inSequence(subgraphSeq);
@@ -204,13 +204,13 @@ public class CompoundGraphMoveBuilderWithPartiallySharingDestinationSubgraphTest
 			
 			exactly(4).of(mockElementFactory).setParent(with(destnNode));
 			exactly(1).of(mockElementFactory).setParent(with(mockEdge));
-			exactly(1).of(mockElementFactory).setParent(with(testFixture.getRootNode()));
-			exactly(6).of(mockElementFactory).setIndex(with(any(Integer.class)));
-			exactly(6).of(mockElementFactory).setAttribute(with(any(IElementAttribute.class)));
+//			exactly(1).of(mockElementFactory).setParent(with(testFixture.getRootNode()));
+			exactly(5).of(mockElementFactory).setIndex(with(any(Integer.class)));
+			exactly(5).of(mockElementFactory).setAttribute(with(any(IElementAttribute.class)));
 			exactly(3).of(mockElementFactory).createNode(); will(returnValue(mockNode));
 			exactly(1).of(mockElementFactory).createEdge(with(mockNode), with(mockNode)); will(returnValue(mockEdge));
 			exactly(1).of(mockElementFactory).createEdge(with(testFixture.getNode(ComplexGraphFixture.NODE2_ID)), with(mockNode)); will(returnValue(mockEdge));
-			exactly(1).of(mockElementFactory).createEdge(with(testFixture.getNode(ComplexGraphFixture.NODE1_ID)), with(testFixture.getNode(ComplexGraphFixture.NODE6_ID))); will(returnValue(mockEdge));
+//			exactly(1).of(mockElementFactory).createEdge(with(testFixture.getNode(ComplexGraphFixture.NODE1_ID)), with(testFixture.getNode(ComplexGraphFixture.NODE6_ID))); will(returnValue(mockEdge));
 			
 			exactly(2).of(destnChildNode).addNode(with(any(ICompoundNode.class)));
 			
@@ -220,9 +220,9 @@ public class CompoundGraphMoveBuilderWithPartiallySharingDestinationSubgraphTest
 
 			exactly(1).of(mockEdgeChildGraph).addNode(mockNode);
 
-			exactly(1).of(rootChildGraph).addEdge(mockEdge);
+//			exactly(1).of(rootChildGraph).addEdge(mockEdge);
 			
-			exactly(2).of(movedNodesSubgraphFactory).addElement(edge1);
+//			exactly(2).of(movedNodesSubgraphFactory).addElement(edge1);
 			
 			allowing(mockRemovalSubgraph).elementIterator(); will(returnIterator(node3, node4, node5, edge2, edge4));
 			
