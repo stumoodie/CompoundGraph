@@ -30,7 +30,7 @@ public aspect SubCompoundGraphDBC extends ISubCompoundGraphDBC {
 	before(SubCompoundGraph sg, final ICompoundGraphElement element) : addTopElement(sg, element) {
 		new Precondition(){{
 			assertion(element != null, "parameter not null");
-			assertion(element.isRemoved() == false, "top element is not removed");
+			//assertion(element.isRemoved() == false, "top element is not removed");
 		}};
 	}
 }

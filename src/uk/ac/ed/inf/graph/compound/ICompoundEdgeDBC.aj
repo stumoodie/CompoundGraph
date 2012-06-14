@@ -15,6 +15,7 @@ public abstract aspect ICompoundEdgeDBC extends ICompoundGraphElementDBC {
 			assertion(implies(cn.isSelfEdge(), cn.getConnectedNodes().getOutNode().equals(cn.getConnectedNodes().getInNode())), "self edge has same nodes");
 			assertion(!cn.isNode(), "is not a node");
 			assertion(cn.isEdge(), "is edge");
+			assertion(implies(!cn.isRemoved(), !cn.getConnectedNodes().getOutNode().isRemoved() && !cn.getConnectedNodes().getInNode().isRemoved()), "incident nodes not removed");
 		}};
 	}
 }

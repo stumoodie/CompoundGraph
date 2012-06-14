@@ -19,8 +19,10 @@
 package uk.ac.ed.inf.graph.compound.newimpl;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -119,6 +121,7 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 		this.oldNewEquivList.clear();
 		this.movedDestnElementsSubgraphFactory = this.destChildGraph.getSuperGraph().subgraphFactory();
 		moveElements();
+		moveLinkedEdges();
 		// avoid holding onto additional unneeded memory
 		this.oldNewEquivList.clear();
 		ICompoundGraph graph = this.destChildGraph.getSuperGraph();
@@ -190,6 +193,44 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 			}
 			this.oldNewEquivList.put(srcElement, newElement);
 			this.movedDestnElementsSubgraphFactory.addElement(newElement);
+		}
+	}
+
+	private void moveLinkedEdges(){
+		Iterator<ICompoundNode> nodeIter = this.sourceSubCigraph.nodeIterator();
+		Set<Integer> visited = new HashSet<Integer>();
+		while (nodeIter.hasNext()) {
+			ICompoundNode srcNode = nodeIter.next();
+			Iterator<ICompoundEdge> edgeIter = srcNode.edgeIterator();
+			while (edgeIter.hasNext()) {
+				boolean foundLinkedNode = true;
+				ICompoundEdge srcEdge = edgeIter.next();
+				if (!visited.contains(srcEdge.getIndex())) {
+					visited.add(srcEdge.getIndex());
+					CompoundNodePair ends = srcEdge.getConnectedNodes();
+					ICompoundNode newInNode = (ICompoundNode)this.oldNewEquivList.get(ends.getInNode());
+					ICompoundNode newOutNode = (ICompoundNode)this.oldNewEquivList.get(ends.getOutNode());
+					if(newInNode == null){
+						newInNode = ends.getInNode();
+					}
+					else if(newOutNode == null){
+						newOutNode = ends.getOutNode();
+					}
+					else{
+						foundLinkedNode = false;
+					}
+					if(foundLinkedNode){
+						ICompoundGraph ciGraph = this.destChildGraph.getSuperGraph();
+						ICompoundGraphElement lca = ciGraph.getElementTree().getLowestCommonAncestor(newInNode, newOutNode);
+						if (lca == null) {
+							throw new IllegalStateException("The graph and subgraph are inconsistent: an lca for a copied edge could not be found");
+						}
+						ICompoundEdge newEdge = moveEdge(srcEdge, lca, newOutNode, newInNode);
+						this.removalSubGraphFactory.addElement(srcEdge);
+						this.movedDestnElementsSubgraphFactory.addElement(newEdge);
+					}
+				}
+			}
 		}
 	}
 

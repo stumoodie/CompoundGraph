@@ -81,6 +81,9 @@ public class CompoundGraphMoveBuilderWithNonDestnSharingSubgraphTest {
 					testFixture.getEdge(ComplexGraphFixture.EDGE2_ID),
 					testFixture.getNode(ComplexGraphFixture.NODE3_ID), testFixture.getNode(ComplexGraphFixture.NODE4_ID),
 					testFixture.getNode(ComplexGraphFixture.NODE5_ID), testFixture.getEdge(ComplexGraphFixture.EDGE4_ID)));
+			allowing(mockSrcSubgraph).nodeIterator(); will(returnIterator(testFixture.getNode(ComplexGraphFixture.NODE2_ID),
+					testFixture.getNode(ComplexGraphFixture.NODE3_ID), testFixture.getNode(ComplexGraphFixture.NODE4_ID),
+					testFixture.getNode(ComplexGraphFixture.NODE5_ID)));
 			allowing(mockSrcSubgraph).edgeLastElementIterator(); will(returnIterator(testFixture.getNode(ComplexGraphFixture.NODE2_ID),
 					testFixture.getEdge(ComplexGraphFixture.EDGE3_ID), testFixture.getNode(ComplexGraphFixture.NODE3_ID),
 					testFixture.getNode(ComplexGraphFixture.NODE5_ID), testFixture.getEdge(ComplexGraphFixture.EDGE2_ID),
