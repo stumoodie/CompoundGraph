@@ -18,11 +18,11 @@
 */
 package uk.ac.ed.inf.graph.compound.newimpl;
 
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -156,22 +156,47 @@ public class CompoundGraphMoveBuilder implements ICompoundGraphMoveBuilder {
 
 	private void addDanglingIncidentEdges() {
 		ElementTreeStructure incidentDanglingEdges = new ElementTreeStructure();
-		Iterator<ICompoundNode> nodeIter = this.sourceSubCigraph.nodeIterator();
+		// algorithm is to do BFS traversal starting at top nodes of subgraph and then adding
+		// in any incident edges, which are also descended until all nodes and edges incident to nodes that
+		// are children of the incident edges to the subgraph are traveresed.
+		// All such edges and their children are stored for later processing.
+		Deque<ICompoundGraphElement> stack = new LinkedList<ICompoundGraphElement>();
+		Iterator<ICompoundGraphElement> nodeIter = this.sourceSubCigraph.topElementIterator();
+		while(nodeIter.hasNext()){
+			stack.push(nodeIter.next());
+		}
 		Set<Integer> visited = new HashSet<Integer>();
-		while (nodeIter.hasNext()) {
-			ICompoundNode srcNode = nodeIter.next();
-			Iterator<ICompoundEdge> edgeIter = srcNode.edgeIterator();
-			while (edgeIter.hasNext()) {
-				ICompoundEdge srcEdge = edgeIter.next();
-				if (!visited.contains(srcEdge.getIndex())) {
-					visited.add(srcEdge.getIndex());
-					CompoundNodePair ends = srcEdge.getConnectedNodes();
-					if(!this.oldNewEquivList.containsKey(ends.getOutNode()) || !this.oldNewEquivList.containsKey(ends.getInNode())){
-						incidentDanglingEdges.addTopElement(srcEdge);
+		while (!stack.isEmpty()) {
+			ICompoundGraphElement srcElement = stack.poll();
+			if(srcElement instanceof ICompoundNode){
+				ICompoundNode srcNode = (ICompoundNode)srcElement;
+				Iterator<ICompoundEdge> edgeIter = srcNode.edgeIterator();
+				while (edgeIter.hasNext()) {
+					ICompoundEdge srcEdge = edgeIter.next();
+					if (!visited.contains(srcEdge.getIndex())) {
+						visited.add(srcEdge.getIndex());
+						CompoundNodePair ends = srcEdge.getConnectedNodes();
+						if(!this.oldNewEquivList.containsKey(ends.getOutNode()) || !this.oldNewEquivList.containsKey(ends.getInNode())){
+							incidentDanglingEdges.addTopElement(srcEdge);
+							stack.push(srcEdge);
+						}
 					}
 				}
 			}
+			Iterator<ICompoundGraphElement> childIter = srcElement.childIterator();
+			while(childIter.hasNext()){
+				ICompoundGraphElement child = childIter.next();
+				if(!visited.contains(child)){
+					stack.push(child);
+					visited.add(child.getIndex());
+				}
+			}
 		}
+		processIncidentEdges(incidentDanglingEdges);
+	}
+	
+	
+	private void processIncidentEdges(ElementTreeStructure incidentDanglingEdges){
 		Iterator<ICompoundGraphElement> elIter = incidentDanglingEdges.edgeLastElementIterator();
 		while (elIter.hasNext()) {
 			ICompoundGraphElement srcElement = elIter.next();

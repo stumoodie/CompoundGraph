@@ -1,0 +1,4 @@
+name CompoundGraphMoveWithChildAndIncidentEdges
+n(n3 "N3"  n(n1 "N1") n(n2 "N2") e(e1 "E1" n1 n2 n(n5 "N5") ) n(n6 "N6") e(e3 "E3" n5 n6))\
+         n(n4 "N4") e(e2 "E2" n4 n2) 
+        

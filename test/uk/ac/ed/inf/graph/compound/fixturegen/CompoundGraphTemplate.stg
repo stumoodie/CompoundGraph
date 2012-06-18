@@ -1,0 +1,75 @@
+group CompoundGraphTemplate;
+
+fixture(package, name, defs, nodes, edges) ::= <<
+package <package>;
+
+import uk.ac.ed.inf.graph.compound.CompoundNodePair;
+import uk.ac.ed.inf.graph.compound.ICompoundEdge;
+import uk.ac.ed.inf.graph.compound.ICompoundEdgeFactory;
+import uk.ac.ed.inf.graph.compound.ICompoundGraph;
+import uk.ac.ed.inf.graph.compound.ICompoundNode;
+import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
+import uk.ac.ed.inf.graph.compound.IElementAttribute;
+import uk.ac.ed.inf.graph.compound.newimpl.CompoundGraph;
+import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
+import uk.ac.ed.inf.graph.compound.testfixture.ElementAttributeFactory;
+
+
+class <name>GraphTestFixture {
+    private ICompoundGraph <name>Graph;
+    <nodes : {n| private ICompoundNode <n>;}; separator="\n">
+    <edges : {e| private ICompoundEdge <e>;}; separator="\n">
+  
+    @SuppressWarnings("unused")
+    public <name>GraphTestFixture(){
+        IElementAttribute rootAtt = new ElementAttribute("root");
+        ElementAttributeFactory elementFactory = new ElementAttributeFactory(); 
+        this.<name>Graph = new CompoundGraph(rootAtt);
+        ICompoundEdgeFactory rootEdgeFactory = this.<name>Graph.edgeFactory();
+        rootEdgeFactory.setAttributeFactory(elementFactory);
+        ICompoundNodeFactory rootNodeFactory = this.<name>Graph.nodeFactory();
+        rootNodeFactory.setAttributeFactory(elementFactory);
+        <defs; separator="\n">
+    }
+   
+    public ICompoundGraph getGraph(){
+        return <name>Graph;
+    }
+   
+    <nodes : {n | public ICompoundNode getNode<n>() \{ return <n>; \} }; separator="\n\n">
+  
+    <edges : {e | public ICompoundEdge getEdge<e>() \{ return <e>; \} }; separator="\n\n">
+}
+>>
+
+branch_node(parent, id, name, defs) ::= <<
+elementFactory.setName(<name>);
+<parent>NodeFactory.setAttributeFactory(elementFactory);
+<id> = <parent>NodeFactory.createNode();
+ICompoundNodeFactory <id>NodeFactory = <id>.getChildCompoundGraph().nodeFactory();
+ICompoundEdgeFactory <id>EdgeFactory = <id>.getChildCompoundGraph().edgeFactory();
+<defs; separator="\n"> 
+>>
+
+leaf_node(id, name, parent) ::= <<
+elementFactory.setName(<name>);
+<parent>NodeFactory.setAttributeFactory(elementFactory);
+<id> = <parent>NodeFactory.createNode();
+>>
+
+branch_edge(id, name, out, in, parent, defs) ::= <<
+elementFactory.setName(<name>);
+<parent>EdgeFactory.setAttributeFactory(elementFactory);
+<parent>EdgeFactory.setPair(new CompoundNodePair(<out>, <in>));
+<id> = <parent>EdgeFactory.createEdge();
+ICompoundEdgeFactory <id>EdgeFactory = <id>.getChildCompoundGraph().edgeFactory();
+ICompoundNodeFactory <id>NodeFactory = <id>.getChildCompoundGraph().nodeFactory();
+<defs; separator="\n"> 
+>>
+
+leaf_edge(id, name, out, in, parent) ::= <<
+elementFactory.setName(<name>);
+<parent>EdgeFactory.setAttributeFactory(elementFactory);
+<parent>EdgeFactory.setPair(new CompoundNodePair(<out>, <in>));
+<id> = <parent>EdgeFactory.createEdge();
+>>
