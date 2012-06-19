@@ -1,0 +1,5 @@
+name Test
+n(n1 "N1" n(n2 "N2" n(n4 "N4")) n(n3 "N3") ) \
+        n(n7 "N4") n(n5 "N5") \
+        e(e1 "E1" n1 n5 n(n6 "N6") ) \
+        e(e2 "E2" n3 n5) 
