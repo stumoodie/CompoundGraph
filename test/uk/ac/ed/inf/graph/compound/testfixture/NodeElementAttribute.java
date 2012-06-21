@@ -22,16 +22,16 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 
-public class ElementAttribute implements IElementAttribute {
+public class NodeElementAttribute implements IElementAttribute {
 	private final String name;
 	private ICompoundGraphElement currentElement;
 	private boolean canCreateFlag = true;
 	
-	public ElementAttribute(String name){
+	public NodeElementAttribute(String name){
 		this.name = name;
 	}
 	
-	public ElementAttribute(ElementAttribute otherEl){
+	public NodeElementAttribute(NodeElementAttribute otherEl){
 		this.name = otherEl.getName();
 	}
 	
@@ -64,7 +64,7 @@ public class ElementAttribute implements IElementAttribute {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ElementAttribute other = (ElementAttribute) obj;
+		NodeElementAttribute other = (NodeElementAttribute) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -85,14 +85,14 @@ public class ElementAttribute implements IElementAttribute {
 
 	@Override
 	public IElementAttributeFactory elementAttributeCopyFactory() {
-		ElementAttributeCopyFactory retVal = new ElementAttributeCopyFactory(this);
+		NodeElementAttributeCopyFactory retVal = new NodeElementAttributeCopyFactory(this);
 		retVal.setCanCreateFlag(canCreateFlag);
 		return retVal;
 	}
 
 	@Override
 	public IElementAttributeFactory elementAttributeMoveFactory() {
-		ElementAttributeMoveFactory retVal = new ElementAttributeMoveFactory(this);
+		NodeElementAttributeMoveFactory retVal = new NodeElementAttributeMoveFactory(this);
 		retVal.setCanCreateFlag(canCreateFlag);
 		return retVal;
 	}

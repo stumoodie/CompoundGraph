@@ -40,7 +40,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttributeFactory;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttributeFactory;
 
 @RunWith(JMock.class)
 public class CompoundEdgeFactorySuccessTest {
@@ -48,7 +48,7 @@ public class CompoundEdgeFactorySuccessTest {
 	
 	private ICompoundEdgeFactory testInstance ;
 	private ComplexGraphFixture testFixture;
-	private ElementAttributeFactory elementFactory;
+	private NodeElementAttributeFactory elementFactory;
 	private CompoundNodePair expectedNodePair;
 
 	@Before
@@ -62,7 +62,7 @@ public class CompoundEdgeFactorySuccessTest {
 		final ICompoundNode node5 = this.testFixture.getNode5();
 		expectedNodePair = new CompoundNodePair(node3, node5);
 		this.testInstance.setPair(expectedNodePair);
-		this.elementFactory = new ElementAttributeFactory();
+		this.elementFactory = new NodeElementAttributeFactory();
 		this.elementFactory.setName("testElement");
 		this.testInstance.setAttributeFactory(this.elementFactory);
 	}

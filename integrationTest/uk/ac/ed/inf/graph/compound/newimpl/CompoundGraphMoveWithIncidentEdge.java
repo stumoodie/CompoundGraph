@@ -21,8 +21,8 @@ import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttributeFactory;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttribute;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttributeFactory;
 
 public class CompoundGraphMoveWithIncidentEdge {
 	private static final int EXPECTED_NODES_IN_ROOT = 4;
@@ -150,7 +150,7 @@ public class CompoundGraphMoveWithIncidentEdge {
 		Iterator<ICompoundEdge> movedEdgeIter = movedSub.edgeIterator();
 		while(movedEdgeIter.hasNext()){
 			ICompoundEdge edge = movedEdgeIter.next(); 
-			String edgeName = ((ElementAttribute)edge.getAttribute()).getName();
+			String edgeName = ((NodeElementAttribute)edge.getAttribute()).getName();
 			if(edgeName.equals("E1")){
 				newEdge1 = edge;
 			}
@@ -214,7 +214,7 @@ public class CompoundGraphMoveWithIncidentEdge {
 		Iterator<ICompoundEdge> movedEdgeIter = movedSub.edgeIterator();
 		while(movedEdgeIter.hasNext()){
 			ICompoundEdge edge = movedEdgeIter.next(); 
-			String edgeName = ((ElementAttribute)edge.getAttribute()).getName();
+			String edgeName = ((NodeElementAttribute)edge.getAttribute()).getName();
 			if(edgeName.equals("E1")){
 				newEdge1 = edge;
 			}

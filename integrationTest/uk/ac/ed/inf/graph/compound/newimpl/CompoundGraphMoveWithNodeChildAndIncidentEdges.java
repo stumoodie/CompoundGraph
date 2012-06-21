@@ -17,7 +17,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphMoveBuilder;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttribute;
 
 public class CompoundGraphMoveWithNodeChildAndIncidentEdges {
 	private static final int EXPECTED_NODES_IN_ROOT = 2;
@@ -156,7 +156,7 @@ public class CompoundGraphMoveWithNodeChildAndIncidentEdges {
 		Iterator<ICompoundEdge> movedEdgeIter = movedSub.edgeIterator();
 		while(movedEdgeIter.hasNext()){
 			ICompoundEdge edge = movedEdgeIter.next(); 
-			String edgeName = ((ElementAttribute)edge.getAttribute()).getName();
+			String edgeName = ((NodeElementAttribute)edge.getAttribute()).getName();
 			if(edgeName.equals("E1")){
 				newEdge1 = edge;
 			}
@@ -172,10 +172,10 @@ public class CompoundGraphMoveWithNodeChildAndIncidentEdges {
 		ICompoundNode newNode5 = null;
 		while(movedNodeIter.hasNext()){
 			ICompoundNode newNode = movedNodeIter.next();
-			if(((ElementAttribute)newNode.getAttribute()).getName().equals(NODE2_ID)){
+			if(((NodeElementAttribute)newNode.getAttribute()).getName().equals(NODE2_ID)){
 				newNode2  = newNode;
 			}
-			else if(((ElementAttribute)newNode.getAttribute()).getName().equals(NODE5_ID)){
+			else if(((NodeElementAttribute)newNode.getAttribute()).getName().equals(NODE5_ID)){
 				newNode5  = newNode;
 			}
 		}
@@ -240,7 +240,7 @@ public class CompoundGraphMoveWithNodeChildAndIncidentEdges {
 		Iterator<ICompoundNode> movedNodeIter = movedSub.nodeIterator();
 		while(movedNodeIter.hasNext()){
 			ICompoundNode node = movedNodeIter.next(); 
-			String nodeName = ((ElementAttribute)node.getAttribute()).getName();
+			String nodeName = ((NodeElementAttribute)node.getAttribute()).getName();
 			if(nodeName.equals(NODE1_ID)){
 				newNode1 = node;
 			}
@@ -257,7 +257,7 @@ public class CompoundGraphMoveWithNodeChildAndIncidentEdges {
 		Iterator<ICompoundEdge> movedEdgeIter = movedSub.edgeIterator();
 		while(movedEdgeIter.hasNext()){
 			ICompoundEdge edge = movedEdgeIter.next(); 
-			String edgeName = ((ElementAttribute)edge.getAttribute()).getName();
+			String edgeName = ((NodeElementAttribute)edge.getAttribute()).getName();
 			if(edgeName.equals("E1")){
 				newEdge1 = edge;
 			}

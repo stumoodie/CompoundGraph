@@ -21,34 +21,33 @@ package uk.ac.ed.inf.graph.compound.testfixture;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 
-public class ElementAttributeCopyFactory implements	IElementAttributeFactory {
-	private final IElementAttribute attribToCopy;
+public class EdgeElementAttributeFactory implements	IElementAttributeFactory {
+	private String name;
 	private IElementAttribute destinationAttribute;
-	private boolean canCreateFlag = true;
-	private IElementAttribute inAttribute;
 	private IElementAttribute outAttribute;
+	private IElementAttribute inAttribute;
 	
-	public ElementAttributeCopyFactory(ElementAttribute attrbToCopy){
-		this.attribToCopy = attrbToCopy;
+	public EdgeElementAttributeFactory(){
+		name = null;
 	}
 	
 	@Override
 	public boolean canCreateAttribute() {
-		return this.attribToCopy != null && destinationAttribute != null && canCreateFlag;
+		return this.name != null;
 	}
 
 	@Override
-	public IElementAttribute createAttribute() {
-		return new ElementAttribute(((ElementAttribute)this.attribToCopy));
+	public NodeElementAttribute createAttribute() {
+		return new NodeElementAttribute(name);
 	}
 
-	public IElementAttribute getElementToCopy() {
-		return this.attribToCopy;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
-	public void setDestinationAttribute(IElementAttribute destinationAttribute) {
-		this.destinationAttribute = destinationAttribute;
+	public void setDestinationAttribute(IElementAttribute attribute) {
+		this.destinationAttribute = attribute;
 	}
 
 	@Override
@@ -56,13 +55,6 @@ public class ElementAttributeCopyFactory implements	IElementAttributeFactory {
 		return this.destinationAttribute;
 	}
 
-	public boolean canCreate() {
-		return canCreateFlag;
-	}
-
-	public void setCanCreateFlag(boolean canCreateFlag) {
-		this.canCreateFlag = canCreateFlag;
-	}
 
 	@Override
 	public void setOutAttribute(IElementAttribute attribute) {

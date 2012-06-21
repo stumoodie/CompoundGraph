@@ -31,8 +31,8 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.IRootCompoundNode;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttributeFactory;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttribute;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttributeFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.IEdgeConstructor;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphConstructor;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphTestFixture;
@@ -61,9 +61,9 @@ public class IntegrationTestGraphFixture implements IGraphTestFixture {
 	
 	@Override
 	public void buildFixture(){
-		ElementAttributeFactory attributeFactory = new ElementAttributeFactory();
+		NodeElementAttributeFactory attributeFactory = new NodeElementAttributeFactory();
 		this.elementMap.clear();
-		this.graph = new CompoundGraph(new ElementAttribute(ROOT_NODE_ID));
+		this.graph = new CompoundGraph(new NodeElementAttribute(ROOT_NODE_ID));
 		this.elementMap.put(ROOT_NODE_ID, this.graph.getRoot());
 		ICompoundNodeFactory rootNodeFact = this.graph.getRoot().getChildCompoundGraph().nodeFactory();
 		rootNodeFact.setAttributeFactory(attributeFactory);

@@ -35,7 +35,7 @@ import uk.ac.ed.inf.graph.compound.CompoundNodePair;
 import uk.ac.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttributeFactory;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttributeFactory;
 
 @RunWith(JMock.class)
 public class CompoundEdgeFactoryAttFactProhibitTest {
@@ -43,7 +43,7 @@ public class CompoundEdgeFactoryAttFactProhibitTest {
 	
 	private ICompoundEdgeFactory testInstance ;
 	private ComplexGraphFixture testFixture;
-	private ElementAttributeFactory elementFactory;
+	private NodeElementAttributeFactory elementFactory;
 	private CompoundNodePair expectedNodePair;
 
 	@Before
@@ -57,7 +57,7 @@ public class CompoundEdgeFactoryAttFactProhibitTest {
 		final ICompoundNode node5 = this.testFixture.getNode5();
 		expectedNodePair = new CompoundNodePair(node3, node5);
 		this.testInstance.setPair(expectedNodePair);
-		this.elementFactory = new ElementAttributeFactory();
+		this.elementFactory = new NodeElementAttributeFactory();
 		this.testInstance.setAttributeFactory(this.elementFactory);
 	}
 

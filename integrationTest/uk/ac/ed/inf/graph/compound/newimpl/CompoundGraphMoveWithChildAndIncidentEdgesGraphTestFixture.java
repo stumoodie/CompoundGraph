@@ -8,8 +8,8 @@ import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.newimpl.CompoundGraph;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttributeFactory;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttribute;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttributeFactory;
 
 
 class CompoundGraphMoveWithChildAndIncidentEdgesGraphTestFixture {
@@ -26,8 +26,8 @@ class CompoundGraphMoveWithChildAndIncidentEdgesGraphTestFixture {
   
     @SuppressWarnings("unused")
     public CompoundGraphMoveWithChildAndIncidentEdgesGraphTestFixture(){
-        IElementAttribute rootAtt = new ElementAttribute("root");
-        ElementAttributeFactory elementFactory = new ElementAttributeFactory(); 
+        IElementAttribute rootAtt = new NodeElementAttribute("root");
+        NodeElementAttributeFactory elementFactory = new NodeElementAttributeFactory(); 
         this.CompoundGraphMoveWithChildAndIncidentEdgesGraph = new CompoundGraph(rootAtt);
         ICompoundEdgeFactory rootEdgeFactory = this.CompoundGraphMoveWithChildAndIncidentEdgesGraph.edgeFactory();
         rootEdgeFactory.setAttributeFactory(elementFactory);

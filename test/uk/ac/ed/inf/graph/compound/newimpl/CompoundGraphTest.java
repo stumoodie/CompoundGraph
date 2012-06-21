@@ -49,7 +49,7 @@ import uk.ac.ed.inf.graph.compound.IRootCompoundNode;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.ISubgraphRemovalBuilder;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphConstructor;
 import uk.ac.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 import uk.ac.ed.inf.graph.state.IGraphState;
@@ -76,7 +76,7 @@ public class CompoundGraphTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		this.expectedAttribute = new ElementAttribute(ComplexGraphFixture.GRAPH_ID);
+		this.expectedAttribute = new NodeElementAttribute(ComplexGraphFixture.GRAPH_ID);
 		this.mockery = new JUnit4Mockery();
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		this.testFixture.redefineGraph(new IGraphConstructor() {

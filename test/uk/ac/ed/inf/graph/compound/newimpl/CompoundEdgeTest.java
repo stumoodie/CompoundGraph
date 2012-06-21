@@ -40,7 +40,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.IEdgeConstructor;
 import uk.ac.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 
@@ -70,12 +70,12 @@ public class CompoundEdgeTest {
 
 	private ComplexGraphFixture otherTestFixture;
 
-	private ElementAttribute expectedElementAttribute;
+	private NodeElementAttribute expectedElementAttribute;
 	
 	@Before
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
-		this.expectedElementAttribute = new ElementAttribute(ComplexGraphFixture.EDGE2_ID);
+		this.expectedElementAttribute = new NodeElementAttribute(ComplexGraphFixture.EDGE2_ID);
 		this.testFixture = new ComplexGraphFixture(mockery, "");
 		this.testFixture.redefineEdge(ComplexGraphFixture.EDGE2_ID, new IEdgeConstructor(){
 			

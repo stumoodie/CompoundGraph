@@ -39,7 +39,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.INodeConstructor;
 
 @RunWith(JMock.class)
@@ -101,7 +101,7 @@ public class CompoundNodeFactoryNonParentingAttributeTest {
 			
 			@Override
 			public IElementAttribute createAttribute() {
-				return new ElementAttribute("new element");
+				return new NodeElementAttribute("new element");
 			}
 			
 			@Override

@@ -30,7 +30,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
-import uk.ac.ed.inf.graph.compound.IElementAttribute;
+import uk.ac.ed.inf.graph.compound.IElementAttributeModel;
 import uk.ac.ed.inf.graph.compound.IGraphRestoreStateAction;
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeListener;
@@ -54,13 +54,15 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 	private final IRootCompoundNode rootNode;
 	private final IGraphStateHandler stateHandler;
 	private final IndexCounter indexCounter;
+	private final IElementAttributeModel model;
 	private final List<IGraphStructureChangeListener> graphStructureListeners;
 
 //	private ICompoundGraphServices services;
 
-	public CompoundGraph(IElementAttribute rootAttribute){
+	public CompoundGraph(IElementAttributeModel rootAttribute){
 		this.stateHandler = new CompoundGraphStateHandler(this);
-		this.rootNode = new RootCompoundNode(this, ROOT_NODE_IDX, rootAttribute);
+		this.model = rootAttribute;
+		this.rootNode = new RootCompoundNode(this, ROOT_NODE_IDX, this.model.getRootAttribute());
 		this.graphStructureListeners = new LinkedList<IGraphStructureChangeListener>();
 		this.indexCounter = new IndexCounter();
 	}
@@ -279,5 +281,10 @@ public class CompoundGraph implements ICompoundGraph, IRestorableGraph {
 		for(IGraphStructureChangeListener l : this.graphStructureListeners){
 			l.notifyRestoreCompleted(e);
 		}
+	}
+
+	@Override
+	public IElementAttributeModel getElementAttributeModel() {
+		return this.model;
 	}
 }

@@ -43,7 +43,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttributeFactory;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttributeFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.IEdgeConstructor;
 import uk.ac.ed.inf.graph.compound.testfixture.IGraphTestFixture;
 
@@ -54,7 +54,7 @@ public class CompoundChildEdgeFactoryTest {
 	private ICompoundChildEdgeFactory testInstance;
 	private CompoundNodePair testNodePair;
 	private IGraphTestFixture otherTestFixture;
-	private ElementAttributeFactory expectedAttributeFactory;
+	private NodeElementAttributeFactory expectedAttributeFactory;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -110,7 +110,7 @@ public class CompoundChildEdgeFactoryTest {
 		});
 		this.testFixture.buildFixture();
 		this.testNodePair = new CompoundNodePair(this.testFixture.getNode(ComplexGraphFixture.NODE5_ID), this.testFixture.getNode(ComplexGraphFixture.NODE3_ID));
-		this.expectedAttributeFactory = new ElementAttributeFactory();
+		this.expectedAttributeFactory = new NodeElementAttributeFactory();
 		this.expectedAttributeFactory.setName("new att");
 		this.testInstance.setAttributeFactory(this.expectedAttributeFactory);
 		this.testInstance.setPair(this.testNodePair);

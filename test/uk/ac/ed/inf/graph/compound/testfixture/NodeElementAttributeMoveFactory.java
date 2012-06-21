@@ -21,28 +21,30 @@ package uk.ac.ed.inf.graph.compound.testfixture;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 
-public class ElementAttributeFactory implements	IElementAttributeFactory {
-	private String name;
+public class NodeElementAttributeMoveFactory implements	IElementAttributeFactory {
+	private final NodeElementAttribute attribToMove;
 	private IElementAttribute destinationAttribute;
+	private boolean canCreateFlag = true;
 	private IElementAttribute outAttribute;
 	private IElementAttribute inAttribute;
 	
-	public ElementAttributeFactory(){
-		name = null;
+	
+	public NodeElementAttributeMoveFactory(NodeElementAttribute attribToMove){
+		this.attribToMove = attribToMove;
 	}
 	
 	@Override
 	public boolean canCreateAttribute() {
-		return this.name != null;
+		return this.attribToMove != null && destinationAttribute != null && canCreateFlag;
 	}
 
 	@Override
-	public IElementAttribute createAttribute() {
-		return new ElementAttribute(name);
+	public NodeElementAttribute createAttribute() {
+		return this.attribToMove;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public IElementAttribute getElementToMove() {
+		return this.attribToMove;
 	}
 
 	@Override
@@ -52,7 +54,16 @@ public class ElementAttributeFactory implements	IElementAttributeFactory {
 
 	@Override
 	public IElementAttribute getDestinationAttribute() {
-		return this.destinationAttribute;
+		return destinationAttribute;
+	}
+
+
+	public boolean canCreate() {
+		return canCreateFlag;
+	}
+
+	public void setCanCreateFlag(boolean canCreateFlag) {
+		this.canCreateFlag = canCreateFlag;
 	}
 
 

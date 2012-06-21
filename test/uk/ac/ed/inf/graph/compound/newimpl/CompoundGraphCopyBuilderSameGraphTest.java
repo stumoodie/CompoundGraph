@@ -42,7 +42,7 @@ import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttribute;
 
 @RunWith(JMock.class)
 public class CompoundGraphCopyBuilderSameGraphTest {
@@ -126,11 +126,11 @@ public class CompoundGraphCopyBuilderSameGraphTest {
 		this.mockery.checking(new Expectations(){{
 			allowing(mockNode).getChildCompoundGraph(); will(returnValue(mockChildGraph));
 			allowing(mockNode).getGraph(); will(returnValue(destnFixture.getGraph()));
-			allowing(mockNode).getAttribute(); will(returnValue(new ElementAttribute("mockNodeAtt")));
+			allowing(mockNode).getAttribute(); will(returnValue(new NodeElementAttribute("mockNodeAtt")));
 			
 			allowing(mockEdge).getChildCompoundGraph(); will(returnValue(mockChildGraph));
 			allowing(mockEdge).getGraph(); will(returnValue(destnFixture.getGraph()));
-			allowing(mockEdge).getAttribute(); will(returnValue(new ElementAttribute("mockNodeAtt")));
+			allowing(mockEdge).getAttribute(); will(returnValue(new NodeElementAttribute("mockNodeAtt")));
 			
 //			allowing(mockChildGraph).nodeFactory(); will(returnValue(mockNodeFact));
 //			allowing(mockChildGraph).edgeFactory(); will(returnValue(mockEdgeFact));
@@ -159,7 +159,7 @@ public class CompoundGraphCopyBuilderSameGraphTest {
 			exactly(4).of(mockElementFactory).setParent(with(destElement));
 			exactly(2).of(mockElementFactory).setParent(with(mockNode));
 			exactly(1).of(mockElementFactory).setParent(with(mockEdge));
-			exactly(7).of(mockElementFactory).setAttribute(with(any(ElementAttribute.class)));
+			exactly(7).of(mockElementFactory).setAttribute(with(any(NodeElementAttribute.class)));
 			exactly(5).of(mockElementFactory).createNode(); will(returnValue(mockNode));
 			exactly(2).of(mockElementFactory).createEdge(mockNode, mockNode); will(returnValue(mockEdge));
 			

@@ -40,7 +40,7 @@ import uk.ac.ed.inf.graph.compound.IElementAttributeFactory;
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.INodeConstructor;
 
 @RunWith(JMock.class)
@@ -99,7 +99,7 @@ public class CompoundNodeFactoryTest {
 			}
 		});
 		this.testFixture.buildFixture();
-		this.expectedAtt = new ElementAttribute("new element");
+		this.expectedAtt = new NodeElementAttribute("new element");
 		this.expectedAttribute = new IElementAttributeFactory() {
 			
 			@Override

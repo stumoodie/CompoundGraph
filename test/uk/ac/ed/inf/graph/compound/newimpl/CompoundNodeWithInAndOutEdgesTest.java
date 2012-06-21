@@ -39,7 +39,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.INodeConstructor;
 import uk.ac.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 
@@ -57,7 +57,7 @@ public class CompoundNodeWithInAndOutEdgesTest {
 
 	@Before
 	public void setUp() throws Exception {
-		this.expectedAttribute = new ElementAttribute(ComplexGraphFixture.NODE3_ID);
+		this.expectedAttribute = new NodeElementAttribute(ComplexGraphFixture.NODE3_ID);
 		this.testFixture = new ComplexGraphFixture(this.mockery, "");
 		this.testFixture.redefineNode(ComplexGraphFixture.NODE3_ID, new INodeConstructor() {
 			

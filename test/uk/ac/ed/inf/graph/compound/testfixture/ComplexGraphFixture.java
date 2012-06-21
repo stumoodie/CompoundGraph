@@ -99,7 +99,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 	private final Map<String,IGraphObjectBuilder> builderMap;
 	private final List<String> creationDepList = Arrays.asList(new String[]{GRAPH_ID, NODE1_ID, NODE2_ID, EDGE3_ID, NODE6_ID, EDGE1_ID, NODE3_ID, NODE5_ID, EDGE2_ID, NODE4_ID, EDGE4_ID});
 	private final Map<String, Boolean> elementRemovalMap;
-	private final Map<String, ElementAttribute> elementAttributesMap;
+	private final Map<String, NodeElementAttribute> elementAttributesMap;
 	private final IGraphObjectBuilder builders[] = {
 			new NodeBuilder(NODE1_ID, new INodeConstructor(){
 		
@@ -1143,7 +1143,7 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 		this.prefix = prefix;
 		this.builderMap = new HashMap<String, IGraphObjectBuilder>();
 		this.elementRemovalMap = new HashMap<String, Boolean>();
-		this.elementAttributesMap = new HashMap<String, ElementAttribute>();
+		this.elementAttributesMap = new HashMap<String, NodeElementAttribute>();
 		createAttributes();
 		IGraphObjectBuilder graphBuilder = new GraphBuilder(GRAPH_ID, new IGraphConstructor() {
 			
@@ -1324,11 +1324,11 @@ public class ComplexGraphFixture implements IGraphTestFixture {
 	
 	private void createAttributes() {
 		for(String name : this.creationDepList){
-			this.elementAttributesMap.put(name, new ElementAttribute(createMockName(name)));
+			this.elementAttributesMap.put(name, new NodeElementAttribute(createMockName(name)));
 		}
 	}
 
-	public ElementAttribute getAttribute(String elementId){
+	public NodeElementAttribute getAttribute(String elementId){
 		return this.elementAttributesMap.get(elementId);
 	}
 	

@@ -36,7 +36,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.INodeConstructor;
 
 @RunWith(JMock.class)
@@ -46,12 +46,12 @@ public class CompoundNodeRemovedStateTest {
 	private ComplexGraphFixture testFixture;
 	private ICompoundNode testInstance;
 	private ComplexGraphFixture otherTestFixture;
-	private ElementAttribute expectedAttribute;
+	private NodeElementAttribute expectedAttribute;
 
 	@Before
 	public void setUp() throws Exception {
 		this.mockery = new JUnit4Mockery();
-		this.expectedAttribute = new ElementAttribute(ComplexGraphFixture.NODE1_ID);
+		this.expectedAttribute = new NodeElementAttribute(ComplexGraphFixture.NODE1_ID);
 		this.testFixture = new ComplexGraphFixture(this.mockery, "");
 		this.testFixture.redefineNode(ComplexGraphFixture.NODE1_ID, new INodeConstructor() {
 			

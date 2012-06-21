@@ -39,7 +39,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
+import uk.ac.ed.inf.graph.compound.testfixture.NodeElementAttribute;
 import uk.ac.ed.inf.graph.compound.testfixture.INodeConstructor;
 import uk.ac.ed.inf.graph.compound.testfixture.IteratorTestUtility;
 
@@ -84,7 +84,7 @@ public class CompoundNodeWithSelfEdgeTest {
 
 			@Override
 			public ICompoundNode createCompoundNode() {
-				testInstance = new CompoundNode(testFixture.getNode1(), ComplexGraphFixture.NODE2_IDX, new ElementAttribute(ComplexGraphFixture.NODE2_ID));
+				testInstance = new CompoundNode(testFixture.getNode1(), ComplexGraphFixture.NODE2_IDX, new NodeElementAttribute(ComplexGraphFixture.NODE2_ID));
 				return testInstance;
 			}
 
