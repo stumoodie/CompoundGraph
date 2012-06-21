@@ -33,6 +33,8 @@
 		<pathelement location="${libs.dir}/jmock-2.5.1/objenesis-1.0.jar" />
 		<pathelement location="${libs.dir}/jmock-2.5.1/cglib-nodep-2.1_3.jar" />
 		<pathelement location="${libs.dir}/aspectj-1.6.9/aspectjrt.jar" />
+                <pathelement location="${libs.dir}/antlr-3.4/antlr-3.4-complete.jar" />
+                <pathelement location="${libs.dir}/jopt-simple-3.2/jopt-simple-3.2.jar" />
 	</path>
 
 	<path id="test.classpath">

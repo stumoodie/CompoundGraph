@@ -1,1 +1,4 @@
 bin
+/ant-build
+/doc
+/jars
