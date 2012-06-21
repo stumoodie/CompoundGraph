@@ -41,7 +41,6 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphMoveBuilder;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.IGraphStructureChangeAction;
-import uk.ac.ed.inf.graph.compound.IRootChildCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ComplexGraphFixture;
@@ -162,8 +161,8 @@ public class CompoundGraphMoveBuilderWithPartiallySharingDestinationSubgraphTest
 		final ICompoundNode node5 = testFixture.getNode(ComplexGraphFixture.NODE5_ID);
 		final ICompoundEdge edge2 = testFixture.getEdge(ComplexGraphFixture.EDGE2_ID);
 		final ICompoundEdge edge4 = testFixture.getEdge(ComplexGraphFixture.EDGE4_ID);
-		final ICompoundEdge edge1 = testFixture.getEdge(ComplexGraphFixture.EDGE1_ID);
-		final IRootChildCompoundGraph rootChildGraph = testFixture.getRootNode().getChildCompoundGraph();
+//		final ICompoundEdge edge1 = testFixture.getEdge(ComplexGraphFixture.EDGE1_ID);
+//		final IRootChildCompoundGraph rootChildGraph = testFixture.getRootNode().getChildCompoundGraph();
 
 		this.mockery.checking(new Expectations(){{
 			allowing(mockNode).getChildCompoundGraph(); will(returnValue(mockNodeChildGraph));

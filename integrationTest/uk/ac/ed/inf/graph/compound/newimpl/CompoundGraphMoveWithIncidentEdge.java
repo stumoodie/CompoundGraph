@@ -11,18 +11,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.ed.inf.graph.compound.CompoundNodePair;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
-import uk.ac.ed.inf.graph.compound.ICompoundEdgeFactory;
 import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphMoveBuilder;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
-import uk.ac.ed.inf.graph.compound.ICompoundNodeFactory;
-import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
-import uk.ac.ed.inf.graph.compound.testfixture.ElementAttributeFactory;
 
 public class CompoundGraphMoveWithIncidentEdge {
 	private static final int EXPECTED_NODES_IN_ROOT = 4;
@@ -129,6 +124,7 @@ public class CompoundGraphMoveWithIncidentEdge {
 		assertTrue("expected node", this.testInstance.getRoot().getChildCompoundGraph().containsNode(node1));
 		assertTrue("expected node", this.testInstance.getRoot().getChildCompoundGraph().containsNode(node2));
 		assertTrue("expected node", this.testInstance.getRoot().getChildCompoundGraph().containsNode(node3));
+		assertTrue("expected node", this.testInstance.getRoot().getChildCompoundGraph().containsNode(node4));
 		assertTrue("expected edge", this.testInstance.getRoot().getChildCompoundGraph().containsEdge(edge1));
 		assertTrue("expected edge", this.testInstance.getRoot().getChildCompoundGraph().containsEdge(edge2));
 		assertTrue("expected node", this.edge1.getChildCompoundGraph().containsNode(node5));

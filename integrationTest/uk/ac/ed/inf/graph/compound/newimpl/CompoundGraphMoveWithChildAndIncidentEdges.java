@@ -1,7 +1,6 @@
 package uk.ac.ed.inf.graph.compound.newimpl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -206,6 +205,7 @@ public class CompoundGraphMoveWithChildAndIncidentEdges {
 		assertTrue("expected node", this.node3.getChildCompoundGraph().containsNode(node1));
 		assertTrue("expected node", this.node3.getChildCompoundGraph().containsNode(node6));
 		assertTrue("expected node", newEdge1.getChildCompoundGraph().containsNode(newNode5));
+		assertTrue("expected node", newEdge3.getConnectedNodes().hasEnds(newNode5, node6));
 		assertTrue("expected edge removed", this.edge1.isRemoved());
 		assertTrue("expected edge removed", this.edge2.isRemoved());
 		assertTrue("expected node removed", this.node2.isRemoved());

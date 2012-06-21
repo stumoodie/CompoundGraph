@@ -2,18 +2,25 @@
 
 package uk.ac.ed.inf.graph.compound.fixturegen.output;
 
-import java.util.LinkedList;
-
-
-import org.antlr.runtime.*;
-import org.antlr.runtime.tree.*;
-import java.util.Stack;
-import java.util.List;
 import java.util.ArrayList;
-
-import org.antlr.stringtemplate.*;
-import org.antlr.stringtemplate.language.*;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.antlr.runtime.BitSet;
+import org.antlr.runtime.EarlyExitException;
+import org.antlr.runtime.NoViableAltException;
+import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.RecognizerSharedState;
+import org.antlr.runtime.RuleReturnScope;
+import org.antlr.runtime.Token;
+import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.TreeNodeStream;
+import org.antlr.runtime.tree.TreeParser;
+import org.antlr.runtime.tree.TreeRuleReturnScope;
+import org.antlr.stringtemplate.StringTemplate;
+import org.antlr.stringtemplate.StringTemplateGroup;
+import org.antlr.stringtemplate.language.AngleBracketTemplateLexer;
 @SuppressWarnings({"all", "warnings", "unchecked"})
 public class CompoundGraphFixtureTree extends TreeParser {
     public static final String[] tokenNames = new String[] {
