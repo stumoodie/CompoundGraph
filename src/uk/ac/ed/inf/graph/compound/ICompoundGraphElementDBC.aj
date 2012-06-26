@@ -17,7 +17,7 @@ public abstract aspect ICompoundGraphElementDBC {
 			assertion(cn.getChildCompoundGraph().getRoot().equals(cn), "this is root of its child graph");
 			assertion(cn.getRoot() != null, "root is not null");
 			assertion(cn.getAttribute().getCurrentElement() != null, "attribute curr element set");
-			assertion(implies(!cn.isRemoved(), cn.getAttribute().getCurrentElement().equals(cn)), "attribute consistent");
+//			assertion(implies(!cn.isRemoved(), cn.getAttribute().getCurrentElement().equals(cn)), "attribute consistent");
 		}};
 	}
 }
