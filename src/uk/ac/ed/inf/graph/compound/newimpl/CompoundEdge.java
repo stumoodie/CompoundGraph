@@ -18,8 +18,6 @@
 */
 package uk.ac.ed.inf.graph.compound.newimpl;
 
-import java.util.Iterator;
-
 import uk.ac.ed.inf.graph.compound.CompoundNodePair;
 import uk.ac.ed.inf.graph.compound.IChildCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundEdge;
@@ -28,28 +26,20 @@ import uk.ac.ed.inf.graph.compound.ICompoundGraphElement;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphElementVisitor;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
 import uk.ac.ed.inf.graph.compound.IElementAttribute;
-import uk.ac.ed.inf.tree.AncestorTreeIterator;
-import uk.ac.ed.inf.tree.LevelOrderTreeIterator;
-import uk.ac.ed.inf.tree.PreOrderTreeIterator;
 
-public class CompoundEdge implements ICompoundEdge {
-	private final int level;
+public class CompoundEdge extends CompoundElement implements ICompoundEdge {
 	private final ICompoundGraphElement parentElement;
 	private final IChildCompoundGraph childGraph;
 	private final CompoundNodePair nodePair;
-	private final int index;
-	private boolean removed;
-	private final IElementAttribute edgeAttribute;
+	private final int level;
 
 	public CompoundEdge(ICompoundGraphElement parent, int index, IElementAttribute attribute,
 			ICompoundNode outNode, ICompoundNode inNode){
-		this.index = index;
+		super(index, attribute);
 		this.parentElement = parent;
 		this.childGraph = new ChildCompoundGraph(this);
 		this.nodePair = new CompoundNodePair(outNode, inNode);
 		this.level = calcTreeLevel();
-		this.removed = false;
-		this.edgeAttribute = attribute;
 		outNode.addOutEdge(this);
 		inNode.addInEdge(this);
 		attribute.setCurrentElement(this);
@@ -67,18 +57,8 @@ public class CompoundEdge implements ICompoundEdge {
 	}
 
 	@Override
-	public IElementAttribute getAttribute(){
-		return this.edgeAttribute;
-	}
-	
-	@Override
 	public CompoundNodePair getConnectedNodes() {
 		return new CompoundNodePair(this.nodePair.getOutNode(), this.nodePair.getInNode());
-	}
-
-	@Override
-	public int getIndex() {
-		return this.index;
 	}
 
 	@Override
@@ -122,24 +102,6 @@ public class CompoundEdge implements ICompoundEdge {
 	}
 
 	@Override
-	public boolean isAncestor(ICompoundGraphElement testNode) {
-	    boolean retVal = false;
-	    if(testNode != null) {
-	        retVal = this.getGraph().getElementTree().isAncestor(this, testNode);
-	    }
-	    return retVal;
-	}
-
-	@Override
-	public boolean isDescendent(ICompoundGraphElement testNode) {
-        boolean retVal = false;
-        if(testNode != null) {
-            retVal = this.getGraph().getElementTree().isDescendant(this, testNode);
-        }
-        return retVal;
-	}
-
-	@Override
 	public boolean isEdge() {
 		return true;
 	}
@@ -147,32 +109,6 @@ public class CompoundEdge implements ICompoundEdge {
 	@Override
 	public boolean isNode() {
 		return false;
-	}
-
-	@Override
-	public boolean isRemoved() {
-		return this.removed;
-	}
-
-	@Override
-	public void markRemoved(boolean setRemoved) {
-		this.removed = setRemoved;
-	}
-
-	@Override
-	public int compareTo(ICompoundGraphElement o) {
-		int otherIdx = o.getIndex();
-		return this.getIndex() < otherIdx ? -1 : (this.getIndex() > otherIdx ? 1 : 0);
-	}
-
-	@Override
-	public Iterator<ICompoundGraphElement> ancestorIterator() {
-		return new AncestorTreeIterator<ICompoundGraphElement>(this);
-	}
-
-	@Override
-	public Iterator<ICompoundGraphElement> childIterator() {
-		return this.getChildCompoundGraph().elementIterator();
 	}
 
 	@Override
@@ -191,42 +127,12 @@ public class CompoundEdge implements ICompoundEdge {
 	}
 
 	@Override
-	public boolean isChild(ICompoundGraphElement childNode) {
-		boolean retVal = false;
-		if(childNode != null){
-			Iterator<ICompoundNode> childIter = this.getChildCompoundGraph().nodeIterator();
-			while(childIter.hasNext() && retVal == false){
-				ICompoundNode possChild = childIter.next();
-				if(possChild.equals(childNode)){
-					retVal = true;
-				}
-			}
-		}
-		return retVal;
-	}
-
-	@Override
-	public boolean isLowestCommonAncestor(ICompoundGraphElement thisNode, ICompoundGraphElement thatNode){
-		return this.getRoot().getGraph().getElementTree().getLowestCommonAncestor(thisNode, thatNode).equals(this);
-	}
-
-	@Override
 	public boolean isParent(ICompoundGraphElement parentNode) {
 		boolean retVal = false;
 		if(parentNode != null){
 			retVal = this.getParent().equals(parentNode);
 		}
 		return retVal;
-	}
-
-	@Override
-	public Iterator<ICompoundGraphElement> levelOrderIterator() {
-		return new LevelOrderTreeIterator<ICompoundGraphElement>(this);
-	}
-
-	@Override
-	public Iterator<ICompoundGraphElement> preOrderIterator() {
-		return new PreOrderTreeIterator<ICompoundGraphElement>(this);
 	}
 
 	@Override
@@ -240,7 +146,7 @@ public class CompoundEdge implements ICompoundEdge {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + this.getGraph().hashCode();
-		result = prime * result + index;
+		result = prime * result + getIndex();
 		return result;
 	}
 
@@ -260,7 +166,7 @@ public class CompoundEdge implements ICompoundEdge {
 		if(!this.getGraph().equals(other.getGraph())){
 			return false;
 		}
-		if (index != other.index) {
+		if (getIndex() != other.getIndex()) {
 			return false;
 		}
 		return true;

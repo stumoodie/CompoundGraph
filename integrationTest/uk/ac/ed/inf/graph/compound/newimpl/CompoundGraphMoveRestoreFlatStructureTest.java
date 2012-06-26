@@ -15,6 +15,7 @@ import uk.ac.ed.inf.graph.compound.ICompoundEdge;
 import uk.ac.ed.inf.graph.compound.ICompoundGraph;
 import uk.ac.ed.inf.graph.compound.ICompoundGraphMoveBuilder;
 import uk.ac.ed.inf.graph.compound.ICompoundNode;
+import uk.ac.ed.inf.graph.compound.IElementAttribute;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraph;
 import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
@@ -46,6 +47,13 @@ public class CompoundGraphMoveRestoreFlatStructureTest {
 	private FlatGraphTestFixture testFixture;
 	private ICompoundGraphMoveBuilder moveBuilder;
 	private IGraphState originalState;	
+	private IElementAttribute nodeAttribute1;
+	private IElementAttribute nodeAttribute2;
+	private IElementAttribute nodeAttribute3;
+	private IElementAttribute nodeAttribute4;
+	private IElementAttribute nodeAttribute5;
+	private IElementAttribute edgeAttribute1;
+	private IElementAttribute edgeAttribute2;	
 	
 	@Before
 	public void setUp() throws Exception {
@@ -58,6 +66,13 @@ public class CompoundGraphMoveRestoreFlatStructureTest {
 		this.node5 = this.testFixture.getNoden5();
 		this.edge1 = this.testFixture.getEdgee1();
 		this.edge2 = this.testFixture.getEdgee2();
+		this.nodeAttribute1 = this.node1.getAttribute();
+		this.nodeAttribute2 = this.node2.getAttribute();
+		this.nodeAttribute3 = this.node3.getAttribute();
+		this.nodeAttribute4 = this.node4.getAttribute();
+		this.nodeAttribute5 = this.node5.getAttribute();
+		this.edgeAttribute1 = this.edge1.getAttribute();
+		this.edgeAttribute2 = this.edge2.getAttribute();
 		originalState = this.testInstance.getCurrentState();
 		ISubCompoundGraphFactory subGraphFact = this.testInstance.subgraphFactory();
 		subGraphFact.addElement(node2);
@@ -79,6 +94,13 @@ public class CompoundGraphMoveRestoreFlatStructureTest {
 		this.edge2 = null;
 		this.newEdge1 = null;
 		this.newEdge2 = null;
+		this.nodeAttribute1 = null;
+		this.nodeAttribute2 = null;
+		this.nodeAttribute3 = null;
+		this.nodeAttribute4 = null;
+		this.nodeAttribute5 = null;
+		this.edgeAttribute1 = null;
+		this.edgeAttribute2 = null;
 	}
 
 	
@@ -98,6 +120,13 @@ public class CompoundGraphMoveRestoreFlatStructureTest {
 		assertTrue("expected node", this.testInstance.getRoot().getChildCompoundGraph().containsNode(node5));
 		assertTrue("expected edge", this.testInstance.getRoot().getChildCompoundGraph().containsEdge(edge1));
 		assertTrue("expected edge", this.testInstance.getRoot().getChildCompoundGraph().containsEdge(edge2));
+		assertEquals("expected curr element", this.node1, this.nodeAttribute1.getCurrentElement());
+		assertEquals("expected curr element", this.node2, this.nodeAttribute2.getCurrentElement());
+		assertEquals("expected curr element", this.node3, this.nodeAttribute3.getCurrentElement());
+		assertEquals("expected curr element", this.node4, this.nodeAttribute4.getCurrentElement());
+		assertEquals("expected curr element", this.node5, this.nodeAttribute5.getCurrentElement());
+		assertEquals("expected curr element", this.edge1, this.edgeAttribute1.getCurrentElement());
+		assertEquals("expected curr element", this.edge2, this.edgeAttribute2.getCurrentElement());
 		assertTrue("expected connected pair", this.edge1.hasDirectedEnds(node1, node2));
 		assertTrue("expected connected pair", this.edge2.hasDirectedEnds(node4, node2));
 	}
@@ -159,6 +188,13 @@ public class CompoundGraphMoveRestoreFlatStructureTest {
 		assertNotNull("new node exists", newNode);
 		assertNotNull("removed edge exists", removedEdge);
 		assertNotNull("removed node exists", removedNode);
+		assertEquals("expected curr element", this.node1, this.nodeAttribute1.getCurrentElement());
+		assertEquals("expected curr element", newNode, this.nodeAttribute2.getCurrentElement());
+		assertEquals("expected curr element", this.node3, this.nodeAttribute3.getCurrentElement());
+		assertEquals("expected curr element", this.node4, this.nodeAttribute4.getCurrentElement());
+		assertEquals("expected curr element", this.node5, this.nodeAttribute5.getCurrentElement());
+		assertEquals("expected curr element", newEdge1, this.edgeAttribute1.getCurrentElement());
+		assertEquals("expected curr element", newEdge2, this.edgeAttribute2.getCurrentElement());
 	}
 
 
