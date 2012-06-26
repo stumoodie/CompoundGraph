@@ -20,7 +20,7 @@ import uk.ac.ed.inf.graph.compound.ISubCompoundGraphFactory;
 import uk.ac.ed.inf.graph.compound.testfixture.ElementAttribute;
 import uk.ac.ed.inf.graph.state.IGraphState;
 
-public class CompoundGraphMoveRestoreFlatStructure {
+public class CompoundGraphMoveRestoreFlatStructureTest {
 	private static final int EXPECTED_NODES_IN_ROOT = 5;
 	private static final int EXPECTED_ELEMENTS_IN_ROOT = 7;
 	private static final int EXPECTED_EDGES_IN_ROOT = 2;
